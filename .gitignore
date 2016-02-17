@@ -1,5 +1,7 @@
 ## SWITCHING TO MARKDOWN - we don't want tex in this repo!
 *.tex
+*.html
+*.pdf
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
