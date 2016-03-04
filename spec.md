@@ -23,17 +23,6 @@ change. In particular, this version does *not* address:
 
 -   static type system (although we’ve made a start)
 
--   module system
-
--   dialects
-
--   the `abstract` top-level method, as a marker for abstract methods,
-
--   identifier resolution rule.
-
--   metadata (Java’s @annotations, C$\sharp$ attributes, final,
-    abstract etc)
-
 -   immutable data and pure methods.
 
 -   reflection
@@ -41,15 +30,7 @@ change. In particular, this version does *not* address:
 -   assertions, data-structure invariants, pre & post conditions,
     contracts
 
--   regexps?
-
 -   libraries, including more (complex?) Numeric types and testing
-
-\[BigMissingFeatures\] For discussion and rationale, see
-<http://gracelang.org>.
-
-Where this document gives “(options)”, we outline choices in the
-language design that have yet to be made.
 
 User Model
 ==========
@@ -104,39 +85,43 @@ Syntax
 ------------------------------------------------------------------------
 
 Grace programs are written in Unicode. Reserved words are written in the
-ASCII subset of Unicode. As a matter of policy, the names of methods
-defined in the required libraries are also restricted to the ASCII
-subset of Unicode and the character $\pi$.
+ASCII subset of Unicode. 
 
 Layout {#Layout}
 ------
 
-Grace uses curly brackets for grouping, and semicolons as statement
-terminators, and infers semicolons at the end of lines. Code layout
-cannot be inconsistent with grouping.
+Grace uses braces for grouping.  Code layout must be consistent with
+grouping.  Indentation must increase by at least two spaces after a
+brace. 
+Statements are terminated by semicolons, and by line breaks when the
+following line has the same or lesser indentation than the indentation
+of the line containing the start of the current statement.
 
-### code with punctuation: {#code-with-punctuation .unnumbered}
+### code with punctuation
 
+    def x = 
+      muble("3")
+      fratz(7);
     while {stream.hasNext} do {
        print(stream.read);
     };
 
-### code without punctuation: {#code-without-punctuation .unnumbered}
+### code without punctuation
 
+    def x = 
+      muble("3")
+      fratz(7)
     while {stream.hasNext} do {
        print(stream.read)
     }
 
-A line break followed by an increase in the indent level implies a line
-continuation, whereas line break followed by the next line at the same
-or lesser indentation implies a semicolon if one is permitted
-syntactically.
+This defines `x` to be the result of the single request `muble("3") fratz(7)`.
 
 Comments
 --------
 
 Grace’s comments start with a pair of slashes `//` and are terminated by
-the end of the line, as in C$++$ and Java. Comments are *not* treated as
+the end of the line. Comments are *not* treated as
 white-space. Each comment is conceptually attached to the smallest
 immediately preceding syntactic unit, except that comments following a
 blank line are attached to the largest immediately following syntactic
@@ -144,8 +129,8 @@ unit.
 
     // comment, to end of line
 
-Identifiers
------------
+Identifiers and Operators
+-------------------------
 
 Identifiers must begin with a letter, which is followed by a sequence of
 zero or more letters, digits and prime (`'`) or underscore (`_`)
@@ -155,16 +140,20 @@ A single underscore (`_`) acts as a placeholder identifier: it can
 appear in declarations, but not in expressions. In declarations, `_` is
 treated as a fresh identifier.
 
-Reserved Words and Reserved Operators
--------------------------------------
+Operators are sequnces of unicode operator symbols and the following
+ASCII operator characters:
 
-Grace has the following reserved words and reserved operators. The ?
-indicates words related to design options not yet chosen.
+   ! ? @ # $ % ^ & | ~ = + - * / \ > < : . 
 
-    class def inherits is method object
-    outer prefix return self Selftype(?) super type var where
+Reserved Tokens
+---------------
 
-    . := =  ; { } [ ] " ( ) : -> 
+Grace has the following reserved tokens:
+
+    alias as class def dialect exclude inherit import is method object
+    outer prefix return self Self trait type var use where 
+
+    . := = ; { } [ ] ( ) : -> < > 
 
 Newlines, Tabs and Control Characters
 -------------------------------------
@@ -183,7 +172,7 @@ Tabs and all other non-printing control characters are syntax errors,
 even in a string literal. Escape sequences are provided to denote
 control characters in strings; see Table \[tab:StringEscapes\] in
 Section \[Strings\].
-
+	
 Built-in Objects
 ================
 
