@@ -210,7 +210,7 @@ denote `Number`s).
     exponent indicator. Base-exponent numerals may optionally be
     preceded by a minus, and may have a minus in front of the exponent.
 
-### Examples {#examples .unnumbered}
+### Examples 
 
     1
     -1
@@ -222,27 +222,28 @@ denote `Number`s).
     2x10110100
     0xdeadbeef // Radix zero treated as 16
 
-Booleans {#Booleans}
+Booleans 
 --------
 
-The predefined constants `true` and `false` denote the only two values
-of Grace’s `Boolean` type. Boolean operators are written using `&&` for
-and, `||` for or, and prefix `!` for not.
+The predefined constants `true` and `false` denote values of Grace’s
+`Boolean` type. Boolean operators are written using `&&` for and, `||`
+for or, and prefix `!` for not.
 
-### Examples {#examples-1 .unnumbered}
+### Examples 
 
     P && Q
     toBe || toBe.not
 
-“Short circuit” (a.k.a non-commutative) boolean operators take blocks as
-their second argument:
+In addition to `&&` and `||` taking boolean arguments, they also accept
+parmameterless blocks that return `Boolean`.  This gives them 
+“short circuit” (a.k.a non-commutative) semantics.
 
-### Examples {#examples-2 .unnumbered}
+### Examples 
 
-    P.andAlso { Q }
-    toBe.orElse { ! toBe }
+    P && { Q }
+    toBe || { ! toBe }
 
-Strings and Characters {#Strings}
+Strings and Characters 
 ----------------------
 
 String literals in Grace are written between double quotes, and must be
@@ -287,8 +288,8 @@ Grace blocks are lambda expressions; they may or may not have
 parameters. If a parameter list is present, the parameters are separated
 by commas and the list is terminated by the `->` symbol.
 
-    {do.something}
-    { i -> i + 1}
+    { do.something }
+    { i -> i + 1 }
     { sum, next -> sum + next }
 
 Blocks construct objects containing a method named `apply`, or
@@ -318,14 +319,11 @@ Here is another example:
 
     var sum := 0
     def summingBlock : Block<Number,Number> =
-        { i:Number ->  sum := sum + i }
+        { i : Number ->  sum := sum + i }
     summingBlock.apply(4)       // sum now 4
     summingBlock.apply(32)      // sum now 36
 
-Blocks are lexically scoped inside their containing method or block. A
-“naked” block literal, that is, a block literal that is neither the
-target of a method request nor an argument, is a syntax error.
-
+Blocks are lexically scoped inside their containing method or block.
 The body of a block consists of a sequence of declarations and
 expressions. An empty body is allowed, and is equivalent to `done`.
 
@@ -333,15 +331,16 @@ Declarations
 ============
 
 Declarations of constants and variables may occur anywhere within an
-object, a method, or a block: their scope is the whole of their defining
-object, method, or block. \[Shadowing\] Grace has a single namespace for
-all identifiers; this shared namespace is used for methods, parameters,
-constants, variables and types. It is an error to declare a constant,
-variable or parameter that shadows a lexically-enclosing constant,
-variable or parameter. It is also an error to attempt to declare any
-name more than once in the same lexical scope.
+object, a method, or a block: their scope is the whole of their
+defining object, method, or block.  It is also an error to attempt to
+declare any name more than once in the same lexical scope.
 
-Constants {#Constants}
+**Shadowing.** Grace has a single namespace for all identifiers; this
+shared namespace is used for methods, parameters, constants, variables
+and types. It is an error to declare a constant, variable or parameter
+that shadows a lexically-enclosing constant, variable or parameter.
+
+Constants
 ---------
 
 Constant definitions are introduced using the `def` keyword; they bind
@@ -351,75 +350,75 @@ optionally be given a type. Constants cannot be re-bound.
 ### Examples {#examples-6 .unnumbered}
 
     def x = 3 * 100 * 0.01
-    def x:Number = 3    // means the same as the above
-    def x:Number                            // Syntax Error: x must be initialised
+    def x : Number = 3
+    def x : Number           // Syntax Error: x must be initialised
 
-Variables {#Variables}
+Variables
 ---------
-
-\[Uninitialised\] \[Assignment\]
 
 Variable definitions are introduced using the `var` keyword; they
 optionally bind an identifier to the value of an initialising
-expression, optionally at a precise type. Variables can be re-bound to
-new values as often as desired, using an assignment statement. If a
+expression. Variables can be re-bound to
+new values as often as desired, using an assignment. If a
 variable is declared without an initializing expression, it is said to
 be *uninitialised*; any attempt to access the value of an uninitialised
 variable is an error. This error may be caught either at run time or at
 compile time, depending on the cleverness of your implementor.
 
-### Examples {#examples-7 .unnumbered}
+### Examples
 
     var x:Rational := 3     // explicit type
-    var x:Rational          // ok; x must be initialised before access
+    var x:Rational          // x must be initialised before access
     var x := 3              // x has type Unknown 
     var x                   // x has Unknown type and uninitialised value 
 
-Methods {#Methods}
+Methods
 -------
 
-Methods are declared with the `method` keyword. The name of the method
-may contain zero or more parameter lists interspersed through it. The
-type of the object returned from the method may optionally be given
-after the symbol `->` The body of the method is enclosed in braces.
 
+Methods are declared with the `method` keyword.
 Methods define the action to be taken when the object containing the
 method receives a request with the given name. Because every method must
 be associated with an object, methods may not be declared directly
 inside other methods.
+The type of the object returned from the method may optionally be given
+after the symbol `->`. The body of the method is enclosed in braces.
 
-    method pi  {3.141592634} 
+    method pi  { 3.141592634 } 
 
-    method greet(user)from(sender) {
+    method greet(user: Person) from(sender: Person) {
         print ``{sender} sends his greetings, {user}.''
     }
-        
-    method either (a : Block0<Done>) or (b : Block0<Done>) -> Done {
+
+    method either (a) or (b) -> Done {
         if (random.nextBoolean)
             then {a.apply} else {b.apply}
     }
 
-### Returning a Value from a Method {#ReturningDone}
-
-\[methodReturn\] Methods may contain one or more `return e` statements.
-If a `return` statement is executed, the method terminates with the
-value of the expression `e`. If the method declares a return type of
-`Done`, then no expression may follow the `return`. If execution reaches
-the end of the method body without executing a `return`, the method
-terminates and returns the value of the last expression evaluated. Thus,
-an empty method body returns `done`.
 
 ### Method Names
 
-Methods can be named by an identifier, or by a sequence of operator
-symbols. Methods can also be named by an identifier suffixed with
-“`:=`”; this form of name is conventionally used for writer methods,
-both user-written and automatically-generated, as exemplified by
-`value:=` below. Prefix operator methods are named “`prefix`” followed
-by the operator character(s).
+Methods names are a sequence of one or more parts, each part 
+A method name with a single part can optionally have an argument list.
 
-### Examples {#examples-8 .unnumbered}
+A method each part
+comprising an identifier and an argument list.  
 
+part of a method name just one part may
+or may not have arguments; otherwise each part (in "multi-part names")
+must have at least one argument declared after the name of that part.
+Methods can also be named by an identifier suffixed with “`:=`”; this
+form of name is conventionally used for writer methods, both
+user-written and automatically-generated, as exemplified by `value:=`
+below. Prefix operator methods are named “`prefix`” followed by the
+operator character(s).
+
+Methods may also define binary or prefix unary operators. Binary
+operator messages take a single arguemnt and thier names are sequences
+of operator characters; prefix methods take no arguments and their
+names are prefixed by `prefix`.
+
+### Examples
 
     method +(other : Point) -> Point { 
         (x +other.x) @ (y +other.y) 
@@ -437,44 +436,7 @@ by the operator character(s).
         super.value:= n 
     }
 
-### Variable Arity Methods
-
-Methods may have “repeated parameters”; this provides a way of defining
-a method of “variable arity”, i.e., one that can be requested with
-different numbers of arguments. A repeated parameter is designated by a
-star `*` before the name of the parameter; if present, the repeated
-parameter must be the final parameter in the parameter list in which it
-appears. Inside the method, a repeated parameter has the type of a
-`Sequence` of the declared type—for example, a parameter `strs` declared
-`*strs:String` has the type `Sequence<String>`.
-
-Grace does not provide a way of requesting a variable-arity method using
-a collection of values (rather than an explicit argument list). Library
-designers are therefore encouraged to first define methods that take
-collection arguments, and then to define variable-arity methods in terms
-of the methods with collection arguments.
-
-### Examples {#examples-9 .unnumbered}
-
-    method show(*strs : String) -> Done {
-        for (strs) do { each -> print each }
-    }
-
-    method addAll(elements: Collection<T>) {
-        for (elements) do { x ->
-            if (! contains(x)) then {
-                def t = findPositionForAdd(x)
-                inner.at(t)put(x)
-                size := size + 1
-                ...
-            }
-        }
-        self
-    }
-
-    method add(*elements:T) { addAll(elements) }
-
-### Type Parameters {#GenericMethodDeclaration}
+### Type Parameters
 
 Methods may be declared with type parameters; these type parameters may
 be constrained with `where` clauses.
@@ -487,6 +449,17 @@ be constrained with `where` clauses.
 
     method prefix- -> Number 
          { 0 - self }
+
+### Returning a Value from a Method
+
+Methods may contain one or more `return` statements.
+If a `return e` statement is executed, the method terminates with the
+value of the expression `e`, while a `return` statement with no
+expression returns `done'.  If execution reaches
+the end of the method body without executing a `return`, the method
+terminates and returns the value of the last expression evaluated. 
+An empty method body returns `done`.
+
 
 Objects and Classes {#ObjectsAndClasses}
 ===================
