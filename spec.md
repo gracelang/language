@@ -19,9 +19,9 @@ This is a specification of the Grace Programming Language. This
 specification is notably incomplete, and everything is subject to
 change. In particular, this version does *not* address:
 
--   the library, especially collections and collection literals
+-   static type system
 
--   static type system (although we’ve made a start)
+-   the library, especially collections and collection literals
 
 -   immutable data and pure methods.
 
@@ -504,7 +504,7 @@ Objects
 -------
 
 Object constructors are expressions that evaluate to an object with the
-given attributes. Each time an object constructors is executed, a new object
+given attributes. Each time an object constructor is executed, a new object
 is created. In addition to declarations of fields and methods, object
 constructors can also contain expression, which are executed as a
 side-effect of evaluating the object constructor. All of the declared
@@ -588,14 +588,17 @@ a trait is a method that returns a trait object.
 Reuse
 -------
 
-Grace supports reuse in two ways: through `inherit` and `use` statements
-Traits cannot contain `inherit` statements;  object constructors, classes and traits can
-all contain `use` statements.
+Grace supports reuse in two ways: through `inherit` and `use` statements.
+Object constructors (and classes) can contain one `inherit` statement while                                            
+traits cannot contain an `inherit` statement;  object constructors, classes and traits can
+all contain one or more `use` statements.
 
-Both `inherit` and `use` introduce the attributes of the reused object—the parent—into the 
-current object (the object under construction).
+Both `inherit` and `use` introduce the attributes of the reused object — the _parent_ — into the 
+current object (the object under construction). 
 A new declaration in the current object can override a declaration from a parent.
-[](Override annotations)
+
+[](Override annotations should be mentioned somewhere!)
+
 If it is necessary to access an overridden attribute, the overridden attribute of the parent
 can be given an additional name by attaching an **alias** clause to the inherits statement.
 Attributes of the parent that are not required can be excluded using an **exclude** clause.
@@ -615,27 +618,20 @@ expression that creates a new object, such as a request on a class or trait.
 The argument cannot refer to `self`, implicitly or explicitly.
 The object reused by a `use` clause must be a trait object. 
 
-An object constructor (or class) _oc_ containing an inherits statement creates a
-new object, and binds it to `self`.  The new object then acquires all of the attributes
-of the inherited object (the _superobject_), _but the initializers for its fields, and its statements,
-are not executed_.
-The new object is then given all of the attributes declared in _oc_,
-in the process possibly overriding some of the inherited attributes.
-Once again, the initializers and statements are _not_ executed.
-Finally, the initializers and executable statements are executed,
-starting with the most superior inherited superobject, and finishing with _oc_.
-As a consequence of these rules, the child object can change the
-initialization of the parent.
+When executed, an object constructor (or trait or class declaration) first creates a new object with no _attributes_ and binds it to `self`. 
+Next, the attributes of all _parent_ objects (created by any 'inherit' or 'uses' clauses), and any local declarations, are added to the new object: local declarations override parental declarations.
+It is a trait composition error for the same attribute to come from more than one parent.
+Finally, the initializers and executable statements are executed in order of their declaration, i.e.  starting with the most superior inherited superobject, and finishing with local declarations.
+Initialisers for all `def`s and `var`s, and code in the bodies of classes and object constructors, are executed in the order they are written, even for `def`s or `var`s that are excluded from the new object. 
+As a consequence of these rules, a new object can change the initialization of its parents, by overriding requests used to initialise the parent. 
 
-An object constructor (or trait, or class) _oc_ can contain _multiple_ `use` statements.
-_oc_ creates a
-new object, and binds it to `self`.  This object then acquires all of the attributes
-of all of the used (_parent_) objects, as modified by their exclude and alias clauses.
-It is a trait composition error for the same attribute to come from more than one
-parent.
-The new object is then given all of the attributes declared in _oc_,
-in the process possibly overriding some of the attributes from the parents.
-Finally, the initializers and executable statements of _oc_ are executed.
+
+Abstract Methods
+----------------
+
+Methods may be annotated as being abstract.  Abstract methods do not conflict with other methods, 
+either abstract or concrete.
+
 
 
 Classes with Type Parameters
@@ -667,7 +663,7 @@ Grace is a pure object-oriented language. Everything in the language is
 an object, and all computation proceeds by *requesting* an object to
 execute a method with a particular *name*. The response of the object is
 to execute the method. The value of a method request is the value
-returned by the execution of the method (see Section \[methodReturn\]).
+returned by the execution of the method.
 
 We distinguish the act of *requesting* a method (what Smalltalk calls
 “sending a message”), and *executing* that method. Requesting a method
@@ -698,7 +694,7 @@ method names: the type and number of arguments in a method request does
 not influence the name of the method being requested.
 
 If the receiver of a named method is `self` it may be left implicit,
-*i.e.*, the `self` and the dot may both be omitted. \[ArgParens\]
+*i.e.*, the `self` and the dot may both be omitted. 
 Parenthesis may be omitted where they would enclose a single argument
 that is a numeral, string or block literal.
 
@@ -876,7 +872,7 @@ Variables and definitions (`var` and `def` declarations) immediately
 inside an object constructor create *fields* in that object.
 
 A field declared as `var x` can be read using the request `x` and
-assigned to using the assignment request `x:=()` (see §\[Assignments\]).
+assigned to using the assignment request `x:=()`.
 A field declared as `def y` can be read using the request `y`, and
 cannot be assigned. By default, fields are *confidential*: they can be
 accessed and assigned from the object itself, and inheriting objects,
