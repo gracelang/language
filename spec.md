@@ -289,16 +289,17 @@ by commas and the list is terminated by the `->` symbol.
     { sum, next -> sum + next }
 
 Blocks construct objects containing a method named `apply`, or
-`apply(n)`, or `apply(n, m)`, …where the number of parameters to `apply`
+`apply(n)`, or `apply(n, m)`, …, where the number of parameters to `apply`
 is the same as the number of parameters of the block. Requesting the
 `apply` method evaluates the block; it is an error to provide the wrong
-number of arguments.
+number of arguments. If block parameters are declared with type
+annotations, it is an error if the arguments do not conform to those types.
 
 ### Examples {#examples-5 .unnumbered}
 
 The looping construct
 
-    for (1..10) do {
+    for (1 .. 10) do {
         i -> print i 
     }
 
@@ -1002,211 +1003,58 @@ Control Flow {#ControlFlow}
 Control flow statements are requests to methods defined in the dialect.
 Grace uses what looks like conventional syntax with a leading keyword
 (`if`, `while`, `for`, etc.); these are implicit method requests
-typically provided in a dialect. 
+typically implemented in a dialect. 
 
-Case {#Case}
-----
+#### Patterns 
 
-The `match(exp)`…`case(p`$_{1}$`)` …`case(p`$_{n}$`)` construct attempts
-to match its first argument `exp` against a series of *pattern blocks*
-`p`$_{i}$. Patterns support destructuring.
+Pattern matching is based around `Pattern` objects that respond to the
+`match(subject)` request by returning a `MatchResult`, which is either
+`false` if the match fails, or a `SuccessfulMatch<R>` object which
+behaves like `true` but also supports a `result` request.  All type
+objects are Patterns, although there are other Patterns that are not
+types.
 
-### Examples {#examples-26 .unnumbered}
-
-    match (x)
-        case { 0 -> "Zero" }                        
-        // match against a literal constant
-        case { s:String -> print(s) }    
-        // typematch, binding s - identical to block with typed parameter
-        case { (pi) -> print("Pi = " ++ pi) } 
-        // match against the value of an expression - requires parenthesis
-        case { _ : Some(v) -> print(v) }
-        // typematch, binding a variable - looks like a block with parameter
-        case { _ -> print("did not match") }
-        // match against placeholder, matches anything
-
-The `case` arguments are patterns: objects that understand the request
-`match()` and return a `MatchResult`, which is either a
-`successfulMatch` object or a `failedMatch` object. Each of the case
-patterns is requested to `match(x)` in turn, until one of them returns
-`SuccessfulMatch(v)`; the result of the whole `match`–`case` construct
-is `v`.
-
-### Patterns 
-
-Pattern matching is based around the `Pattern` objects, which are
-objects that respond to a request `match(anObject)`. The pattern tests
-whether or not the argument to `match` “matches” the pattern, and
-returns a `MatchResult`, which is either a `SuccessfulMatch` or a
-`FailedMatch`. An object that has type `SuccessfulMatch` behaves like
-the boolean `true` but also responds to the requests `result` and
-`bindings`. An object that has type `FailedlMatch` behaves like the
-boolean `false` but also responds to the requests `result` and
-`bindings`.
-
-`result` is the return value, typically the object matched, and the
-`bindings` are a list of objects that may be bound to intermediate
-variables, generally used for destructuring objects.
-
-For example, in the scope of this `Point` type:
+In particular, in the scope of this `Point` type:
 
     type Point = {
       x -> Number
       y -> Number
-      extract -> List<Number>
     }
 
 implemented by this class:
 
-    class aCartesianPoint.x(x':Number)y(y':Number) -> Point {
+    class x(x':Number) y(y':Number) -> Point {
       method x { x' }
       method y { y' }
-      method extract { aList.with(x, y) } 
     }
 
-these hold:
+we can write
 
-    def cp = aCartesianPoint.new(10,20)
+    def cp = x(10) y(20)
 
-    Point.match(cp).result           // returns cp
-    Point.match(cp).bindings       // returns an empty list
-    Point.match(true)              // returns FailedMatch
+    Point.match(cp)              // SuccessfulMatch, behaves like true
+    Point.match(cp).result       // cp
+    Point.match(42)              // false
 
-### Matching Blocks
+#### Matching Blocks
 
-Blocks with a single parameter are also patterns: they match any object
-that can validly be bound to that parameter. For example, if the
-parameter is annotated with a type, the block will successfully match an
-object that has that type, and will fail to match other objects.
+Blocks with a single parameter are called _matching blocks_. Matching
+blocks also conform to  type Pattern, and can be evaluted by
+requesting `match(_)` as well as `apply(_)`. When `apply(_)` would
+raises a type error because the block's argument would not match its
+parameter type, `match(_)` returns false; when `apply(_)` would return
+a result `r`, `match(_)` returns a `SuccessfulMatch` object whose
+`result` is `r`. 
 
-Matching-blocks support an extended syntax for their parameters. In
-addition to being a fresh variable, as in a normal block, the parameter
-may also be a pattern. Matching-blocks are themselves patterns:
-one-argument (matching) block with parameter type `A` and return type
-`R` also implements `Pattern<R,Done>`.
+If a matching block parameter declaration takes the form `_ :
+pattern`, then the `_ :` can be ommitted, provided the `pattern` here
+is either parenthesized, or a string or numeric literal (the delimited
+argument rule).
 
-A recursive, syntax-directed translation maps matching-blocks into
-blocks with separate explict patterns non-matching blocks that are
-called via `apply` only when their patterns match.
+#### Self-Matching Objects
 
-First, the matching block is flattened — translated into a
-straightforward non-matching block with one parameter for every bound
-name or placeholder. For example:
-
-     { _ : Pair(a,Pair(b,c)) -> "{a} {b} {c}"  }
-
-is flattened into
-
-     { _, a, b, c -> "{a} {b} {c}" }
-
-then the pattern itself is translated into a composite object structure:
-
-    def mypat = 
-      MatchAndDestructuringPattern.new(Pair, 
-         VariablePattern.new("a"), 
-         MatchAndDestructuringPattern.new(Pair,
-            VariablePattern.new("b"), VariablePattern.new("c")))
-
-Finally, the translated pattern and block are glued together via a
-`LambdaPattern`:
-
-    LambdaPattern.new( mypat,  { _, a, b, c -> "{a} {b} {c}" } )
-
-The translation is as follows:
-
-  `e`                             $\lbrack\lbrack$ `e` $\rbrack\rbrack$
-  ------------------------------- ---------------------------------------------------------------------------------------------------------------------
-  `_ : e`                         $\lbrack\lbrack$ `e` $\rbrack\rbrack$
-  `_`                             `WildcardPattern`
-  `v` (fresh, unbound variable)   `VariablePattern("v")`
-  `v` (bound variable)            error
-  `v : e`                         `AndPattern.new(VariablePattern.new("v"),`$\lbrack\lbrack$ `e` $\rbrack\rbrack$ `)`
-  `e(f,g)`                        `MatchAndDestructuringPattern.new(e,` $\lbrack\lbrack$`f`$\rbrack\rbrack$`,` $\lbrack\lbrack$`g`$\rbrack\rbrack$`)`
-  literal                         `literal`
-  `e` not otherwise translated    `e`
-
-### Implementing Match-case
-
-Finally the match(1)\*case(N) methods can be implemented directly, e.g.:
-
-    method match(o : Any) 
-             case(b1 : Block<B1,R>) 
-             case(b2 : Block<B2,R>)
-      {
-        for [b1, b2] do { b -> 
-          def rv = b.match(o)
-          if (rv.succeeded) then {return rv.result}
-        }
-        
-        FailedMatchException.raise
-      }
-
-or (because matching-blocks are patterns) in terms of pattern
-combinators:
-
-    method match(o : Any)
-             case(b1 : Block<B1,R>) 
-             case(b2 : Block<B2,R>)
-      {
-        def rv = (b1 || b2).match(o) 
-        if (rv.succeeded) then {return rv.result}
-
-        FailedMatchException.raise
-      }
-
-#### First Class Patterns
-
-While all types are patterns, not all patterns are types. For example,
-it would seems sensible for regular expressions to be patterns,
-potentially created via one (or more) shorthand syntaxes (shorthands all
-defined in standard Grace)
-
-    match (myString) 
-      case { "" -> print "null string" }
-      case { Regexp.new("[a-z]*") -> print "lower case" }
-      case { "[A-Z]*".r  -> print "UPPER CASE" }
-      case { /"[0-9]*" -> print "numeric" } 
-      case { ("Forename:([A-Za-z]*)Surname:([A-Za-z]*)".r2)(fn,sn)  -> 
-                    print "Passenger {fn.first} {sn}"}
-
-With potentially justifiable special cases, more literals, e.g. things
-like tuples/lists could be descructured `[a,b,...] -> a * b`. Although
-it would be very nice, it’s hard to see how e.g. points created with
-`"3@4"` could be destructed like `a@b -> print "x: {a}, y: {b}"` without
-yet more bloated special-case syntax.
-
-#### Discussion
-
-This rules try to avoid literal conversions and ambiguous syntax. The
-potential ambiguity is whether to treat something as a variable
-declaration, and when as a first-class pattern. These rules (should!)
-treat only fresh variables as intended binding instances, so a “pattern”
-that syntactically matches a simple variable declaration (as in this
-block `{ empty -> print "the singleton empty collection" }`) will raise
-an error — even though this is unambiguous given Grace’s no shadowing
-rule.
-
-Match statements that do nothing but match on types must distinguish
-themselves syntactically from a variable declaration, *e.g.*:
-
-    match (rv) 
-      case { (FailedMatch) -> print "failed" }
-      case { _ : SuccessfulMatch -> print "succeeded" }
-
-while writing just:
-
-    match (rv) 
-      case { FailedMatch -> print "failed" }
-      case { SuccessfulMatch -> print "succeeded" }
-
-although closer to the type declaration, less gratuitous, and perhaps
-less error-prone, would result in two errors about variable shadowing.
-
-#### Self-Matching
-
-For this to work, the main value types in Grace, the main literals —
-Strings, Numbers — must be patterns that match themselves. That’s what
-lets things like this work:
+The objects created by literals — Strings and Numbers — are patterns that
+match themselves. That’s what lets things like this work:
 
     method fib(n : Number) {
       match (n) 
@@ -1215,18 +1063,28 @@ lets things like this work:
         case { _ -> fib(n-1) + fib(n-2) }
     }
 
-With this design, there is a potential ambiguity regarding Booleans:
-“`true || false`” as an expression is very different from
-“`true | false`” as a composite pattern! Unfortunately, if Booleans are
-Patterns, then there’s no way the type checker can distinguish these two
-cases.
+To match against objects that are not patterns, a library or dialect
+can offer to lift any object `o` to a pattern that matches just `o`
+by supporting a request such as `singleton(o)`.
 
-If you want to match against objects that are not patterns, you can lift
-any object to a pattern that matches just that object by writing e.g.
-`LiteralPattern.new(o)` (option — or something shorter, like a prefix
-`=~`?).
 
-Exceptions {#Exceptions}
+##### Examples
+
+    { 0 -> "Zero" }                        
+        // match against a literal constant
+
+    { s:String -> print(s) }    
+        // typematch, binding s - identical to block with typed parameter
+
+    { (pi) -> print("Pi = " ++ pi) } 
+        // match against the value of an expression - requires parenthesis
+
+    { _ -> print("did not match") }
+        // match against placeholder, matches anything
+
+
+
+Exceptions
 ----------
 
 Grace supports exceptions, which can be raised and caught. Exceptions
@@ -1277,7 +1135,7 @@ exception is raised, or one of the `catch` blocks returns.
         f.close
     }
 
-The Exception Hierarchy {#ExceptionHierarchy}
+The Exception Hierarchy
 -----------------------
 
 Grace defines a hierarchy of kinds of exception. All exceptions have the
