@@ -158,15 +158,11 @@ Grace has the following reserved tokens:
 Newlines, Tabs and Control Characters
 -------------------------------------
 
-Newline in Grace programs can be represented by the Unicode <span
-style="font-variant:small-caps;">line feed (lf)</span> character, by the
-Unicode <span style="font-variant:small-caps;">carriage return
-(cr)</span> character, or by the Unicode <span
-style="font-variant:small-caps;">line separator</span>
-<span>(U+2028)</span> character; a <span
-style="font-variant:small-caps;">line feed</span> that immediately
-follows a <span style="font-variant:small-caps;">carriage return</span>
-is ignored.
+Newline in Grace programs can be represented by the Unicode line feed (lf) character, by the
+Unicode carriage return
+(cr) character, or by the Unicode line separator
+(U+2028) character; a line feed that immediately
+follows a carriage return is ignored.
 
 Tabs and all other non-printing control characters are syntax errors,
 even in a string literal. Escape sequences are provided to denote
@@ -448,7 +444,7 @@ allows "overloading by arity" (although it does _not_ allow overloading by type)
 
     method value:=(n : Number) -> Done {
         print "value currently {value}, now assigned {n}"
-        super.value:= n 
+        outer.value:= n 
     }
 
     method prefix- -> Number 
@@ -854,22 +850,19 @@ libraries, *e.g.*, for indexing and modifying collections.
 Outer
 -------
 
-The reserved word `outer` is used to refer to identifiers in lexically
-enclosing scopes.  The expression `outer.x` refers to the innermost
-lexically enclosing identifier `x`; it is an error if there is no such
-`x`. If there are multiple enclosing declarations of `x`, then only the
-innermost is accessible; if a programmer finds it necessary to refer to
-one of the others, then the programmer should change the name to avoid
-this problem.
+The reserved word `outer` refers to the object lexically enclosing
+`self`.  The expression `outer.x` requests `x` on the object lexically
+enclosing the current object.
+
 
 ### Examples {#examples-21 .unnumbered}
 
-      outer                     // illegal
+      outer                     
       outer.value
       outer.bar(1,2,6)
-      outer.outer.doThis(3) timesTo("foo")                      // illegal
-      outer + 1     // illegal   (requests the binary + method, but on what receiver?)
-      ! outer                           // illegal  (requests the prefix ! method, but on what receiver?)
+      outer.outer.doThis(3) timesTo("foo")               
+      outer + 1 
+      ! outer   
 
 Encapsulation
 -------------
@@ -878,38 +871,30 @@ Grace has different default encapsulation rules for methods, types, and
 fields. The defaults can be changed by explicit annotations. The details
 are as follows.
 
-### Methods and Types {#methodencapsulation}
+### Methods, Classes, Traits and Types
 
-By default, methods and types are public, which means that they can be
-requested by any client that has access to the object. Thus, any
-expression can be the target of a request for a public method.
+By default, methods, classs, traits and types are public, which means
+that they can be requested by any client that has access to the
+object. Thus, any expression can be the target of a request of a
+public method.
 
 If a method or type is annotated `is confidential`, it can be requested
-only on the target `self` or `super`. This means that such a method or
-type is accessible to the object that contains it, and to inheriting
+only on `self` or `outer`. This means that it 
+is accessible to the object that contains it, and to inheriting
 objects, but not to client objects.
 
-Methods and Types can be explicitly annotated as `is public`; this has
-no effect unless a dialect changes the default encapsulation.
-
-Some other languages support “private methods”, which are available only
-to an object itself, and not to clients or subobjects. Grace has neither
-private methods nor private types.
-
-### Classes {#classes}
-
-### Fields {#fieldencapsulation}
+### Fields
 
 Variables and definitions (`var` and `def` declarations) immediately
 inside an object constructor create *fields* in that object.
 
 A field declared as `var x` can be read using the request `x` and
-assigned to using the assignment request `x:=()`.
+assigned to using the assignment request `x:=(_)`.
 A field declared as `def y` can be read using the request `y`, and
 cannot be assigned. By default, fields are *confidential*: they can be
 accessed and assigned from the object itself, and inheriting objects,
 and from lexically-enclosed objects, but not from clients. In other
-words, these requests can be made only on `self`, `super` and `outer`.
+words, these requests can be made only on `self` and `outer`.
 
 The default visibility can be changed using annotations. The annotation
 `readable` can be applied to a `def` or `var` declaration, and makes the
@@ -924,21 +909,21 @@ Fields and methods share the same namespace. The syntax for variable
 access is identical to that for requesting a reader method, while the
 syntax for variable assignment is identical to that for requesting an
 assignment method. This means that an object cannot have a field and a
-method with the same name, and cannot have an assignment method `x:=()`
+method with the same name, and cannot have a method `x:=(_)`
 as well as a `var` field `x`.
 
-### Examples {#examples-22 .unnumbered}
+### Examples
 
-     [escapechar=\%]
+
     object {
-        def a = 1  %\tabto{5cm}%            // Confidential access to a
-        def b is public = 2   %\tabto{5cm}%     // Public access to b
-        def c is readable = 2   %\tabto{5cm}%  // Public access to c
-        var d := 3    %\tabto{5cm}%               // Confidential access and assignment 
-        var e is readable   %\tabto{5cm}%       // Public access and confidential assignment
-        var f is writable  %\tabto{5cm}%         // Confidential access, public assignment
-        var g is public    %\tabto{5cm}%         // Public access and assignment
-        var h is readable, writable  %\tabto{5cm}%  // Public access and assignment
+        def a = 1              // Confidential access to a
+        def b is public = 2        // Public access to b
+        def c is readable = 2     // Public access to c
+        var d := 3                   // Confidential access and assignment 
+        var e is readable          // Public access and confidential assignment
+        var f is writable           // Confidential access, public assignment
+        var g is public             // Public access and assignment
+        var h is readable, writable    // Public access and assignment
     }
 
 ### No Private Fields
@@ -972,10 +957,12 @@ fresh objects can be used to obtain an effect similar to privacy.
 Requesting Methods with Type Parameters {#GenericMethodRequests}
 ---------------------------------------
 
-Methods that have type parameters may be requested without explicit type
-arguments. When a method declared with type parameters is requested in a
-statically typed context without explicit type arguments, the type
-arguments are inferred.
+Methods that have type parameters may be requested with or without
+explicit type arguments. If type arguments are supplied there must be
+the same number of arguments as there are parameters. If type
+arguments are omitted, they are assumed to be type `Unknown`.
+
+
 
 ### Examples {#examples-24 .unnumbered}
 
@@ -1006,7 +993,7 @@ levels; lower numbers bind more tightly.
 6.  “Other” operators, whose binding must be given explicitly
     using parenthesis.
 
-7.  Assignments, and method requests using `:=` as a suffix to a
+7.  Assignments and method requests that use `:=` as a suffix to a
     method name.
 
 Control Flow {#ControlFlow}
@@ -1014,60 +1001,8 @@ Control Flow {#ControlFlow}
 
 Control flow statements are requests to methods defined in the dialect.
 Grace uses what looks like conventional syntax with a leading keyword
-(`if`, `while`, `for`, etc.); these are actually method requests on the
-`outer` object defined in *standardGrace* or in some dialect.
-
-Conditionals {#BasicControlFlow}
-------------
-
-``` {mathescape="true"}
-if (test) then {block}
-
-if (test) then {block} else {block}
-
-if (test$_{1}$) then {block$_{1}$} elseif {test$_{2}$} then {block$_{2}$} ... else {block$_{n}$}
-```
-
-Looping statements
-------------------
-
-Grace has two bounded loops and an unbounded (while) loop.
-
-### for statement: {#for-statement .unnumbered}
-
-
-    for (collection) do { each -> loop body }
-
-    for (course.students) do { s:Student -> print s } 
-
-    for (0..n) do { i -> print i }
-
-The first argument can be any object that answers an iterator when
-requested. Numeric ranges, collections and strings are typical examples.
-It is an error to modify the collection being iterated in the loop body.
-The block following `do` is executed repeatedly with the values yielded
-by the iterator as argument. Note that the block must have a single
-parameter; if the body of the block does not make use of the parameter,
-it may be named `_`.
-
-### Examples {#examples-25 .unnumbered}
-
-
-    for (1..4) do { _ -> turn 90; forward 10 }
-
-For the common case where an action is repeated a fixed number of times,
-use `repeat()times()`, which takes a parameterless block:
-
-
-    repeat 4 times { turn 90; forward 10 }
-
-### while statement: {#while-statement .unnumbered}
-
-    while {test} do {block}
-
-Note that, since test can do a series of actions before returning a
-boolean, `while()do()` can be used to implement loops with exits in the
-middle or at the end, as well as loops with exits at the beginning.
+(`if`, `while`, `for`, etc.); these are implicit method requests
+typically provided in a dialect. 
 
 Case {#Case}
 ----
@@ -1092,12 +1027,12 @@ to match its first argument `exp` against a series of *pattern blocks*
 
 The `case` arguments are patterns: objects that understand the request
 `match()` and return a `MatchResult`, which is either a
-`SuccessfulMatch` object or a `FailedMatch` object. Each of the case
+`successfulMatch` object or a `failedMatch` object. Each of the case
 patterns is requested to `match(x)` in turn, until one of them returns
 `SuccessfulMatch(v)`; the result of the whole `match`–`case` construct
 is `v`.
 
-### Patterns {#Patterns}
+### Patterns 
 
 Pattern matching is based around the `Pattern` objects, which are
 objects that respond to a request `match(anObject)`. The pattern tests
@@ -1133,9 +1068,9 @@ these hold:
 
     def cp = aCartesianPoint.new(10,20)
 
-    Point.match(cp).result         %\tabto{5cm}%  // returns cp
-    Point.match(cp).bindings    %\tabto{5cm}%   // returns an empty list
-    Point.match(true)    %\tabto{5cm}%          // returns FailedMatch
+    Point.match(cp).result           // returns cp
+    Point.match(cp).bindings       // returns an empty list
+    Point.match(true)              // returns FailedMatch
 
 ### Matching Blocks
 
