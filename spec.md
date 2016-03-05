@@ -398,37 +398,52 @@ after the symbol `->`. The body of the method is enclosed in braces.
 
 ### Method Names
 
-Methods names are a sequence of one or more parts, each part 
-A method name with a single part can optionally have an argument list.
+Method names have several forms.  For each form, we describe its appearance, 
+and also a _canonical_ form of the name which is used in dispatching method requests.
+A request "matches" a method if the canonical names are equal.
 
-A method each part
-comprising an identifier and an argument list.  
+1. A method can be named by a single identifier, in which case the method
+has no parameters; in this case the _canonical_ name of the method is the identifier.
 
-part of a method name just one part may
-or may not have arguments; otherwise each part (in "multi-part names")
-must have at least one argument declared after the name of that part.
-Methods can also be named by an identifier suffixed with “`:=`”; this
+2. A method can be named by an identifier suffixed with `:=`; this
 form of name is conventionally used for writer methods, both
 user-written and automatically-generated, as exemplified by `value:=`
-below. Prefix operator methods are named “`prefix`” followed by the
-operator character(s).
+below.  Such methods _always_ take a single parameter after the `:=` 
 
-Methods may also define binary or prefix unary operators. Binary
-operator messages take a single arguemnt and thier names are sequences
-of operator characters; prefix methods take no arguments and their
-names are prefixed by `prefix`.
+3. A method can be
+named by a single identifier followed by a parenthesized list of parameters; in this case 
+the  _canonical_ name of the method is the identifier followed by `(_, ..., _)`,
+where the number of underscores is the same as the number of parameters.
+
+4. A method can be named by _multiple parts_, where each _part_ is an identifier 
+followed by a parenthesized list of parameters; in this case 
+the  _canonical_ name of the method is the sequence of identifiers followed by `(_, ..., _)`.
+The number of underscores between each pair of parentheses the same as the number of 
+parameters in the parameter list of the corresponding part.
+
+5. A method can also be named by a sequence of operators symbols. 
+Such an "operator method" can have no parameters, in which case
+the method is requested by a prefix operator expression.
+It can also have one parameter, in which
+case it is requested by a binary operator expression.  The canonical name of a 
+unary method is `prefix` followed by the operator symbols; the canonical 
+name of a binary method is the sequence of operator symbols followed by `(_)`
+
+As a consequence of the above rules, methods `max(a, b, c)` and `max(a, b)` have different 
+canonical names and are therefore treated as distinct methods.  In other words, Grace
+allows "overloading by arity" (although it does _not_ allow overloading by type).
+ 
+(TODO: need to distribute examples into the above list or something) 
 
 ### Examples
+
+    method ping { print "PING!" } 
 
     method +(other : Point) -> Point { 
         (x +other.x) @ (y +other.y) 
     }
 
-    method + (other) {
-        (x +other.x) @ (y +other.y)
-    }
-
-    method + (other) 
+    method add (other) 
         { return (x +other.x) @ (y +other.y) }
 
     method value:=(n : Number) -> Done {
@@ -436,19 +451,32 @@ names are prefixed by `prefix`.
         super.value:= n 
     }
 
+    method prefix- -> Number 
+         { 0 - self }
+
 ### Type Parameters
 
-Methods may be declared with type parameters; these type parameters may
-be constrained with `where` clauses.
+Methods may be declared with one or more type parameters, which are listed between `<` and `>` used as brackets.
+If present, type parameters must appear after the identifier of the first part of
+a multipart name.   There must be no space between the opening `<` and the first type parameter (or,
+in a request, the first type argument), or between the last type parameter (or argument) and the closing `>`.
+The purpose of this rule is to disambiguate this use of `<` and `>` from their use as operator symbols, when 
+they must be surrounded by spaces.
 
-### Examples {#examples-10 .unnumbered}
+If an operator method has a type parameter list, it must be separated from the sequence of operator symbols that 
+names the method by a space.
+
+The presence or absence of type parameters does not change the canonical name of the method.
+
+### Examples
 
     method sumSq<T>(a : T, b : T) -> T where T <: Numeric {
         (a * a) + (b * b)
     }
 
-    method prefix- -> Number 
+    method prefix-<T> -> Number 
          { 0 - self }
+
 
 ### Returning a Value from a Method
 
@@ -461,59 +489,56 @@ terminates and returns the value of the last expression evaluated.
 An empty method body returns `done`.
 
 
-Objects and Classes {#ObjectsAndClasses}
+Objects, Classes, and Traits 
 ===================
 
-Grace `object` constructor expressions and declarations produce
-individual objects. Grace provides `class` declarations to create
-classes of objects all of which have the same structure.
+Grace `object` constructors generate
+individual objects. 
+Grace `class` declarations define methods that generate objects,
+all of which have the same structure.
 
-Grace’s class and inheritance design is complete but tentative. We need
+The design of inheritance is complete but tentative. We need
 experience before confirming the design.
 
-Objects {#Objects}
+Objects 
 -------
 
-Object literals are expressions that evaluate to an object with the
-given attributes. Each time an object literal is executed, a new object
+Object constructors are expressions that evaluate to an object with the
+given attributes. Each time an object constructors is executed, a new object
 is created. In addition to declarations of fields and methods, object
-literals can also contain expression, which are executed as a
-side-effect of evaluating the object literal. All of the declared
-attributes of the object are in scope throughout the object literal.
+constructors can also contain expression, which are executed as a
+side-effect of evaluating the object constructor. All of the declared
+attributes of the object are in scope throughout the object constructors.
 
-### Examples {#examples-11 .unnumbered}
+### Examples
 
     object {
         def colour:Colour = Colour.tabby
         def name:String = "Unnamed"
         var miceEaten := 0
-        method eatMouse {miceEaten := miceEaten + 1}
+        method eatMouse { miceEaten := miceEaten + 1 }
     }
 
-Object literals are lexically scoped inside their containing method, or
-block.
+Like everything in Grace, object constructors are lexically scoped.
 
-A name can be bound to an object literal, like this:
+A name can be bound to an object constructor, like this:
 
     def unnamedCat =  object {
          def colour : Colour = Colour.tabby
          def name : String = "Unnamed"
          var miceEaten := 0
-         method eatMouse {miceEaten := miceEaten + 1 }
+         method eatMouse { miceEaten := miceEaten + 1 }
     }
 
-Every reference to `unnamedCat` returns the same object.  \
 
-Factory methods
----------------
+Classes
+--------
 
-The body of a factory method is treated as an object constructor that is
-executed every time that the factory method is invoked. The factory
-method returns the newly-created object. Thus, the keyword `factory` in
-front of a method declaration is equivalent to enclosing the method body
-in `object { ... }`. For example,
+A class is a method whose body is treated as an object constructor that is
+executed every time that the class is invoked. The class
+returns the newly-created object.  For example,
 
-    factory method ofColour(c) named (n) {
+    class catColoured(c) named (n) {
         def colour is public = c
         def name is public = n
         var miceEaten is readable := 0
@@ -523,7 +548,7 @@ in `object { ... }`. For example,
 
 is equivalent to
 
-    method ofColour(c) named (n) {
+    method catColoured(c) named (n) {
         object {
             def colour is public = c
             def name is public = n
@@ -533,144 +558,109 @@ is equivalent to
         }
     }
 
-Classes {#Classes}
--------
-
-Class declarations combine the definition of an object with the
-definition of a single factory method on that object. This method
-creates “instances of the class”. A class declaration is syntactically a
-combination of a definition, an object constructor, and a factory
-method.
-
-### Examples {#examples-12 .unnumbered}
-
-    class cat.ofColour (c:Colour) named (n: String) {
-        def colour:Colour is public = c
-        def name:String is public = n
-        var miceEaten is readable := 0
-        method eatMouse {miceEaten := miceEaten + 1}
-        print "The cat {n} has been created."
-    }
-
-is equivalent to
-
-    def cat = object {
-        factory method ofColour (c:Colour) named (n: String) {
-            def colour:Colour is public = c
-            def name:String is public = n
-            var miceEaten is readable := 0
-            method eatMouse {miceEaten := miceEaten + 1}
-            print "The cat {n} has been created."
-        }
-    }
-
-\[Constructors\]
-
-This declares a class, binds it to the name `cat`, and declares a
-factory method on that class called `ofColour()named()`. This method
-takes two arguments, and returns a newly-created object with the fields
-and methods listed. Creating the object also has the side-effect of
-printing the given string, since executable code in the class
-declaration is also part of the implicit object literal.
-
 This class might be used as follows:
 
-    def fergus = cat.ofColour (Colour.Tortoiseshell) named "Fergus"
+    def fergus = catColoured (colour.tortoiseshell) named "Fergus"
 
 This creates an object with fields `colour` (set to
-`Colour.Tortoiseshell`), `name` (set to `"Fergus"`), and `miceEaten`
-(initialised to `0`), prints “The Cat Fergus has been created”, and
-binds `fergus` to this object.
+`colour.tortoiseshell`), `name` (set to `"Fergus"`), and `miceEaten`
+(initialised to `0`), prints “The cat Fergus has been created”, and
+binds the name `fergus` to this object.
 
-Classes with more than one method cannot be built using the `class`
-syntax, but programmers are free to build such objects using object
-constructors containing several methods, some of which may be factory
-methods.
+Trait Objects
+----------------
 
-Inheritance {#Inheritance}
------------
+Trait objects are objects with certain properties.  Specifically, a trait object is created by
+an object constructor that contains no inherits statements, field declarations,
+or executable code.
 
-Grace supports inheritance with “single subclassing, multiple subtyping”
-(like Java), by way of an `inherits ` clause in a class declaration or
-object literal.
+Modulo these restrictions, Grace's trait syntax and semantics is exactly parallel to the class syntax:
+a trait is a method that returns a trait object.
 
-A new declaration of a method can override an existing declaration, but
-overriding declarations must be annotated with `is override`. Overridden
-methods can be accessed via `super` requests. (see §\[SuperRequests\]).
-It is a static error for a field to override another field or a method.
-
-The example below shows how a subclass can override accessor methods for
-a variable defined in a superclass (in this case, to always return 0 and
-to ignore assignments).
-
-    class aPedigreeCat.ofColour (aColour) named (aName) {
-       inherits cat.ofColour (aColour) named (aName)
-       var prizes := 0
-       method miceEaten is override {0}
-       method miceEaten:= (n:Number)->Number is override {return}
-                                          // ignore attempts to change it
+    trait emptiness {
+	method isEmpty { size == 0 }
+	method nonEmpty { size ≠ 0 }
+	method ifEmptyDo (eAction) nonEmptyDo (nAction) {
+		if (isEmpty) then { eAction.apply } else { do(nAction) }
+	} 
     }
 
-The right hand side of an `inherits` clause is restricted to be an
-expression that creates a new object, such as the name of a class
-followed by a request on its factory method, or a request to copy an
-exiting object.
+Reuse
+-------
 
-When executing inherited code, self is first bound to the object under
-construction, self requests are resolved in the same way as the finally
-constructed object, def and var initialisers and inline code are run in
-order from the topmost superclass down to the bottom subclass. Accesses
-to unitialised vars and defs raise uninitialised exceptions
-(§\[Uninitialised\]).
+Grace supports reuse in two ways: through `inherit` and `use` statements
+Traits cannot contain `inherit` statements;  object constructors, classes and traits can
+all contain `use` statements.
 
-Understanding Inheritance (under discussion) {#UnderstandingClasses}
---------------------------------------------
+Both `inherit` and `use` introduce the attributes of the reused object—the parent—into the 
+current object (the object under construction).
+A new declaration in the current object can override a declaration from a parent.
+[](Override annotations)
+If it is necessary to access an overridden attribute, the overridden attribute of the parent
+can be given an additional name by attaching an **alias** clause to the inherits statement.
+Attributes of the parent that are not required can be excluded using an **exclude** clause.
 
-Grace’s class declarations can be understood in terms of a flattening
-translation to object constructor expressions that build the factory
-object. Understanding this translation lets expert programmers build
-more flexible factories.
+The example below shows how a class can use a method to override an accessor method for
+an inherited variable. 
 
-The above declaration for `class aPedigreeCat` is broadly equivalent to
-the following nested object declarations, not considering types,
-modules, and *renaming superclass methods to ensure that an object’s
-method have unique names*.
+    class pedigreeCatColoured (aColour) named (aName) {
+        inherits catColoured (aColour) named (aName)
+        var prizes := 0
+        method miceEaten is override { 0 }	// a pedigree cat would never be so coarse
+        method miceEaten:= (n:Number) -> Number is override { return }    // ignore attempts to debase it
+    }
 
-    def aPedigreeCat = object { // a cat factory
-        method ofColour (c: Colour) named (n: String) -> PedigreeCat {
-        object  { // the cat herself
-            def colour : Colour := c
-            def name : String := n
-            var Cat__miceEaten := 0   // ugly. very ugly
-                var prizes = 0
-                method miceEaten {0} 
-                method miceEaten:=(n:Number) {return} // ignore attempts to change it
-            } // object
-         } // method
-    } // object 
+The argument of an `inherit` or `use` clause is restricted to be a manifest
+expression that creates a new object, such as a request on a class or trait.
+The argument cannot refer to `self`, implicitly or explicitly.
+The object reused by a `use` clause must be a trait object. 
 
-Parameterized Classes {#GenericClasses}
+An object constructor (or class) _oc_ containing an inherits statement creates a
+new object, and binds it to `self`.  The new object then acquires all of the attributes
+of the inherited object (the _superobject_), _but the initializers for its fields, and its statements,
+are not executed_.
+The new object is then given all of the attributes declared in _oc_,
+in the process possibly overriding some of the inherited attributes.
+Once again, the initializers and statements are _not_ executed.
+Finally, the initializers and executable statements are executed,
+starting with the most superior inherited superobject, and finishing with _oc_.
+As a consequence of these rules, the child object can change the
+initialization of the parent.
+
+An object constructor (or trait, or class) _oc_ can contain _multiple_ `use` statements.
+_oc_ creates a
+new object, and binds it to `self`.  This object then acquires all of the attributes
+of all of the used (_parent_) objects, as modified by their exclude and alias clauses.
+It is a trait composition error for the same attribute to come from more than one
+parent.
+The new object is then given all of the attributes declared in _oc_,
+in the process possibly overriding some of the attributes from the parents.
+Finally, the initializers and executable statements of _oc_ are executed.
+
+
+Classes with Type Parameters
 ---------------------
 
-Classes may optionally be declared with type parameters. The
-corresponding requests on the factory methods may optionally be provided
-with type arguments. Type parameters may be constrained with `where`
-clauses.
+Like methods, classes may optionally be declared to have type parameters.
+Requests on the class may optionally be provided
+with type arguments. 
+[](Type parameters may be constrained with `where` clauses.)
 
 ### Examples {#examples-13 .unnumbered}
 
-    class aVector.ofSize(size)<T> {  
-       var contents := Array.size(size)
-       method at(index : Number) -> T {return contents.at() } 
-       method at(index : Number) put(elem : T) { }
+    class vectorOfSize(size)<T> {
+        var contents := Array.size(size)
+        method at(index : Number) -> T {return contents.at() } 
+        method at(index : Number) put(elem : T) { }
     }
 
-    class aSortedVector.ofSize<T> 
-       where T <: Comparable<T> {
+[](    class sortedVectorOfSize(size)<T> 
+        where T <: Comparable<T> {
           ...
     }
+)
 
-Method Requests {#MethodReq}
+Method Requests
 ===============
 
 Grace is a pure object-oriented language. Everything in the language is
@@ -1860,9 +1850,9 @@ that remain to be done:
     blog post 10/02/2011, Jon Boyland’s paper. How do type patterns
     interact with the static type system?
 
-8.  support multiple factory methods for classes §\[Constructors\]
+8.  support multiple classs for classes §\[Constructors\]
 
-9.  `factory method`s.
+9.  `class`s.
 
 10. where should we draw the lines between object constructor
     expressions/named object declarations, class declarations, and
