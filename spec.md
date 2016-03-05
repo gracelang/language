@@ -7,7 +7,7 @@ bibliography:
 - 'spec.bib'
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.6a1.
+    Draft Specification Version 0.6a2.
 ...
 
 <span>Revision committed on -- at : by </span>
@@ -580,7 +580,7 @@ a trait is a method that returns a trait object.
 
     trait emptiness {
 	method isEmpty { size == 0 }
-	method nonEmpty { size ≠ 0 }
+	method nonEmpty { size != 0 }
 	method ifEmptyDo (eAction) nonEmptyDo (nAction) {
 		if (isEmpty) then { eAction.apply } else { do(nAction) }
 	} 
@@ -629,7 +629,7 @@ Traits are designed to be used as fine-grained components of reuse:
     trait canine {
         method loyal { "I'm your best friend" }
         method move { 
-            if (you.location ≠ self.location) then {
+            if (you.location != self.location) then {
                 self.setPosition(you.heel)
             }
         }
@@ -758,7 +758,7 @@ that is a numeral, string, lineup, or block.
 ### Examples
 
         canvas.drawLineFrom (p1) to (p2)
-        canvas.drawLineFrom (origin) length 9 angle (π/6)
+        canvas.drawLineFrom (origin) length 9 angle (pi/6)
         canvas.movePenTo (x, y)
         canvas.movePenTo (p)
         print "Hello world" 
@@ -804,7 +804,7 @@ Four binary operators do have precedence defined between them: `/` and
     1 + (2 * 3)                // evaluates to 7
     (1 + 2) * 3                // evaluates to 9
     1 + 2 * 3                  // evaluates to 7
-    1 +*+ 4 -*- 4            // syntax error
+    1 +*+ 4 -*- 4              // precedence error
 
 Named method requests without arguments bind more tightly than operator
 requests. The following examples show the Grace expressions on the left,
