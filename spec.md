@@ -497,16 +497,17 @@ individual objects.
 Grace `class` declarations define methods that generate objects,
 all of which have the same structure.
 
-The design of inheritance is complete but tentative. We need
+The design of Grace's reuse is complete, but tentative. We need
 experience before confirming the design.
 
 Objects 
--------
+---------
 
 Object constructors are expressions that evaluate to an object with the
 given attributes. Each time an object constructor is executed, a new object
 is created. In addition to declarations of fields and methods, object
-constructors can also contain expression, which are executed as a
+constructors can also contain expressions (executable code at the top level),
+which are executed as a
 side-effect of evaluating the object constructor. All of the declared
 attributes of the object are in scope throughout the object constructors.
 
@@ -535,7 +536,7 @@ Classes
 --------
 
 A class is a method whose body is treated as an object constructor that is
-executed every time that the class is invoked. The class
+executed every time the class is invoked. The class
 returns the newly-created object.  For example,
 
     class catColoured(c) named (n) {
@@ -593,7 +594,7 @@ Object constructors (and classes) can contain one `inherit` statement while
 traits cannot contain an `inherit` statement;  object constructors, classes and traits can
 all contain one or more `use` statements.
 
-Both `inherit` and `use` introduce the attributes of the reused object — the _parent_ — into the 
+Both `inherit` and `use` introduce the attributes of the reused object — called the _parent_ — into the 
 current object (the object under construction). 
 A new declaration in the current object can override a declaration from a parent.
 
@@ -613,16 +614,67 @@ an inherited variable.
         method miceEaten:= (n:Number) -> Number is override { return }    // ignore attempts to debase it
     }
 
+Traits are designed to be used as fine-grained components of reuse:
+
+    trait feline {
+        method independent { "I did it my way" }
+        method move {
+        if (isOut) then {
+            comeIn
+        } else {
+            goOut
+        }
+    }
+
+    trait canine {
+        method loyal { "I'm your best friend" }
+        method move { 
+            if (you.location ≠ self.location) then {
+                self.setPosition(you.heel)
+            }
+        }
+    }
+
+In this context, the following object is a trait conflict:
+
+    object {
+        use feline alias catMove = move
+        use canine alias dogMove = move
+    }
+
+because the `move` attribute is defined in two separate traits.
+In contrast, the following definition is legal:
+
+    def nyssa = object {
+        use feline alias catMove = move
+        use canine alias dogMove = move
+        method move {
+            if (random.choice) then {
+                catMove
+            } else {
+                dogMove
+            }
+        }
+    }
+
+Here, the
+conflict is resolved by overriding with a local `move` method.  This method
+accesses the overridden methods from the parent traits using the aliases `catMove` 
+and `dogMove`; as a result, nyssa will `move` either like a dog or a cat, depending on 
+a random variable.  
+
 The argument of an `inherit` or `use` clause is restricted to be a manifest
 expression that creates a new object, such as a request on a class or trait.
 The argument cannot refer to `self`, implicitly or explicitly.
 The object reused by a `use` clause must be a trait object. 
 
-When executed, an object constructor (or trait or class declaration) first creates a new object with no _attributes_ and binds it to `self`. 
+When executed, an object constructor (or trait or class declaration) creates a new object with no attributes, and binds it to `self`. 
 Next, the attributes of all _parent_ objects (created by any 'inherit' or 'uses' clauses), and any local declarations, are added to the new object: local declarations override parental declarations.
-It is a trait composition error for the same attribute to come from more than one parent.
-Finally, the initializers and executable statements are executed in order of their declaration, i.e.  starting with the most superior inherited superobject, and finishing with local declarations.
-Initialisers for all `def`s and `var`s, and code in the bodies of classes and object constructors, are executed in the order they are written, even for `def`s or `var`s that are excluded from the new object. 
+It is a _trait composition error_ for the same attribute to come from more than one parent, and not to be overridden by a local definition.
+Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with local declarations. (Note that used traits contain no executable code.)
+Initialisers for all `def`s and `var`s, 
+and code in the bodies of parents,
+are executed in the order they are written, even for `def`s or `var`s that are excluded from the new object. 
 As a consequence of these rules, a new object can change the initialization of its parents, by overriding requests used to initialise the parent. 
 
 
@@ -633,16 +685,16 @@ Methods may be annotated as being abstract.  Abstract methods do not conflict wi
 either abstract or concrete.
 
 
-
 Classes with Type Parameters
----------------------
+----------------------------------
 
-Like methods, classes may optionally be declared to have type parameters.
+Like methods, classes may be declared to have type parameters.
 Requests on the class may optionally be provided
 with type arguments. 
+
 [](Type parameters may be constrained with `where` clauses.)
 
-### Examples {#examples-13 .unnumbered}
+### Example
 
     class vectorOfSize(size)<T> {
         var contents := Array.size(size)
@@ -660,74 +712,79 @@ Method Requests
 ===============
 
 Grace is a pure object-oriented language. Everything in the language is
-an object, and all computation proceeds by *requesting* an object to
-execute a method with a particular *name*. The response of the object is
-to execute the method. The value of a method request is the value
-returned by the execution of the method.
+an object, and all computation proceeds by _requesting_ an object—the receiver of the request—to
+execute a method with a particular *name*. The response of the receiver is
+to execute the method, and to return as an answer the value returned by the execution of the method.
 
-We distinguish the act of *requesting* a method (what Smalltalk calls
+Grace distinguishes the act of *requesting* a method (what Smalltalk calls
 “sending a message”), and *executing* that method. Requesting a method
 happens outside the object receiving the request, and involves only a
 reference to the receiver, the method name, and possibly some arguments.
 In contrast, executing the method involves the code of the method, which
 is local to the receiver.
 
-Named Requests {#NamedCall}
+Named Requests
 --------------
 
-A named method request is a receiver followed by a dot “.”, then a
-method name (an identifier), then any arguments in parentheses.
-Parentheses are not used if there are no arguments. To improve
+A named method request comprises an expression identifying the receiver, 
+followed by a dot “.”, followed by a
+method name, and arguments.
+Parentheses are not used if there are no arguments. 
+
+To improve
 readability, a the name of a method that takes more than one parameter
-may comprise multiple parts, with argument lists between the parts, and
-following the last part. For example
+may comprise multiple parts, with argument lists between the parts and after the last part.
+For example
 
-        method drawLineFrom(source)to(destination) { ... }
+        method drawLineFrom (source) to (destination) { ... }
 
-In this example the name of the method is `drawLineFrom()to()`; it
-comprises two parts, `drawLineFrom` and `to`. The name of a method and
-the position of its argument lists within that name is determined when
+In this example the name of the method is `drawLineFrom(_) to(_)`; it
+comprises two parts, `drawLineFrom(_)` and `to(_)`. The name of a method and
+the position of the argument lists within that name is determined when
 the method is declared. When reading a request of a multi-part method
 name, you should continue accumulating words and argument lists as far
-to the right as possible. Grace does not allow the “overloading” of
-method names: the type and number of arguments in a method request does
-not influence the name of the method being requested.
+to the right as possible. 
+
+Unlike some other languages, Grace does _not_ allow the overloading of
+method names:  the type of the arguments supplied to the request does
+not influence the method being requested.  However, the _number_ of arguments
+in a list does determine the method being requested.
 
 If the receiver of a named method is `self` it may be left implicit,
-*i.e.*, the `self` and the dot may both be omitted. 
+_i.e._, the `self` and the dot may both be omitted. 
 Parenthesis may be omitted where they would enclose a single argument
-that is a numeral, string or block literal.
+that is a numeral, string, lineup, or block.
 
-### Examples {#examples-14 .unnumbered}
+### Examples
 
-        canvas.drawLineFromPoint(p1)toPoint(p1)
-        canvas.drawLineFromPoint(origin)ofLenthXY(3,5)
-        canvas.movePenToXY(x,y)
-        canvas.movePenToPoint(p)
+        canvas.drawLineFrom (p1) to (p2)
+        canvas.drawLineFrom (origin) length 9 angle (π/6)
+        canvas.movePenTo (x, y)
+        canvas.movePenTo (p)
         print "Hello world" 
         size 
 
-Assignment Requests {#Assignments}
+Assignment Requests
 -------------------
 
-An assignment request is a variable followed by `:=`, or it is a request
+An assignment request is a variable followed by `:=`, or a request
 of a method whose name ends with `:=`. In both cases the `:=` is
 followed by a single argument. Spaces are optional before and after the
 `:=`.
 
-### Examples {#examples-15 .unnumbered}
+### Examples
 
        x := 3
        y:=2 
        widget.active := true
 
-Assignment methods return `done`.  \
+Assignment methods return `done`.
 
-Binary Operator Requests {#BinaryOperatorCall}
+Binary Operator Requests 
 ------------------------
 
 Binary operators are methods whose names comprise one or more operator
-characters, provided that the operator is not a reserved symbol of the
+characters, provided that the operator reserved by the
 Grace language. Binary operators have a receiver and one argument; the
 receiver must be explicit. So, for example, `+`, `++` and `..` are valid
 operator symbols, but `.` is not, because it is reserved.
@@ -739,21 +796,21 @@ can be requested more than once without parenthesis; such expressions
 are evaluated left-to-right.
 
 Four binary operators do have precedence defined between them: `/` and
-`*` over `* and \lstinline`-+.
+`*` bind more tightly than `+` and `-`.
 
 ### Examples {#examples-16 .unnumbered}
 
-    1 + 2 + 3                       // evaluates to 6
-    1 + (2 * 3)                 // evaluates to 7
-    (1 + 2) * 3                 // evaluates to 9
-    1 + 2 * 3                       // evaluates to 7
-    1 +*+ 4 -*- 4           // syntax error
+    1 + 2 + 3                  // evaluates to 6
+    1 + (2 * 3)                // evaluates to 7
+    (1 + 2) * 3                // evaluates to 9
+    1 + 2 * 3                  // evaluates to 7
+    1 +*+ 4 -*- 4            // syntax error
 
 Named method requests without arguments bind more tightly than operator
 requests. The following examples show the Grace expressions on the left,
 and the parse on the right.
 
-### Examples {#examples-17 .unnumbered}
+### Examples
 
   ----------------------------- ---------------------------
   `1 + 2.i`                     `1 + (2.i)`
@@ -764,7 +821,7 @@ and the parse on the right.
   `a - b - c`                   `(a - b) - c`
   ----------------------------- ---------------------------
 
-Unary Prefix Operator Requests {#PrefixOperatorCall}
+Unary Prefix Operator Requests
 ------------------------------
 
 Grace supports unary methods named by operator symbols that precede the
@@ -783,10 +840,10 @@ tightly than binary operator requests.
 
     status.ok :=  !engine.isOnFire && wings.areAttached && isOnCourse
 
-Bracket Operator Requests {#BracketOperatorRequest}
+Bracket Operator Requests
 -------------------------
 
-Grace supports operators `[`…`]` and `[`…`]:=`, which can be defined in
+Grace supports operators `[…]` and `[…]:=`, which can be defined in
 libraries, *e.g.*, for indexing and modifying collections.
 
 ### Examples {#examples-19 .unnumbered}
@@ -794,41 +851,16 @@ libraries, *e.g.*, for indexing and modifying collections.
     print( a[3] )       // requests method [] on a with argument 3
     a[3] := "Hello"    // requests method []:= on a with arguments 3 and "Hello"
 
-Super Requests {#SuperRequests}
---------------
-
-The reserved word `super` may be used only as an explicit receiver. In
-overriding methods, method requests with the receiver `super` request
-the prior overridden method with the given name from `self`. Note that
-no “search” is involved; super-requests can be resolved statically,
-unlike other method requests.
-
-### Examples {#examples-20 .unnumbered}
-
-      super.value
-      super.bar(1,2,6)
-      super.doThis(3) timesTo("foo")
-      super + 1 
-      !super 
-
-      foo(super)  // syntax error
-      1 + super   // syntax error
-
-Outer {#OuterRequests}
------
+Outer
+-------
 
 The reserved word `outer` is used to refer to identifiers in lexically
-enclosing scopes. The expression `outer.x` refers to the innermost
+enclosing scopes.  The expression `outer.x` refers to the innermost
 lexically enclosing identifier `x`; it is an error if there is no such
 `x`. If there are multiple enclosing declarations of `x`, then only the
 innermost is accessible; if a programmer finds it necessary to refer to
 one of the others, then the programmer should change the name to avoid
 this problem.
-
-<span> <span>$\blacktriangleright$<span>**Note: **</span>**minigrace*
-currently recognizes `outer` as a *method* that can be requested of any
-object and that answers a reference to its enclosing object. This is a
-known limitation.*$\blacktriangleleft$</span> </span>
 
 ### Examples {#examples-21 .unnumbered}
 
