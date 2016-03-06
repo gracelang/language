@@ -677,6 +677,7 @@ is equivalent to
 
     method catColoured(c) named (n) {
         object {
+            inherits graceObject
             def colour is public = c
             def name is public = n
             var miceEaten is readable := 0
@@ -849,13 +850,24 @@ accesses the overridden methods from the parent traits using the aliases `catMov
 and `dogMove`; as a result, nyssa will `move` either like a dog or a cat, depending on 
 a random variable.  
 
+### Default Methods
+
+Many objects conventionally implement a number of _default methods_ by
+inheriting from the **`graceObject`** trait. In particular, the
+objects created by the `class` syntax inherit from `graceObject` if no
+**inherits** clause is supplied (but not objects created by the
+`trait` syntax or by `object` constructors): programmers can of course
+override some of these implementations, or write those methods _ab initio_.
+The [type Object] conventionally defines a type containing all the default methods.
 
 # Method Requests
 
-Grace is a pure object-oriented language. Everything in the language is
-an object, and all computation proceeds by _requesting_ an object—the receiver of the request—to
-execute a method with a particular *name*. The response of the receiver is
-to execute the method, and to return as an answer the value returned by the execution of the method.
+Grace is a pure object-oriented language. Everything in the language
+is an object, and all computation proceeds by _requesting_ an
+object—the receiver of the request—to execute a method with a
+particular *name*. The response of the receiver is to execute the
+method, and to return as an answer the value returned by the execution
+of the method.
 
 Grace distinguishes the act of *requesting* a method (what Smalltalk calls
 “sending a message”), and *executing* that method. Requesting a method
@@ -962,8 +974,9 @@ Implicit requests are resolved as follows:
    containing the method, or `use`d or `inherit`ed by that declaraton)
    then the implicit request is treated as a `self` request. Otherwise:
 
-* If there is a lexically visible declaration of _m_, then the request
-  resolves to that declaration. Otherwise:
+* If there is a lexically visible declaration of _m_, going out as far
+  as the (module object)[Modules] and (dialect)[Dialects],
+  then the request resolves to that declaration. Otherwise:
 
 * If there is no declaration named _m_, the request is an error.
 
@@ -1091,6 +1104,8 @@ arguments are omitted, they are assumed to be type `Unknown`.
     sumSq<Integer64>(10.i64, 20.i64) 
 
     sumSq(10.i64, 20.i64) 
+
+
 
 ## Precedence of Method Requests
 
@@ -1249,35 +1264,8 @@ exception is raised, or one of the `catch` blocks returns.
         f.close
     }
 
-# Equality and Value Objects
-
-All objects automatically implement the following methods; programmers
-may override them.
-
-1.  `==` operator: the implementation inherited from `graceObject`
-    answers true if and only if the argument is the same object as
-    the receiver.
-
-2.  `!=`, which answers the negation of `==`
-
-3.  `hash`, which must be compatible with `==`. This means that two
-    objects that are `==` must have the same `hash`
-
-4.  `asString`, which answers a string representation of the object
-    tailored for the end user, and
-
-5.  `asDebugString`, which answers a string representation of the object
-    tailored for the programmer; the implementation inherited from
-    `graceObject` answers `asString`.
-
-Immutable objects (objects that have no `var` fields and that capture no
-mutable objects) that the programmer wishes to treat as a “value
-objects” should override `==` so that it implements Leibniz equality.
-
- 
 
 # Types
-
 
 Grace uses structural typing @Modula3 [@malayeri08; @whiteoak08]. Types
 primarily describe the requests that objects can answer. Fields do not
@@ -1291,8 +1279,7 @@ identifiers that refer to types, and those that refer to constant name
 definitions (introduced by `def`) which are interpreted as Singleton
 types.
 
-Basic Types
------------
+## Basic Types
 
 Grace’s standard prelude defines the following basic types:
 
@@ -1342,8 +1329,19 @@ reasoning about the values of expressions. Parameters and variables that
 lack explicit types  are implicitly annotated with type
 `Unknown`.
 
-Types {#ObjectTypes}
------
+## type Object
+
+The type ``Object`` declares a number of methods to which most normal
+objects will respond --- the [Default Methods] declared in
+`graceObject`. Some objects, notably instances of raw traits and
+`done` do not conform to ``Object``.
+
+## type Self 
+
+The type name ``Self`` represents the whole public interface of the
+current object.
+
+## Types {#ObjectTypes}
 
 Types define the interface of objects by detailing their public methods,
 and the types of the arguments and results of those methods. Types can
@@ -1367,8 +1365,7 @@ of the methods. If a parameter name is omitted, it must be replaced by
 an underscore. The type of a parameter may be omitted, in which case the
 type is `Unknown`.
 
-Type Declarations
------------------
+## Type Declarations
 
 Types—and parameterized types—may be named in type declarations:
 
@@ -1394,8 +1391,7 @@ methods and variables.
         cleanup(_:B)
      }
 
-Relationships between Types—Conformance Rules
----------------------------------------------
+## Relationships between Types—Conformance Rules
 
 The key relation between types is **conformance**. We write <span>B $<:$
 A</span> to mean B conforms to A; that is, that B has all of the methods
@@ -1431,8 +1427,8 @@ similar instantiatons of their types should conform.
 The conformance relationship is used in `where` clauses to constrain
 type parameters of classes and methods.
 
-Variant Types
--------------
+## Variant Types
+
 
 Variables with untagged, retained variant types, written
 `T1 | T2 ... | Tn `, may refer to an object of any one of their
@@ -1464,8 +1460,8 @@ To illustrates the limitations of variant types, suppose
 Then `U` fails to conform to `S | T` even though `U` contains all
 methods continued in both `S` and `T`.
 
-Intersection Types
-------------------
+## Intersection Types
+
 
 An object conforms to an Intersection type, written
 `T1 & T2 & ... & Tn`, if and only if that object conforms to all of the
@@ -1484,8 +1480,7 @@ types with new operations, and as as bounds on `where` clauses.
                ...
     }
 
-Union Types
------------
+## Union Types
 
 Structural union types (sum types), written `1 + `2 + ... + Tn\*, are
 the dual of intersection types. A union type `T1 + T2` has the interface
@@ -1494,14 +1489,12 @@ has a method that conforms to each of the methods common to `T1` and
 `T2`. Unions are mostly included for completeness: variant types subsume
 most uses.
 
-Type subtraction
-----------------
+## Type subtraction
 
 A type subtraction, written `T1 - T2` has the interface of `T1` without
 any of the methods in `T2`.
 
-Singleton Types
----------------
+## Singleton Types
 
 The names of singleton objects, typically declared in object
 declarations, may be used as types. Singleton types match only their
@@ -1519,8 +1512,7 @@ because Grace type declarations are statically typed.
 
     type Option<T> = Some<T> | null
 
-Nested Types
-------------
+## Nested Types
 
 Type definitions may be nested inside other expressions, for example,
 they may be defined inside object, class, method, and other type
@@ -1528,8 +1520,8 @@ definitions. Such types can be referred to using “dot” notation, written
 `o.T`. This allows a type to be used as a specification module, and for
 types to be imported from modules, since modules are objects.
 
-Additional Types of Types
--------------------------
+
+## Additional Types of Types
 
 <span>option:</span> Grace may support exact types (written `=Type`)
 
@@ -1538,19 +1530,9 @@ types, probably written `Tuple<T1, T2, ..., Tn>`.
 
 <span>option:</span> Grace may support selftypes, written `Selftype`.
 
-\[Tuples\]
 
-Syntax for Types
-----------------
+## Reified Type Information Metaobjects and Type Literals
 
-This is very basic - but hopefully better than nothing!
-
-    Type := GroundType | (Type ("|" | "&" | "+") Type) | "(" Type ")" 
-    GroundType ::= BasicType | BasicType "<" Type ","... ">" | "Selftype"
-    BasicType ::= TypeID | "=" TypeID  
-
-Reified Type Information Metaobjects and Type Literals
-------------------------------------------------------
 
 (option) Types are represented by objects of type `Type` (Hmm, should be
 `Type<T>`?). Since Grace has a single namespace, types can be accessed
@@ -1560,11 +1542,10 @@ To support anonymous type literals, types may be written in expressions:
 `type Type`. This expression returns the type metaobject representing
 the literal type.
 
-Type Assertions
----------------
+## Type Assertions
 
-(option) Type assertions can be used to check conformance and equality
-of types.
+Type assertions can be used to check conformance and equality of
+types.
 
     assert {B <: A}  
        // B 'conforms to' A.
@@ -1572,38 +1553,144 @@ of types.
        // B had better have a foo method from C returning D
     assert {B = A | C}
 
-Notes
------
 
-1.  (**Sanity Check**) these rules
 
-2.  What’s the relationship between “type members” across inheritance
-    (and subtyping???). What are the rules on methods etc.
+# Modules and Dialects 
 
-3.  On matching, How does destructuring match works? What’s the
-    protocol? Who defines the extractor method? (not sure why this
-    is here)
+Grace programs are divided into multiple modules. 
 
-4.  can a type extend another type?
+## Modules
 
-5.  Structural typing means we neither need nor want any variance
-    annotations! Because Grace is structural, programmers can always
-    write an (anonymous) structural type that gives just the interface
-    they need—or such types could be stored in a library.
+A module is typically defined in a single Grace file. The text of the
+file is treated as the body of an object constructor, so it may
+contain any declarations and executable code. When a module is loaded,
+its code is executed, resulting in a _module object_.
 
-6.  ObjectTypes require formal parameter names & need to fix examples.
-    §\[ObjectTypes\]?
+Modules may begin with one or more `import "module" as nickname`
+statments, naming a module to be imported and giving a _nickname_
+that can be used to refer to the module object in the rest of the
+importing module. Because modules are just objects, public
+declarations at the top level of imported modules are requested simply
+by requesting a method on the module's nickname.
 
-7.  Tuples §\[Tuples\]. Syntax as a type? Literal Tuple Syntax?
+Grace programs may be executed by choosing one module as an entry
+point to run in the operating system. Grace will the load and
+initialise all transitively imported modules in depth-first order,
+thus executing the "main" module _last_, after all its dependencies
+are loaded. Each individual module is loaded only once, the first time
+it is reached: importing the same module name results in the same
+module object. 
 
-8.  Nesting.
+Circular module dependencies are errors.
 
-9.  Serialization
+##### Examples
 
-10. Include dialect description.
+cat.grace module:
+````
+import "animal" as a 
+print "initialising cat module" 
+class cat {
+  inherit a.animal
+  method species { "Cat" } 
+}
+print "cat module done" 
+````
 
-Pragmatics {#Pragmatics}
-==========
+animal.grace module:
+````
+print "initialising animal module" 
+class animal {
+  method asString { "I am a {species}" }
+  method species { "Random Animal" }
+}
+print "animal module done" 
+````
+
+will print:
+
+````
+initialising animal module
+animal module done
+initialising cat module
+cat module done
+````
+
+## Dialects 
+
+Grace dialects support language levels for teaching, and
+domain-specific little languages. A module may begin with a dialect
+statement `dialect "name"`: this imports the dialect like any other
+module, but then places the arranges that the dialect's module object
+lexically encloses the object defined by the module. This means that
+[Implicit Requests] in the module can resolve to the definitions in
+the dialect. 
+
+Many features built in to other programming languages are obtained
+from dialects in Grace: this includes all preexisting type
+declarations, classes, traits, control structures, and even the
+'graceObject' trait that defines the default methods.
+
+Modules that do not declare a 'dialect' implicitly belong to the
+`standardPrelude` dialect: the definition of _Standard Grace_.
+
+##### Examples
+
+The `bcpl.grace` module declares an "`unless(_)do(_)`" control
+struture that is like "`if`" but backwards. 
+
+bcpl.grace module:
+````
+method do (block : Block) unless (test : Boolean)  {
+  if (!test) then (block)
+}
+````
+
+A module written in that dialect can use that control structure as if
+it was built in:
+
+example.grace module:
+````
+dialect "bcpl"
+import "file" as f
+
+def myfile = f.openFile "foo.txt"
+do {  print "Can't open file" }  unless (myfile.isOpen) 
+
+````
+
+will print:
+
+````
+initialising animal module
+animal module done
+initialising cat module
+cat module done
+````
+
+
+## Module and Dialect Scopes
+
+Moving out from module scope, Grace programs can access the following scopes:
+
+1. **module scope** containing all declarations at the top level of
+a module. 
+
+2. **surrounding module scope** containing the nicknames introduced by
+`import` declarations.
+
+3. **dialect scope** containing all declarations at the top level of
+a module. 
+
+Lexical lookup stops at the module's dialect scope: it does not extend
+to the surrrounding dialect's scope (containing any nicknames
+introduced by imports in the module); nor to the scopes of e.g. any
+dialects used to implement the dialect module.
+
+This allows dialects to import modules, and to be defined via other
+(module-defining) dialects, without those other definitions polluting
+the langauge defined by the dialect.
+
+# Pragmatics
 
 The distribution medium for Grace programs, objects, and libraries is
 Grace source code.
@@ -1614,16 +1701,15 @@ bizzare reason a trigraph extension is required, it should be `.grc`
 Grace files may start with one or more lines beginning with “`#`”: these
 lines are ignored.
 
-Garbage Collection
-------------------
+## Garbage Collection
+
 
 Grace implementations should be garbage collected. Safepoints where GC
 may occur are at any backwards branch and at any method request.
 
 Grace will not support finalisation.
 
-Concurrency and Memory Model
-----------------------------
+## Concurrency
 
 The core Grace specification does not describe a concurrent language.
 Different concurrency models may be provided as dialects.
