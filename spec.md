@@ -145,7 +145,7 @@ treated as a fresh identifier.
 Operators are sequnces of unicode operator symbols and the following
 ASCII operator characters:
 
-   ! ? @ # $ % ^ & | ~ = + - * / \ > < : . 
+    ! ? @ # $ % ^ & | ~ = + - * / \ > < : . 
 
 Reserved Tokens
 ---------------
@@ -170,7 +170,7 @@ Tabs and all other non-printing control characters are syntax errors,
 even in a string literal. Escape sequences are provided to denote
 control characters in strings; see Table \[tab:StringEscapes\] in
 Section \[Strings\].
-	
+        
 # Built-in Objects
 
 
@@ -371,7 +371,7 @@ an identifier to the value of an initialising expression, and may
 optionally be given a type: this type is checked when
 the constant is initialised. Constants cannot be re-bound.
 
-#### Examples {#examples-6 .unnumbered}
+#### Examples
 
     def x = 3 * 100 * 0.01
     def x : Number = 3
@@ -510,7 +510,7 @@ The presence or absence of type parameters does not change the canonical name of
 Methods may contain one or more `return` statements.
 If a `return e` statement is executed, the method terminates with the
 value of the expression `e`, while a `return` statement with no
-expression returns `done'.  If execution reaches
+expression returns `done`.  If execution reaches
 the end of the method body without executing a `return`, the method
 terminates and returns the value of the last expression evaluated. 
 An empty method body returns `done`.
@@ -518,25 +518,26 @@ An empty method body returns `done`.
 ## Annotations
 
 Any declaration, and any object constructor, may be have a 
-comma-separated list of annotations following the kewword 'is' before
+comma-separated list of annotations following the kewword `is` before
 its body or initialiser. Annotations must be manifest expressions. While
 annotations may be defined by libraries or dialects, Grace defines the
 following core annotations:
 
-| *abstract* | method will not conflict with or override another method | 
-| *confidential* | method may not be called from outside | 
-| *manifest* | method or object must be manifest |
-| *overrides* | method must override a parental method |
-| *public* | method may be called from outside |
-| *readable*  | variable or constant may be read from outside |
-| *writeable* | variable may be assigned from outside | 
+|:--|:--|
+| `abstract` | method will not conflict with or override another method | 
+| `confidential` | method may not be called from outside | 
+| `manifest` | method or object must be manifest |
+| `overrides` | method must override a parental method |
+| `public` | method may be called from outside |
+| `readable`  | variable or constant may be read from outside |
+| `writeable` | variable may be assigned from outside | 
 
 #### Examples
 
-var x is readable, writeable := 3
-def y : Number is public
-method foo is confidential
-method id<T> is confidential
+    var x is readable, writeable := 3
+    def y : Number is public
+    method foo is confidential  { } 
+    method id<T> is abstract,  { } 
 
 
 
@@ -548,7 +549,7 @@ individual objects.
 Grace `class` declarations define methods that generate objects,
 all of which have the same structure.
 
-The design of Grace's reuse is complete, but tentative. We need
+The design of Grace's reuse mechanism is complete, but tentative. We need
 experience before confirming the design.
 
 ## Objects 
@@ -582,7 +583,7 @@ A name can be bound to an object constructor, like this:
     }
 
 
-## Class Declaration
+## Class Declarations
 
 A class is a method whose body is treated as an object constructor that is
 executed every time the class is invoked. The class
@@ -627,93 +628,59 @@ Modulo these restrictions, Grace's trait syntax and semantics is exactly paralle
 a trait is a method that returns a trait object.
 
     trait emptiness {
-	method isEmpty { size == 0 }
-	method nonEmpty { size != 0 }
-	method ifEmptyDo (eAction) nonEmptyDo (nAction) {
-		if (isEmpty) then { eAction.apply } else { do(nAction) }
-	} 
+        method isEmpty { size == 0 }
+        method nonEmpty { size != 0 }
+        method ifEmptyDo (eAction) nonEmptyDo (nAction) {
+                if (isEmpty) then { eAction.apply } else { do(nAction) }
+        } 
     }
+
+
+## Type Parameters
+
+Like methods, classes and traits may be declared to have type
+parameters.  Requests on the class or trait may optionally be provided
+with type arguments.
+
+[](Type parameters may be constrained with `where` clauses.)
+
+#### Example
+
+    class vectorOfSize(size)<T> {
+        var contents := Array.size(size)
+        method at(index : Number) -> T {return contents.at() } 
+        method at(index : Number) put(elem : T) { }
+    }
+
+[](    class sortedVectorOfSize(size)<T> 
+        where T <: Comparable<T> {
+          ...
+    }
+)
 
 ## Reuse
 
-Grace supports reuse in two ways: through `inherit` and `use` statements.
-Object constructors (and classes) can contain one `inherit` statement while                                            
-traits cannot contain an `inherit` statement;  object constructors, classes and traits can
-all contain one or more `use` statements.
+Grace supports reuse in two ways: through **`inherit`** and **`use`** statements.
+Object constructors (and classes) can contain one `inherit` statement
+while traits cannot contain an `inherit` statement;  object
+constructors, classes and traits can all contain one or more `use` statements.
 
-Both `inherit` and `use` introduce the attributes of a reused object — called the _parent_ — into the 
-current object (the object under construction). 
-A new declaration in the current object can override a declaration from a parent.
+Both `inherit` and `use` introduce the attributes of a reused object —
+called the _parent_ — into the current object (the object under
+construction).  A new declaration in the current object can override a
+declaration from a parent.
 
 The argument of an `inherit` or `use` clause is restricted to be a manifest
 expression that creates a new object, such as a request on a class or trait.
 The argument cannot refer to `self`, implicitly or explicitly.
 The object reused by a `use` clause must be a trait object. 
 
-If it is necessary to access an overridden attribute, the overridden attribute of the parent
-can be given an additional name by attaching an **alias** clause to the inherits statement.
-Attributes of the parent that are not required can be excluded using an **exclude** clause.
+If it is necessary to access an overridden attribute, the overridden
+attribute of the parent can be given an additional name by attaching
+an **`alias`** clause to the inherits statement.  Attributes of the
+parent that are not required can be excluded using an **`exclude`**
+clause.
 
-#### Examples
-
-The example below shows how a class can use a method to override an accessor method for
-an inherited variable. 
-
-    class pedigreeCatColoured (aColour) named (aName) {
-        inherits catColoured (aColour) named (aName)
-        var prizes := 0
-        method miceEaten is override { 0 }	// a pedigree cat would never be so coarse
-        method miceEaten:= (n:Number) -> Number is override { return }    // ignore attempts to debase it
-    }
-
-Traits are designed to be used as fine-grained components of reuse:
-
-    trait feline {
-        method independent { "I did it my way" }
-        method move {
-        if (isOut) then {
-            comeIn
-        } else {
-            goOut
-        }
-    }
-
-    trait canine {
-        method loyal { "I'm your best friend" }
-        method move { 
-            if (you.location != self.location) then {
-                self.setPosition(you.heel)
-            }
-        }
-    }
-
-In this context, the following object is a trait conflict:
-
-    object {
-        use feline alias catMove = move
-        use canine alias dogMove = move
-    }
-
-because the `move` attribute is defined in two separate traits.
-In contrast, the following definition is legal:
-
-    def nyssa = object {
-        use feline alias catMove = move
-        use canine alias dogMove = move
-        method move {
-            if (random.choice) then {
-                catMove
-            } else {
-                dogMove
-            }
-        }
-    }
-
-Here, the
-conflict is resolved by overriding with a local `move` method.  This method
-accesses the overridden methods from the parent traits using the aliases `catMove` 
-and `dogMove`; as a result, nyssa will `move` either like a dog or a cat, depending on 
-a random variable.  
 
 ### Combination and Initialisation
 
@@ -743,28 +710,69 @@ Methods may be annotated as being `abstract`.  Abstract methods do not
 conflict with other methods, either abstract or concrete (non
 abstract).
 
+#### Examples
 
-## Classes with Type Parameters
+The example below shows how a class can use a method to override an
+accessor method for an inherited variable. 
 
-Like methods, classes may be declared to have type parameters.
-Requests on the class may optionally be provided
-with type arguments. 
-
-[](Type parameters may be constrained with `where` clauses.)
-
-#### Example
-
-    class vectorOfSize(size)<T> {
-        var contents := Array.size(size)
-        method at(index : Number) -> T {return contents.at() } 
-        method at(index : Number) put(elem : T) { }
+    class pedigreeCatColoured (aColour) named (aName) {
+        inherits catColoured (aColour) named (aName)
+        var prizes := 0
+        method miceEaten is override { 0 }
+                // a pedigree cat would never be so coarse
+        method miceEaten:= (n:Number) -> Number is override { return }
+               // ignore attempts to debase it
     }
 
-[](    class sortedVectorOfSize(size)<T> 
-        where T <: Comparable<T> {
-          ...
+Traits are designed to be used as fine-grained components of reuse:
+
+    trait feline {
+        method independent { "I did it my way" }
+        method move {
+        if (isOut) then {
+            comeIn
+        } else {
+            goOut
+        }
     }
-)
+
+    trait canine {
+        method loyal { "I'm your best friend" }
+        method move { 
+            if (you.location != self.location) then {
+                self.setPosition(you.heel)
+            }
+        }
+    }
+
+In this context, the following object has a trait conflict:
+
+    object {
+        use feline alias catMove = move
+        use canine alias dogMove = move
+    }
+
+because the `move` attribute is defined in two separate traits.
+In contrast, the following definition is legal:
+
+    def nyssa = object {
+        use feline alias catMove = move
+        use canine alias dogMove = move
+        method move {
+            if (random.choice) then {
+                catMove
+            } else {
+                dogMove
+            }
+        }
+    }
+
+Here, the
+conflict is resolved by overriding with a local `move` method.  This method
+accesses the overridden methods from the parent traits using the aliases `catMove` 
+and `dogMove`; as a result, nyssa will `move` either like a dog or a cat, depending on 
+a random variable.  
+
 
 # Method Requests
 
@@ -779,6 +787,28 @@ happens outside the object receiving the request, and involves only a
 reference to the receiver, the method name, and possibly some arguments.
 In contrast, executing the method involves the code of the method, which
 is local to the receiver.
+
+
+## Self 
+
+The reserved word `self` refers to the lexically enclosing object.
+The expression `self.x` requests `x` on the current object.
+
+## Outer
+
+The reserved word `outer` refers to the object lexically enclosing
+`self`.  The expression `outer.x` requests `x` on the object lexically
+enclosing the current object.
+
+
+#### Examples
+
+      outer                     
+      outer.value
+      outer.bar(1,2,6)
+      outer.outer.doThis(3) timesTo("foo")               
+      outer + 1 
+      ! outer   
 
 ## Named Requests
 
@@ -853,7 +883,7 @@ are evaluated left-to-right.
 Four binary operators do have precedence defined between them: `/` and
 `*` bind more tightly than `+` and `-`.
 
-#### Examples {#examples-16 .unnumbered}
+#### Examples
 
     1 + 2 + 3                  // evaluates to 6
     1 + (2 * 3)                // evaluates to 7
@@ -886,7 +916,7 @@ explicit receiver, there is no syntactic ambiguity.)
 Prefix operators bind less tightly than named method requests, and more
 tightly than binary operator requests.
 
-#### Examples {#examples-18 .unnumbered}
+#### Examples
 
     -3 + 4
     (-b).squared
@@ -895,33 +925,7 @@ tightly than binary operator requests.
 
     status.ok :=  !engine.isOnFire && wings.areAttached && isOnCourse
 
-Bracket Operator Requests
--------------------------
 
-Grace supports operators `[…]` and `[…]:=`, which can be defined in
-libraries, *e.g.*, for indexing and modifying collections.
-
-#### Examples {#examples-19 .unnumbered}
-
-    print( a[3] )       // requests method [] on a with argument 3
-    a[3] := "Hello"    // requests method []:= on a with arguments 3 and "Hello"
-
-Outer
--------
-
-The reserved word `outer` refers to the object lexically enclosing
-`self`.  The expression `outer.x` requests `x` on the object lexically
-enclosing the current object.
-
-
-#### Examples {#examples-21 .unnumbered}
-
-      outer                     
-      outer.value
-      outer.bar(1,2,6)
-      outer.outer.doThis(3) timesTo("foo")               
-      outer + 1 
-      ! outer   
 
 Encapsulation
 -------------
@@ -993,7 +997,7 @@ have private fields; all fields can be accessed from subobjects.
 However, the parameters and temporary variables of methods that return
 fresh objects can be used to obtain an effect similar to privacy.
 
-#### Examples {#examples-23 .unnumbered}
+#### Examples
 
         method newShipStartingAt(s:Vector2D)endingAt(e:Vector2D) {
             // returns a battleship object extending from s to e.  This object cannot
@@ -1023,7 +1027,7 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 
 
-#### Examples {#examples-24 .unnumbered}
+#### Examples
 
     sumSq<Integer64>(10.i64, 20.i64) 
 
@@ -1036,14 +1040,14 @@ Grace programs are formally defined by the language’s grammar (see
 appendix \[Grammar\]). The grammar gives the following precedence
 levels; lower numbers bind more tightly.
 
-1.  Numerals, and constructors for numbers, strings, objects, iterables,
+1.  Numerals and constructors for strings, objects, iterables,
     blocks, and types; parenthesized expressions.
 
-2.  Requests of named methods, and of the `[` bracket `]` method.
+2.  Requests of named methods.
     Multi-part requests accumulate name-parts and arguments as far to
     the right as possible.
 
-3.  Prefix operators: associate right to left.
+3.  Prefix operators
 
 4.  “Multiplicative” operators `*` and `/`: associate left to right.
 
@@ -1142,8 +1146,8 @@ by supporting a request such as `singleton(o)`.
 
 
 
-Exceptions
-----------
+# Exceptions
+
 
 Grace supports exceptions, which can be raised and caught. Exceptions
 are categorized into a hierarchy of `ExceptionKind`s, described in
@@ -1153,15 +1157,17 @@ At the site where an exceptional situation is detected, an exception is
 raised by requesting the `raise` method on an `ExceptionKind` object,
 with a string argument explaining the problem.
 
-#### Examples {#examples-27 .unnumbered}
+#### Examples
 
         BoundsError.raise "index {ix} not in range 1..{n}"
         UserException.raise "Oops...!"
 
 Raising an exception does two things: it creates an `exception` object
 of the specified kind, and terminates the execution of the expression
-containing the `raise` request; it is not possible to restart or resume
-that execution[^1]. Execution continues when the exception is *caught.*
+containing the `raise` request; it is not possible to restart or
+resume that execution although reflection or debuggers should have
+access to the whole stack at the point the exception is
+thrown. Execution continues when the exception is *caught.*
 
 An exception will be caught by a dynamically-enclosing
 `try(exp) catch (block`$_{1}$`)`
@@ -1176,7 +1182,7 @@ dynamically-surrounding `try() catch()` …`catch() finally()`. The
 `try() catch()` …` catch()` `finally()` construct, whether or not an
 exception is raised, or one of the `catch` blocks returns.
 
-#### Examples {#examples-28 .unnumbered}
+#### Examples 
 
     try {
         def f = file.open("data.store")
@@ -1662,113 +1668,43 @@ that interfere.
 Grace’s memory model should support efficient execution on architectures
 with Total Store Ordering (TSO).
 
-Libraries {#Libraries}
-=========
+# Acknowledgements
 
-Collections
------------
-
-Grace will support some collection classes.
-
-Collections will be indexed `1..size` by default; bounds should be able
-to be chosen when explicitly instantiating collection classes.
-
-Acknowledgements {#acknowledgements .unnumbered}
-================
-
-Thanks to Josh Bloch, Cay Horstmann, Michael K<span>ö</span>lling, Doug
-Lea, the participants at the Grace Design Workshops and the IFIP WG2.16
-Programming Language Design for discussions about the language design.
-
-Thanks to Michael Homer and Ewan Tempero for their comments on drafts.
+Thanks to Josh Bloch, Cay Horstmann, Michael Kölling, Doug Lea, Ewan
+Tempero, and the participants at the Grace Design Workshops and the
+IFIP WG2.16 Programming Language Design for discussions about the
+language design.
 
 The Scala language specification 2.8 @scala28 and the Newspeak language
 specification 0.05 @newspeak005 were used as references for early
 versions of this document. The design of Grace (so far!) has been
 influenced by Algol @algolPerlis [@algolNaur], AmbientTalk @ambientTalk,
 AspectJ @aspectJecoop, BCPL @BCPLBOOK [@cpl2bcpl], Beta @betabook, Blue
-@BlueSIGCSE95 [@BlueSIGCSE96; @BlueSpec], C @Cbook, C$++$ @cppnotoo,
-C$\sharp$ @Csharp3 [@Csharp4], Dylan @dylan, Eiffel @oosc [@eiffel],
-Emerald @Black2007, $F_1$ @LucaTypeSystems, $F\sharp$ @fsharp, $FGJ$
-@igarashi01, $FJ\vee$ @igarashi07, FORTRESS @fortress10b, gBeta
-@fampoly, Haskell @haskellHistory, Java @mrBunny [@JavaConcur], Kevo
-@anteroCloning, Lua @lua, Lisp @goodBadUgly, ML @ml, Modula-2 @Modula2,
+@BlueSIGCSE95 [@BlueSIGCSE96; @BlueSpec], Brainfuck @brainfuckLanguage, C @Cbook, C$++$ @cppnotoo,
+C$\sharp$ @Csharp3 [@Csharp4], Ceylon @Ceylon, Dart @dart, Dylan @dylan, E [@E]Eiffel @oosc [@eiffel],
+Emerald @Black2007, $F_1$ @LucaTypeSystems, $F\sharp$ @fsharp, FORTH
+@FORTH, $FGJ$ @igarashi01, $FJ\vee$ @igarashi07, FORTRESS @fortress10b, gBeta
+@fampoly, Go @Go, Haskell @haskellHistory, IGJ @AlexIGJ, INTERCAL
+@INTERCAL, Java @mrBunny [@JavaConcur], Jigsaw
+[@Jigsaw], Kevo @anteroCloning, Lua @lua, Lisp @goodBadUgly, ML @ml, Modula-2 @Modula2,
 Modula-3 @Modula3, Modular Smalltalk @ModularSmalltalk, Newspeak
-@brachamodules [@newspeak005], Pascal @Pascal, Perl @perltalk, Racket
+@brachamodules [@newspeak005], Noney @malayeri08, O'CAML @OCAML, the Object Calculus
+@AbadiCardelli, Pascal @Pascal, Perl @perltalk, Quorun @Quorum, Racket
 @HowToDesignPrograms, Scala @SCA [@scala28], Scheme @scheme, Self
 @selfpower, Smalltalk @bluebook [@Ingalls81; @Budd1987; @strongtalk],
-Object-Oriented Turing @OOTuring, Noney @malayeri08, and Whiteoak
-@whiteoak08 at least: we apologise if we’ve missed any languages out.
+TrumpScript @TrumpScript, 
+Turing @OOTuring,  
+U2 @someLanguageBeginningWithU,
+VDM @VDM (or VC++ @VC++),
+Whiteoak @whiteoak08, Whitespace @whitespaceLanguage,
+XTend @XTend, 
+yes @UnixYesCommand,
+and Z @Zed 
+at least: we apologise if we’ve missed any languages out.
 All the good ideas come from these languages: the bad ideas are our
 responsibility @HoareHints.
-
-To Be Done
-==========
-
-As well as the large list in Section \[BigMissingFeatures\] of features
-we haven’t started to design, this section lists details of the language
-that remain to be done:
-
-1.  specify full numeric types
-
-2.  `Block::apply` §\[Blocks\]—How should we spell “apply”? “run”?
-
-3.  confirm method lookup algorithm, in particular relation between
-    lexical scope and inheritance (see §\[MethodReq\]) (“Out then Up”).
-    Is that enough? Does the no-shadowing rule work? If it does, is this
-    a problem?
-
-4.  update grammar to incude “outer” §\[OuterRequests\].
-
-5.  confirm rules on named method argument parenthesization
-    §\[ArgParens\]
-
-6.  how are (mutually) recursive names initialised?
-
-7.  how should `case` work and how powerful should it be §\[Case\], see
-    blog post 10/02/2011, Jon Boyland’s paper. How do type patterns
-    interact with the static type system?
-
-8.  support multiple classs for classes §\[Constructors\]
-
-9.  `class`s.
-
-10. where should we draw the lines between object constructor
-    expressions/named object declarations, class declarations, and
-    “hand-built” classes? §\[Inheritance\]
-
-11. how do factories etc relate to “uninitialised” §\[Uninitialised\]
-
-12. decide what to do about equality operators §\[Values\]
-
-13. Support for enquiring about static type (`decltype` ?) and dynamic
-    type (`dyntype` ?). Note that neither of these is a method request.
-
-14. What is the type system?
-
-15. Multiple Assignment §\[Assignment\]
-
-16. Type assertions—should they just be normal assertions between types?
-    so *e.g.*, $<:$ could be a normal operator between types.
-
-17. Grace needs subclass compatibility rules
-
-18. Brands Do we need them is a teaching language?
-
-19. weak references
-
-20. virtualise literals — numbers, strings,
-
-21. Do we want a built-in sequence constructor, or tuple constructor?
-
-22. design option — generalised requests, that is, requests with 0 or
-    more repeating parts like *elseif*
 
 Grammar {#Grammar}
 =======
 
-grammar.tex
-
-[^1]: However, implementors should pickle the stack frames that are
-    terminated when an exception is raised, so that they can be used in
-    the error reporting machinery (debugger, stack trace)
+_(to be attached one James works out how to do it)_
