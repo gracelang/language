@@ -169,11 +169,11 @@ even in a string literal. Escape sequences are provided to denote
 control characters in strings; see Table \[tab:StringEscapes\] in
 Section \[Strings\].
 	
-Built-in Objects
-================
+# Built-in Objects
 
-Done
-----
+
+## Done
+
 
 Assignments, and methods without an explicit result, have the value
 `done`, of type `Done`. The type `Done` plays a role similar to *void*
@@ -181,8 +181,7 @@ or *Unit* in other languages. The only requests understood by `done` are
 `asString` and `asDebugString`. (In particular, `done` does not have an
 equality method).
 
-Numbers
--------
+## Numbers
 
 Grace supports a single type `Number`. `Number` supports at least 64-bit
 precision floats. Implementations may support other numeric types: a
@@ -206,7 +205,7 @@ denote `Number`s).
     exponent indicator. Base-exponent numerals may optionally be
     preceded by a minus, and may have a minus in front of the exponent.
 
-### Examples 
+#### Examples 
 
     1
     -1
@@ -218,14 +217,13 @@ denote `Number`s).
     2x10110100
     0xdeadbeef // Radix zero treated as 16
 
-Booleans 
---------
+## Booleans 
 
 The predefined constants `true` and `false` denote values of Grace’s
 `Boolean` type. Boolean operators are written using `&&` for and, `||`
 for or, and prefix `!` for not.
 
-### Examples 
+#### Examples 
 
     P && Q
     toBe || toBe.not
@@ -234,13 +232,13 @@ In addition to `&&` and `||` taking boolean arguments, they also accept
 parmameterless blocks that return `Boolean`.  This gives them 
 “short circuit” (a.k.a non-commutative) semantics.
 
-### Examples 
+#### Examples 
 
     P && { Q }
     toBe || { ! toBe }
 
-Strings and Characters 
-----------------------
+
+## Strings and Characters 
 
 String literals in Grace are written between double quotes, and must be
 confined to a single line. Strings literals support a range of escape
@@ -259,7 +257,7 @@ library includes supports efficient incremental string construction.
     \\}    right brace    <span>U+007D</span>    <span>\\U$hhhhhh$</span>  6-digit Unicode      <span>U+$hhhhhh$</span>
    \\`"`   double quote   <span>U+0022</span>                                                   
 
-### Examples {#examples-3 .unnumbered}
+#### Examples
 
     "Hello World!"
     "\t"
@@ -273,12 +271,38 @@ specially. The expression is evaluated, the `asString` method is
 requested on the resulting object, and the resulting string is inserted
 into the string literal in place of the brace expression.
 
-### Examples {#examples-4 .unnumbered}
+#### Examples
 
     "Adding {a} to {b} gives {a+b}"
 
-Blocks {#Blocks}
-======
+## Lineups 
+
+Grace supports a constructor syntax for use parsing multiple arguments
+or building collections: a comma separated list of expressions
+surrounded by `[` and `]` brackets.
+
+#### Examples
+
+    [ ]        //empty lineup
+    [ 1 ]
+    [ 2, a, 5 ] 
+
+When executed, this constructor returns an object that supports a 
+very minimal interface ('size' and `do(_)`), which will generally be
+used to build collections.
+
+#### Examples
+
+    set [ 1, 2, 4, 5 ]      //make a set
+    seq [ "a", "b", "c" ]   //make a sequence
+    myWindow.addWidgets [ 
+       title "Launch",
+       text "Good Morning Mrs President", 
+       button "OK" action { missiles.launch },
+       button "Cancel" action { missiles.abort }
+    ]
+
+## Blocks {#Blocks}
 
 Grace blocks are lambda expressions; they may or may not have
 parameters. If a parameter list is present, the parameters are separated
@@ -295,7 +319,7 @@ is the same as the number of parameters of the block. Requesting the
 number of arguments. If block parameters are declared with type
 annotations, it is an error if the arguments do not conform to those types.
 
-### Examples {#examples-5 .unnumbered}
+#### Examples {#examples-5 .unnumbered}
 
 The looping construct
 
@@ -324,34 +348,34 @@ Blocks are lexically scoped inside their containing method or block.
 The body of a block consists of a sequence of declarations and
 expressions. An empty body is allowed, and is equivalent to `done`.
 
-Declarations
-============
+# Declarations
 
-Declarations of constants and variables may occur anywhere within an
-object, a method, or a block: their scope is the whole of their
-defining object, method, or block.  It is also an error to attempt to
-declare any name more than once in the same lexical scope.
+All declarations may occour anywhere within a module, object, class,
+or trait.  Constant and variable declarations may also occur within a
+method or block body.  Declarations are visible within the whole of
+their containing lexical scope.  It is an error to attempt to declare
+any name more than once in the same lexical scope.
 
 **Shadowing.** Grace has a single namespace for all identifiers; this
-shared namespace is used for methods, parameters, constants, variables
-and types. It is an error to declare a constant, variable or parameter
-that shadows a lexically-enclosing constant, variable or parameter.
+shared namespace is used for everything: methods, parameters,
+constants, variables, classes, traits, and and types. It is an error
+to declare a constant, variable or parameter that shadows a
+lexically-enclosing constant, variable or parameter.
 
-Constants
----------
+## Constants
 
 Constant definitions are introduced using the `def` keyword; they bind
 an identifier to the value of an initialising expression, and may
-optionally be given a type. Constants cannot be re-bound.
+optionally be given a type: this type is checked when
+the constant is initialised. Constants cannot be re-bound.
 
-### Examples {#examples-6 .unnumbered}
+#### Examples {#examples-6 .unnumbered}
 
     def x = 3 * 100 * 0.01
     def x : Number = 3
     def x : Number           // Syntax Error: x must be initialised
 
-Variables
----------
+## Variables
 
 Variable definitions are introduced using the `var` keyword; they
 optionally bind an identifier to the value of an initialising
@@ -361,25 +385,25 @@ variable is declared without an initializing expression, it is said to
 be *uninitialised*; any attempt to access the value of an uninitialised
 variable is an error. This error may be caught either at run time or at
 compile time, depending on the cleverness of your implementor.
+Variables may be optionally given a type: this type is checked when
+the variable is initialised or assigned.
 
-### Examples
+#### Examples
 
     var x:Rational := 3     // explicit type
     var x:Rational          // x must be initialised before access
     var x := 3              // x has type Unknown 
     var x                   // x has Unknown type and uninitialised value 
 
-Methods
--------
+## Methods
 
-
-Methods are declared with the `method` keyword.
-Methods define the action to be taken when the object containing the
-method receives a request with the given name. Because every method must
-be associated with an object, methods may not be declared directly
-inside other methods.
-The type of the object returned from the method may optionally be given
-after the symbol `->`. The body of the method is enclosed in braces.
+Methods are declared with the `method` keyword.  Methods define the
+action to be taken when the object containing the method receives a
+request with the given name. Because every method must be associated
+with an object, methods may not be declared directly inside other
+methods.  The type of the object returned from the method may
+optionally be given after the symbol `->`: this type is checked when
+the method returns. The body of the method is enclosed in braces.
 
     method pi  { 3.141592634 } 
 
@@ -426,13 +450,17 @@ case it is requested by a binary operator expression.  The canonical name of a
 unary method is `prefix` followed by the operator symbols; the canonical 
 name of a binary method is the sequence of operator symbols followed by `(_)`
 
-As a consequence of the above rules, methods `max(a, b, c)` and `max(a, b)` have different 
-canonical names and are therefore treated as distinct methods.  In other words, Grace
-allows "overloading by arity" (although it does _not_ allow overloading by type).
+As a consequence of the above rules, methods `max(a, b, c)` and
+`max(a, b)` have different canonical names and are therefore treated
+as distinct methods.  In other words, Grace allows "overloading by
+arity" (although it does _not_ allow overloading by type).
  
-(TODO: need to distribute examples into the above list or something) 
+Method parameters optionally may be given types: those types will be
+checked just before the method body is executed.
 
-### Examples
+[](TODO: need to distribute examples into the above list or something) 
+
+#### Examples
 
     method ping { print "PING!" } 
 
@@ -465,7 +493,7 @@ names the method by a space.
 
 The presence or absence of type parameters does not change the canonical name of the method.
 
-### Examples
+#### Examples
 
     method sumSq<T>(a : T, b : T) -> T where T <: Numeric {
         (a * a) + (b * b)
@@ -485,9 +513,33 @@ the end of the method body without executing a `return`, the method
 terminates and returns the value of the last expression evaluated. 
 An empty method body returns `done`.
 
+## Annotations
 
-Objects, Classes, and Traits 
-===================
+Any declaration, and any object constructor, may be have a 
+comma-separated list of annotations following the kewword 'is' before
+its body or initialiser. Annotations must be manifest expressions. While
+annotations may be defined by libraries or dialects, Grace defines the
+following core annotations:
+
+| *abstract* | method will not conflict with or override another method | 
+| *confidential* | method may not be called from outside | 
+| *manifest* | method or object must be manifest |
+| *overrides* | method must override a parental method |
+| *public* | method may be called from outside |
+| *readable*  | variable or constant may be read from outside |
+| *writeable* | variable may be assigned from outside | 
+
+#### Examples
+
+var x is readable, writeable := 3
+def y : Number is public
+method foo is confidential
+method id<T> is confidential
+
+
+
+
+# Objects, Classes, and Traits 
 
 Grace `object` constructors generate
 individual objects. 
@@ -497,8 +549,7 @@ all of which have the same structure.
 The design of Grace's reuse is complete, but tentative. We need
 experience before confirming the design.
 
-Objects 
----------
+## Objects 
 
 Object constructors are expressions that evaluate to an object with the
 given attributes. Each time an object constructor is executed, a new object
@@ -508,7 +559,7 @@ which are executed as a
 side-effect of evaluating the object constructor. All of the declared
 attributes of the object are in scope throughout the object constructors.
 
-### Examples
+#### Examples
 
     object {
         def colour:Colour = Colour.tabby
@@ -529,8 +580,7 @@ A name can be bound to an object constructor, like this:
     }
 
 
-Classes
---------
+## Class Declaration
 
 A class is a method whose body is treated as an object constructor that is
 executed every time the class is invoked. The class
@@ -565,8 +615,7 @@ This creates an object with fields `colour` (set to
 (initialised to `0`), prints “The cat Fergus has been created”, and
 binds the name `fergus` to this object.
 
-Trait Objects
-----------------
+## Trait Objects and Trait Declarations
 
 Trait objects are objects with certain properties.  Specifically, a trait object is created by
 an object constructor that contains no inherits statements, field declarations,
@@ -583,19 +632,16 @@ a trait is a method that returns a trait object.
 	} 
     }
 
-Reuse
--------
+## Reuse
 
 Grace supports reuse in two ways: through `inherit` and `use` statements.
 Object constructors (and classes) can contain one `inherit` statement while                                            
 traits cannot contain an `inherit` statement;  object constructors, classes and traits can
 all contain one or more `use` statements.
 
-Both `inherit` and `use` introduce the attributes of the reused object — called the _parent_ — into the 
+Both `inherit` and `use` introduce the attributes of a reused object — called the _parent_ — into the 
 current object (the object under construction). 
 A new declaration in the current object can override a declaration from a parent.
-
-[](Override annotations should be mentioned somewhere!)
 
 If it is necessary to access an overridden attribute, the overridden attribute of the parent
 can be given an additional name by attaching an **alias** clause to the inherits statement.
@@ -667,7 +713,10 @@ The object reused by a `use` clause must be a trait object.
 
 When executed, an object constructor (or trait or class declaration) creates a new object with no attributes, and binds it to `self`. 
 Next, the attributes of all _parent_ objects (created by any 'inherit' or 'uses' clauses), and any local declarations, are added to the new object: local declarations override parental declarations.
-It is a _trait composition error_ for the same attribute to come from more than one parent, and not to be overridden by a local definition.
+It is a _trait composition error_ for the same concrete attribute to
+come from more than one parent, and not to be overridden by a local
+definition (all attributes are concrete unless annotated `is
+abstract`; abstract attributes must have empty bodies).
 Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with local declarations. (Note that used traits contain no executable code.)
 Initialisers for all `def`s and `var`s, 
 and code in the bodies of parents,
@@ -691,7 +740,7 @@ with type arguments.
 
 [](Type parameters may be constrained with `where` clauses.)
 
-### Example
+#### Example
 
     class vectorOfSize(size)<T> {
         var contents := Array.size(size)
@@ -752,7 +801,7 @@ _i.e._, the `self` and the dot may both be omitted.
 Parenthesis may be omitted where they would enclose a single argument
 that is a numeral, string, lineup, or block.
 
-### Examples
+#### Examples
 
         canvas.drawLineFrom (p1) to (p2)
         canvas.drawLineFrom (origin) length 9 angle (pi/6)
@@ -769,7 +818,7 @@ of a method whose name ends with `:=`. In both cases the `:=` is
 followed by a single argument. Spaces are optional before and after the
 `:=`.
 
-### Examples
+#### Examples
 
        x := 3
        y:=2 
@@ -795,7 +844,7 @@ are evaluated left-to-right.
 Four binary operators do have precedence defined between them: `/` and
 `*` bind more tightly than `+` and `-`.
 
-### Examples {#examples-16 .unnumbered}
+#### Examples {#examples-16 .unnumbered}
 
     1 + 2 + 3                  // evaluates to 6
     1 + (2 * 3)                // evaluates to 7
@@ -807,7 +856,7 @@ Named method requests without arguments bind more tightly than operator
 requests. The following examples show the Grace expressions on the left,
 and the parse on the right.
 
-### Examples
+#### Examples
 
   ----------------------------- ---------------------------
   `1 + 2.i`                     `1 + (2.i)`
@@ -828,7 +877,7 @@ explicit receiver, there is no syntactic ambiguity.)
 Prefix operators bind less tightly than named method requests, and more
 tightly than binary operator requests.
 
-### Examples {#examples-18 .unnumbered}
+#### Examples {#examples-18 .unnumbered}
 
     -3 + 4
     (-b).squared
@@ -843,7 +892,7 @@ Bracket Operator Requests
 Grace supports operators `[…]` and `[…]:=`, which can be defined in
 libraries, *e.g.*, for indexing and modifying collections.
 
-### Examples {#examples-19 .unnumbered}
+#### Examples {#examples-19 .unnumbered}
 
     print( a[3] )       // requests method [] on a with argument 3
     a[3] := "Hello"    // requests method []:= on a with arguments 3 and "Hello"
@@ -856,7 +905,7 @@ The reserved word `outer` refers to the object lexically enclosing
 enclosing the current object.
 
 
-### Examples {#examples-21 .unnumbered}
+#### Examples {#examples-21 .unnumbered}
 
       outer                     
       outer.value
@@ -913,7 +962,7 @@ assignment method. This means that an object cannot have a field and a
 method with the same name, and cannot have a method `x:=(_)`
 as well as a `var` field `x`.
 
-### Examples
+#### Examples
 
 
     object {
@@ -935,7 +984,7 @@ have private fields; all fields can be accessed from subobjects.
 However, the parameters and temporary variables of methods that return
 fresh objects can be used to obtain an effect similar to privacy.
 
-### Examples {#examples-23 .unnumbered}
+#### Examples {#examples-23 .unnumbered}
 
         method newShipStartingAt(s:Vector2D)endingAt(e:Vector2D) {
             // returns a battleship object extending from s to e.  This object cannot
@@ -965,7 +1014,7 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 
 
-### Examples {#examples-24 .unnumbered}
+#### Examples {#examples-24 .unnumbered}
 
     sumSq<Integer64>(10.i64, 20.i64) 
 
@@ -1068,7 +1117,7 @@ can offer to lift any object `o` to a pattern that matches just `o`
 by supporting a request such as `singleton(o)`.
 
 
-##### Examples
+#### Examples
 
     { 0 -> "Zero" }                        
         // match against a literal constant
@@ -1095,7 +1144,7 @@ At the site where an exceptional situation is detected, an exception is
 raised by requesting the `raise` method on an `ExceptionKind` object,
 with a string argument explaining the problem.
 
-### Examples {#examples-27 .unnumbered}
+#### Examples {#examples-27 .unnumbered}
 
         BoundsError.raise "index {ix} not in range 1..{n}"
         UserException.raise "Oops...!"
@@ -1118,7 +1167,7 @@ dynamically-surrounding `try() catch()` …`catch() finally()`. The
 `try() catch()` …` catch()` `finally()` construct, whether or not an
 exception is raised, or one of the `catch` blocks returns.
 
-### Examples {#examples-28 .unnumbered}
+#### Examples {#examples-28 .unnumbered}
 
     try {
         def f = file.open("data.store")
@@ -1306,7 +1355,7 @@ Grace’s standard prelude defines the following basic types:
 In addition, variables can be annotated as having type `Unknown`.
 Unknown is not a type, but a label that the type system uses when
 reasoning about the values of expressions. Parameters and variables that
-lack explicit type annotations are implicitly annotated with type
+lack explicit type  are implicitly annotated with type
 `Unknown`.
 
 Types {#ObjectTypes}
@@ -1439,7 +1488,7 @@ An object conforms to an Intersection type, written
 component types. The main use of intersection types is for augmenting
 types with new operations, and as as bounds on `where` clauses.
 
-### Examples {#examples-29 .unnumbered}
+#### Examples
 
     type List<T> = Sequence<T> & type {
         add(_:T) -> List<T>
