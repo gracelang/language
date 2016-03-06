@@ -14,16 +14,13 @@ title: |
 ...
 
 
-Introduction
-============
+# Introduction
 
 This is a specification of the Grace Programming Language. This
 specification is notably incomplete, and everything is subject to
 change. In particular, this version does *not* address:
 
 -   static type system
-
--   the library, especially collections and collection literals
 
 -   immutable data and pure methods.
 
@@ -34,8 +31,7 @@ change. In particular, this version does *not* address:
 
 -   libraries, including more (complex?) Numeric types and testing
 
-User Model
-==========
+# User Model
 
 ------------------------------------------------------------------------
 
@@ -74,8 +70,7 @@ User Model
 5.  Designers of other programming or scripting languages in search of a
     good example of contemporary OO language design.
 
-Syntax
-======
+# Syntax
 
 ------------------------------------------------------------------------
 
@@ -89,8 +84,7 @@ Syntax
 Grace programs are written in Unicode. Reserved words are written in the
 ASCII subset of Unicode. 
 
-Layout {#Layout}
-------
+## Layout
 
 Grace uses braces for grouping.  Code layout must be consistent with
 grouping.  Indentation must increase by at least two spaces after a
@@ -119,8 +113,7 @@ of the line containing the start of the current statement.
 
 This defines `x` to be the result of the single request `muble("3") fratz(7)`.
 
-Comments
---------
+## Comments
 
 Grace’s comments start with a pair of slashes `//` and are terminated by
 the end of the line. Comments are *not* treated as
@@ -131,8 +124,7 @@ unit.
 
     // comment, to end of line
 
-Identifiers and Operators
--------------------------
+## Identifiers and Operators
 
 Identifiers must begin with a letter, which is followed by a sequence of
 zero or more letters, digits and prime (`'`) or underscore (`_`)
@@ -147,8 +139,7 @@ ASCII operator characters:
 
     ! ? @ # $ % ^ & | ~ = + - * / \ > < : . 
 
-Reserved Tokens
----------------
+## Reserved Tokens
 
 Grace has the following reserved tokens:
 
@@ -157,8 +148,7 @@ Grace has the following reserved tokens:
 
     . := = ; { } [ ] ( ) : -> < > 
 
-Newlines, Tabs and Control Characters
--------------------------------------
+## Newlines, Tabs and Control Characters
 
 Newline in Grace programs can be represented by the Unicode line feed (lf) character, by the
 Unicode carriage return
@@ -172,7 +162,6 @@ control characters in strings; see Table \[tab:StringEscapes\] in
 Section \[Strings\].
         
 # Built-in Objects
-
 
 ## Done
 
@@ -962,12 +951,7 @@ If the receiver of a named method request named _m_ is `self` or
 `outer` it may be left implicit, _i.e._, the `self` or `outer` and the
 dot may both be omitted.
 
-#### Examples
-        print "Hello world" 
-        size 
-        canvas
-
-#### Resolving Implcit Requests
+Implicit requests are resolved as follows:
 
 * If there is a declaration named _m_ lexically inside but excluding
     the single innermost object (or trait, class) then the implicit
@@ -987,6 +971,14 @@ Note that implicit requests are resolved within the site of the
 declaring method, not where they are used. 
 
 #### Examples
+
+Implicit requests: 
+
+        print "Hello world" 
+        size 
+        canvas
+
+Resolving implicit requests: 
 
 ````
 method foo { print "outer" } 
@@ -1026,8 +1018,7 @@ followed by a single argument. Spaces are optional before and after the
 
 Assignment methods return `done`.
 
-Binary Operator Requests 
-------------------------
+## Binary Operator Requests 
 
 Binary operators are methods whose names comprise one or more operator
 characters, provided that the operator reserved by the
@@ -1067,8 +1058,7 @@ and the parse on the right.
   `a - b - c`                   `(a - b) - c`
   ----------------------------- ---------------------------
 
-Unary Prefix Operator Requests
-------------------------------
+## Unary Prefix Operator Requests
 
 Grace supports unary methods named by operator symbols that precede the
 explicit receiver. (Since binary operator methods must also have an
@@ -1087,9 +1077,7 @@ tightly than binary operator requests.
     status.ok :=  !engine.isOnFire && wings.areAttached && isOnCourse
 
 
-
-Requesting Methods with Type Parameters {#GenericMethodRequests}
----------------------------------------
+## Requesting Methods with Type Parameters
 
 Methods that have type parameters may be requested with or without
 explicit type arguments. If type arguments are supplied there must be
@@ -1104,12 +1092,11 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
     sumSq(10.i64, 20.i64) 
 
-Precedence of Method Requests {#sect:precedence}
------------------------------
+## Precedence of Method Requests
 
-Grace programs are formally defined by the language’s grammar (see
-appendix \[Grammar\]). The grammar gives the following precedence
-levels; lower numbers bind more tightly.
+Grace programs are formally defined by the language’s [Grammar]. The
+grammar gives the following precedence levels; lower numbers bind more
+tightly.
 
 1.  Numerals and constructors for strings, objects, iterables,
     blocks, and types; parenthesized expressions.
@@ -1130,15 +1117,8 @@ levels; lower numbers bind more tightly.
 7.  Assignments and method requests that use `:=` as a suffix to a
     method name.
 
-Control Flow {#ControlFlow}
-============
 
-Control flow statements are requests to methods defined in the dialect.
-Grace uses what looks like conventional syntax with a leading keyword
-(`if`, `while`, `for`, etc.); these are implicit method requests
-typically implemented in a dialect. 
-
-#### Patterns 
+# Pattern Matching
 
 Pattern matching is based around `Pattern` objects that respond to the
 `match(subject)` request by returning a `MatchResult`, which is either
@@ -1169,7 +1149,7 @@ we can write
     Point.match(cp).result       // cp
     Point.match(42)              // false
 
-#### Matching Blocks
+## Matching Blocks
 
 Blocks with a single parameter are called _matching blocks_. Matching
 blocks also conform to  type Pattern, and can be evaluted by
@@ -1184,12 +1164,12 @@ pattern`, then the `_ :` can be ommitted, provided the `pattern` here
 is either parenthesized, or a string or numeric literal (the delimited
 argument rule).
 
-#### Self-Matching Objects
+## Self-Matching Objects
 
 The objects created by literals — Strings and Numbers — are patterns that
 match themselves. That’s what lets things like this work:
 
-    method fib(n : Number) {
+    method fib(n : Number) -> Number {
       match (n) 
         case { 0 -> 0 }
         case { 1 -> 1 }
@@ -1199,7 +1179,6 @@ match themselves. That’s what lets things like this work:
 To match against objects that are not patterns, a library or dialect
 can offer to lift any object `o` to a pattern that matches just `o`
 by supporting a request such as `singleton(o)`.
-
 
 #### Examples
 
@@ -1219,19 +1198,12 @@ by supporting a request such as `singleton(o)`.
 
 # Exceptions
 
-
 Grace supports exceptions, which can be raised and caught. Exceptions
-are categorized into a hierarchy of `ExceptionKind`s, described in
-Section \[ExceptionHierarchy\].
-
+are categorized into a hierarchy of `ExceptionKind`s.
 At the site where an exceptional situation is detected, an exception is
 raised by requesting the `raise` method on an `ExceptionKind` object,
 with a string argument explaining the problem.
 
-#### Examples
-
-        BoundsError.raise "index {ix} not in range 1..{n}"
-        UserException.raise "Oops...!"
 
 Raising an exception does two things: it creates an `exception` object
 of the specified kind, and terminates the execution of the expression
@@ -1240,12 +1212,19 @@ resume that execution although reflection or debuggers should have
 access to the whole stack at the point the exception is
 thrown. Execution continues when the exception is *caught.*
 
-An exception will be caught by a dynamically-enclosing
-`try(exp) catch (block`$_{1}$`)`
-…`catch(block`$_{n}$`) finally(finalBlock)`, in which the `block`$_{i}$
+#### Examples
+
+        BoundsError.raise "index {ix} not in range 1..{n}"
+        UserException.raise "Oops...!"
+
+## Catching Exceptions
+
+An exception can be caught by a dynamically-enclosing
+`try(exp) catch (block`1)`
+…`catch(block`n`) finally(finalBlock)`, in which the `block`i
 are pattern-matching blocks. More precisely, if an exception is raised
 during the evaluation of the `try` block `exp`, the `catch` blocks
-`block`$_{1}$, `block`$_{2}$, …`block`$_{n}$, are attempted in order
+`block`1, `block`2, …`block`n, are attempted in order
 until one of them matches the exception. If none of them matches, then
 the process of matching the exception continues in the
 dynamically-surrounding `try() catch()` …`catch() finally()`. The
@@ -1270,88 +1249,7 @@ exception is raised, or one of the `catch` blocks returns.
         f.close
     }
 
-The Exception Hierarchy
------------------------
-
-Grace defines a hierarchy of kinds of exception. All exceptions have the
-same type, that is, they understand the same set of requests. However,
-there are various kinds of exception, corresponding to various kinds of
-exceptional situation. The exception hierarchy classifies these kinds of
-exception using `ExceptionKind` objects, which have the following type:
-
-    type ExceptionKind = Pattern & {
-        parent -> ExceptionKind
-        // answers the exceptionKind that is the parent of this exception in the 
-        // hierarchy. The parent of exception is defined to be exception. The parent
-        // of any other exceptionKind is the exception that was refined to create it.
-        
-        refine (name:String) -> ExceptionKind
-        // answers a new exceptionKind, which is a refinement of self.
-        
-        raise (message:String) 
-        // creates an exception of this kind, terminating the current execution, 
-        // and transferring control to an appropriate handler.
-
-        raise (message:String) with (data:Object) 
-        // similar to raise(), except that the object data is associated with the 
-        // new exception.
-    }
-
-Because `ExceptionKinds` are also `Patterns`, they support the pattern
-protocol (`match`, `&`, and `|`) described in Section \[Patterns\].
-Perhaps more pertinently, this means that they can be used as the
-argument of the `catch blocks` in a `try()` `catch()` …construct.
-
-At the top of the hierarchy is the `Exception` object; all exceptions
-are refinements of `exception`. There are three immediate refinements,
-of `Exception`.
-
-1.  `EnvironmentException`: those exceptions arising from interactions
-    between the program and the environment, including network
-    exceptions, file system exceptions, and inappropriate user input.
-
-2.  `ProgrammingError`: exceptions arising from programming errors.
-    Examples are `IndexOutOfBounds`, `NoSuchMethod`, and `NoSuchObject`.
-
-3.  `ResourceException`: exceptions arising from an implementation
-    insufficiency, such as running out of memory or disk space.
-
-Notice that there is no category for “expected” exceptions. This is
-deliberate; expected events should not be represented by exceptions, but
-by other values and control structures. For example, if you you have a
-key that may or may not be in a dictionary, you should not request the
-`at` method and catch the `NoSuchObject` error. Instead, you should
-request the `at()ifAbsent()` method.
-
-Each exception is matched by the `ExceptionKind` that was raised to
-create it, and all of the ancestors of that kind of exception. Because
-`Exception` is the top of the exception hierarchy, it matches all
-exceptions.
-
-Exceptions have the following type.
-
-    type Exception = type {
-        exception -> exceptionKind  // the exceptionKind of this exception.
-        message -> String       
-        // the message that was provided when this exaction was raised.
-        
-        data -> Object      // the data object that was associated with this exception
-        // when it was raised, if there was one. Otherwise, the string "no data".
-        
-        lineNumber -> Number        // the source code line number
-        // of the raise request that created this exception.
-        
-        moduleName -> String        // the name of the module
-        // containing the raise request that created this exception.
-        
-        backtrace -> List<String>   
-        // a description of the call stack at the time that this exception was raised. 
-        // backtrace.first is the initial execution environment; backtrace.last is the 
-        // context that raised the exception.
-    }
-
-Equality and Value Objects {#Values}
-==========================
+# Equality and Value Objects
 
 All objects automatically implement the following methods; programmers
 may override them.
@@ -1378,8 +1276,8 @@ objects” should override `==` so that it implements Leibniz equality.
 
  
 
-Types {#Types}
-=====
+# Types
+
 
 Grace uses structural typing @Modula3 [@malayeri08; @whiteoak08]. Types
 primarily describe the requests that objects can answer. Fields do not
@@ -1441,7 +1339,7 @@ Grace’s standard prelude defines the following basic types:
 In addition, variables can be annotated as having type `Unknown`.
 Unknown is not a type, but a label that the type system uses when
 reasoning about the values of expressions. Parameters and variables that
-lack explicit type  are implicitly annotated with type
+lack explicit types  are implicitly annotated with type
 `Unknown`.
 
 Types {#ObjectTypes}
@@ -1775,7 +1673,7 @@ at least: we apologise if we’ve missed any languages out.
 All the good ideas come from these languages: the bad ideas are our
 responsibility @HoareHints.
 
-Grammar {#Grammar}
+Grammar
 =======
 
 _(to be attached one James works out how to do it)_
