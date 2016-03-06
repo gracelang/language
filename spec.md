@@ -3,7 +3,6 @@ author:
 - 'Andrew P. Black'
 - 'Kim B. Bruce'
 - James Noble
-- Michael Homer
 
 bibliography:
 - 'spec.bib'
@@ -229,24 +228,24 @@ parmameterless blocks that return `Boolean`.  This gives them
     toBe || { ! toBe }
 
 
-## Strings and Characters 
+## Strings
 
-String literals in Grace are written between double quotes, and must be
-confined to a single line. Strings literals support a range of escape
-characters such as `"\n\t"`, and also escapes for Unicode; these are
-listed in Table \[tab:StringEscapes\]. Individual characters are
-represented by Strings of length 1. Strings are Grace value objects (see
-§\[Values\]), and so an implementation may intern them. Grace’s standard
+String literals in Grace are written between double quotes, and must
+be confined to a single line. Strings literals support a range of
+escape characters such as `"\n\t"`, and also escapes for Unicode;
+these are listed in Table \[tab:StringEscapes\]. Individual characters
+are represented by Strings of length 1. Strings are Grace value
+objects, so an implementation may intern them. Grace’s standard
 library includes supports efficient incremental string construction.
 
    Escape  Meaning        Unicode                         Escape           Meaning              Unicode
   -------- -------------- --------------------- -------------------------- -------------------- -------------------------
-    \\\\   backslash      <span>U+005C</span>             \\`_`            non-breaking space   <span>U+00A0</span>
-    \\n    line-feed      <span>U+000A</span>              \\r             carriage return      <span>U+000D</span>
-    \\t    tab            <span>U+0009</span>              \\l             Line separator       <span>U+2028</span>
-    \\{    left brace     <span>U+007B</span>           \\u$hhhh$          4-digit Unicode      <span>U+$hhhh$</span>
-    \\}    right brace    <span>U+007D</span>    <span>\\U$hhhhhh$</span>  6-digit Unicode      <span>U+$hhhhhh$</span>
-   \\`"`   double quote   <span>U+0022</span>                                                   
+    \\\\   backslash      U+005C             \\`_`            non-breaking space   U+00A0
+    \\n    line-feed      U+000A              \\r             carriage return      U+000D
+    \\t    tab            U+0009              \\l             Line separator       U+2028
+    \\{    left brace     U+007B           \\u$hhhh$          4-digit Unicode      U+$hhhh$
+    \\}    right brace    U+007D    \\U$hhhhhh$  6-digit Unicode      U+$hhhhhh$
+   \\`"`   double quote   U+0022                                                   
 
 #### Examples
 
@@ -506,11 +505,12 @@ An empty method body returns `done`.
 
 ## Annotations
 
-Any declaration, and any object constructor, may be have a 
-comma-separated list of annotations following the kewword **`is`** before
-its body or initialiser. Annotations must be manifest expressions. While
-annotations may be defined by libraries or dialects, Grace defines the
-following core annotations:
+Any declaration, and any object constructor, may be have a
+comma-separated list of annotations following the kewword **`is`**
+before its body or initialiser. Annotations must be [Manifest
+Expressions] that return _annotator objects_. While annotations may be
+defined by libraries or dialects, Grace defines the following core
+annotations:
 
 |:--|:--|
 | `abstract` | method will not conflict with or override another method | 
@@ -747,8 +747,9 @@ called the _parent_ — into the current object (the object under
 construction).  A new declaration in the current object can override a
 declaration from a parent.
 
-The argument of an `inherit` or `use` clause is restricted to be a manifest
-expression that creates a new object, such as a request on a class or trait.
+The argument of an `inherit` or `use` clause is restricted to be a
+[Manifest Expression](Manifest Expressions)
+that creates a new object, such as a request on a class or trait.
 The argument cannot refer to `self`, implicitly or explicitly.
 The object reused by a `use` clause must be a trait object. 
 
@@ -957,7 +958,7 @@ that is a numeral, string, lineup, or block.
 	while {x < 10} then { print [a, x, b]; x := x + 1 }
 
 
-### Implicit requests
+### Implicit Requests
 
 If the receiver of a named method request named _m_ is `self` or
 `outer` it may be left implicit, _i.e._, the `self` or `outer` and the
@@ -975,7 +976,7 @@ Implicit requests are resolved as follows:
    then the implicit request is treated as a `self` request. Otherwise:
 
 * If there is a lexically visible declaration of _m_, going out as far
-  as the (module object)[Modules] and (dialect)[Dialects],
+  as the [module object](Modules) and [dialect](Dialects)
   then the request resolves to that declaration. Otherwise:
 
 * If there is no declaration named _m_, the request is an error.
@@ -1106,6 +1107,33 @@ arguments are omitted, they are assumed to be type `Unknown`.
     sumSq(10.i64, 20.i64) 
 
 
+## Manifest Expressions
+
+Types, annotations, and the parent arguments to `inherit` and `use`
+clauses must be _manifest_: that is they must be able to be determined
+before a program begins running. Requests for types and annotations
+must return manifest type and annotation objects respectively, while
+parent arguments must return the results of manifest object constructors.
+
+ 1. [Numbers], [Lineups], [Strings], and [Objects] are manifest.
+ 2. [Implicit Requests] and  [Outer] requests resolving to manifest
+ declarations in surrounding method scopes, the module, or the
+ dialect, are manifest.
+ 4. Explicit requests are manifest if the receiver is manifest
+ and if they resolve to a manifest declaration.
+ 5. A method is manifest if it uniquely tail-returns a manifest
+ expression.  Thus, class and trait declarations are manifest.
+ 6. [Constant](Constants) and [Type](Types) declarations, and 
+imported [Modules]' nicknames are manifest.
+
+Note that [Variables], method parameters, and [Self] are not manifest.
+Class, trait and method declarations may themselves be manifest, but
+they will not be able to be used in manifest expressions if they
+are reached by implicit or explicit method requests on `self`.
+
+A dialect may check method declarations with `manifest` annotation to
+ensure that they declare methods that would be manifest when requested
+on manifest objects.
 
 ## Precedence of Method Requests
 
@@ -1115,20 +1143,14 @@ tightly.
 
 1.  Numerals and constructors for strings, objects, iterables,
     blocks, and types; parenthesized expressions.
-
 2.  Requests of named methods.
     Multi-part requests accumulate name-parts and arguments as far to
     the right as possible.
-
 3.  Prefix operators
-
 4.  “Multiplicative” operators `*` and `/`: associate left to right.
-
 5.  “Additive” operators `+` and `-`: associate left to right.
-
 6.  “Other” operators, whose binding must be given explicitly
     using parenthesis.
-
 7.  Assignments and method requests that use `:=` as a suffix to a
     method name.
 
@@ -1193,7 +1215,7 @@ match themselves. That’s what lets things like this work:
 
 To match against objects that are not patterns, a library or dialect
 can offer to lift any object `o` to a pattern that matches just `o`
-by supporting a request such as `singleton(o)`.
+by supporting a request such as `Singleton(o)`.
 
 #### Examples
 
@@ -1267,88 +1289,66 @@ exception is raised, or one of the `catch` blocks returns.
 
 # Types
 
-Grace uses structural typing @Modula3 [@malayeri08; @whiteoak08]. Types
+Grace uses structural typing @Modula3 @malayeri08 @whiteoak08. Types
 primarily describe the requests that objects can answer. Fields do not
 directly influence types, except that a field that is public, readable
 or writable is treated as the appropriate method.
 
-Unlike in other parts of Grace, the names introduced by type
-declarations are always statically typed, and their semantics may depend
-on the static types. The main case for this is distinguishing between
-identifiers that refer to types, and those that refer to constant name
-definitions (introduced by `def`) which are interpreted as Singleton
-types.
+Type declarations are always statically typed, and their semantics may
+depend on the static types. 
+When they are used "type names" are conceptually [Manifest Expressions]
+that return _type objects_. All type objects are also patterns, so
+they can be used in [Pattern Matching], typically to perform dynamic
+type tests. On the other hand, because they are manifest, types can be
+checked statically.
 
-## Basic Types
+## Predeclared Types
 
-Grace’s standard prelude defines the following basic types:
+A number of types are declared in the standard prelude and included in
+most dialects, including `None`, `Done`, `Boolean`, `Object`,
+`Number`, `String`, `Block`, `Stream`, `Pattern`, `Exception`, and
+`ExceptionKind`.  Some paticular types are treated specially:
 
--   `None`—an uninhabited type. `None` conforms to all other types.
-    \[None\]
-
--   `Done`—the type of the object returned by assignments and methods
-    that have nothing interesting to return. All types conform to
-    `Done`. The only methods on `Done` objects are `asString` and
-    `asDebugString`
-
--   `Object`—the common interface of most objects. It has methods `==`,
-    `!=` (also written as or $\neq$), `asString`, `asDebugString`, and
-    `::` (binding construction). Objects that do not explicitly inherit
-    from some other object implicitly inherit from a superobject with
-    this type, and thus all objects (apart from `done`) have these
-    methods, which will not be further mentioned.
-
--   `Boolean`—the type of the objects `true` and `false`. `Boolean` has
-    methods $\&\&$, $||$, $==$, $!=$, $!$ (prefix-not), `not`, `andAlso`
-    (short-circuit <span>and</span>), `orElse` (short-circuit
-    <span>or</span>), and `match`.
-
--   `Number`—the type of all numbers. `Number` has methods $+$, $*$,
-    $-$, $/$, $\%$ (remainder), `^` (exponentiation), $++$, $<$, $<=$
-    (or $\leq$), $>$, $>=$ (or $\geq$), `..` (creating a range), `-`
-    (prefix), `inBase`, `truncate`, and `match`.
-
--   `String`—the type of character strings, and individual characters.
-    String has methods $++$, `size`, `ord`, `at` (also `[ ]`),
-    `iterator`, `substringFrom()to`, `replace()with`, `hash`, `indices`,
-    `asNumber`, `indexOf`, `lastIndexOf`, and `match`.
-
--   `Pattern`—pattern used in match/case statements
-
--   `ExceptionKind`—categorizing the various kinds of exceptional event.
-    `ExceptionKind` has methods `refine`, `raise`, `raise()with`,
-    `match`, $|$, $\&$ and `parent`.
-
--   `Exception`—the type of a raised exception. `Exception` has methods
-    `message`, `lineNumber`, `moduleName`, `backtrace`,
-    `printBackTrace`, `data` and `exception`.
-
-In addition, variables can be annotated as having type `Unknown`.
-Unknown is not a type, but a label that the type system uses when
-reasoning about the values of expressions. Parameters and variables that
-lack explicit types  are implicitly annotated with type
-`Unknown`.
-
-## type Object
+### type Object
 
 The type ``Object`` declares a number of methods to which most normal
 objects will respond --- the [Default Methods] declared in
 `graceObject`. Some objects, notably instances of raw traits and
 `done` do not conform to ``Object``.
 
-## type Self 
+### type Self 
 
-The type name ``Self`` represents the whole public interface of the
-current object.
+The type ``Self`` represents the whole public interface of the current
+object.
 
-## Types {#ObjectTypes}
+### type Unknown 
+
+The type `Unknown` prevents type checking. Any object matches
+type unknown, and messages sent to Unknown can only be checked at
+runtime. Unknown can either be written explicitly in declarations,
+or types can be omitted altogether, in which case the type is
+considered to be _implicitly `Unknown`_
+
+#### Examples
+
+    var x : Unknown := 5  //who knows what the type is 
+    var x := 5            //same here, but Unknown is implicit
+    x := "five"           //who cares
+    x.gilad               //almost certainly crash at run time
+
+    method id(x) { x }    //argument and return types both implicitly unknown
+    method id(x : Unknown) -> Unknown { x }  // same thing, explicitly  
+
+
+## Interface Types
 
 Types define the interface of objects by detailing their public methods,
 and the types of the arguments and results of those methods. Types can
-also contain definitions of other types.
+contain definitions of other types to describe types nested
+inside objects.
 
 The various `Cat` object and class descriptions (see
-§\[ObjectsAndClasses\]) would produce objects that conform to an object
+[Objects, Classes, and Traits]) would objects that conform to an interface
 type such as the following. Notice that the public methods implicitly
 inherited from `Object` are implicitly included in all types.
 
@@ -1383,7 +1383,7 @@ Notice that the `type` keyword may be omitted from the right-hand-side
 of a type declaration when it is a simple type literal.
 
 Grace has a single namespace: types live in the same namespace as
-methods and variables.
+feverything else.
 
     type MyParametricType = type <A,B>
      {
@@ -1391,10 +1391,10 @@ methods and variables.
         cleanup(_:B)
      }
 
-## Relationships between Types—Conformance Rules
+## Type Conformance
 
-The key relation between types is **conformance**. We write <span>B $<:$
-A</span> to mean B conforms to A; that is, that B has all of the methods
+The key relation between types is **conformance**. We write `B <: A`
+to mean B conforms to A; that is, that B has all of the methods
 of A, and perhaps additional methods (and that the corresponding methods
 have conforming signatures). This can also be read as “B is a subtype of
 A”, “A is a supertype of B”.
@@ -1402,33 +1402,31 @@ A”, “A is a supertype of B”.
 We now define the conformance relation more rigorously. This section
 draws heavily on the wording of the Modula-3 report @Modula3.
 
-If <span>B $<:$ A</span>, then every object of type B is also an object
+If B `<:` A, then every object of type B is also an object
 of type A. The converse does not apply.
 
-If A and B are ground object types, then <span>B $<:$ A</span> iff for
-every method m in A, there is a corresponding method $m$ (with the same
+If A and B are ground object types, then B `<:` A iff for
+every method m in A, there is a corresponding method `m` (with the same
 name) in B such that
 
--   The method $m$ in B must have the same number of arguments as $m$ in
+-   The method `m` in B must have the same number of arguments as `m` in
     A, with the same distribution in multi-part method names.
 
--   If the method $m$ in A has signature “($P_1,...P_n$) `->` $R$”, and
-    $m$ in B has signature “($Q_1,...Q_n$) `->` $S$”, then
+-   If the method `m` in A has signature “`(P1,...Pn) -> R`, and
+    `m` in B has signature “`(Q1,...Qn) -> S`”, then
 
-    -   parameter types must be contravariant: <span>$P_i$ $<:$
-        $Q_i$</span>
+    -   parameter types must be contravariant: `Pi <: Qi`
 
-    -   results types must be covariant: <span>S $<:$ R</span>
-
-If a class or object B inherits from another class A, then B’s type
-should conform to A’s type. If A and B are parameterized classes, then
-similar instantiatons of their types should conform.
+    -   results types must be covariant: `S <: R`
 
 The conformance relationship is used in `where` clauses to constrain
 type parameters of classes and methods.
 
-## Variant Types
+## Composite types
 
+Grace offers a number of operators to build up composite types.
+
+### Variant Types
 
 Variables with untagged, retained variant types, written
 `T1 | T2 ... | Tn `, may refer to an object of any one of their
@@ -1438,17 +1436,15 @@ variable can be determined using that object’s reified type information.
 
 The only methods that may be requested via a variant type are methods
 with exactly the same declaration across all members of the variant.
-(Option) methods with different signatures may be requested at the most
-most specific argument types and least specific return type.
 
 Variant types are retained as variants: they are *not* equivalent to the
 object type that describes all common methods. This is so that the
 exhaustiveness of match/case statements can be determined statically.
 Thus the rules for conformance are more restrictive:
 
-``` {mathescape="true"}
-S <: S | T;   $~~~$  T <: S | T 
-(S' <: S) & (T' <: T) $\Rightarrow$ (S' | T')  <: (S | T) 
+``` 
+S <: (S | T);    T <: (S | T) 
+(S' <: S) & (T' <: T)  ==>  (S' | T')  <: (S | T) 
 ```
 
 To illustrates the limitations of variant types, suppose
@@ -1460,13 +1456,17 @@ To illustrates the limitations of variant types, suppose
 Then `U` fails to conform to `S | T` even though `U` contains all
 methods continued in both `S` and `T`.
 
-## Intersection Types
-
+### Intersection Types
 
 An object conforms to an Intersection type, written
 `T1 & T2 & ... & Tn`, if and only if that object conforms to all of the
 component types. The main use of intersection types is for augmenting
 types with new operations, and as as bounds on `where` clauses.
+
+``` 
+U <: S; U <: T;  U <: (S & T)
+(S & T) <: S;    (S & T) <: T 
+```
 
 #### Examples
 
@@ -1480,7 +1480,7 @@ types with new operations, and as as bounds on `where` clauses.
                ...
     }
 
-## Union Types
+### Union Types
 
 Structural union types (sum types), written `1 + `2 + ... + Tn\*, are
 the dual of intersection types. A union type `T1 + T2` has the interface
@@ -1489,17 +1489,28 @@ has a method that conforms to each of the methods common to `T1` and
 `T2`. Unions are mostly included for completeness: variant types subsume
 most uses.
 
-## Type subtraction
+
+``` 
+S <: (S + T);    T <: (S + T)
+```
+
+
+### Type Subtraction
 
 A type subtraction, written `T1 - T2` has the interface of `T1` without
 any of the methods in `T2`.
 
-## Singleton Types
+```
+interface(S - T) = interface(S) - interface(T) 
+```
 
-The names of singleton objects, typically declared in object
-declarations, may be used as types. Singleton types match only their
-singleton object. Singleton types can be distinguished from other types
-because Grace type declarations are statically typed.
+
+### Singleton Types
+
+To keep track of individual objects (especially in variants) a library
+or dialect can offer to lift any object `o` to a type just `o` by
+supporting a manifest request such as `Singleton(o)` and treating the
+result as a type.  Singleton types match only their singleton object.
 
     def null = object { 
         method isNull -> Boolean {return true} 
@@ -1510,49 +1521,32 @@ because Grace type declarations are statically typed.
         isNull -> Boolean
     }
 
-    type Option<T> = Some<T> | null
+    type Option<T> = Some<T> | Singleton(null)
 
-## Nested Types
+
+```
+singleton(o) <: S  if (o : T) && (T <: S)
+x : singleton(o)   if x == o
+```
+
+### Nested Types
 
 Type definitions may be nested inside other expressions, for example,
 they may be defined inside object, class, method, and other type
-definitions. Such types can be referred to using “dot” notation, written
-`o.T`. This allows a type to be used as a specification module, and for
-types to be imported from modules, since modules are objects.
+definitions, and typically accessed via [Manifest Requests].
+This allows types to be declared and imported from
+across modules, since modules are manifest objects.
 
-
-## Additional Types of Types
-
-<span>option:</span> Grace may support exact types (written `=Type`)
-
-<span>option:</span> Grace probably will probably not support Tuple
-types, probably written `Tuple<T1, T2, ..., Tn>`.
-
-<span>option:</span> Grace may support selftypes, written `Selftype`.
-
-
-## Reified Type Information Metaobjects and Type Literals
-
-
-(option) Types are represented by objects of type `Type` (Hmm, should be
-`Type<T>`?). Since Grace has a single namespace, types can be accessed
-by requesting their names.
-
-To support anonymous type literals, types may be written in expressions:
-`type Type`. This expression returns the type metaobject representing
-the literal type.
-
-## Type Assertions
+### Type Assertions
 
 Type assertions can be used to check conformance and equality of
 types.
 
     assert {B <: A}  
        // B 'conforms to' A.
-    assert {B <: {foo(_:C) -> D} }
+    assert {B <: type {foo(_:C) -> D} }
        // B had better have a foo method from C returning D
-    assert {B = A | C}
-
+    assert {B == A | C}
 
 
 # Modules and Dialects 
