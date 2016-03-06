@@ -178,14 +178,14 @@ Section \[Strings\].
 
 
 Assignments, and methods without an explicit result, have the value
-`done`, of type `Done`. The type `Done` plays a role similar to *void*
+**`done`**, of type **`Done`**. The type `Done` plays a role similar to *void*
 or *Unit* in other languages. The only requests understood by `done` are
 `asString` and `asDebugString`. (In particular, `done` does not have an
 equality method).
 
 ## Numbers
 
-Grace supports a single type `Number`. `Number` supports at least 64-bit
+Grace supports a single type **`Number`**. `Number` supports at least 64-bit
 precision floats. Implementations may support other numeric types: a
 full specification of numeric types is yet to be completed.
 
@@ -304,11 +304,11 @@ used to build collections.
        button "Cancel" action { missiles.abort }
     ]
 
-## Blocks {#Blocks}
+## Blocks
 
 Grace blocks are lambda expressions; they may or may not have
 parameters. If a parameter list is present, the parameters are separated
-by commas and the list is terminated by the `->` symbol.
+by commas and the list is terminated by the **`->`** symbol.
 
     { do.something }
     { i -> i + 1 }
@@ -321,7 +321,7 @@ is the same as the number of parameters of the block. Requesting the
 number of arguments. If block parameters are declared with type
 annotations, it is an error if the arguments do not conform to those types.
 
-#### Examples {#examples-5 .unnumbered}
+#### Examples
 
 The looping construct
 
@@ -366,7 +366,7 @@ lexically-enclosing constant, variable or parameter.
 
 ## Constants
 
-Constant definitions are introduced using the `def` keyword; they bind
+Constant definitions are introduced using the **`def`** keyword; they bind
 an identifier to the value of an initialising expression, and may
 optionally be given a type: this type is checked when
 the constant is initialised. Constants cannot be re-bound.
@@ -379,7 +379,7 @@ the constant is initialised. Constants cannot be re-bound.
 
 ## Variables
 
-Variable definitions are introduced using the `var` keyword; they
+Variable definitions are introduced using the **`var`** keyword; they
 optionally bind an identifier to the value of an initialising
 expression. Variables can be re-bound to
 new values as often as desired, using an assignment. If a
@@ -399,7 +399,7 @@ the variable is initialised or assigned.
 
 ## Methods
 
-Methods are declared with the `method` keyword.  Methods define the
+Methods are declared with the **`method`** keyword.  Methods define the
 action to be taken when the object containing the method receives a
 request with the given name. Because every method must be associated
 with an object, methods may not be declared directly inside other
@@ -449,7 +449,7 @@ Such an "operator method" can have no parameters, in which case
 the method is requested by a prefix operator expression.
 It can also have one parameter, in which
 case it is requested by a binary operator expression.  The canonical name of a 
-unary method is `prefix` followed by the operator symbols; the canonical 
+unary method is **`prefix`** followed by the operator symbols; the canonical 
 name of a binary method is the sequence of operator symbols followed by `(_)`
 
 As a consequence of the above rules, methods `max(a, b, c)` and
@@ -483,7 +483,7 @@ checked just before the method body is executed.
 
 ### Type Parameters
 
-Methods may be declared with one or more type parameters, which are listed between `<` and `>` used as brackets.
+Methods may be declared with one or more type parameters, which are listed between **`<`** and **`>`** used as brackets.
 If present, type parameters must appear after the identifier of the first part of
 a multipart name.   There must be no space between the opening `<` and the first type parameter (or,
 in a request, the first type argument), or between the last type parameter (or argument) and the closing `>`.
@@ -507,7 +507,7 @@ The presence or absence of type parameters does not change the canonical name of
 
 ### Returning a Value from a Method
 
-Methods may contain one or more `return` statements.
+Methods may contain one or more **`return`** statements.
 If a `return e` statement is executed, the method terminates with the
 value of the expression `e`, while a `return` statement with no
 expression returns `done`.  If execution reaches
@@ -518,7 +518,7 @@ An empty method body returns `done`.
 ## Annotations
 
 Any declaration, and any object constructor, may be have a 
-comma-separated list of annotations following the kewword `is` before
+comma-separated list of annotations following the kewword **`is`** before
 its body or initialiser. Annotations must be manifest expressions. While
 annotations may be defined by libraries or dialects, Grace defines the
 following core annotations:
@@ -540,13 +540,100 @@ following core annotations:
     method id<T> is abstract,  { } 
 
 
+## Encapsulation
+
+Grace has different default encapsulation rules for methods, types, and
+fields. The defaults can be changed by explicit annotations. The details
+are as follows.
+
+### Methods, Classes, Traits and Types
+
+By default, methods, classs, traits and types are public, which means
+that they can be requested by any client that has access to the
+object. Thus, any expression can be the target of a request of a
+public method.
+
+If a method or type is annotated `is confidential`, it can be requested
+only on `self` or `outer`. This means that it 
+is accessible to the object that contains it, and to inheriting
+objects, but not to client objects.
+
+### Fields
+
+Variables and definitions (`var` and `def` declarations) immediately
+inside an object constructor create *fields* in that object.
+
+A field declared as `var x` can be read using the request `x` and
+assigned to using the assignment request `x:=(_)`.
+A field declared as `def y` can be read using the request `y`, and
+cannot be assigned. By default, fields are *confidential*: they can be
+accessed and assigned from the object itself, and inheriting objects,
+and from lexically-enclosed objects, but not from clients. In other
+words, these requests can be made only on `self` and `outer`.
+
+The default visibility can be changed using annotations. The annotation
+`readable` can be applied to a `def` or `var` declaration, and makes the
+accessor request available to any object. The annotation `writable` can
+be applied to a `var` declaration, and makes the assignment request
+available to any object. It is also possible to annotate a field
+declaration as `public`. In the case of a `def`, `public` is equivalent
+to (and preferred over) `readable`. In the case of a `var`, `public` is
+equivalent to `readable, writable`.
+
+Fields and methods share the same namespace. The syntax for variable
+access is identical to that for requesting a reader method, while the
+syntax for variable assignment is identical to that for requesting an
+assignment method. This means that an object cannot have a field and a
+method with the same name, and cannot have a method `x:=(_)`
+as well as a `var` field `x`.
+
+#### Examples
+
+    object {
+        def a = 1              // Confidential access to a
+        def b is public = 2        // Public access to b
+        def c is readable = 2     // Public access to c
+        var d := 3                   // Confidential access and assignment 
+        var e is readable          // Public access and confidential assignment
+        var f is writable           // Confidential access, public assignment
+        var g is public             // Public access and assignment
+        var h is readable, writable    // Public access and assignment
+    }
+
+### No Private Fields
+
+Some other languages support “private fields”, which are available only
+to an object itself, and not to clients or inheritors. Grace does not
+have private fields; all fields can be accessed from subobjects.
+However, the parameters and temporary variables of methods that return
+fresh objects can be used to obtain an effect similar to privacy.
+
+#### Examples
+
+        method newShipStartingAt(s:Vector2D)endingAt(e:Vector2D) {
+            // returns a battleship object extending from s to e.  This object cannot
+            // be asked its size, or its location, or how much floatation remains.
+            assert ( (s.x == e.x) || (s.y == e.y) )
+            def size = s.distanceTo(e)
+            var floatation := size
+            object {
+                method isHitAt(shot:Vector2D) {
+                    if (shot.onLineFrom(s)to(e)) then {
+                        floatation := floatation -1
+                        if (floatation == 0) then { self.sink }
+                        true
+                    } else { false }
+                }
+                ...
+            }
+        }                
 
 
 # Objects, Classes, and Traits 
 
-Grace `object` constructors generate
+Grace **`object`** constructors generate
 individual objects. 
-Grace `class` declarations define methods that generate objects,
+Grace **`class`** declarations define methods that generate objects,
 all of which have the same structure.
 
 The design of Grace's reuse mechanism is complete, but tentative. We need
@@ -624,8 +711,8 @@ Trait objects are objects with certain properties.  Specifically, a trait object
 an object constructor that contains no inherits statements, field declarations,
 or executable code.
 
-Modulo these restrictions, Grace's trait syntax and semantics is exactly parallel to the class syntax:
-a trait is a method that returns a trait object.
+Modulo these restrictions, Grace's **trait** syntax and semantics is exactly parallel to the class syntax:
+a `trait` defines a method that returns a trait object.
 
     trait emptiness {
         method isEmpty { size == 0 }
@@ -706,7 +793,7 @@ initialization of its parents, by overriding self requests used to initialise th
 
 ### Abstract Methods
 
-Methods may be annotated as being `abstract`.  Abstract methods do not
+Methods may be annotated as being **`abstract`**.  Abstract methods do not
 conflict with other methods, either abstract or concrete (non
 abstract).
 
@@ -791,19 +878,29 @@ is local to the receiver.
 
 ## Self 
 
-The reserved word `self` refers to the lexically enclosing object.
+The reserved word **`self`** refers to the lexically enclosing object.
 The expression `self.x` requests `x` on the current object.
-
-## Outer
-
-The reserved word `outer` refers to the object lexically enclosing
-`self`.  The expression `outer.x` requests `x` on the object lexically
-enclosing the current object.
 
 
 #### Examples
 
+      self                     
+      self.value
+      self.bar(1,2,6)
+      self.doThis(3) timesTo("foo")               
+      self + 1 
+      ! self   
+
+## Outer
+
+The reserved word **`outer`** refers to the object lexically enclosing
+`self`.  The expression `outer.x` requests `x` on the object lexically
+enclosing the current object.
+
+#### Examples
+
       outer                     
+      outer.outer.outer.outer
       outer.value
       outer.bar(1,2,6)
       outer.outer.doThis(3) timesTo("foo")               
@@ -814,13 +911,15 @@ enclosing the current object.
 
 A named method request comprises an expression identifying the receiver, 
 followed by a dot “.”, followed by a
-method name, and arguments.
+method name, and within parentheses, a comma-separated list of
+arguments.
 Parentheses are not used if there are no arguments. 
+
 
 To improve
 readability, a the name of a method that takes more than one parameter
-may comprise multiple parts, with argument lists between the parts and after the last part.
-For example
+may comprise multiple parts, with multiple argument lists between the parts and after the last part.
+For example:
 
         method drawLineFrom (source) to (destination) { ... }
 
@@ -832,23 +931,85 @@ name, you should continue accumulating words and argument lists as far
 to the right as possible. 
 
 Unlike some other languages, Grace does _not_ allow the overloading of
-method names:  the type of the arguments supplied to the request does
+method names by type:  the type of the arguments supplied to the request does
 not influence the method being requested.  However, the _number_ of arguments
 in a list does determine the method being requested.
 
-If the receiver of a named method is `self` it may be left implicit,
-_i.e._, the `self` and the dot may both be omitted. 
+#### Examples
+        self.clear
+        self.drawLineFrom (p1) to (p2)
+        self.drawLineFrom (origin) length (9) angle (pi/6)
+        self.movePenTo (x, y)
+        self.movePenTo (p)
+
+
+### Delimited Arguments
+
 Parenthesis may be omitted where they would enclose a single argument
 that is a numeral, string, lineup, or block.
 
 #### Examples
 
-        canvas.drawLineFrom (p1) to (p2)
-        canvas.drawLineFrom (origin) length 9 angle (pi/6)
-        canvas.movePenTo (x, y)
-        canvas.movePenTo (p)
+        self.drawLineFrom (p1) to (p2)
+        self.drawLineFrom (origin) length 9 angle (pi/6)
+        print "Hello World"
+	while {x < 10} then { print [a, x, b]; x := x + 1 }
+
+
+### Implicit requests
+
+If the receiver of a named method request named _m_ is `self` or
+`outer` it may be left implicit, _i.e._, the `self` or `outer` and the
+dot may both be omitted.
+
+#### Examples
         print "Hello world" 
         size 
+        canvas
+
+#### Resolving Implcit Requests
+
+* If there is a declaration named _m_ lexically inside but excluding
+    the single innermost object (or trait, class) then the implicit
+    request resolves to that declaration. Otherwise:
+
+* If there is a declaration named _m_ lexically visible on `self`
+   (i.e. declared in the single innermost object, trait, or class declaration
+   containing the method, or `use`d or `inherit`ed by that declaraton)
+   then the implicit request is treated as a `self` request. Otherwise:
+
+* If there is a lexically visible declaration of _m_, then the request
+  resolves to that declaration. Otherwise:
+
+* If there is no declaration named _m_, the request is an error.
+
+Note that implicit requests are resolved within the site of the
+declaring method, not where they are used. 
+
+#### Examples
+
+````
+method foo { print "outer" } 
+
+class app {
+  method barf { foo }
+}
+
+class bar { 
+  inherits app
+  method foo { print "bar" } 
+} 
+
+class baz {
+  inherits bar
+  method barf { foo }
+}
+
+
+app.barf  //prints "outer"
+bar.barf  //prints "outer"
+baz.barf  //prints "bar"
+````
 
 ##Assignment Requests
 
@@ -926,96 +1087,6 @@ tightly than binary operator requests.
     status.ok :=  !engine.isOnFire && wings.areAttached && isOnCourse
 
 
-
-Encapsulation
--------------
-
-Grace has different default encapsulation rules for methods, types, and
-fields. The defaults can be changed by explicit annotations. The details
-are as follows.
-
-### Methods, Classes, Traits and Types
-
-By default, methods, classs, traits and types are public, which means
-that they can be requested by any client that has access to the
-object. Thus, any expression can be the target of a request of a
-public method.
-
-If a method or type is annotated `is confidential`, it can be requested
-only on `self` or `outer`. This means that it 
-is accessible to the object that contains it, and to inheriting
-objects, but not to client objects.
-
-### Fields
-
-Variables and definitions (`var` and `def` declarations) immediately
-inside an object constructor create *fields* in that object.
-
-A field declared as `var x` can be read using the request `x` and
-assigned to using the assignment request `x:=(_)`.
-A field declared as `def y` can be read using the request `y`, and
-cannot be assigned. By default, fields are *confidential*: they can be
-accessed and assigned from the object itself, and inheriting objects,
-and from lexically-enclosed objects, but not from clients. In other
-words, these requests can be made only on `self` and `outer`.
-
-The default visibility can be changed using annotations. The annotation
-`readable` can be applied to a `def` or `var` declaration, and makes the
-accessor request available to any object. The annotation `writable` can
-be applied to a `var` declaration, and makes the assignment request
-available to any object. It is also possible to annotate a field
-declaration as `public`. In the case of a `def`, `public` is equivalent
-to (and preferred over) `readable`. In the case of a `var`, `public` is
-equivalent to `readable, writable`.
-
-Fields and methods share the same namespace. The syntax for variable
-access is identical to that for requesting a reader method, while the
-syntax for variable assignment is identical to that for requesting an
-assignment method. This means that an object cannot have a field and a
-method with the same name, and cannot have a method `x:=(_)`
-as well as a `var` field `x`.
-
-#### Examples
-
-
-    object {
-        def a = 1              // Confidential access to a
-        def b is public = 2        // Public access to b
-        def c is readable = 2     // Public access to c
-        var d := 3                   // Confidential access and assignment 
-        var e is readable          // Public access and confidential assignment
-        var f is writable           // Confidential access, public assignment
-        var g is public             // Public access and assignment
-        var h is readable, writable    // Public access and assignment
-    }
-
-### No Private Fields
-
-Some other languages support “private fields”, which are available only
-to an object itself, and not to clients or inheritors. Grace does not
-have private fields; all fields can be accessed from subobjects.
-However, the parameters and temporary variables of methods that return
-fresh objects can be used to obtain an effect similar to privacy.
-
-#### Examples
-
-        method newShipStartingAt(s:Vector2D)endingAt(e:Vector2D) {
-            // returns a battleship object extending from s to e.  This object cannot
-            // be asked its size, or its location, or how much floatation remains.
-            assert ( (s.x == e.x) || (s.y == e.y) )
-            def size = s.distanceTo(e)
-            var floatation := size
-            object {
-                method isHitAt(shot:Vector2D) {
-                    if (shot.onLineFrom(s)to(e)) then {
-                        floatation := floatation -1
-                        if (floatation == 0) then { self.sink }
-                        true
-                    } else { false }
-                }
-                ...
-            }
-        }                
 
 Requesting Methods with Type Parameters {#GenericMethodRequests}
 ---------------------------------------
