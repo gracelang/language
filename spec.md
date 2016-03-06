@@ -3,14 +3,16 @@ author:
 - 'Andrew P. Black'
 - 'Kim B. Bruce'
 - James Noble
+- Michael Homer
+
 bibliography:
 - 'spec.bib'
+
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.6a2.
+    Draft Specification Version 0.6a5
 ...
 
-<span>Revision committed on -- at : by </span>
 
 Introduction
 ============
@@ -643,9 +645,16 @@ Both `inherit` and `use` introduce the attributes of a reused object — called 
 current object (the object under construction). 
 A new declaration in the current object can override a declaration from a parent.
 
+The argument of an `inherit` or `use` clause is restricted to be a manifest
+expression that creates a new object, such as a request on a class or trait.
+The argument cannot refer to `self`, implicitly or explicitly.
+The object reused by a `use` clause must be a trait object. 
+
 If it is necessary to access an overridden attribute, the overridden attribute of the parent
 can be given an additional name by attaching an **alias** clause to the inherits statement.
 Attributes of the parent that are not required can be excluded using an **exclude** clause.
+
+#### Examples
 
 The example below shows how a class can use a method to override an accessor method for
 an inherited variable. 
@@ -706,33 +715,36 @@ accesses the overridden methods from the parent traits using the aliases `catMov
 and `dogMove`; as a result, nyssa will `move` either like a dog or a cat, depending on 
 a random variable.  
 
-The argument of an `inherit` or `use` clause is restricted to be a manifest
-expression that creates a new object, such as a request on a class or trait.
-The argument cannot refer to `self`, implicitly or explicitly.
-The object reused by a `use` clause must be a trait object. 
+### Combination and Initialisation
 
-When executed, an object constructor (or trait or class declaration) creates a new object with no attributes, and binds it to `self`. 
+When executed, an object constructor (or trait or class declaration)
+first creates a new object with no attributes, and binds it to `self`. 
+
 Next, the attributes of all _parent_ objects (created by any 'inherit' or 'uses' clauses), and any local declarations, are added to the new object: local declarations override parental declarations.
 It is a _trait composition error_ for the same concrete attribute to
 come from more than one parent, and not to be overridden by a local
-definition (all attributes are concrete unless annotated `is
-abstract`; abstract attributes must have empty bodies).
+definition.
+
 Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with local declarations. (Note that used traits contain no executable code.)
 Initialisers for all `def`s and `var`s, 
 and code in the bodies of parents,
 are executed in the order they are written, even for `def`s or `var`s that are excluded from the new object. 
-As a consequence of these rules, a new object can change the initialization of its parents, by overriding requests used to initialise the parent. 
+During initialisation, `self` is always bound to the new object being
+created, even while executing code and initialisers from parent
+objects, classes or traits.
+
+As a consequence of these rules, a new object can change the
+initialization of its parents, by overriding self requests used to initialise the parent. 
 
 
-Abstract Methods
-----------------
+### Abstract Methods
 
-Methods may be annotated as being abstract.  Abstract methods do not conflict with other methods, 
-either abstract or concrete.
+Methods may be annotated as being `abstract`.  Abstract methods do not
+conflict with other methods, either abstract or concrete (non
+abstract).
 
 
-Classes with Type Parameters
-----------------------------------
+## Classes with Type Parameters
 
 Like methods, classes may be declared to have type parameters.
 Requests on the class may optionally be provided
@@ -754,8 +766,7 @@ with type arguments.
     }
 )
 
-Method Requests
-===============
+# Method Requests
 
 Grace is a pure object-oriented language. Everything in the language is
 an object, and all computation proceeds by _requesting_ an object—the receiver of the request—to
@@ -769,8 +780,7 @@ reference to the receiver, the method name, and possibly some arguments.
 In contrast, executing the method involves the code of the method, which
 is local to the receiver.
 
-Named Requests
---------------
+## Named Requests
 
 A named method request comprises an expression identifying the receiver, 
 followed by a dot “.”, followed by a
@@ -810,8 +820,7 @@ that is a numeral, string, lineup, or block.
         print "Hello world" 
         size 
 
-Assignment Requests
--------------------
+##Assignment Requests
 
 An assignment request is a variable followed by `:=`, or a request
 of a method whose name ends with `:=`. In both cases the `:=` is
