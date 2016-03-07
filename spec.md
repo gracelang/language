@@ -254,7 +254,7 @@ library includes supports efficient incremental string construction.
     "The End of the Line\n"
     "A"
 
-### String interpolation {#StringInterpolation}
+### String interpolation
 
 Within a string literal, expressions enclosed in braces are treated
 specially. The expression is evaluated, the `asString` method is
@@ -1031,7 +1031,7 @@ followed by a single argument. Spaces are optional before and after the
        y:=2 
        widget.active := true
 
-Assignment methods return `done`.
+Assignment methods conventionally return `done`.
 
 ## Binary Operator Requests 
 
