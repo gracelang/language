@@ -756,9 +756,10 @@ The object reused by a `use` clause must be a trait object.
 
 If it is necessary to access an overridden attribute, the overridden
 attribute of the parent can be given an additional name by attaching
-an **`alias`** clause to the inherits statement.  Attributes of the
-parent that are not required can be excluded using an **`exclude`**
-clause.
+an **`alias`** clause to the inherits statement: `alias n(_) = m(_)`
+gives a new confidential _alias_ `n(_)` for the attribute `m(_)`.
+Attributes of the parent that are not required can be excluded using
+an **`exclude`** clause.
 
 
 ### Combination and Initialisation
@@ -766,15 +767,20 @@ clause.
 When executed, an object constructor (or trait or class declaration)
 first creates a new object with no attributes, and binds it to `self`. 
 
-Next, the attributes of all _parent_ objects (created by any 'inherit' or 'uses' clauses), and any local declarations, are added to the new object: local declarations override parental declarations.
-It is a _trait composition error_ for the same concrete attribute to
-come from more than one parent, and not to be overridden by a local
-definition.
+Next, the attributes of all _parent_ objects (created by any 'inherit'
+or 'uses' clauses, modified by `alias` and `exclude`), and any local
+declarations, are installed in the new object.  Local declarations
+override parental declarations.  It is a _trait composition error_ for
+the same concrete attribute to come from more than one parent, and not
+to be overridden by a local definition; or for an alias to be
+overridden by a local declaration.
 
 Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with local declarations. (Note that used traits contain no executable code.)
 Initialisers for all `def`s and `var`s, 
 and code in the bodies of parents,
-are executed in the order they are written, even for `def`s or `var`s that are excluded from the new object. 
+are executed once in the order they are written, even for `def`s or
+`var`s that are excluded from the new object, or aliased to one or
+more new names. 
 During initialisation, `self` is always bound to the new object being
 created, even while executing code and initialisers from parent
 objects, classes or traits.
