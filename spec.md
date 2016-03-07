@@ -1122,7 +1122,7 @@ before a program begins running. Requests for types and annotations
 must return manifest type and annotation objects respectively, while
 parent arguments must return the results of manifest object constructors.
 
- 1. [Numbers], [Lineups], [Strings], and [Objects] are manifest.
+ 1. [Numbers], [Lineups], [Strings], and [Objects] are manifest expressions.
  2. [Implicit Requests] and  [Outer] requests resolving to manifest
  declarations in surrounding method scopes, the module, or the
  dialect, are manifest.
@@ -1131,7 +1131,8 @@ parent arguments must return the results of manifest object constructors.
  5. A method is manifest if it uniquely tail-returns a manifest
  expression.  Thus, class and trait declarations are manifest.
  6. [Constant](Constants) and [Type](Types) declarations, and 
-imported [Modules]' nicknames are manifest.
+imported [Modules]' nicknames are manifest declarations.
+ 7. `self` and `outer` are not manifest expressions.
 
 Note that [Variables], method parameters, and [Self] are not manifest.
 Class, trait and method declarations may themselves be manifest, but
