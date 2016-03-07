@@ -512,6 +512,7 @@ Expressions] that return _annotator objects_. While annotations may be
 defined by libraries or dialects, Grace defines the following core
 annotations:
 
+| Annotation | Semantics | 
 |:--|:--|
 | `abstract` | method will not conflict with or override another method | 
 | `confidential` | method may not be called from outside | 
