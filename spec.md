@@ -538,7 +538,7 @@ are as follows.
 
 ### Methods, Classes, Traits and Types
 
-By default, methods, classs, traits and types are public, which means
+By default, methods, classes, traits and types are public, which means
 that they can be requested by any client that has access to the
 object. Thus, any expression can be the target of a request of a
 public method.
