@@ -95,8 +95,8 @@ of the line containing the start of the current statement.
 ### code with punctuation
 
     def x = 
-      muble("3")
-      fratz(7);
+       muble "3"
+       fratz 7;
     while {stream.hasNext} do {
        print(stream.read);
     };
@@ -104,8 +104,8 @@ of the line containing the start of the current statement.
 ### code without punctuation
 
     def x = 
-      muble("3")
-      fratz(7)
+       muble "3"
+       fratz 7
     while {stream.hasNext} do {
        print(stream.read)
     }
@@ -133,7 +133,7 @@ A single underscore (`_`) acts as a placeholder identifier: it can
 appear in declarations, but not in expressions. In declarations, `_` is
 treated as a fresh identifier.
 
-Operators are sequnces of unicode operator symbols and the following
+Operators are sequences of unicode operator symbols and the following
 ASCII operator characters:
 
     ! ? @ # $ % ^ & | ~ = + - * / \ > < : . 
@@ -855,7 +855,7 @@ In contrast, the following definition is legal:
 Here, the
 conflict is resolved by overriding with a local `move` method.  This method
 accesses the overridden methods from the parent traits using the aliases `catMove` 
-and `dogMove`; as a result, nyssa will `move` either like a dog or a cat, depending on 
+and `dogMove`; as a result, `nyssa` will `move` either like a dog or a cat, depending on 
 a random variable.  
 
 ### Default Methods
@@ -1569,7 +1569,7 @@ contain any declarations and executable code. When a module is loaded,
 its code is executed, resulting in a _module object_.
 
 Modules may begin with one or more `import "module" as nickname`
-statments, naming a module to be imported and giving a _nickname_
+statements, naming a module to be imported and giving a _nickname_
 that can be used to refer to the module object in the rest of the
 importing module. Because modules are just objects, public
 declarations at the top level of imported modules are requested simply
@@ -1638,12 +1638,12 @@ Modules that do not declare a 'dialect' implicitly belong to the
 ##### Examples
 
 The `bcpl.grace` module declares an "`unless(_)do(_)`" control
-struture that is like "`if`" but backwards. 
+structure that is like `if`, but backwards. 
 
 bcpl.grace module:
 ````
 method do (block : Block) unless (test : Boolean)  {
-  if (!test) then (block)
+    if (!test) then (block)
 }
 ````
 
@@ -1684,13 +1684,13 @@ a module.
 a module. 
 
 Lexical lookup stops at the module's dialect scope: it does not extend
-to the surrrounding dialect's scope (containing any nicknames
+to the surrounding dialect's scope (containing any nicknames
 introduced by imports in the module); nor to the scopes of e.g. any
 dialects used to implement the dialect module.
 
 This allows dialects to import modules, and to be defined via other
 (module-defining) dialects, without those other definitions polluting
-the langauge defined by the dialect.
+the language defined by the dialect.
 
 # Pragmatics
 
@@ -1698,18 +1698,19 @@ The distribution medium for Grace programs, objects, and libraries is
 Grace source code.
 
 Grace source files should have the file extension `.grace`. If, for any
-bizzare reason a trigraph extension is required, it should be `.grc`
+bizarre reason a trigraph extension is required, it should be `.grc`
 
 Grace files may start with one or more lines beginning with “`#`”: these
 lines are ignored.
 
 ## Garbage Collection
 
-
-Grace implementations should be garbage collected. Safepoints where GC
+Grace implementations should be garbage collected. Points where GC
 may occur are at any backwards branch and at any method request.
+(Why is this here at all?  What about execution of object constrictors, which 
+will presumably trigger allocation?)
 
-Grace will not support finalisation.
+Grace will not support finalization.
 
 ## Concurrency
 
