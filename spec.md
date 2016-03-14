@@ -766,7 +766,8 @@ attribute of the parent can be given an additional name by attaching
 an **`alias`** clause to the inherits statement: `alias n(_) = m(_)`
 gives a new confidential _alias_ `n(_)` for the attribute `m(_)`.
 Attributes of the parent that are not required can be excluded using
-an **`exclude`** clause.
+an **`exclude`** clause: excluded attributes are replaced by a
+`required` method with an empty body.
 
 
 ### Combination and Initialisation
