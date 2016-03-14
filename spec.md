@@ -514,7 +514,7 @@ annotations:
 
 | Annotation | Semantics | 
 |:--|:--|
-| `abstract` | method will not conflict with or override another method | 
+| `required` | method will not conflict with or override another method | 
 | `confidential` | method may not be called from outside | 
 | `manifest` | method or object must be manifest |
 | `overrides` | method must override a parental method |
@@ -527,7 +527,7 @@ annotations:
     var x is readable, writeable := 3
     def y : Number is public
     method foo is confidential  { } 
-    method id<T> is abstract,  { } 
+    method id<T> is required  { } 
 
 
 ## Encapsulation
@@ -698,9 +698,13 @@ binds the name `fergus` to this object.
 
 ## Trait Objects and Trait Declarations
 
-Trait objects are objects with certain properties.  Specifically, a trait object is created by
-an object constructor that contains no inherits statements, field declarations,
-or executable code.
+Trait objects are objects with certain properties.  Specifically, a
+trait object is created by an object constructor that contains no
+field declarations no executable code, that `use`s only other traits,
+and that `inherit`s nothing.
+
+
+
 
 Modulo these restrictions, Grace's **trait** syntax and semantics is exactly parallel to the class syntax:
 a `trait` defines a method that returns a trait object.
@@ -748,11 +752,14 @@ called the _parent_ — into the current object (the object under
 construction).  A new declaration in the current object can override a
 declaration from a parent.
 
-The argument of an `inherit` or `use` clause is restricted to be a
+The request of an `inherit` or `use` clause is restricted to be a
 [Manifest Expression](Manifest Expressions)
 that creates a new object, such as a request on a class or trait.
-The argument cannot refer to `self`, implicitly or explicitly.
+This mens that the  request  cannot depend on a `self`, implicitly or
+explicitly: programs cannot inherit (or use) any trait or class that
+can potentially be overridden. 
 The object reused by a `use` clause must be a trait object. 
+The arguments to this request need not themselves be manifest.
 
 If it is necessary to access an overridden attribute, the overridden
 attribute of the parent can be given an additional name by attaching
@@ -768,12 +775,15 @@ When executed, an object constructor (or trait or class declaration)
 first creates a new object with no attributes, and binds it to `self`. 
 
 Next, the attributes of all _parent_ objects (created by any 'inherit'
-or 'uses' clauses, modified by `alias` and `exclude`), and any local
+or 'uses' clauses, modified by `alias` and `exclude`) and any local
 declarations, are installed in the new object.  Local declarations
 override parental declarations.  It is a _trait composition error_ for
 the same concrete attribute to come from more than one parent, and not
 to be overridden by a local definition; or for an alias to be
 overridden by a local declaration.
+
+Next, types must be evaluated and bound within objects. As [Manifest
+Expressions], types cannot depend on runtime values.
 
 Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with local declarations. (Note that used traits contain no executable code.)
 Initialisers for all `def`s and `var`s, 
@@ -786,14 +796,17 @@ created, even while executing code and initialisers from parent
 objects, classes or traits.
 
 As a consequence of these rules, a new object can change the
-initialization of its parents, by overriding self requests used to initialise the parent. 
+initialization of its parents, by overriding self requests invoked by
+parents' initialisers or executable statements.
 
 
-### Abstract Methods
+### Required Methods
 
-Methods may be annotated as being **`abstract`**.  Abstract methods do not
-conflict with other methods, either abstract or concrete (non
-abstract).
+Methods may be annotated as being **`required`** (previously
+"abstract").  Required methods do not conflict with other methods,
+either required or concrete (not required), however a required local
+method overrides an inherited concrete method. In most dialects,
+a required method's body must be empty.
 
 #### Examples
 
@@ -1046,7 +1059,7 @@ characters, provided that the operator reserved by the
 Grace language. Binary operators have a receiver and one argument; the
 receiver must be explicit. So, for example, `+`, `++` and `..` are valid
 operator symbols, but `.` is not, because it is reserved.
-
+de
 Most Grace operators have the same precedence: it is a syntax error for
 two different operator symbols to appear in an expression without
 parenthesis to indicate order of evaluation. The same operator symbol
@@ -1139,7 +1152,7 @@ Class, trait and method declarations may themselves be manifest, but
 they will not be able to be used in manifest expressions if they
 are reached by implicit or explicit method requests on `self`.
 
-A dialect may check method declarations with `manifest` annotation to
+A dialect may check method declarations with `manifest` annotations to
 ensure that they declare methods that would be manifest when requested
 on manifest objects.
 
