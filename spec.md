@@ -1291,6 +1291,10 @@ dynamically-surrounding `try() catch()` …`catch() finally()`. The
 `try() catch()` …` catch()` `finally()` construct, whether or not an
 exception is raised, or one of the `catch` blocks returns.
 
+Finally clause can return early, either with by executing a `return`, or by
+raising an exception. In such a situation, any prior `return` or raised
+exception is silently dropped.
+
 #### Examples 
 
     try {
