@@ -183,17 +183,18 @@ denote `Number`s).
 1.  Decimal numerals, written as strings of digits, optionally preceded
     by a minus.
 
-2.  Explicit radix numerals, written as a (decimal) number between 2 and
+2.  Base-exponent numerals, always in decimal, which contain a decimal
+    point, or an exponent, or both. Grace uses `e` as the
+    exponent indicator. Base-exponent numerals may optionally be
+    preceded by a minus, and may have a minus in front of the exponent.
+
+3.  Explicit radix numerals, written as a (decimal) number between 2 and
     35 representing the radix, a leading `x`, and a string of digits,
     where the digits from 10 to 35 are represented by the letters A to
     Z, in either upper or lower case. A radix of 0 is taken to mean a
     radix of 16. Explicit radix numerals may optionally be preceded by
     a minus.
 
-3.  Base-exponent numerals, always in decimal, which contain a decimal
-    point, or an exponent, or both. Grace uses `e` as the
-    exponent indicator. Base-exponent numerals may optionally be
-    preceded by a minus, and may have a minus in front of the exponent.
 
 #### Examples 
 
@@ -215,7 +216,7 @@ for or, and prefix `!` for not.
 
 #### Examples 
 
-    P && Q
+    p && q
     toBe || toBe.not
 
 In addition to `&&` and `||` taking boolean arguments, they also accept
@@ -224,7 +225,7 @@ parmameterless blocks that return `Boolean`.  This gives them
 
 #### Examples 
 
-    P && { Q }
+    p && { q }
     toBe || { ! toBe }
 
 
@@ -267,7 +268,7 @@ into the string literal in place of the brace expression.
 
 ## Lineups 
 
-Grace supports a constructor syntax for use parsing multiple arguments
+Grace supports a constructor syntax for use in parsing multiple arguments
 or building collections: a comma separated list of expressions
 surrounded by `[` and `]` brackets.
 
@@ -300,6 +301,7 @@ by commas and the list is terminated by the **`->`** symbol.
 
     { do.something }
     { i -> i + 1 }
+    { i:Number -> i + 1 }
     { sum, next -> sum + next }
 
 Blocks construct objects containing a method named `apply`, or
@@ -317,7 +319,7 @@ The looping construct
         i -> print i 
     }
 
-might be implemented as as method with a block parameter
+might be implemented as a method with a block parameter
 
     method for (collection) do (block) {
         def stream = collection.iterator
@@ -346,11 +348,11 @@ method or block body.  Declarations are visible within the whole of
 their containing lexical scope.  It is an error to attempt to declare
 any name more than once in the same lexical scope.
 
-**Shadowing.** Grace has a single namespace for all identifiers; this
+**ing.** Grace has a single namespace for all identifiers; this
 shared namespace is used for everything: methods, parameters,
 constants, variables, classes, traits, and and types. It is an error
-to declare a constant, variable or parameter that shadows a
-lexically-enclosing constant, variable or parameter.
+to declare a constant, variable or parameter that s a
+lexically-enclosing constant, variable, or parameter.
 
 ## Constants
 
@@ -376,7 +378,7 @@ be *uninitialised*; any attempt to access the value of an uninitialised
 variable is an error. This error may be caught either at run time or at
 compile time, depending on the cleverness of your implementor.
 Variables may be optionally given a type: this type is checked when
-the variable is initialised or assigned.
+the variable is initialised or assigned to.
 
 #### Examples
 
@@ -432,7 +434,7 @@ the  _canonical_ name of the method is the sequence of identifiers followed by `
 The number of underscores between each pair of parentheses the same as the number of 
 parameters in the parameter list of the corresponding part.
 
-5. A method can also be named by a sequence of operators symbols. 
+5. A method can also be named by a sequence of operator symbols. 
 Such an "operator method" can have no parameters, in which case
 the method is requested by a prefix operator expression.
 It can also have one parameter, in which
@@ -505,8 +507,8 @@ An empty method body returns `done`.
 
 ## Annotations
 
-Any declaration, and any object constructor, may be have a
-comma-separated list of annotations following the kewword **`is`**
+Any declaration, and any object constructor, may have a
+comma-separated list of annotations following the keyword **`is`**
 before its body or initialiser. Annotations must be [Manifest
 Expressions] that return _annotator objects_. While annotations may be
 defined by libraries or dialects, Grace defines the following core
@@ -545,7 +547,7 @@ public method.
 
 If a method or type is annotated `is confidential`, it can be requested
 only on `self` or `outer`. This means that it 
-is accessible to the object that contains it, and to inheriting
+is accessible to any object that contains it, and to inheriting
 objects, but not to client objects.
 
 ### Fields
@@ -700,7 +702,7 @@ binds the name `fergus` to this object.
 
 Trait objects are objects with certain properties.  Specifically, a
 trait object is created by an object constructor that contains no
-field declarations no executable code, that `use`s only other traits,
+field declarations and no executable code, that `use`s only other traits,
 and that `inherit`s nothing.
 
 
@@ -878,7 +880,7 @@ Many objects conventionally implement a number of _default methods_ by
 inheriting from the **`graceObject`** trait. In particular, the
 objects created by the `class` syntax inherit from `graceObject` if no
 **inherits** clause is supplied (but not objects created by the
-`trait` syntax or by `object` constructors): programmers can of course
+`trait` syntax or by `object` constructors). Programmers can of course
 override some of these implementations, or write those methods _ab initio_.
 The [type Object] conventionally defines a type containing all the default methods.
 
@@ -940,7 +942,7 @@ Parentheses are not used if there are no arguments.
 
 
 To improve
-readability, a the name of a method that takes more than one parameter
+readability, the name of a method that takes more than one parameter
 may comprise multiple parts, with multiple argument lists between the parts and after the last part.
 For example:
 
@@ -976,7 +978,10 @@ that is a numeral, string, lineup, or block.
         self.drawLineFrom (p1) to (p2)
         self.drawLineFrom (origin) length 9 angle (pi/6)
         print "Hello World"
-	while {x < 10} then { print [a, x, b]; x := x + 1 }
+        while {x < 10} then { 
+            print [a, x, b]
+            x := x + 1 
+        }
 
 
 ### Implicit Requests
@@ -1042,7 +1047,8 @@ baz.barf  //prints "bar"
 
 An assignment request is a variable followed by `:=`, or a request
 of a method whose name ends with `:=`. In both cases the `:=` is
-followed by a single argument. Spaces are optional before and after the
+followed by a single argument, which need not be surrounded by
+parentheses. Spaces are optional before and after the
 `:=`.
 
 #### Examples
@@ -1056,11 +1062,11 @@ Assignment methods conventionally return `done`.
 ## Binary Operator Requests 
 
 Binary operators are methods whose names comprise one or more operator
-characters, provided that the operator reserved by the
+characters, provided that the operator is not reserved by the
 Grace language. Binary operators have a receiver and one argument; the
 receiver must be explicit. So, for example, `+`, `++` and `..` are valid
 operator symbols, but `.` is not, because it is reserved.
-de
+
 Most Grace operators have the same precedence: it is a syntax error for
 two different operator symbols to appear in an expression without
 parenthesis to indicate order of evaluation. The same operator symbol
@@ -1096,7 +1102,7 @@ and the parse on the right.
 ## Unary Prefix Operator Requests
 
 Grace supports unary methods named by operator symbols that precede the
-explicit receiver. (Since binary operator methods must also have an
+explicit receiver. (Since binary operator methods must have an
 explicit receiver, there is no syntactic ambiguity.)
 
 Prefix operators bind less tightly than named method requests, and more
