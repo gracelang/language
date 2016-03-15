@@ -1225,7 +1225,7 @@ a result `r`, `match(_)` returns a `SuccessfulMatch` object whose
 `result` is `r`. 
 
 If a matching block parameter declaration takes the form `_ :
-pattern`, then the `_ :` can be ommitted, provided the `pattern` here
+pattern`, then the `_ :` can be omitted, provided the `pattern` here
 is either parenthesized, or a string or numeric literal (the delimited
 argument rule).
 
@@ -1285,7 +1285,7 @@ thrown. Execution continues when the exception is *caught.*
 ## Catching Exceptions
 
 An exception can be caught by a dynamically-enclosing
-`try(exp) catch (block`1)`
+`try(exp) catch (block 1)`
 …`catch(block`n`) finally(finalBlock)`, in which the `block`i
 are pattern-matching blocks. More precisely, if an exception is raised
 during the evaluation of the `try` block `exp`, the `catch` blocks
@@ -1297,7 +1297,7 @@ dynamically-surrounding `try() catch()` …`catch() finally()`. The
 `try() catch()` …` catch()` `finally()` construct, whether or not an
 exception is raised, or one of the `catch` blocks returns.
 
-Finally clause can return early, either with by executing a `return`, or by
+Finally clauses can return early, either by executing a `return`, or by
 raising an exception. In such a situation, any prior `return` or raised
 exception is silently dropped.
 
@@ -1307,10 +1307,8 @@ exception is silently dropped.
         def f = file.open("data.store")
     } catch {
         e : NoSuchFile -> print "No Such File"
-        return
     } catch {
         e : PermissionError -> print "Permission denied"
-        return
     } catch {
         _ : Exception -> print "Unidentified Error"
         system.exit
@@ -1350,7 +1348,7 @@ objects will respond --- the [Default Methods] declared in
 
 ### type Self 
 
-The type ``Self`` represents the whole public interface of the current
+The type ``Self`` represents the public interface of the current
 object.
 
 ### type Unknown 
@@ -1359,7 +1357,7 @@ The type `Unknown` prevents type checking. Any object matches
 type unknown, and messages sent to Unknown can only be checked at
 runtime. Unknown can either be written explicitly in declarations,
 or types can be omitted altogether, in which case the type is
-considered to be _implicitly `Unknown`_
+considered to be _implicitly_ `Unknown`
 
 #### Examples
 
@@ -1380,7 +1378,7 @@ contain definitions of other types to describe types nested
 inside objects.
 
 The various `Cat` object and class descriptions (see
-[Objects, Classes, and Traits]) would objects that conform to an interface
+[Objects, Classes, and Traits]) would create objects that conform to an interface
 type such as the following. Notice that the public methods implicitly
 inherited from `Object` are implicitly included in all types.
 
@@ -1401,7 +1399,10 @@ type is `Unknown`.
 
 Types—and parameterized types—may be named in type declarations:
 
-    type MyCatType = { color -> Colour; name -> String } 
+    type MyCatType = { 
+       color -> Colour
+       name -> String 
+    } 
        // I care only about names and colours
 
     type MyParametricType<A,B> = 
@@ -1415,7 +1416,7 @@ Notice that the `type` keyword may be omitted from the right-hand-side
 of a type declaration when it is a simple type literal.
 
 Grace has a single namespace: types live in the same namespace as
-feverything else.
+everything else.
 
     type MyParametricType = type <A,B>
      {
@@ -1486,7 +1487,7 @@ To illustrates the limitations of variant types, suppose
     type U = {m: A -> B}
 
 Then `U` fails to conform to `S | T` even though `U` contains all
-methods continued in both `S` and `T`.
+methods contained in both `S` and `T`.
 
 ### Intersection Types
 
@@ -1496,7 +1497,7 @@ component types. The main use of intersection types is for augmenting
 types with new operations, and as as bounds on `where` clauses.
 
 ``` 
-U <: S; U <: T;  U <: (S & T)
+U <: S; U <: T; ==> U <: (S & T)
 (S & T) <: S;    (S & T) <: T 
 ```
 
@@ -1507,7 +1508,7 @@ U <: S; U <: T;  U <: (S & T)
         remove(_:T) -> List<T>
     }
 
-    class happy.new<T>(param: T)
+    class happy<T>(param: T) -> Done
        where T <: (Comparable<T> & Printable & Happyable) {     
                ...
     }
@@ -1583,7 +1584,7 @@ types.
 
 # Modules and Dialects 
 
-Grace programs are divided into multiple modules. 
+Grace programs can be divided into multiple modules. 
 
 ## Modules
 
@@ -1604,7 +1605,7 @@ point to run in the operating system. Grace will the load and
 initialise all transitively imported modules in depth-first order,
 thus executing the "main" module _last_, after all its dependencies
 are loaded. Each individual module is loaded only once, the first time
-it is reached: importing the same module name results in the same
+it is reached: importing the same module name again results in the same
 module object. 
 
 Circular module dependencies are errors.
@@ -1646,7 +1647,7 @@ cat module done
 Grace dialects support language levels for teaching, and
 domain-specific little languages. A module may begin with a dialect
 statement `dialect "name"`: this imports the dialect like any other
-module, but then places the arranges that the dialect's module object
+module, but then arranges that the dialect's module object
 lexically encloses the object defined by the module. This means that
 [Implicit Requests] in the module can resolve to the definitions in
 the dialect. 
@@ -1684,14 +1685,6 @@ do {  print "Can't open file" }  unless (myfile.isOpen)
 
 ````
 
-will print:
-
-````
-initialising animal module
-animal module done
-initialising cat module
-cat module done
-````
 
 
 ## Module and Dialect Scopes
