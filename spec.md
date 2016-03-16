@@ -46,14 +46,14 @@ change. In particular, this version does *not* address:
     classes that are based on object-oriented programming.
 
     1.  The courses may be structured objects first, or
-        imperative first. Is it necessary to support “procedures first”?
+        procedural first. 
 
     2.  The courses may be taught using dynamic types, static types, or
         both in combination (in either order).
 
     3.  We aim to offer some (but not necessarily complete) support for
         “functional first” curricula, primarily for courses that proceed
-        rapidly to imperative and object-oriented programming.
+        rapidly to procedural and object-oriented programming.
 
 2.  University students taking second year classes in programming,
     algorithms and data structures, concurrent programming, software
@@ -88,9 +88,10 @@ ASCII subset of Unicode.
 Grace uses braces for grouping.  Code layout must be consistent with
 grouping.  Indentation must increase by at least two spaces after a
 brace. 
-Statements are terminated by semicolons, and by line breaks when the
+Statements are terminated by line breaks when the
 following line has the same or lesser indentation than the indentation
-of the line containing the start of the current statement.
+of the line containing the start of the current statement.  Statements
+may also optionally be terminated by semicolons
 
 ### code with punctuation
 
@@ -127,14 +128,16 @@ unit.
 
 Identifiers must begin with a letter, which is followed by a sequence of
 zero or more letters, digits and prime (`'`) or underscore (`_`)
-characters.
+characters.  Conventionally, type and pattern identifiers start with capital
+letters, while other identifiers start with lower-case letters.
 
 A single underscore (`_`) acts as a placeholder identifier: it can
 appear in declarations, but not in expressions. In declarations, `_` is
 treated as a fresh identifier.
 
-Operators are sequences of unicode operator symbols and the following
-ASCII operator characters:
+Operators are sequences of unicode mathematics operator symbols 
+(see https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode)
+and the following ASCII operator characters:
 
     ! ? @ # $ % ^ & | ~ = + - * / \ > < : . 
 
@@ -376,7 +379,7 @@ new values as often as desired, using an assignment. If a
 variable is declared without an initializing expression, it is said to
 be *uninitialised*; any attempt to access the value of an uninitialised
 variable is an error. This error may be caught either at run time or at
-compile time, depending on the cleverness of your implementor.
+compile time.
 Variables may be optionally given a type: this type is checked when
 the variable is initialised or assigned to.
 
