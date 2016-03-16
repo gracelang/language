@@ -494,7 +494,7 @@ The presence or absence of type parameters does not change the canonical name of
         (a * a) + (b * b)
     }
 
-    method prefix-<T> -> Number 
+    method prefix- <T> -> Number 
          { 0 - self }
 
 
@@ -545,11 +545,10 @@ are as follows.
 
 By default, methods, classes, traits and types are public, which means
 that they can be requested by any client that has access to the
-object. Thus, any expression can be the target of a request of a
-public method.
+object. 
 
 If a method or type is annotated `is confidential`, it can be requested
-only on `self` or `outer`. This means that it 
+only on `self` or any number of cascaded `outer`s. This means that it 
 is accessible to any object that contains it, and to inheriting
 objects, but not to client objects.
 
@@ -595,13 +594,12 @@ as well as a `var` field `x`.
         var h is readable, writable    // Public access and assignment
     }
 
-### No Private Fields
+### No Private Attributes
 
-Some other languages support “private fields”, which are available only
+Some other languages support “private attributes”, which are available only
 to an object itself, and not to clients or inheritors. Grace does not
-have private fields; all fields can be accessed from subobjects.
-However, the parameters and temporary variables of methods that return
-fresh objects can be used to obtain an effect similar to privacy.
+have private fields or methods; all can be accessed from subobjects.
+However, identifiers from outer scopes can be used to obtain an effect similar to privacy.
 
 #### Examples
 
@@ -623,6 +621,8 @@ fresh objects can be used to obtain an effect similar to privacy.
             }
         }                
 
+The object returned by newShipStartingAt()endingAt() can update the variable floatation from the outer scope, even though it is not
+accessible to anything inheriting from that object.
 
 # Objects, Classes, and Traits 
 
@@ -1132,7 +1132,7 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 #### Examples
 
-    sumSq<Integer64>(10.i64, 20.i64) 
+    sumSq<Number>(10.i64, 20.i64) 
 
     sumSq(10.i64, 20.i64) 
 
@@ -1244,10 +1244,6 @@ match themselves. That’s what lets things like this work:
         case { _ -> fib(n-1) + fib(n-2) }
     }
 
-To match against objects that are not patterns, a library or dialect
-can offer to lift any object `o` to a pattern that matches just `o`
-by supporting a request such as `Singleton(o)`.
-
 #### Examples
 
     { 0 -> "Zero" }                        
@@ -1327,8 +1323,6 @@ primarily describe the requests that objects can answer. Fields do not
 directly influence types, except that a field that is public, readable
 or writable is treated as the appropriate method.
 
-Type declarations are always statically typed, and their semantics may
-depend on the static types. 
 When they are used "type names" are conceptually [Manifest Expressions]
 that return _type objects_. All type objects are also patterns, so
 they can be used in [Pattern Matching], typically to perform dynamic
@@ -1356,7 +1350,7 @@ object.
 
 ### type Unknown 
 
-The type `Unknown` prevents type checking. Any object matches
+The type `Unknown` bypasses type checking. Any object matches
 type unknown, and messages sent to Unknown can only be checked at
 runtime. Unknown can either be written explicitly in declarations,
 or types can be omitted altogether, in which case the type is
@@ -1448,8 +1442,8 @@ name) in B such that
 -   The method `m` in B must have the same number of arguments as `m` in
     A, with the same distribution in multi-part method names.
 
--   If the method `m` in A has signature “`(P1,...Pn) -> R`, and
-    `m` in B has signature “`(Q1,...Qn) -> S`”, then
+-   If the method `m` in A has signature “`m(P1,...,Pk)n(Pk+1,...,Pn)... -> R`, and
+    `m` in B has signature “`m(Q1,...,Qk)n(Qk+1,...,Qn)... -> S`”, then
 
     -   parameter types must be contravariant: `Pi <: Qi`
 
@@ -1499,6 +1493,9 @@ An object conforms to an Intersection type, written
 component types. The main use of intersection types is for augmenting
 types with new operations, and as as bounds on `where` clauses.
 
+[Must add rules to provide results if two types have same multi-part method name (and arities), but the
+type of parameters and return types differ.]
+
 ``` 
 U <: S; U <: T; ==> U <: (S & T)
 (S & T) <: S;    (S & T) <: T 
@@ -1536,9 +1533,6 @@ S <: (S + T);    T <: (S + T)
 A type subtraction, written `T1 - T2` has the interface of `T1` without
 any of the methods in `T2`.
 
-```
-interface(S - T) = interface(S) - interface(T) 
-```
 
 
 ### Singleton Types
@@ -1617,7 +1611,7 @@ Circular module dependencies are errors.
 
 cat.grace module:
 ````
-import "animal" as a 
+import "animalMod" as a 
 print "initialising cat module" 
 class cat {
   inherit a.animal
@@ -1626,9 +1620,9 @@ class cat {
 print "cat module done" 
 ````
 
-animal.grace module:
+animalMod.grace module:
 ````
-print "initialising animal module" 
+print "initialising animalMod module" 
 class animal {
   method asString { "I am a {species}" }
   method species { "Random Animal" }
@@ -1661,7 +1655,7 @@ declarations, classes, traits, control structures, and even the
 'graceObject' trait that defines the default methods.
 
 Modules that do not declare a 'dialect' implicitly belong to the
-`standardPrelude` dialect: the definition of _Standard Grace_.
+`standardPrelude` dialect.
 
 ##### Examples
 
@@ -1701,7 +1695,8 @@ a module.
 `import` declarations.
 
 3. **dialect scope** containing all declarations at the top level of
-a module. 
+a module used as a dialect.  That is, the names at the top level of the dialect
+are treated as being in the outer scope of the module being defined.
 
 Lexical lookup stops at the module's dialect scope: it does not extend
 to the surrounding dialect's scope (containing any nicknames
