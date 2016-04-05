@@ -35,7 +35,7 @@ change. In particular, this version does *not* address:
 ------------------------------------------------------------------------
 
 > *All designers in fact have user and use models consciously or
-> subconsciously in mind as they work. Team design … requires explicit
+> subconsciously in mind as they work. Team design …requires explicit
 > models and assumptions.*
 >
 > Frederick P. Brooks, *The Design of Design*.
@@ -240,7 +240,7 @@ String literals in Grace are written between double quotes, and must
 be confined to a single line. Strings literals support a range of
 escape characters such as `"\n\t"`, and also escapes for Unicode;
 these are listed in Table \[tab:StringEscapes\]. Individual characters
-are represented by Strings of length 1. Strings are imutable, so an implementation may intern them. Grace’s standard
+are represented by Strings of length 1. Strings are immutable, so an implementation may intern them. Grace’s standard
 library includes supports efficient incremental string construction.
 
 |Escape |  Meaning |  Unicode |
@@ -271,7 +271,8 @@ library includes supports efficient incremental string construction.
 
 ### String Constructors
 
-String Constructors are a generalization of [String Literals](String Literals) that contain, in addition to the above escapes, expressions enclosed in braces.
+String Constructors are a generalization of [String Literals](String Literals) that contain,
+in addition to the above escapes, expressions enclosed in braces.
 The value of a String Constructor is obtained by first evaluating any
 expressions inside braces, requesting `asString` of the resulting object,
 and inserting the resulting string into the string literal in place of the
@@ -291,7 +292,10 @@ A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
     [ 1 ]
     [ red, green, blue ]
 
-When executed, a lineup returns an object that supports the Iterator interface, which includes the methods `size`, `map`, `do(_)`, and `iterator`).  Lineups are most frequently used to build collections, to control loops, and to pass collections of options to methods.
+When executed, a lineup returns an object that supports the Iterator interface,
+which includes the methods `size`, `map`, `do(_)`, and `iterator`).  
+Lineups are most frequently used to build collections, to control loops, 
+and to pass collections of options to methods.
 
 #### Examples
 
@@ -327,7 +331,7 @@ annotations, it is a `TypeError` if the arguments do not conform to those types.
 
 The looping construct
 
-    for (1..10) do {
+    for (1 .. 10) do {
         i -> print i
     }
 
@@ -527,7 +531,7 @@ An empty method body returns `done`.
 Any declaration, and any object constructor, may have a
 comma-separated list of annotations following the keyword **`is`**
 before its body or initialiser. Annotations must be [Manifest
-Expressions] that return _annotator objects_. While annotations may be
+Expressions] that return manifest _annotator objects_. While annotations may be
 defined by libraries or dialects, Grace defines the following core
 annotations:
 
@@ -771,14 +775,15 @@ called the _parent_ — into the current object (the object under
 construction).  A new declaration in the current object can override a
 declaration from a parent.
 
-The request of an `inherit` or `use` clause is restricted to be a
-[Manifest Expression](Manifest Expressions)
-that creates a new object, such as a request on a class or trait.
-This mens that the  request  cannot depend on a `self`, implicitly or
+An `inherit` or `use` clause takes a
+[Manifest Expression][Manifest Expressions]
+that creates a new manifest object, such as a request on a class or trait.
+This means that the  request  cannot depend on a `self`, implicitly or
 explicitly: programs cannot inherit (or use) any trait or class that
 can potentially be overridden.
 The object reused by a `use` clause must be a trait object.
-The arguments to this request need not themselves be manifest.
+Note that the arguments to [Manifest Expression][Manifest Expressions]
+need not themselves be manifest. 
 
 If it is necessary to access an overridden attribute, the overridden
 attribute of the parent can be given an additional name by attaching
@@ -1029,7 +1034,7 @@ Implicit requests are resolved as follows:
    then the implicit request is treated as a `self` request. Otherwise:
 
 * If there is a lexically visible declaration of _m_, going out as far
-  as the [module object](Modules) and [dialect](Dialects)
+  as the [module object][Modules] and [dialect][Dialects]
   then the request resolves to that declaration. Otherwise:
 
 * If there is no declaration named _m_, the request is an error.
@@ -1179,13 +1184,17 @@ even if the value of `data` is not known until execution time.
  dialect, are manifest.
  4. Explicit requests are manifest if the receiver is manifest
  and if they resolve to a manifest declaration.
- 5. A method is manifest if it uniquely tail-returns a manifest
+ 5. A method declaration is manifest if it uniquely tail-returns a manifest
  expression.  Thus, class and trait declarations are manifest.
- 6. [Constant](Constants) and [Type](Types) declarations, and
+ 6. [Constant][Constants] and [Type][Types] declarations, and
 imported [Modules]' nicknames are manifest declarations.
  7. `self` and `outer` are not manifest expressions.
 
 Note that [Variables], method parameters, and [Self] are not manifest.
+Note also that this definition constraints recievers of requests, and
+the declartions they resolve to, but not the arguments passed to those
+requests.
+
 Class, trait and method declarations may themselves be manifest, but
 they will not be able to be used in manifest expressions if they
 are reached by implicit or explicit method requests on `self`.
