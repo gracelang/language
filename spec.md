@@ -523,7 +523,7 @@ An empty method body returns `done`.
 Any declaration, and any object constructor, may have a
 comma-separated list of annotations following the keyword **`is`**
 before its body or initialiser. Annotations must be [Manifest
-Expressions] that return _annotator objects_. While annotations may be
+Expressions] that return manifest _annotator objects_. While annotations may be
 defined by libraries or dialects, Grace defines the following core
 annotations:
 
@@ -767,14 +767,15 @@ called the _parent_ — into the current object (the object under
 construction).  A new declaration in the current object can override a
 declaration from a parent.
 
-The request of an `inherit` or `use` clause is restricted to be a
-[Manifest Expression](Manifest Expressions)
-that creates a new object, such as a request on a class or trait.
-This mens that the  request  cannot depend on a `self`, implicitly or
+An `inherit` or `use` clause takes a
+[Manifest Expression][Manifest Expressions]
+that creates a new manifest object, such as a request on a class or trait.
+This means that the  request  cannot depend on a `self`, implicitly or
 explicitly: programs cannot inherit (or use) any trait or class that
 can potentially be overridden.
 The object reused by a `use` clause must be a trait object.
-The arguments to this request need not themselves be manifest.
+Note that the arguments to [Manifest Expression][Manifest Expressions]
+need not themselves be manifest. 
 
 If it is necessary to access an overridden attribute, the overridden
 attribute of the parent can be given an additional name by attaching
@@ -1025,7 +1026,7 @@ Implicit requests are resolved as follows:
    then the implicit request is treated as a `self` request. Otherwise:
 
 * If there is a lexically visible declaration of _m_, going out as far
-  as the [module object](Modules) and [dialect](Dialects)
+  as the [module object][Modules] and [dialect][Dialects]
   then the request resolves to that declaration. Otherwise:
 
 * If there is no declaration named _m_, the request is an error.
@@ -1160,7 +1161,7 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 ## Manifest Expressions
 
-Types, annotations, and the parent arguments to `inherit` and `use`
+Types, annotations, and the parent arguments of `inherit` and `use`
 clauses must be _manifest_: that is they must be able to be determined
 before a program begins running. Requests for types and annotations
 must return manifest type and annotation objects respectively, while
@@ -1172,13 +1173,17 @@ parent arguments must return the results of manifest object constructors.
  dialect, are manifest.
  4. Explicit requests are manifest if the receiver is manifest
  and if they resolve to a manifest declaration.
- 5. A method is manifest if it uniquely tail-returns a manifest
+ 5. A method declaration is manifest if it uniquely tail-returns a manifest
  expression.  Thus, class and trait declarations are manifest.
- 6. [Constant](Constants) and [Type](Types) declarations, and
+ 6. [Constant][Constants] and [Type][Types] declarations, and
 imported [Modules]' nicknames are manifest declarations.
  7. `self` and `outer` are not manifest expressions.
 
 Note that [Variables], method parameters, and [Self] are not manifest.
+Note also that this definition constraints recievers of requests, and
+the declartions they resolve to, but not the arguments passed to those
+requests.
+
 Class, trait and method declarations may themselves be manifest, but
 they will not be able to be used in manifest expressions if they
 are reached by implicit or explicit method requests on `self`.
