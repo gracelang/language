@@ -46,7 +46,7 @@ change. In particular, this version does *not* address:
     classes that are based on object-oriented programming.
 
     1.  The courses may be structured objects first, or
-        procedural first. 
+        procedural first.
 
     2.  The courses may be taught using dynamic types, static types, or
         both in combination (in either order).
@@ -81,13 +81,13 @@ change. In particular, this version does *not* address:
 ------------------------------------------------------------------------
 
 Grace programs are written in Unicode. Reserved words are written in the
-ASCII subset of Unicode. 
+ASCII subset of Unicode.
 
 ## Layout
 
 Grace uses braces for grouping.  Code layout must be consistent with
 grouping.  Indentation must increase by at least two spaces after a
-brace. 
+brace.
 Statements are terminated by line breaks when the
 following line has the same or lesser indentation than the indentation
 of the line containing the start of the current statement.  Statements
@@ -95,7 +95,7 @@ may also optionally be terminated by semicolons
 
 ### code with punctuation
 
-    def x = 
+    def x =
        muble "3"
        fratz 7;
     while {stream.hasNext} do {
@@ -104,7 +104,7 @@ may also optionally be terminated by semicolons
 
 ### code without punctuation
 
-    def x = 
+    def x =
        muble "3"
        fratz 7
     while {stream.hasNext} do {
@@ -135,20 +135,20 @@ A single underscore (`_`) acts as a placeholder identifier: it can
 appear in declarations, but not in expressions. In declarations, `_` is
 treated as a fresh identifier.
 
-Operators are sequences of unicode mathematics operator symbols 
+Operators are sequences of unicode mathematics operator symbols
 (see https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode)
 and the following ASCII operator characters:
 
-    ! ? @ # $ % ^ & | ~ = + - * / \ > < : . 
+    ! ? @ # $ % ^ & | ~ = + - * / \ > < : .
 
 ## Reserved Tokens
 
 Grace has the following reserved tokens:
 
     alias as class def dialect exclude inherit import is method object
-    outer prefix return self Self trait type var use where 
+    outer prefix return self Self trait type var use where
 
-    . := = ; { } [ ] ( ) : -> < > 
+    . := = ; { } [ ] ( ) : -> < >
 
 ## Newlines, Tabs and Control Characters
 
@@ -162,7 +162,7 @@ Tabs and all other non-printing control characters are syntax errors,
 even in a string literal. Escape sequences are provided to denote
 control characters in strings; see Table \[tab:StringEscapes\] in
 Section \[Strings\].
-        
+
 # Built-in Objects
 
 ## Done
@@ -199,7 +199,7 @@ denote `Number`s).
     a minus.
 
 
-#### Examples 
+#### Examples
 
     1
     -1
@@ -211,22 +211,22 @@ denote `Number`s).
     2x10110100
     0xdeadbeef // Radix zero treated as 16
 
-## Booleans 
+## Booleans
 
 The predefined constants `true` and `false` denote values of Grace’s
 `Boolean` type. Boolean operators are written using `&&` for and, `||`
 for or, and prefix `!` for not.
 
-#### Examples 
+#### Examples
 
     p && q
     toBe || toBe.not
 
 In addition to `&&` and `||` taking boolean arguments, they also accept
-parmameterless blocks that return `Boolean`.  This gives them 
+parmameterless blocks that return `Boolean`.  This gives them
 “short circuit” (a.k.a non-commutative) semantics.
 
-#### Examples 
+#### Examples
 
     p && { q }
     toBe || { ! toBe }
@@ -242,14 +242,24 @@ are represented by Strings of length 1. Strings are Grace value
 objects, so an implementation may intern them. Grace’s standard
 library includes supports efficient incremental string construction.
 
-   Escape  Meaning        Unicode                         Escape           Meaning              Unicode
-  -------- -------------- --------------------- -------------------------- -------------------- -------------------------
-    \\\\   backslash      U+005C             \\`_`            non-breaking space   U+00A0
-    \\n    line-feed      U+000A              \\r             carriage return      U+000D
-    \\t    tab            U+0009              \\l             Line separator       U+2028
-    \\{    left brace     U+007B           \\u$hhhh$          4-digit Unicode      U+$hhhh$
-    \\}    right brace    U+007D    \\U$hhhhhh$  6-digit Unicode      U+$hhhhhh$
-   \\`"`   double quote   U+0022                                                   
+|Escape |  Meaning |  Unicode |
+|:--|:--|:--|
+|    \\\\    | backslash      | U+005C | 
+|    \\n     | line-feed      | U+000A | 
+|    \\t     | tab            | U+0009 | 
+|    \\{     | left brace     | U+007B | 
+|    \\}     | right brace    | U+007D | 
+|    \\`"`   | double quote   | U+0022 | 
+|   \\u$hhhh$       | 4-digit Unicode      | U+$hhhh$     | 
+|   \\U$hhhhhh$     | 6-digit Unicode      | U+$hhhhhh$   | 
+
+
+|Escape |  Meaning |  Unicode |
+|:--|:--|:--|
+|   \\r             | carriage return      | U+000D       | 
+|   \\l             | line separator       | U+2028       |
+|   \\`_`            | non-breaking space   | U+00A0       | 
+
 
 #### Examples
 
@@ -269,7 +279,7 @@ into the string literal in place of the brace expression.
 
     "Adding {a} to {b} gives {a+b}"
 
-## Lineups 
+## Lineups
 
 Grace supports a constructor syntax for use in parsing multiple arguments
 or building collections: a comma separated list of expressions
@@ -279,9 +289,9 @@ surrounded by `[` and `]` brackets.
 
     [ ]        //empty lineup
     [ 1 ]
-    [ 2, a, 5 ] 
+    [ 2, a, 5 ]
 
-When executed, this constructor returns an object that supports a 
+When executed, this constructor returns an object that supports a
 very minimal interface ('size' and `do(_)`), which will generally be
 used to build collections.
 
@@ -289,9 +299,9 @@ used to build collections.
 
     set [ 1, 2, 4, 5 ]      //make a set
     seq [ "a", "b", "c" ]   //make a sequence
-    myWindow.addWidgets [ 
+    myWindow.addWidgets [
        title "Launch",
-       text "Good Morning Mrs President", 
+       text "Good Morning Mrs President",
        button "OK" action { missiles.launch },
        button "Cancel" action { missiles.abort }
     ]
@@ -319,7 +329,7 @@ annotations, it is an error if the arguments do not conform to those types.
 The looping construct
 
     for (1 .. 10) do {
-        i -> print i 
+        i -> print i
     }
 
 might be implemented as a method with a block parameter
@@ -387,8 +397,8 @@ the variable is initialised or assigned to.
 
     var x:Rational := 3     // explicit type
     var x:Rational          // x must be initialised before access
-    var x := 3              // x has type Unknown 
-    var x                   // x has Unknown type and uninitialised value 
+    var x := 3              // x has type Unknown
+    var x                   // x has Unknown type and uninitialised value
 
 ## Methods
 
@@ -400,7 +410,7 @@ methods.  The type of the object returned from the method may
 optionally be given after the symbol `->`: this type is checked when
 the method returns. The body of the method is enclosed in braces.
 
-    method pi  { 3.141592634 } 
+    method pi  { 3.141592634 }
 
     method greet(user: Person) from(sender: Person) {
         print ``{sender} sends his greetings, {user}.''
@@ -414,7 +424,7 @@ the method returns. The body of the method is enclosed in braces.
 
 ### Method Names
 
-Method names have several forms.  For each form, we describe its appearance, 
+Method names have several forms.  For each form, we describe its appearance,
 and also a _canonical_ form of the name which is used in dispatching method requests.
 A request "matches" a method if the canonical names are equal.
 
@@ -424,54 +434,54 @@ has no parameters; in this case the _canonical_ name of the method is the identi
 2. A method can be named by an identifier suffixed with `:=`; this
 form of name is conventionally used for writer methods, both
 user-written and automatically-generated, as exemplified by `value:=`
-below.  Such methods _always_ take a single parameter after the `:=` 
+below.  Such methods _always_ take a single parameter after the `:=`
 
 3. A method can be
-named by a single identifier followed by a parenthesized list of parameters; in this case 
+named by a single identifier followed by a parenthesized list of parameters; in this case
 the  _canonical_ name of the method is the identifier followed by `(_, ..., _)`,
 where the number of underscores is the same as the number of parameters.
 
-4. A method can be named by _multiple parts_, where each _part_ is an identifier 
-followed by a parenthesized list of parameters; in this case 
+4. A method can be named by _multiple parts_, where each _part_ is an identifier
+followed by a parenthesized list of parameters; in this case
 the  _canonical_ name of the method is the sequence of identifiers followed by `(_, ..., _)`.
-The number of underscores between each pair of parentheses the same as the number of 
+The number of underscores between each pair of parentheses the same as the number of
 parameters in the parameter list of the corresponding part.
 
-5. A method can also be named by a sequence of operator symbols. 
+5. A method can also be named by a sequence of operator symbols.
 Such an "operator method" can have no parameters, in which case
 the method is requested by a prefix operator expression.
 It can also have one parameter, in which
-case it is requested by a binary operator expression.  The canonical name of a 
-unary method is **`prefix`** followed by the operator symbols; the canonical 
+case it is requested by a binary operator expression.  The canonical name of a
+unary method is **`prefix`** followed by the operator symbols; the canonical
 name of a binary method is the sequence of operator symbols followed by `(_)`
 
 As a consequence of the above rules, methods `max(a, b, c)` and
 `max(a, b)` have different canonical names and are therefore treated
 as distinct methods.  In other words, Grace allows "overloading by
 arity" (although it does _not_ allow overloading by type).
- 
+
 Method parameters optionally may be given types: those types will be
 checked just before the method body is executed.
 
-[](TODO: need to distribute examples into the above list or something) 
+[](TODO: need to distribute examples into the above list or something)
 
 #### Examples
 
-    method ping { print "PING!" } 
+    method ping { print "PING!" }
 
-    method +(other : Point) -> Point { 
-        (x +other.x) @ (y +other.y) 
+    method +(other : Point) -> Point {
+        (x +other.x) @ (y +other.y)
     }
 
-    method add (other) 
+    method add (other)
         { return (x +other.x) @ (y +other.y) }
 
     method value:=(n : Number) -> Done {
         print "value currently {value}, now assigned {n}"
-        outer.value:= n 
+        outer.value:= n
     }
 
-    method prefix- -> Number 
+    method prefix- -> Number
          { 0 - self }
 
 ### Type Parameters
@@ -480,10 +490,10 @@ Methods may be declared with one or more type parameters, which are listed betwe
 If present, type parameters must appear after the identifier of the first part of
 a multipart name.   There must be no space between the opening `<` and the first type parameter (or,
 in a request, the first type argument), or between the last type parameter (or argument) and the closing `>`.
-The purpose of this rule is to disambiguate this use of `<` and `>` from their use as operator symbols, when 
+The purpose of this rule is to disambiguate this use of `<` and `>` from their use as operator symbols, when
 they must be surrounded by spaces.
 
-If an operator method has a type parameter list, it must be separated from the sequence of operator symbols that 
+If an operator method has a type parameter list, it must be separated from the sequence of operator symbols that
 names the method by a space.
 
 The presence or absence of type parameters does not change the canonical name of the method.
@@ -494,7 +504,7 @@ The presence or absence of type parameters does not change the canonical name of
         (a * a) + (b * b)
     }
 
-    method prefix- <T> -> Number 
+    method prefix- <T> -> Number
          { 0 - self }
 
 
@@ -505,7 +515,7 @@ If a `return e` statement is executed, the method terminates with the
 value of the expression `e`, while a `return` statement with no
 expression returns `done`.  If execution reaches
 the end of the method body without executing a `return`, the method
-terminates and returns the value of the last expression evaluated. 
+terminates and returns the value of the last expression evaluated.
 An empty method body returns `done`.
 
 ## Annotations
@@ -517,24 +527,22 @@ Expressions] that return _annotator objects_. While annotations may be
 defined by libraries or dialects, Grace defines the following core
 annotations:
 
-| Annotation | Semantics | 
+| Annotation | Semantics |
 |:--|:--|
-| `required` | the body of the method is omitted (see [required methods]) | 
-| `confidential` | method may only be requested on self | 
-| `manifest` | method or object must be manifest (see [manifest expressions]) |
-| `overrides` | method must override a method from its parent with the same name and parameter types |
-| `public` | method may be requested from anywhere inside or outside its containing object |
-| `readable`  | variable or constant may be read from inside or outside its containing object |
-| `writeable` | variable may be assigned from inside or outside its containing object | 
-
-More details on the last three annotations may be found in [Methods, Classes, Traits and Types] below.
+| `required` | the body of the method is omitted - [Required Methods] |
+| `confidential` | method may only be requested on self - [Encapsulation] |
+| `manifest` | method must return a manifest object - [Manifest Expressions] |
+| `overrides` | method must override another method - [Overriding Methods] |
+| `public` | method may be requested from anywhere - [Encapsulation] |
+| `readable`  | field may be read from anywhere - [Encapsulation] |
+| `writeable` | variable may be assigned from anywhere - [Encapsulation] |
 
 #### Examples
 
     var x is readable, writeable := 3
     def y : Number is public
-    method foo is confidential  { } 
-    method id<T> is required  { } 
+    method foo is confidential  { }
+    method id<T> is required  { }
 
 
 ## Encapsulation
@@ -547,10 +555,10 @@ are as follows.
 
 By default, methods, classes, traits and types are public, which means
 that they can be requested by any client that has access to the
-object. 
+object.
 
 If a method or type is annotated `is confidential`, it can be requested
-only on `self` or any number of cascaded `outer`s. This means that it 
+only on `self` or any number of cascaded `outer`s. This means that it
 is accessible to any object that contains it, and to inheriting
 objects, but not to client objects.
 
@@ -589,7 +597,7 @@ as well as a `var` field `x`.
         def a = 1              // Confidential access to a
         def b is public = 2        // Public access to b
         def c is readable = 2     // Public access to c
-        var d := 3                   // Confidential access and assignment 
+        var d := 3                   // Confidential access and assignment
         var e is readable          // Public access and confidential assignment
         var f is writable           // Confidential access, public assignment
         var g is public             // Public access and assignment
@@ -621,22 +629,22 @@ However, identifiers from outer scopes can be used to obtain an effect similar t
                 }
                 ...
             }
-        }                
+        }
 
 The object returned by newShipStartingAt()endingAt() can update the variable floatation from the outer scope, even though it is not
 accessible to anything inheriting from that object.
 
-# Objects, Classes, and Traits 
+# Objects, Classes, and Traits
 
 Grace **`object`** constructors generate
-individual objects. 
+individual objects.
 Grace **`class`** declarations define methods that generate objects,
 all of which have the same structure.
 
 The design of Grace's reuse mechanism is complete, but tentative. We need
 experience before confirming the design.
 
-## Objects 
+## Objects
 
 Object constructors are expressions that evaluate to an object with the
 given attributes. Each time an object constructor is executed, a new object
@@ -721,7 +729,7 @@ a `trait` defines a method that returns a trait object.
         method nonEmpty { size != 0 }
         method ifEmptyDo (eAction) nonEmptyDo (nAction) {
                 if (isEmpty) then { eAction.apply } else { do(nAction) }
-        } 
+        }
     }
 
 
@@ -737,11 +745,11 @@ with type arguments.
 
     class vectorOfSize(size)<T> {
         var contents := Array.size(size)
-        method at(index : Number) -> T {return contents.at() } 
+        method at(index : Number) -> T {return contents.at() }
         method at(index : Number) put(elem : T) { }
     }
 
-[](    class sortedVectorOfSize(size)<T> 
+[](    class sortedVectorOfSize(size)<T>
         where T <: Comparable<T> {
           ...
     }
@@ -764,8 +772,8 @@ The request of an `inherit` or `use` clause is restricted to be a
 that creates a new object, such as a request on a class or trait.
 This mens that the  request  cannot depend on a `self`, implicitly or
 explicitly: programs cannot inherit (or use) any trait or class that
-can potentially be overridden. 
-The object reused by a `use` clause must be a trait object. 
+can potentially be overridden.
+The object reused by a `use` clause must be a trait object.
 The arguments to this request need not themselves be manifest.
 
 If it is necessary to access an overridden attribute, the overridden
@@ -780,7 +788,7 @@ an **`exclude`** clause: excluded attributes are replaced by a
 ### Combination and Initialisation
 
 When executed, an object constructor (or trait or class declaration)
-first creates a new object with no attributes, and binds it to `self`. 
+first creates a new object with no attributes, and binds it to `self`.
 
 Next, the attributes of all _parent_ objects (created by any 'inherit'
 or 'uses' clauses, modified by `alias` and `exclude`) and any local
@@ -794,11 +802,11 @@ Next, types must be evaluated and bound within objects. As [Manifest
 Expressions], types cannot depend on runtime values.
 
 Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with local declarations. (Note that used traits contain no executable code.)
-Initialisers for all `def`s and `var`s, 
+Initialisers for all `def`s and `var`s,
 and code in the bodies of parents,
 are executed once in the order they are written, even for `def`s or
 `var`s that are excluded from the new object, or aliased to one or
-more new names. 
+more new names.
 During initialisation, `self` is always bound to the new object being
 created, even while executing code and initialisers from parent
 objects, classes or traits.
@@ -810,7 +818,7 @@ parents' initialisers or executable statements.
 
 ### Required Methods
 
-Methods may be annotated as being **`required`** (previously
+Methods may be annotated as **`required`** (previously
 "abstract").  The annotation is used to indicate that a method
 body must be supplied before an object created by this expression
 can have that method requested.  Required methods do not conflict with other methods,
@@ -819,10 +827,17 @@ method overrides an inherited concrete method. In most dialects,
 a required method's body must be empty.  Requesting a method that
 is annotated **`required`** will generate a run-time error.
 
+### Overriding Methods
+
+Methods may be annotated as **overrides**. An overriding method must
+override a method from its parent with the same name and parameter types
+This annotation is optional: local methods override parents' methods
+with or without the **overrides* annotations.
+
 #### Examples
 
 The example below shows how a class can use a method to override an
-accessor method for an inherited variable. 
+accessor method for an inherited variable.
 
     class pedigreeCatColoured (aColour) named (aName) {
         inherits catColoured (aColour) named (aName)
@@ -847,7 +862,7 @@ Traits are designed to be used as fine-grained components of reuse:
 
     trait canine {
         method loyal { "I'm your best friend" }
-        method move { 
+        method move {
             if (you.location != self.location) then {
                 self.setPosition(you.heel)
             }
@@ -878,9 +893,9 @@ In contrast, the following definition is legal:
 
 Here, the
 conflict is resolved by overriding with a local `move` method.  This method
-accesses the overridden methods from the parent traits using the aliases `catMove` 
-and `dogMove`; as a result, `nyssa` will `move` either like a dog or a cat, depending on 
-a random variable.  
+accesses the overridden methods from the parent traits using the aliases `catMove`
+and `dogMove`; as a result, `nyssa` will `move` either like a dog or a cat, depending on
+a random variable.
 
 ### Default Methods
 
@@ -909,7 +924,7 @@ In contrast, executing the method involves the code of the method, which
 is local to the receiver.
 
 
-## Self 
+## Self
 
 The reserved word **`self`** refers to the lexically enclosing object.
 The expression `self.x` requests `x` on the current object.
@@ -917,12 +932,12 @@ The expression `self.x` requests `x` on the current object.
 
 #### Examples
 
-      self                     
+      self
       self.value
       self.bar(1,2,6)
-      self.doThis(3) timesTo("foo")               
-      self + 1 
-      ! self   
+      self.doThis(3) timesTo("foo")
+      self + 1
+      ! self
 
 ## Outer
 
@@ -932,21 +947,21 @@ enclosing the current object.
 
 #### Examples
 
-      outer                     
+      outer
       outer.outer.outer.outer
       outer.value
       outer.bar(1,2,6)
-      outer.outer.doThis(3) timesTo("foo")               
-      outer + 1 
-      ! outer   
+      outer.outer.doThis(3) timesTo("foo")
+      outer + 1
+      ! outer
 
 ## Named Requests
 
-A named method request comprises an expression identifying the receiver, 
+A named method request comprises an expression identifying the receiver,
 followed by a dot “.”, followed by a
 method name, and within parentheses, a comma-separated list of
 arguments.
-Parentheses are not used if there are no arguments. 
+Parentheses are not used if there are no arguments.
 
 
 To improve
@@ -961,7 +976,7 @@ comprises two parts, `drawLineFrom(_)` and `to(_)`. The name of a method and
 the position of the argument lists within that name is determined when
 the method is declared. When reading a request of a multi-part method
 name, you should continue accumulating words and argument lists as far
-to the right as possible. 
+to the right as possible.
 
 Unlike some other languages, Grace does _not_ allow the overloading of
 method names by type:  the type of the arguments supplied to the request does
@@ -986,9 +1001,9 @@ that is a numeral, string, lineup, or block.
         self.drawLineFrom (p1) to (p2)
         self.drawLineFrom (origin) length 9 angle (pi/6)
         print "Hello World"
-        while {x < 10} then { 
+        while {x < 10} then {
             print [a, x, b]
-            x := x + 1 
+            x := x + 1
         }
 
 
@@ -1016,29 +1031,29 @@ Implicit requests are resolved as follows:
 * If there is no declaration named _m_, the request is an error.
 
 Note that implicit requests are resolved within the site of the
-declaring method, not where they are used. 
+declaring method, not where they are used.
 
 #### Examples
 
-Implicit requests: 
+Implicit requests:
 
-        print "Hello world" 
-        size 
+        print "Hello world"
+        size
         canvas
 
-Resolving implicit requests: 
+Resolving implicit requests:
 
 ````
-method foo { print "outer" } 
+method foo { print "outer" }
 
 class app {
   method barf { foo }
 }
 
-class bar { 
+class bar {
   inherits app
-  method foo { print "bar" } 
-} 
+  method foo { print "bar" }
+}
 
 class baz {
   inherits bar
@@ -1062,12 +1077,12 @@ parentheses. Spaces are optional before and after the
 #### Examples
 
        x := 3
-       y:=2 
+       y:=2
        widget.active := true
 
 Assignment methods conventionally return `done`.
 
-## Binary Operator Requests 
+## Binary Operator Requests
 
 Binary operators are methods whose names comprise one or more operator
 characters, provided that the operator is not reserved by the
@@ -1092,20 +1107,21 @@ Four binary operators do have precedence defined between them: `/` and
     1 + 2 * 3                  // evaluates to 7
     1 +*+ 4 -*- 4              // precedence error
 
-Named method requests without arguments bind more tightly than operator
-requests. The following examples show the Grace expressions on the left,
-and the parse on the right.
-
 #### Examples
 
-  ----------------------------- ---------------------------
-  `1 + 2.i`                     `1 + (2.i)`
-  `(a * a) + (b * b).sqrt`      `(a * a) + ((b *b).sqrt)`
-  `((a * a) + (b * b)).sqrt `   `((a * a) + (b *b)).sqrt`
-  `a * a + b * b`               `(a * a) + (b *b)`
-  `a + b + c`                   `(a + b) + c`
-  `a - b - c`                   `(a - b) - c`
-  ----------------------------- ---------------------------
+Named method requests without arguments bind more tightly than operator
+requests.
+
+
+| Grace | Parsed as |
+|:--|:--|
+|  `1 + 2.i`                     | `1 + (2.i)` |
+|  `(a * a) + (b * b).sqrt`      | `(a * a) + ((b *b).sqrt)` |
+|  `((a * a) + (b * b)).sqrt `   | `((a * a) + (b *b)).sqrt` |
+|  `a * a + b * b`               | `(a * a) + (b *b)` |
+|  `a + b + c`                   | `(a + b) + c` |
+|  `a - b - c`                   | `(a - b) - c` |
+
 
 ## Unary Prefix Operator Requests
 
@@ -1137,9 +1153,9 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 #### Examples
 
-    sumSq<Number>(10.i64, 20.i64) 
+    sumSq<Number>(10.i64, 20.i64)
 
-    sumSq(10.i64, 20.i64) 
+    sumSq(10.i64, 20.i64)
 
 
 ## Manifest Expressions
@@ -1158,7 +1174,7 @@ parent arguments must return the results of manifest object constructors.
  and if they resolve to a manifest declaration.
  5. A method is manifest if it uniquely tail-returns a manifest
  expression.  Thus, class and trait declarations are manifest.
- 6. [Constant](Constants) and [Type](Types) declarations, and 
+ 6. [Constant](Constants) and [Type](Types) declarations, and
 imported [Modules]' nicknames are manifest declarations.
  7. `self` and `outer` are not manifest expressions.
 
@@ -1230,7 +1246,7 @@ requesting `match(_)` as well as `apply(_)`. When `apply(_)` would
 raises a type error because the block's argument would not match its
 parameter type, `match(_)` returns false; when `apply(_)` would return
 a result `r`, `match(_)` returns a `SuccessfulMatch` object whose
-`result` is `r`. 
+`result` is `r`.
 
 If a matching block parameter declaration takes the form `_ :
 pattern`, then the `_ :` can be omitted, provided the `pattern` here
@@ -1243,7 +1259,7 @@ The objects created by literals — Strings and Numbers — are patterns that
 match themselves. That’s what lets things like this work:
 
     method fib(n : Number) -> Number {
-      match (n) 
+      match (n)
         case { 0 -> 0 }
         case { 1 -> 1 }
         case { _ -> fib(n-1) + fib(n-2) }
@@ -1251,13 +1267,13 @@ match themselves. That’s what lets things like this work:
 
 #### Examples
 
-    { 0 -> "Zero" }                        
+    { 0 -> "Zero" }
         // match against a literal constant
 
-    { s:String -> print(s) }    
+    { s:String -> print(s) }
         // typematch, binding s - identical to block with typed parameter
 
-    { (pi) -> print("Pi = " ++ pi) } 
+    { (pi) -> print("Pi = " ++ pi) }
         // match against the value of an expression - requires parenthesis
 
     { _ -> print("did not match") }
@@ -1305,7 +1321,7 @@ Finally clauses can return early, either by executing a `return`, or by
 raising an exception. In such a situation, any prior `return` or raised
 exception is silently dropped.
 
-#### Examples 
+#### Examples
 
     try {
         def f = file.open("data.store")
@@ -1348,12 +1364,12 @@ objects will respond --- the [Default Methods] declared in
 `graceObject`. Some objects, notably instances of raw traits and
 `done` do not conform to ``Object``.
 
-### type Self 
+### type Self
 
 The type ``Self`` represents the public interface of the current
 object.
 
-### type Unknown 
+### type Unknown
 
 The type `Unknown` bypasses type checking. Any object matches
 type unknown, and messages sent to Unknown can only be checked at
@@ -1363,13 +1379,13 @@ considered to be _implicitly_ `Unknown`
 
 #### Examples
 
-    var x : Unknown := 5  //who knows what the type is 
+    var x : Unknown := 5  //who knows what the type is
     var x := 5            //same here, but Unknown is implicit
     x := "five"           //who cares
     x.gilad               //almost certainly crash at run time
 
     method id(x) { x }    //argument and return types both implicitly unknown
-    method id(x : Unknown) -> Unknown { x }  // same thing, explicitly  
+    method id(x : Unknown) -> Unknown { x }  // same thing, explicitly
 
 
 ## Interface Types
@@ -1401,16 +1417,16 @@ type is `Unknown`.
 
 Types—and parameterized types—may be named in type declarations:
 
-    type MyCatType = { 
+    type MyCatType = {
        color -> Colour
-       name -> String 
-    } 
+       name -> String
+    }
        // I care only about names and colours
 
-    type MyParametricType<A,B> = 
+    type MyParametricType<A,B> =
         where A <: Hashable,  B <: DisposableReference
       type {
-        at (_:A) put (_:B) -> Boolean  
+        at (_:A) put (_:B) -> Boolean
         cleanup(_:B)
       }
 
@@ -1422,7 +1438,7 @@ everything else.
 
     type MyParametricType = type <A,B>
      {
-        at (_:A) put (_:B) -> Boolean  
+        at (_:A) put (_:B) -> Boolean
         cleanup(_:B)
      }
 
@@ -1477,9 +1493,9 @@ object type that describes all common methods. This is so that the
 exhaustiveness of match/case statements can be determined statically.
 Thus the rules for conformance are more restrictive:
 
-``` 
-S <: (S | T);    T <: (S | T) 
-(S' <: S) & (T' <: T)  ==>  (S' | T')  <: (S | T) 
+```
+S <: (S | T);    T <: (S | T)
+(S' <: S) & (T' <: T)  ==>  (S' | T')  <: (S | T)
 ```
 
 To illustrates the limitations of variant types, suppose
@@ -1501,9 +1517,9 @@ types with new operations, and as as bounds on `where` clauses.
 [Must add rules to provide results if two types have same multi-part method name (and arities), but the
 type of parameters and return types differ.]
 
-``` 
+```
 U <: S; U <: T; ==> U <: (S & T)
-(S & T) <: S;    (S & T) <: T 
+(S & T) <: S;    (S & T) <: T
 ```
 
 #### Examples
@@ -1514,7 +1530,7 @@ U <: S; U <: T; ==> U <: (S & T)
     }
 
     class happy<T>(param: T) -> Done
-       where T <: (Comparable<T> & Printable & Happyable) {     
+       where T <: (Comparable<T> & Printable & Happyable) {
                ...
     }
 
@@ -1528,7 +1544,7 @@ has a method that conforms to each of the methods common to `T1` and
 most uses.
 
 
-``` 
+```
 S <: (S + T);    T <: (S + T)
 ```
 
@@ -1547,12 +1563,12 @@ or dialect can offer to lift any object `o` to a type just `o` by
 supporting a manifest request such as `Singleton(o)` and treating the
 result as a type.  Singleton types match only their singleton object.
 
-    def null = object { 
-        method isNull -> Boolean {return true} 
+    def null = object {
+        method isNull -> Boolean {return true}
     }
 
-    type Some<T> { 
-        thing -> T 
+    type Some<T> {
+        thing -> T
         isNull -> Boolean
     }
 
@@ -1577,16 +1593,16 @@ across modules, since modules are manifest objects.
 Type assertions can be used to check conformance and equality of
 types.
 
-    assert {B <: A}  
+    assert {B <: A}
        // B 'conforms to' A.
     assert {B <: type {foo(_:C) -> D} }
        // B had better have a foo method from C returning D
     assert {B == A | C}
 
 
-# Modules and Dialects 
+# Modules and Dialects
 
-Grace programs can be divided into multiple modules. 
+Grace programs can be divided into multiple modules.
 
 ## Modules
 
@@ -1608,7 +1624,7 @@ initialise all transitively imported modules in depth-first order,
 thus executing the "main" module _last_, after all its dependencies
 are loaded. Each individual module is loaded only once, the first time
 it is reached: importing the same module name again results in the same
-module object. 
+module object.
 
 Circular module dependencies are errors.
 
@@ -1616,23 +1632,23 @@ Circular module dependencies are errors.
 
 cat.grace module:
 ````
-import "animalMod" as a 
-print "initialising cat module" 
+import "animalMod" as a
+print "initialising cat module"
 class cat {
   inherit a.animal
-  method species { "Cat" } 
+  method species { "Cat" }
 }
-print "cat module done" 
+print "cat module done"
 ````
 
 animalMod.grace module:
 ````
-print "initialising animalMod module" 
+print "initialising animalMod module"
 class animal {
   method asString { "I am a {species}" }
   method species { "Random Animal" }
 }
-print "animal module done" 
+print "animal module done"
 ````
 
 will print:
@@ -1644,7 +1660,7 @@ initialising cat module
 cat module done
 ````
 
-## Dialects 
+## Dialects
 
 Grace dialects support language levels for teaching, and
 domain-specific little languages. A module may begin with a dialect
@@ -1652,7 +1668,7 @@ statement `dialect "name"`: this imports the dialect like any other
 module, but then arranges that the dialect's module object
 lexically encloses the object defined by the module. This means that
 [Implicit Requests] in the module can resolve to the definitions in
-the dialect. 
+the dialect.
 
 Many features built in to other programming languages are obtained
 from dialects in Grace: this includes all preexisting type
@@ -1665,7 +1681,7 @@ Modules that do not declare a 'dialect' implicitly belong to the
 ##### Examples
 
 The `bcpl.grace` module declares an "`unless(_)do(_)`" control
-structure that is like `if`, but backwards. 
+structure that is like `if`, but backwards.
 
 bcpl.grace module:
 ````
@@ -1683,7 +1699,7 @@ dialect "bcpl"
 import "file" as f
 
 def myfile = f.openFile "foo.txt"
-do {  print "Can't open file" }  unless (myfile.isOpen) 
+do {  print "Can't open file" }  unless (myfile.isOpen)
 
 ````
 
@@ -1694,7 +1710,7 @@ do {  print "Can't open file" }  unless (myfile.isOpen)
 Moving out from module scope, Grace programs can access the following scopes:
 
 1. **module scope** containing all declarations at the top level of
-a module. 
+a module.
 
 2. **surrounding module scope** containing the nicknames introduced by
 `import` declarations.
@@ -1727,7 +1743,7 @@ lines are ignored.
 
 Grace implementations should be garbage collected. Points where GC
 may occur are at any backwards branch and at any method request.
-(Why is this here at all?  What about execution of object constrictors, which 
+(Why is this here at all?  What about execution of object constrictors, which
 will presumably trigger allocation?)
 
 Grace will not support finalization.
@@ -1770,14 +1786,14 @@ Modula-3 @Modula3, Modular Smalltalk @ModularSmalltalk, Newspeak
 @AbadiCardelli, Pascal @Pascal, Perl @perltalk, Quorun @Quorum, Racket
 @HowToDesignPrograms, Scala @SCA [@scala28], Scheme @scheme, Self
 @selfpower, Smalltalk @bluebook [@Ingalls81; @Budd1987; @strongtalk],
-TrumpScript @TrumpScript, 
-Turing @OOTuring,  
+TrumpScript @TrumpScript,
+Turing @OOTuring,
 U2 @someLanguageBeginningWithU,
 VDM @VDM (or VC++ @VC++),
 Whiteoak @whiteoak08, Whitespace @whitespaceLanguage,
-XTend @XTend, 
+XTend @XTend,
 yes @UnixYesCommand,
-and Z @Zed 
+and Z @Zed
 at least: we apologise if we’ve missed any languages out.
 All the good ideas come from these languages: the bad ideas are our
 responsibility @HoareHints.
