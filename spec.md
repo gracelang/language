@@ -35,7 +35,7 @@ change. In particular, this version does *not* address:
 ------------------------------------------------------------------------
 
 > *All designers in fact have user and use models consciously or
-> subconsciously in mind as they work. Team design …requires explicit
+> subconsciously in mind as they work. Team design … requires explicit
 > models and assumptions.*
 >
 > Frederick P. Brooks, *The Design of Design*.
@@ -234,12 +234,13 @@ parmameterless blocks that return `Boolean`.  This gives them
 
 ## Strings
 
+### String Literals
+
 String literals in Grace are written between double quotes, and must
 be confined to a single line. Strings literals support a range of
 escape characters such as `"\n\t"`, and also escapes for Unicode;
 these are listed in Table \[tab:StringEscapes\]. Individual characters
-are represented by Strings of length 1. Strings are Grace value
-objects, so an implementation may intern them. Grace’s standard
+are represented by Strings of length 1. Strings are imutable, so an implementation may intern them. Grace’s standard
 library includes supports efficient incremental string construction.
 
 |Escape |  Meaning |  Unicode |
@@ -268,49 +269,47 @@ library includes supports efficient incremental string construction.
     "The End of the Line\n"
     "A"
 
-### String interpolation
+### String Constructors
 
-Within a string literal, expressions enclosed in braces are treated
-specially. The expression is evaluated, the `asString` method is
-requested on the resulting object, and the resulting string is inserted
-into the string literal in place of the brace expression.
+String Constructors are a generalization of [String Literals](String Literals) that contain, in addition to the above escapes, expressions enclosed in braces.
+The value of a String Constructor is obtained by first evaluating any
+expressions inside braces, requesting `asString` of the resulting object,
+and inserting the resulting string into the string literal in place of the
+brace expression.
 
-#### Examples
+#### Example
 
     "Adding {a} to {b} gives {a+b}"
 
 ## Lineups
 
-Grace supports a constructor syntax for use in parsing multiple arguments
-or building collections: a comma separated list of expressions
-surrounded by `[` and `]` brackets.
+A Lineup is a comma separated list of expressions surrounded by `[` and `]`.  
 
 #### Examples
 
     [ ]        //empty lineup
     [ 1 ]
-    [ 2, a, 5 ]
+    [ red, green, blue ]
 
-When executed, this constructor returns an object that supports a
-very minimal interface ('size' and `do(_)`), which will generally be
-used to build collections.
+When executed, a lineup returns an object that supports the Iterator interface, which includes the methods `size`, `map`, `do(_)`, and `iterator`).  Lineups are most frequently used to build collections, to control loops, and to pass collections of options to methods.
 
 #### Examples
 
     set [ 1, 2, 4, 5 ]      //make a set
-    seq [ "a", "b", "c" ]   //make a sequence
+    sequence [ "a", "b", "c" ]   //make a sequence
+    ["a", "e", "i", "o", "u"].do { x -> testletter(x) }
     myWindow.addWidgets [
        title "Launch",
-       text "Good Morning Mrs President",
+       text "Good Morning, Mrs President",
        button "OK" action { missiles.launch },
        button "Cancel" action { missiles.abort }
     ]
 
 ## Blocks
 
-Grace blocks are lambda expressions; they may or may not have
+Grace blocks are lambda expressions, with or without
 parameters. If a parameter list is present, the parameters are separated
-by commas and the list is terminated by the **`->`** symbol.
+by commas and the list is terminated by the `->` symbol.
 
     { do.something }
     { i -> i + 1 }
@@ -320,15 +319,15 @@ by commas and the list is terminated by the **`->`** symbol.
 Blocks construct objects containing a method named `apply`, or
 `apply(n)`, or `apply(n, m)`, …, where the number of parameters to `apply`
 is the same as the number of parameters of the block. Requesting the
-`apply` method evaluates the block; it is an error to provide the wrong
+`apply(…)` method evaluates the block; it is an error to provide the wrong
 number of arguments. If block parameters are declared with type
-annotations, it is an error if the arguments do not conform to those types.
+annotations, it is a `TypeError` if the arguments do not conform to those types.
 
 #### Examples
 
 The looping construct
 
-    for (1 .. 10) do {
+    for (1..10) do {
         i -> print i
     }
 
@@ -349,29 +348,34 @@ Here is another example:
     summingBlock.apply(4)       // sum now 4
     summingBlock.apply(32)      // sum now 36
 
-Blocks are lexically scoped inside their containing method or block.
+Blocks are lexically scoped, and can close over any visible field or parameter.
 The body of a block consists of a sequence of declarations and
-expressions. An empty body is allowed, and is equivalent to `done`.
+expressions; declarations are local to the block.
+An empty body is allowed, and is equivalent to `done`.
 
 # Declarations
 
-All declarations may occour anywhere within a module, object, class,
-or trait.  Constant and variable declarations may also occur within a
-method or block body.  Declarations are visible within the whole of
+Declarations may occur anywhere within a module, object, class,
+or trait.  Field declarations may also occur within a
+method or block body.  Declarations are visible within the *whole* of
 their containing lexical scope.  It is an error to attempt to declare
-any name more than once in the same lexical scope.
+any name more than once in a given lexical scope.
 
-**ing.** Grace has a single namespace for all identifiers; this
-shared namespace is used for everything: methods, parameters,
-constants, variables, classes, traits, and and types. It is an error
-to declare a constant, variable or parameter that s a
-lexically-enclosing constant, variable, or parameter.
+Grace has a single namespace for all identifiers; this
+namespace is used for everything: methods, parameters,
+constants, variables, classes, traits, and types. It is a *shadowing error*
+to declare a parameter (but not a method or field) that has the same name as a
+lexically-enclosing field, method, or parameter.
 
-## Constants
+## Fields
 
-Constant definitions are introduced using the **`def`** keyword; they bind
+Grace has two kinds of fields: [constants](Constants) and [variables](Variables).
+
+### Constants
+
+Constants are defined with the **`def`** keyword; they bind
 an identifier to the value of an initialising expression, and may
-optionally be given a type: this type is checked when
+optionally be given a type.  This type is checked when
 the constant is initialised. Constants cannot be re-bound.
 
 #### Examples
@@ -380,18 +384,18 @@ the constant is initialised. Constants cannot be re-bound.
     def x : Number = 3
     def x : Number           // Syntax Error: x must be initialised
 
-## Variables
+### Variables
 
-Variable definitions are introduced using the **`var`** keyword; they
-optionally bind an identifier to the value of an initialising
-expression. Variables can be re-bound to
-new values as often as desired, using an assignment. If a
-variable is declared without an initializing expression, it is said to
-be *uninitialised*; any attempt to access the value of an uninitialised
-variable is an error. This error may be caught either at run time or at
+Variable introduced with the **`var`** keyword.
+Variables can be re-bound to
+new values as often as desired, using an assignment. 
+A variable declaration may optionally provide an initial value; if there is 
+not initial value, the variable is *uninitialised*.
+Any attempt to access the value of an uninitialised
+variable is an error, which may be caught either at run time or at
 compile time.
 Variables may be optionally given a type: this type is checked when
-the variable is initialised or assigned to.
+the variable is initialised and assigned.
 
 #### Examples
 
@@ -1160,11 +1164,14 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 ## Manifest Expressions
 
-Types, annotations, and the parent arguments to `inherit` and `use`
-clauses must be _manifest_: that is they must be able to be determined
+Types, annotations, and the parents in `inherit <parent>` and `use <parent>`
+clauses must be _manifest_. This means that must be able to be determined
 before a program begins running. Requests for types and annotations
 must return manifest type and annotation objects respectively, while
-parent arguments must return the results of manifest object constructors.
+parents must be the results of manifest object constructors.
+Note that the parents themselves may not be manifest.  For example if 
+`listNode(_)` is a manifest class, then it's OK to `inherit listNode(data)`, 
+even if the value of `data` is not known until execution time.
 
  1. [Numbers], [Lineups], [Strings], and [Objects] are manifest expressions.
  2. [Implicit Requests] and  [Outer] requests resolving to manifest
