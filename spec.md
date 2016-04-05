@@ -776,13 +776,13 @@ construction).  A new declaration in the current object can override a
 declaration from a parent.
 
 An `inherit` or `use` clause takes a
-[Manifest Expression][Manifest Expressions]
+[Manifest Expression](Manifest Expressions)
 that creates a new manifest object, such as a request on a class or trait.
 This means that the  request  cannot depend on a `self`, implicitly or
 explicitly: programs cannot inherit (or use) any trait or class that
 can potentially be overridden.
 The object reused by a `use` clause must be a trait object.
-Note that the arguments to [Manifest Expression][Manifest Expressions]
+Note that the arguments to [Manifest Expression](Manifest Expressions)
 need not themselves be manifest. 
 
 If it is necessary to access an overridden attribute, the overridden
@@ -1190,9 +1190,10 @@ even if the value of `data` is not known until execution time.
 imported [Modules]' nicknames are manifest declarations.
  7. `self` and `outer` are not manifest expressions.
 
-Note that [Variables], method parameters, and [Self] are not manifest.
-Note also that this definition constraints recievers of requests, and
-the declartions they resolve to, but not the arguments passed to those
+<*There is still confusion here between manifest **declarations** and manifest **expressions**.  What's the relationship?  Especially when the declaration has parameters?*>
+
+Note that [Variables](Variables), method parameters, and [Self](Self) are not manifest.
+Note also that this definition constraints the receivers of requests that appear in manifest expressions, but not the arguments passed to those
 requests.
 
 Class, trait and method declarations may themselves be manifest, but
