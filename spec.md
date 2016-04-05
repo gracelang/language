@@ -519,13 +519,15 @@ annotations:
 
 | Annotation | Semantics | 
 |:--|:--|
-| `required` | method will not conflict with or override another method | 
-| `confidential` | method may not be called from outside | 
-| `manifest` | method or object must be manifest |
-| `overrides` | method must override a parental method |
-| `public` | method may be called from outside |
-| `readable`  | variable or constant may be read from outside |
-| `writeable` | variable may be assigned from outside | 
+| `required` | the body of the method is omitted (see [required methods]) | 
+| `confidential` | method may only be requested on self | 
+| `manifest` | method or object must be manifest (see [manifest expressions]) |
+| `overrides` | method must override a method from its parent with the same name and parameter types |
+| `public` | method may be requested from anywhere inside or outside its containing object |
+| `readable`  | variable or constant may be read from inside or outside its containing object |
+| `writeable` | variable may be assigned from inside or outside its containing object | 
+
+More details on the last three annotations may be found in [Methods, Classes, Traits and Types] below.
 
 #### Examples
 
@@ -809,10 +811,13 @@ parents' initialisers or executable statements.
 ### Required Methods
 
 Methods may be annotated as being **`required`** (previously
-"abstract").  Required methods do not conflict with other methods,
+"abstract").  The annotation is used to indicate that a method
+body must be supplied before an object created by this expression
+can have that method requested.  Required methods do not conflict with other methods,
 either required or concrete (not required), however a required local
 method overrides an inherited concrete method. In most dialects,
-a required method's body must be empty.
+a required method's body must be empty.  Requesting a method that
+is annotated **`required`** will generate a run-time error.
 
 #### Examples
 
