@@ -1169,40 +1169,17 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 ## Manifest Expressions
 
-Types, annotations, and the parents in `inherit <parent>` and `use <parent>`
-clauses must be _manifest_. This means that must be able to be determined
-before a program begins running. Requests for types and annotations
-must return manifest type and annotation objects respectively, while
-parents must be the results of manifest object constructors.
-Note that the parents themselves may not be manifest.  For example if 
-`listNode(_)` is a manifest class, then it's OK to `inherit listNode(data)`, 
-even if the value of `data` is not known until execution time.
+The parents in `inherit <parent>` and `use <parent>`
+clauses must be _manifest_. This means that Grace must be able to
+determine the _shape_ of the object that is being inherited on a module-by-module
+basis. 
+In particular,
 
- 1. [Numbers], [Lineups], [Strings], and [Objects] are manifest expressions.
- 2. [Implicit Requests] and  [Outer] requests resolving to manifest
- declarations in surrounding method scopes, the module, or the
- dialect, are manifest.
- 4. Explicit requests are manifest if the receiver is manifest
- and if they resolve to a manifest declaration.
- 5. A method declaration is manifest if it uniquely tail-returns a manifest
- expression.  Thus, class and trait declarations are manifest.
- 6. [Constant][Constants] and [Type][Types] declarations, and
-imported [Modules]' nicknames are manifest declarations.
- 7. `self` and `outer` are not manifest expressions.
+1. the meaning of the parent expressions must not be subject to
+overriding, and 
+2. the result of the parent expression must be a fresh object 
+whose shape is statically determinable.
 
-<*There is still confusion here between manifest **declarations** and manifest **expressions**.  What's the relationship?  Especially when the declaration has parameters?*>
-
-Note that [Variables](Variables), method parameters, and [Self](Self) are not manifest.
-Note also that this definition constraints the receivers of requests that appear in manifest expressions, but not the arguments passed to those
-requests.
-
-Class, trait and method declarations may themselves be manifest, but
-they will not be able to be used in manifest expressions if they
-are reached by implicit or explicit method requests on `self`.
-
-A dialect may check method declarations with `manifest` annotations to
-ensure that they declare methods that would be manifest when requested
-on manifest objects.
 
 ## Precedence of Method Requests
 
