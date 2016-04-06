@@ -12,7 +12,7 @@ title: |
     Draft Specification Version 0.6b9
 ...
 
-
+  
 # Introduction
 
 This is a specification of the Grace Programming Language. This

@@ -1,5 +1,4 @@
-
-
+---
 author:
 - 'Andrew P. Black'
 - 'Kim B. Bruce'
@@ -160,12 +159,10 @@ type Object = {
    // true if other is equal to self
 
    != (other: Object) -> Boolean
-   /= (other: Object) -> Boolean
-   $\neq$ (other: Object) -> Boolean
-   // the inverse of ==.   All three variants have the same meaning.
+   // the inverse of ==. There are unicode aliases for this opreator.
 
    hash -> Number
-   // the hash code of self, a Number in the range $0 .. 2^{32}$
+   // the hash code of self, a Number in the range 0 .. 2^32
 
    match (other: Object) -> SucccessfulMatch | FailedMatch
    // returns a SuccessfulMatch if self "matches" other
@@ -183,9 +180,6 @@ type Object = {
 }
 ```
 
-We will also not discuss or include the pattern combinators
-`|` (or) and `&` (and) used in generating
-compound patterns.
 
 Number
 ------
@@ -207,16 +201,16 @@ type Number = {
   - (other: Number) -> Number
   //  difference of self and other
 
-  * (other: Number) -> Number
+  * (Other: Number) -> Number
   //  product of self and other
 
   / (other: Number) -> Number
   //  quotient of self divided by other (in general, a fraction).
 
   % (other: Number) -> Number
-  //  remainder r of self after integer division by other: 0 \leq r < | self $; see also $\div$
+  //  remainder r of self after integer division by other: 0 \leq r < | self;  see also *
 
-  $\div$ (other: Number) -> Number
+  ÷ (other: Number) -> Number
    // quotient q of self after integer division by other: self = (other * q) + r, where r = self % other
    
   .. (last: Number) -> Sequence
@@ -226,14 +220,12 @@ type Number = {
   //  true iff self is less than other
 
   <= (other: Number) -> Boolean
-  $\leq$ (other: Number) -> Boolean
   //  true iff self is less than or equal to other
 
   > (other: Number) -> Boolean
   //  true iff self is greater than other
 
   >= (other: Number) -> Boolean
-  $\geq$ (other: Number) -> Boolean
   //  true iff self is greater than or equal to other
 
   prefix- -> Number
@@ -280,8 +272,8 @@ There are also escapes for a few other characters and for arbitrary
 Unicode codepoints; for more information, see the Grace language
 specification.
 
-String constructors can also contain simple Grace expressions[^1]
-enclosed in braces, like this: +“count = count.”+ These are
+String constructors can also contain simple Grace expressions
+enclosed in braces, like this: `count = {count}` These are
 called string interpolations. The value of the interpolated expression
 is calculated, converted to a string (by requesting its
 `asString` method), and concatenated between the
@@ -289,14 +281,14 @@ surrounding fragments of literal string. Thus, if the value of
 `count` is `7`, the above example will
 evaluate to the string `“count = 7.”`
 
-Strings are immutable. Methods like `replace()with`
+Strings are immutable. Methods like `replace(_)with(_)`
 always return a new string; they never change the receiver.
 
 ``` 
 
 type String =  {
   * (n: Number) -> String
-  // returns a string that contains $n$ repetitions of self, so "abc"*$\,$3 = "abcabcabc"
+  // returns a string that contains n repetitions of self, so "abc" * 3 = "abcabcabc"
 
   ++(other: Object) -> String
   // returns a string that is the concatenation of self and other.asString
@@ -305,14 +297,12 @@ type String =  {
   // true if self precedes other lexicographically
 
   <= (other: String)
-  $\leq$ (other: String)
   // (self == other) || (self < other)
 
   == (other: Object)
   // true if other is a String and is equal to self
 
   != (other: Object)
-  $\neq$ (other: Object)
   // !(self == other)
 
   > (other: String)
@@ -356,7 +346,7 @@ type String =  {
 
   fold<U> (binaryFunction: Block2<U,String,U>) startingWith(initial: U) -> U
   // performs a left fold of binaryFunction over self, starting with initial.  For example, 
-  // fold \{a, b -> a + b.ord\} startingWith 0 will compute the sum of the ords of the characters in self
+  // fold a, b -> a + b.ord startingWith 0 will compute the sum of the ords of the characters in self
 
   hash -> Number
   // the hash of self
@@ -368,13 +358,13 @@ type String =  {
   // returns the leftmost index at which pattern appears in self; applies absent if it is not there.
 
   indexOf (pattern:String) startingAt (offset) -> Number
-  // like indexOf(pattern), except that it returns the first index $\geq \textsf{offset}$, or 0 if  pattern is not found.
+  // like indexOf(pattern), except that it returns the first index >= offset, or 0 if  pattern is not found.
 
   indexOf<W> (pattern:String) startingAt(offset) ifAbsent (action:Block0<W>) -> Number | W
   // like the above, except that it answers the result of applying action if there is no such index.
 
   indices -> Sequence
-  // an object representing the range of indices of self $(1..\textsf{self}.size)$.
+  // an object representing the range of indices of self (1..self.size)
 
   isEmpty -> Boolean
   // true if self is the empty string
@@ -390,7 +380,7 @@ type String =  {
 
   lastIndexOf<W> (pattern:String) startingAt (offset) ifAbsent (action:Block0<W>) -> 
       Number | W
-  // like the above, except that it returns the rightmost index $\leq \textsf{offset}$.
+  // like the above, except that it returns the rightmost index <=  offset.
 
   map<U> (function:Block<String,U>) -> Iterable<U>
   // returns an Iterable object containing the results of successive applications of function to the
@@ -426,20 +416,20 @@ type String =  {
 
   substringFrom (start: Number) size (max:Number) -> String
   // returns the substring of self starting at index start and of length max characters,
-  // or extending to the end of self if that is less than max.    If start} = \textsf{self}.\textsf{size} + 1$, or
-  // $\textsf{stop} < \textsf{start, the empty string is returned.   If start is outside the range
-  // $1..\textsf{self}.\textsf{size}+1$, BoundsError is raised.
+  // or extending to the end of self if that is less than max.    If start = self.size + 1 or
+  // stop < start, the empty string is returned.   If start is outside the range
+  // 1..self.size+1, BoundsError is raised.
 
   substringFrom (start: Number) to (stop: Number) -> String
   // returns the substring of self starting at index start and extending
-  // either to the end of self, or to stop.    If start} = \textsf{self}.\textsf{size} + 1$, or
-  // $\textsf{stop} < \textsf{start, the empty string is returned.   If start is outside the range
-  // $1..\textsf{self}.\textsf{size}+1$, BoundsError is raised.
+  // either to the end of self, or to stop.    If start = self.size + 1, or
+  // stop < start, the empty string is returned.   If start is outside the range
+  // 1..self.size+1, BoundsError is raised.
 
   substringFrom (start: Number) -> String
   // returns the substring of self starting at index start and extending
-  // to the end of self.    If start} = \textsf{self}.\textsf{size} + 1$, the empty string is returned.
-  // If start is outside the range $1..\textsf{self}.\textsf{size}+1$, $\textsf{BoundsError is raised.
+  // to the end of self.    If start = self.size + 1, the empty string is returned.
+  // If start is outside the range 1..self.size+1, BoundsError is raised.
 
   trim -> String
   // a string like self except that leading and trailing spaces are omitted.
@@ -453,30 +443,30 @@ type String =  {
 Boolean
 -------
 
-The Boolean literals are `true` and
-`false`.
+The Boolean literals are `true` and `false`.
 
-
+```
     type Boolean =  {
 
         not -> Boolean
         prefix ! -> Boolean
         // the negation of self
 
-        && (other: Boolean) -> Boolean
+        && (other: BlockOrBoolean) -> Boolean
         // return true when self and other are both true
 
-        || (other: Boolean) -> Boolean
+        || (other: BlockOrBoolean) -> Boolean
         // return true when either self or other (or both) are true
-
-        andAlso (other: BlockBoolean) -> Boolean
-        // other is a nullary block returning a Boolean.
-        // short circuit version of &&; other is evaluated only when self is true
-
-        orElse (other: BlockBoolean) -> Boolean
-        // other is a nullary block returning a Boolean.
-        // short circuit version of ||; other is evaluated only when self is false
     }
+```
+
+In conditions in `if` statements, and in shortcircult Boolean
+operators, a Block returning a boolean may be used instead of a Boolean.
+
+``` 
+type BlockBoolean = { apply -> Boolean }
+type BlockOrBoolean = BlockBoolean | Block 
+```
 
 Point
 -----
@@ -484,11 +474,9 @@ Point
 Points can be thought of as locations in the cartesian plane, or as
 2-dimensional vectors from the origin to a specified location. Points
 are created from Numbers using the ``@ infix operator.
-Thus, `3 @ 4` represents the point with coordinates
-$(3, 4)$.
+Thus, `3 @ 4` represents the point with coordinates (3, 4).
 
 ``` 
-
 type Point =  {
 
     x -> Number
@@ -539,14 +527,14 @@ The objects described in this section are made available to all standard
 Grace programs. (This means that they are defined as part of the
 *standardGrace* dialect.) As is natural for collections, the types are
 parameterized by the types of the elements of the collection. Type
-arguments are enclosed in `\<` and `\>`
+arguments are enclosed in `<` and `>`
 used as brackets. This enables us to distinguish, for example, between
-and `Set\<String\>`. In Grace programs, type arguments
+and `Set<String>`. In Grace programs, type arguments
 and their brackets can be omitted; this is equivalent to using
 `Unknown` as the argument, which says that the programmer
 either does not know, or does not care to state, the type.
 
-Common Abstractions {#sec:collectionAbstraction}
+Common Abstractions 
 -------------------
 
 The major kinds of collection are `sequence`,
@@ -555,6 +543,7 @@ The major kinds of collection are `sequence`,
 details, they share many common properties. First, they can all be
 created by similar methods:
 
+```
     type CollectionFactory<T> = type {
         with (*elts:Object) -> Collection<T>
         //  creates a collection of my kind that contains *elts, which is a variable-length argument list.   
@@ -568,10 +557,11 @@ created by similar methods:
         // like with, except that elts is a single argument, which is a collection, rather than a 
         // variable-length list of arguments.
     }
+```
 
 Second, they share many common methods, which are defined in a hierarchy
 of types, each extending the one above it in the hierarchy. The simplest
-is the type `Iterable\<T\>`, which captures the idea of a
+is the type `Iterable\<T>`, which captures the idea of a
 (potentially unordered) collection of *elements*, each of type
 `T`, over which a client can iterate: [type:Iterable]
 
@@ -613,7 +603,7 @@ type Iterable<T> = Object & type {
 
 The type `Collection` adds some conversion methods to
 `Iterable`:
-
+```
     type Collection<T> = Iterable<T> & type {
          asList -> List<T>
         // returns a (mutable) list containing my elements.
@@ -625,6 +615,7 @@ The type `Collection` adds some conversion methods to
         // returns a (mutable) Set containing my elements, with duplicates eliminated.
         // The == operation on my elements is used to identify duplicates.
     }
+```
 
 Additional methods are available in the type
 `Enumerable`; an `Enumerable` is like a
@@ -637,13 +628,6 @@ between an `Iterable` and an `Enumerable`
 is that `Enumerable`s have a natural order, so lists are
 `Enumerable`, whereas sets are just
 `Iterable`.
-
- $\blacktriangleright$*Perhaps
-`size` should return a result of `+`type
-Number | sizeUnknown+ rather than raising an exception. I
-coded it this way first, and it was a mess. What I didn’t try, though,
-was a method
-`sizeIfUnknown(action)`.*$\blacktriangleleft$
 
     type Enumerable<T> = Collection<T> & type {
         size -> Number
@@ -658,17 +642,17 @@ was a method
         
         asDictionary -> Dictionary<Number, T>
         // returns a dictionary containing my indices as keys and my elements as values, so that
-        // my $i^{th}$ element is $\mbox{self.asDictionary.at(\({i}\))}$.
+        // my i^th element is self.asDictionary.at(i).
 
         keysAndValuesDo (action:Block2<Number, T, Object>) -> Done
         // applies action, in sequence, to each of my keys and the corresponding element. 
         
         onto(f:CollectionFactory<T>) -> Collection<T>
-        // uses the factory $\mbox{f}$ to create a new collection, then populates it with my elements;
+        // uses the factory f to create a new collection, then populates it with my elements;
         // returns the new collection.
         
         into(existing:Collection<T>) -> Collection<T>
-        // adds my elements to $\mbox{existing}$, and returns $\mbox{existing}$.
+        // adds my elements to existing, and returns existing.
         
         sorted -> List<T>
         // returns a new List containing all of my elements, but sorted by their < and == operations.
@@ -682,7 +666,7 @@ was a method
 Sequence
 --------
 
-The type `Sequence\<T\>` describes sequences of values of
+The type `Sequence\<T>` describes sequences of values of
 type `T`. Sequence objects are immutable; they can be
 constructed either explicitly, using `sequence.with(1, 3, 5,
 7)`, or as ranges like `1..10`.
@@ -690,8 +674,7 @@ constructed either explicitly, using `sequence.with(1, 3, 5,
     type Sequence<T> = Enumerable<T> & type {
 
         at(ix:Number) -> T
-        [ ](ix:Number) -> T
-        // returns my $\mbox{ix}^{th}$ element, provided $\mbox{ix}$ is integral and $1 \leq \mbox{ix} \leq \mbox{size}$
+        // returns my x^th element, provided ix is integral and l <= \leq ix <=  size
         
         first -> T
         // returns my first element
@@ -737,6 +720,7 @@ Ranges are sequences of consecutive integers. They behave exactly like
 other sequences, but are stored compactly. Ranges are created by two
 methods on the `range` class:
 
+```
         range.from(lower:Number) to(upper:Number)
         // the sequence of integers from lower to upper, inclusive.  If lower = upper, the range contains a single value.
         // if lower > upper, the range is empty.  It is an error for lower or upper not to be an integer.
@@ -744,6 +728,7 @@ methods on the `range` class:
         range.from(upper:Number) downTo(lower:Number)
         // the sequence from upper to lower, inclusive.  If upper = lower, the range contains a single value.
         // if upper < lower, the range is empty.  It is an error for lower or upper not to be an integer.
+```
 
 The `..` operation on Numbers can also be conveniently
 used to create ranges. Thus, `3..9` is the same as
@@ -753,26 +738,23 @@ is the same as `range.from 9 downTo 3`.
 List
 ----
 
-The type `List\<T\>` describes objects that are mutable
+The type `List<T>` describes objects that are mutable
 lists of elements that have type `T`. Like sets and
 sequences, list objects can be constructed using the
 `empty`, `with`, and
 `withAll` requests, as in
-`list.empty\<T\>`, `list.with\<T\>(a, b, c,
+`list.empty<T>`, `list.with<T>(a, b, c,
 ...)`, or
-`list.withAll\<T\>(existingCollection)`.
+`list.withAll<T>(existingCollection)`.
 
 ``` 
 
 type List<T> = Sequence<T> & type {
 
     at(n: Number) put(new:T) -> List<T>
-    // updates self so that my $n^{th}$ element is new.  Returns self.
-    // Requires $1 \leq n \leq$ size$+1$; when $n = $size$+1$, equivalent to $\mbox{addLast(new)}$.
+    // updates self so that my n^th element is new.  Returns self.
+    // Requires 1 <= n <= size+1; when n = size+1, equivalent to addLast(new).
     
-    [$\,$]:=(n: Number, new:T) -> Done
-    // updates self so that my $n^{th}$ element is new; requested by writing lst[n] := new. Returns done
-    // Requires $1 \leq n \leq$ size$+1$; when $n = $size$+1$, equivalent to $\mbox{addLast(new)}$.
 
     add(*new:T) -> List<T>
     addLast(*new:T) -> List<T>
@@ -791,7 +773,7 @@ type List<T> = Sequence<T> & type {
     // remove and return last element of self.
 
     removeAt(n:Number) -> T
-    // removes and returns $n^{th}$ element of self
+    // removes and returns n^th element of self
 
     remove(*element:T) -> List<T>
     // removes element(s) from self.  Raises a NoSuchObject exception if not.self.contains(element). 
@@ -822,19 +804,19 @@ type List<T> = Sequence<T> & type {
 
     sort -> List<T>
     // sorts self, using the < and == operations on my elements.  Returns self.
-    // Compare with $\mbox{sorted}$, which constructs a new list.
+    // Compare with sorted, which constructs a new list.
     
     sortBy(sortBlock:Block2<T, T, Number>) -> List<T>
     // sorts self according to the ordering determined by sortBlock, which should return -1 if its first 
     // argument is less than its second argument, 0 if they are equal, and +1 otherwise.  Returns self.
-    // Compare with $\mbox{sortedBy}$, which constructs a new list.
+    // Compare with sortedBy, which constructs a new list.
 
     copy -> List<T>
     // returns a list that is a (shallow) copy of self
     
     reverse -> List<T>
     // mutates self in-place so that its elements are in the reverse order.  Returns self.
-    // Compare with $\mbox{reversed}$, which creates a new collection.
+    // Compare with reversed, which creates a new collection.
 }
 ```
 
@@ -899,7 +881,7 @@ eliminate duplicates; it must be symmetric.
 Dictionary
 ----------
 
-The type `Dictionary\<K, T\>` describes objects that are
+The type `Dictionary<K, T>` describes objects that are
 mappings from *keys* of type `K` to *values* of type
 `T`. Like sets and sequences, dictionary objects can be
 constructed using the `empty`, and
@@ -907,8 +889,8 @@ constructed using the `empty`, and
 `with` must be of type `Binding`, i.e.,
 they must have methods `key` and `value`.
 Bindings can be conveniently created using the infix `::`
-operator, as in `dictionary.empty\<K, T\>`,
-`dictionary.with\<K, T\>(k::v, m::w, n::x, ...)`, or .
+operator, as in `dictionary.empty<K, T>`,
+`dictionary.with<K, T>(k::v, m::w, n::x, ...)`, or .
 
     type Dictionary<K, T> = Collection<T> & type {
         size -> Number
@@ -973,7 +955,7 @@ operator, as in `dictionary.empty\<K, T\>`,
 
         ++ (other:Dictionary<K, T>) -> Dictionary<K, T>
         // returns a new dictionary that merges the entries from self and other.
-        // A value in other at key $k$ overrides the value in self at key $k$.
+        // A value in other at key k overrides the value in self at key k.
         
         -- (other:Dictionary<K, T>) -> Dictionary<K, T>
         // returns a new dictionary that contains all of my entries except for those whose keys are in other
@@ -982,7 +964,7 @@ operator, as in `dictionary.empty\<K, T\>`,
 Iterables and ***for*** loops {#sec:forLoop}
 -----------------------------
 
-Collections that implement the type `Iteratable\<T\>`
+Collections that implement the type `Iteratable<T>`
 (defined in Section [type:Iterable]) implement the internal and external
 iterator patterns, which provide for iteration through a collection of
 elements of type `T`, one element at a time. The method
@@ -1000,7 +982,7 @@ type Iterator<T> = type {
     
     hasNext -> Boolean
     // returns  true if there is at least one more element, i.e., if next will not raise the Exhausted
-    // exception. Once an iterator is exhausted (i.e., once $\textsfhasNext}$ returns false), it will remain exhausted. 
+    // exception. Once an iterator is exhausted (i.e., once hasNext returns false), it will remain exhausted. 
 }
 ```
 
@@ -1086,12 +1068,12 @@ sorted list:
         result
     }
 
- $\blacktriangleright$*I find it annoying that
+[](I find it annoying that
 this code is so complicated. Can it be simplified? I think that the
 source of the complexity is that both modifies the iterator *and*
 returns a result. If we had a method on Iterators, the need to pre-load
 and would go away, as well as most of the
-complexity.*$\blacktriangleleft$
+complexity)
 
 Primitive Array
 ---------------
@@ -1112,14 +1094,10 @@ type Array<T> =  {
     // return the number of elements in self
 
     at(index: Number) -> T
-    [$\,$](index: Number) -> T
     // both of the above return the element of array at index
 
     at(index: Number) put (newValue: T) -> Done
     // update element of list at given index to newValue
-
-    [$\,$]:=(index: Number, newValue: T) -> Done
-    // same as above, written as myList[n] := newValue
 
     sortInitial(n:Number) by(sortBlock:block2<T, T, Number>) -> Boolean
     // sorts elements 0..n.  The ordering is determined by sortBlock, which should return -1 
@@ -1142,15 +1120,14 @@ any identifier of your choice `m`. The object
 `m` responds to the following methods.
 
 ``` 
+    sin(θ: Number) -> Number
+    // trigonometric sine (θ in radians)
 
-    sin($\theta$: Number) -> Number
-    // trigonometric sine ($\theta$ in radians)
+    cos(θ: Number) -> Number
+    // cosine (θ in radians)
 
-    cos($\theta$: Number) -> Number
-    // cosine ($\theta$ in radians)
-
-    tan($\theta$: Number) -> Number
-    // tangent ($\theta$ in radians)
+    tan(θ: Number) -> Number
+    // tangent (θ in radians)
 
     asin(r: Number) -> Number
     // arcsine (result in radians)
@@ -1161,8 +1138,7 @@ any identifier of your choice `m`. The object
     atan(r: Number) -> Number
     //arctangent (result in radians)
 
-    pi -> Number
-    $\pi$ -> Number
+     π -> Number
     // 3.14159265...
 
     abs(r: Number) -> Number
@@ -1172,16 +1148,16 @@ any identifier of your choice `m`. The object
     // random number between 0 and 1
 
     lg(n: Number) -> Number
-    // $log_{2} n$
+    // log_2 n
 
     ln (n: Number) -> Number
-    // $log_{e} n $
+    // log_e n $
 
     exp(n: Number) -> Number
-    // $e^{n}$
+    // e^n
 
     log10 (n: Number) -> Number
-    // $log_{10}{n}$
+    // log_10 n
 ```
 
 Sys
@@ -1194,9 +1170,7 @@ for any identifier of your choice `system`. The object
 ```
     type Environment = type {
         at(key:String) -> String
-        [](key:String) -> String
         at(key:String) put(value:String) -> Boolean
-        []:= (key:String, value:String) -> Boolean
         contains(key:String) -> Boolean
     }
 
@@ -1217,6 +1191,3 @@ for any identifier of your choice `system`. The object
     // the current environment.
  
 ```
-
-[^1]: It is a limitation of *minigrace* that expressions containing
-    {braces} and “quotes” cannot be interpolated into strings.
