@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.6a5
+    Draft Specification Version 0.6b9
 ...
 
 
