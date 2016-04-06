@@ -158,7 +158,7 @@ and the following ASCII operator characters:
 Grace has the following reserved tokens:
 
     alias as class def dialect exclude inherit import is method object
-    outer prefix return self Self trait type var use where
+    outer prefix required return self Self trait type var use where
 
     . := = ; { } [ ] ( ) : -> < >
 
@@ -548,7 +548,6 @@ annotations:
 
 | Annotation | Semantics |
 |:--|:--|
-| `required` | the body of the method is omitted - [Required Methods] |
 | `confidential` | method may only be requested on self - [Encapsulation] |
 | `manifest` | method must return a manifest object - [Manifest Expressions] |
 | `overrides` | method must override another method - [Overriding Methods] |
@@ -1264,7 +1263,9 @@ argument rule).
 ## Self-Matching Objects
 
 The objects created by literals — Strings and Numbers — are patterns that
-match themselves. That’s what lets things like this work:
+match themselves. Matching blocks and self-matching objects are
+often combined in the `match(_)case(_)` family of methods. 
+That’s what lets things like this work:
 
     method fib(n : Number) -> Number {
       match (n)
@@ -1272,6 +1273,9 @@ match themselves. That’s what lets things like this work:
         case { 1 -> 1 }
         case { _ -> fib(n-1) + fib(n-2) }
     }
+
+The last block matches against a placeholder: without that block, the
+`match(_)case(-)` would raise an error if no block matched.
 
 #### Examples
 
