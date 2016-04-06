@@ -12,6 +12,7 @@ title: |
     Draft Specification Version 0.6b9
 ...
 
+
 Introduction
 ============
 
@@ -137,6 +138,20 @@ determined in advance. This is what we mean by “unbounded loop”. The
 number of times may even be infinite—a common coding error for
 beginners.
 
+
+ValueOf
+-------
+
+Grace's 'valueOf' allows a statement list where an expression is
+required.
+
+```
+def constant = valof {
+    def local1 = ...
+    def local2 = ...
+    complicated expression involving locals }
+```
+
 Built-in Types
 ==============
 
@@ -252,6 +267,9 @@ type Number = {
   
   abs -> Number
   // the absolute value of self
+
+  isNan -> Boolean
+  // true if this Number is a NaN
 }
 ```
 
@@ -1088,7 +1106,6 @@ for more user-friendly objects. Most programmers should use
 `dictionary` rather than `primitiveArray`.
 
 ``` 
-
 type Array<T> =  {
     size -> Number
     // return the number of elements in self
@@ -1102,10 +1119,6 @@ type Array<T> =  {
     sortInitial(n:Number) by(sortBlock:block2<T, T, Number>) -> Boolean
     // sorts elements 0..n.  The ordering is determined by sortBlock, which should return -1 
     // if its first argument is less than its second argument, 0 if they are equal, and +1 otherwise.
-
-    iterator -> Iterator<T>
-    // returns iterator through the elements of self.  It is an error to modify the array while
-    // iterating through it.
 }
 ```
 
@@ -1138,8 +1151,11 @@ any identifier of your choice `m`. The object
     atan(r: Number) -> Number
     //arctangent (result in radians)
 
-     π -> Number
+    π -> Number
     // 3.14159265...
+
+    infinity -> Number
+    // infinity
 
     abs(r: Number) -> Number
     // absolute value
