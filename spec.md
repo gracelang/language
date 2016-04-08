@@ -1577,6 +1577,8 @@ methods and variables.
         cleanup(_:B)
      }
 
+Type declarations may not be overridden.
+
 Relationships between Types—Conformance Rules
 ---------------------------------------------
 
