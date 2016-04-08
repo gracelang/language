@@ -25,10 +25,11 @@ change. In particular, this version does *not* address:
 
 -   reflection
 
--   assertions, data-structure invariants, pre & post conditions,
+-   assertions, data-structure invariants, pre- & post-conditions,
     contracts
+-   concurrency
 
--   libraries, including more (complex?) Numeric types and testing
+-   libraries and dialects, including implementations of Number, and testing
 
 # User Model
 
@@ -41,17 +42,18 @@ change. In particular, this version does *not* address:
 > Frederick P. Brooks, *The Design of Design*.
 
 ------------------------------------------------------------------------
+Grace has been designed with the following users in mind.
 
 1.  First year university students learning programming in CS1 and CS2
-    classes that are based on object-oriented programming.
+    courses that use object-oriented programming.
 
-    1.  The courses may be structured objects first, or
-        procedural first.
+    i.  The courses may be structured objects first, or
+        procedures first.
 
-    2.  The courses may be taught using dynamic types, static types, or
+    ii.  The courses may be taught using dynamic types, static types, or
         both in combination (in either order).
 
-    3.  We aim to offer some (but not necessarily complete) support for
+    iii.  Grace offers some (but not necessarily complete) support for
         “functional first” curricula, primarily for courses that proceed
         rapidly to procedural and object-oriented programming.
 
@@ -60,8 +62,7 @@ change. In particular, this version does *not* address:
     craft, and software design.
 
 3.  Faculty and teaching assistants developing libraries, frameworks,
-    examples, problems and solutions, for first and second year
-    programming classes.
+    examples, problems and solutions, for the above courses.
 
 4.  Programming language researchers needing a contemporary
     object-oriented programming language as a research vehicle.
@@ -88,7 +89,7 @@ ASCII subset of Unicode.
 The following ASCII sequences are treated as equivalent to the corresponding Unicode characters everywhere except in strings.
 
 
-ASCII | Typeset
+ASCII | Unicode
 ---------| ----------
 >=  |  ≥
 <=  |  ≤
@@ -123,11 +124,11 @@ may also optionally be terminated by semicolons
        print(stream.read)
     }
 
-This defines `x` to be the result of the single request `muble("3") fratz(7)`.
+This defines `x` to be the result of the single request `muble ("3") fratz (7)`.
 
 ## Comments
 
-Grace’s comments start with a pair of slashes `//` and are terminated by
+Comments start with a pair of slashes `//` and are terminated by
 the end of the line. Comments are *not* treated as
 white-space. Each comment is conceptually attached to the smallest
 immediately preceding syntactic unit, except that comments following a
@@ -139,16 +140,16 @@ unit.
 ## Identifiers and Operators
 
 Identifiers must begin with a letter, which is followed by a sequence of
-zero or more letters, digits and prime (`'`) or underscore (`_`)
+zero or more letters, digits, prime (`'`) or underscore (`_`)
 characters.  Conventionally, type and pattern identifiers start with capital
 letters, while other identifiers start with lower-case letters.
 
-A single underscore (`_`) acts as a placeholder identifier: it can
+A identifier comprising a single underscore `_` acts as a placeholder: it can
 appear in declarations, but not in expressions. In declarations, `_` is
 treated as a fresh identifier.
 
-Operators are sequences of unicode mathematics operator symbols
-(see https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode)
+Operators are sequences of [unicode mathematical operator symbols](
+https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode)
 and the following ASCII operator characters:
 
     ! ? @ # $ % ^ & | ~ = + - * / \ > < : .
@@ -160,20 +161,19 @@ Grace has the following reserved tokens:
     alias as class def dialect exclude inherit import is method object
     outer prefix required return self Self trait type var use where
 
-    . := = ; { } [ ] ( ) : -> < >
+    . ... := = ; { } [ ] ( ) : -> < >
 
 ## Newlines, Tabs and Control Characters
 
-Newline in Grace programs can be represented by the Unicode line feed (lf) character, by the
+Newline in Grace programs can be represented by the Unicode line feed (LF) character, by the
 Unicode carriage return
-(cr) character, or by the Unicode line separator
+(CR) character, or by the Unicode line separator
 (U+2028) character; a line feed that immediately
 follows a carriage return is ignored.
 
 Tabs and all other non-printing control characters are syntax errors,
 even in a string literal. Escape sequences are provided to denote
-control characters in strings; see Table \[tab:StringEscapes\] in
-Section \[Strings\].
+control characters in strings; see [the Table of StringEscapes](Strings).
 
 # Built-in Objects
 
@@ -181,25 +181,27 @@ Section \[Strings\].
 
 
 Assignments, and methods without an explicit result, have the value
-**`done`**, of type **`Done`**. The type `Done` plays a role similar to *void*
+`done`, of type `Done`. The type `Done` plays a role similar to *void*
 or *Unit* in other languages. The only requests understood by `done` are
-`asString` and `asDebugString`. (In particular, `done` does not have an
-equality method).
+`asString` and `asDebugString`; in particular, `done` does not have an
+equality method.
 
 ## Elipsis
 
-The symbol `...` is a valid expression, but evaluating it will lead to a runtime error.
+The token `...` is a valid expression, but evaluating it will lead to a runtime error.
 It is included in the language so that programmers can indicate that their code is 
 incomplete.
 
 ## Numbers
 
-Grace supports a single type **`Number`**. `Number` supports at least 64-bit
-precision floats. Implementations may support other numeric types: a
+In Grace, numbers are objects. Grace supports a single type **`Number`**, 
+which accommodates at least 64-bit
+precision floats. Implementations may support other implementations 
+of numbers, and may define types that extend `Number`; a
 full specification of numeric types is yet to be completed.
 
-Grace has three syntactic forms for numerals (that is, literals that
-denote `Number`s).
+Grace has three forms of numerals (that is, literals that
+denote `Number` objects).
 
 1.  Decimal numerals, written as strings of digits, optionally preceded
     by a minus.
@@ -257,9 +259,11 @@ parmameterless blocks that return `Boolean`.  This gives them
 String literals in Grace are written between double quotes, and must
 be confined to a single line. Strings literals support a range of
 escape characters such as `"\n\t"`, and also escapes for Unicode;
-these are listed in Table \[tab:StringEscapes\]. Individual characters
+these are listed in the table below. 
+
+Individual characters
 are represented by Strings of length 1. Strings are immutable, so an implementation may intern them. Grace’s standard
-library includes supports efficient incremental string construction.
+library supports efficient incremental string construction.
 
 |Escape |  Meaning |  Unicode |
 |:--|:--|:--|
@@ -305,14 +309,14 @@ A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
     [ 1 ]
     [ red, green, blue ]
 
-When executed, a lineup returns an object that supports the Iterator interface,
-which includes the methods `size`, `map`, `do(_)`, and `iterator`).  
+When executed, a lineup returns an object that supports the `Iterator` interface,
+which includes the methods `size`, `map`, `do(_)`, and `iterator`.  
 Lineups are most frequently used to build collections, to control loops, 
 and to pass collections of options to methods.
 
 #### Examples
 
-    set [ 1, 2, 4, 5 ]      //make a set
+    set [ 1, 2, 4, 5 ]           //make a set
     sequence [ "a", "b", "c" ]   //make a sequence
     ["a", "e", "i", "o", "u"].do { x -> testletter(x) }
     myWindow.addWidgets [
@@ -326,12 +330,18 @@ and to pass collections of options to methods.
 
 Grace blocks are lambda expressions, with or without
 parameters. If a parameter list is present, the parameters are separated
-by commas and the list is terminated by the `->` symbol.
+by commas and the list is separated from the body of the block by the `->` symbol.
 
     { do.something }
     { i -> i + 1 }
     { i:Number -> i + 1 }
     { sum, next -> sum + next }
+    
+Blocks are lexically scoped, and can close over any visible field or parameter.
+The body of a block consists of a sequence of declarations and
+expressions; declarations are local to the block.
+An empty body is allowed, and is equivalent to `done`.
+A `return` statement inside a block returns from the enclosing method.
 
 Blocks construct objects containing a method named `apply`, or
 `apply(n)`, or `apply(n, m)`, …, where the number of parameters to `apply`
@@ -365,21 +375,16 @@ Here is another example:
     summingBlock.apply(4)       // sum now 4
     summingBlock.apply(32)      // sum now 36
 
-Blocks are lexically scoped, and can close over any visible field or parameter.
-The body of a block consists of a sequence of declarations and
-expressions; declarations are local to the block.
-An empty body is allowed, and is equivalent to `done`.
 
 # Declarations
 
 Declarations may occur anywhere within a module, object, class,
 or trait.  Field declarations may also occur within a
 method or block body.  Declarations are visible within the *whole* of
-their containing lexical scope.  It is an error to attempt to declare
+their containing lexical scope.  It is an error to declare
 any name more than once in a given lexical scope.
 
-Grace has a single namespace for all identifiers; this
-namespace is used for everything: methods, parameters,
+Grace has a single namespace for all identifiers: methods, parameters,
 constants, variables, classes, traits, and types. It is a *shadowing error*
 to declare a parameter (but not a method or field) that has the same name as a
 lexically-enclosing field, method, or parameter.
@@ -398,16 +403,16 @@ the constant is initialised. Constants cannot be re-bound.
 #### Examples
 
     def x = 3 * 100 * 0.01
-    def x : Number = 3
-    def x : Number           // Syntax Error: x must be initialised
+    def x:Number = 3
+    def x:Number           // Syntax Error: x must be initialised
 
 ### Variables
 
-Variable introduced with the **`var`** keyword.
+Variable are introduced with the **`var`** keyword.
 Variables can be re-bound to
 new values as often as desired, using an assignment. 
 A variable declaration may optionally provide an initial value; if there is 
-not initial value, the variable is *uninitialised*.
+no initial value, the variable is *uninitialised* until it is assigned.
 Any attempt to access the value of an uninitialised
 variable is an error, which may be caught either at run time or at
 compile time.
@@ -419,12 +424,13 @@ the variable is initialised and assigned.
     var x:Rational := 3     // explicit type
     var x:Rational          // x must be initialised before access
     var x := 3              // x has type Unknown
-    var x                   // x has Unknown type and uninitialised value
+    var x                   // x has Unknown type is uninitialised
 
 ## Methods
 
-Methods are declared with the **`method`** keyword.  Methods define the
-action to be taken when the object containing the method receives a
+Methods are declared using the **`method`** keyword followed by a name.
+Methods define the action to be taken when the object containing the
+method receives a
 request with the given name. Because every method must be associated
 with an object, methods may not be declared directly inside other
 methods.  The type of the object returned from the method may
@@ -434,7 +440,7 @@ the method returns. The body of the method is enclosed in braces.
     method pi  { 3.141592634 }
 
     method greet(user: Person) from(sender: Person) {
-        print ``{sender} sends his greetings, {user}.''
+        print "{sender} sends his greetings, {user}."
     }
 
     method either (a) or (b) -> Done {
@@ -769,11 +775,10 @@ with type arguments.
         method at(index : Number) put(elem : T) { }
     }
 
-[](    class sortedVectorOfSize(size)<T>
+    class sortedVectorOfSize(size)<T>
         where T <: Comparable<T> {
           ...
     }
-)
 
 ## Reuse
 
@@ -1065,7 +1070,7 @@ Implicit requests:
 
 Resolving implicit requests:
 
-````
+```
 method foo { print "outer" }
 
 class app {
@@ -1086,7 +1091,7 @@ class baz {
 app.barf  //prints "outer"
 bar.barf  //prints "outer"
 baz.barf  //prints "bar"
-````
+```
 
 ##Assignment Requests
 
@@ -1380,9 +1385,9 @@ Type `None` is completely empty; it has no methods.
 
 ### Type Object
 
-The type ``Object`` declares a number of methods to which most normal
+The type `Object` declares several methods to which most normal
 objects will respond --- the [Default Methods] declared in
-`graceObject`. Some objects, notably `done`, do not conform to ``Object``.
+`graceObject`. Some objects, notably `done`, do not conform to `Object`.
 
 ``` 
 type Object = {
@@ -1398,7 +1403,7 @@ type Object = {
 
 ### Type Self
 
-The type ``Self`` represents the public interface of the current
+The type `Self` represents the public interface of the current
 object.
 
 ### Type Unknown
