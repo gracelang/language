@@ -194,9 +194,9 @@ incomplete.
 
 ## Numbers
 
-In Grace, numbers are objects. Grace supports a single type **`Number`**, 
+In Grace, numbers are objects. Grace supports a single type **`Number`**,
 which accommodates at least 64-bit
-precision floats. Implementations may support other implementations 
+precision floats. Implementations may support other classes
 of numbers, and may define types that extend `Number`; a
 full specification of numeric types is yet to be completed.
 
@@ -259,7 +259,7 @@ parmameterless blocks that return `Boolean`.  This gives them
 String literals in Grace are written between double quotes, and must
 be confined to a single line. Strings literals support a range of
 escape characters such as `"\n\t"`, and also escapes for Unicode;
-these are listed in the table below. 
+these are listed in the table below.
 
 Individual characters
 are represented by Strings of length 1. Strings are immutable, so an implementation may intern them. Grace’s standard
@@ -310,7 +310,7 @@ A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
     [ red, green, blue ]
 
 When executed, a lineup returns an object that supports the `Iterator` interface,
-which includes the methods `size`, `map`, `do(_)`, and `iterator`.  
+which includes the methods `size`, `map`, `do(_)`, and `iterator`.
 Lineups are most frequently used to build collections, to control loops, 
 and to pass collections of options to methods.
 
