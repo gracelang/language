@@ -463,18 +463,15 @@ form of name is conventionally used for writer methods, both
 user-written and automatically-generated, as exemplified by `value:=`
 below.  Such methods _always_ take a single parameter after the `:=`
 
-3. A method can be
-named by a single identifier followed by a parenthesized list of parameters; in this case
-the  _canonical_ name of the method is the identifier followed by `(_, …, _)`,
-where the number of underscores is the same as the number of parameters.
+4. A method can be named by one or more _parts_, where each _part_ is an identifier
+followed by a parenthesized list of parameters.
+In this case
+the  _canonical_ name of the method is a sequence of parts, where 
+each part comprises the identifier for that part followed by `(_, …, _)`,
+the number of underscores between the parentheses being the number of
+parameters of the part.
 
-4. A method can be named by _multiple parts_, where each _part_ is an identifier
-followed by a parenthesized list of parameters; in this case
-the  _canonical_ name of the method is the sequence of identifiers followed by `(_, …, _)`.
-The number of underscores between each pair of parentheses the same as the number of
-parameters in the parameter list of the corresponding part.
-
-5. A method can also be named by a sequence of operator symbols.
+5. A method can be named by a sequence of operator symbols.
 Such an "operator method" can have no parameters, in which case
 the method is requested by a prefix operator expression.
 It can also have one parameter, in which
@@ -487,8 +484,8 @@ As a consequence of the above rules, methods `max(a, b, c)` and
 as distinct methods.  In other words, Grace allows "overloading by
 arity" (although it does _not_ allow overloading by type).
 
-Method parameters optionally may be given types: those types will be
-checked just before the method body is executed.
+Method parameters may optionally be given types: the corresponding arguments will be
+    checked against those declared types just before the method body is executed.
 
 [](TODO: need to distribute examples into the above list or something)
 
@@ -540,7 +537,7 @@ The presence or absence of type parameters does not change the canonical name of
 Methods may contain one or more **`return`** statements.
 If a `return e` statement is executed, the method terminates with the
 value of the expression `e`, while a `return` statement with no
-expression returns `done`.  If execution reaches
+expression is equivalent to `return done`.  If execution reaches
 the end of the method body without executing a `return`, the method
 terminates and returns the value of the last expression evaluated.
 An empty method body returns `done`.
@@ -554,19 +551,19 @@ annotations:
 
 | Annotation | Semantics |
 |:--|:--|
-| `confidential` | method may only be requested on self - [Encapsulation] |
+| `confidential` | method may be requested only on self — [see Encapsulation](Encapsulation) |
 | `manifest` | method must return a manifest object - [Manifest Expressions] |
 | `overrides` | method must override another method - [Overriding Methods] |
-| `public` | method may be requested from anywhere - [Encapsulation] |
-| `readable`  | field may be read from anywhere - [Encapsulation] |
-| `writeable` | variable may be assigned from anywhere - [Encapsulation] |
+| `public` | method may be requested from anywhere; field can be read and written from any object - [see Encapsulation](Encapsulation) |
+| `readable`  | field may be read from anywhere - [see Encapsulation](Encapsulation) |
+| `writeable` | variable may be assigned from anywhere - [see Encapsulation](Encapsulation) |
 
 Additional annotations may be defined by dialect or libraries.
 
 #### Examples
 
     var x is readable, writeable := 3
-    def y : Number is public
+    def y: Number is public
     method foo is confidential  { }
     method id<T> is required  { }
 
@@ -577,16 +574,23 @@ Grace has different default encapsulation rules for methods, types, and
 fields. The defaults can be changed by explicit annotations. The details
 are as follows.
 
+### Public
+
+Public attributes can be requested by any client that has access to the
+object that defines them.
+
+### Confidential
+
+Confidential attributes can be requested
+only on `self` or on some number of cascaded `outer`s, or in an implicit request (which must resolve to one of the former cases).
+Consequently, if _m_ is
+defined in the object, class, or trait _d_, it 
+is accessible to _d_, to objects that inherit from _d_, and to objects lexically enclosed by _d_, but not to clients of _d_.
+
 ### Methods, Classes, Traits and Types
 
-By default, methods, classes, traits and types are public, which means
-that they can be requested by any client that has access to the
-object.
-
-If a method or type is annotated `is confidential`, it can be requested
-only on `self` or any number of cascaded `outer`s. This means that it
-is accessible to any object that contains it, and to inheriting
-objects, but not to client objects.
+By default, methods (which category includes classes and traits), and types, are public.
+If a method or type is annotated `is confidential`, it is confidential.
 
 ### Fields
 
@@ -596,10 +600,7 @@ inside an object constructor create *fields* in that object.
 A field declared as `var x` can be read using the request `x` and
 assigned to using the assignment request `x:=(_)`.
 A field declared as `def y` can be read using the request `y`, and
-cannot be assigned. By default, fields are *confidential*: they can be
-accessed and assigned from the object itself, and inheriting objects,
-and from lexically-enclosed objects, but not from clients. In other
-words, these requests can be made only on `self` and `outer`.
+cannot be assigned. By default, fields are *confidential*.
 
 The default visibility can be changed using annotations. The annotation
 `readable` can be applied to a `def` or `var` declaration, and makes the
@@ -615,18 +616,18 @@ access is identical to that for requesting a reader method, while the
 syntax for variable assignment is identical to that for requesting an
 assignment method. This means that an object cannot have a field and a
 method with the same name, and cannot have a method `x:=(_)`
-as well as a `var` field `x`.
+as well as a `var` field named `x`.
 
 #### Examples
 
     object {
-        def a = 1              // Confidential access to a
+        def a = 1                  // Confidential access to a
         def b is public = 2        // Public access to b
-        def c is readable = 2     // Public access to c
-        var d := 3                   // Confidential access and assignment
+        def c is readable = 2      // Public access to c
+        var d := 3                 // Confidential access and assignment
         var e is readable          // Public access and confidential assignment
-        var f is writable           // Confidential access, public assignment
-        var g is public             // Public access and assignment
+        var f is writable          // Confidential access, public assignment
+        var g is public            // Public access and assignment
         var h is readable, writable    // Public access and assignment
     }
 
@@ -639,25 +640,25 @@ However, identifiers from outer scopes can be used to obtain an effect similar t
 
 #### Examples
 
-        method newShipStartingAt(s:Vector2D)endingAt(e:Vector2D) {
-            // returns a battleship object extending from s to e.  This object cannot
-            // be asked its size, or its location, or how much floatation remains.
-            assert ( (s.x == e.x) || (s.y == e.y) )
-            def size = s.distanceTo(e)
-            var floatation := size
-            object {
-                method isHitAt(shot:Vector2D) {
-                    if (shot.onLineFrom(s)to(e)) then {
-                        floatation := floatation -1
-                        if (floatation == 0) then { self.sink }
-                        true
-                    } else { false }
-                }
-                ...
+    method newShipStartingAt(s:Point)endingAt(e:Point) {
+        // returns a battleship object extending from s to e.  This object cannot
+        // be asked its size, or its location, or how much floatation remains.
+        assert ( (s.x == e.x) || (s.y == e.y) )
+        def size = s.distanceTo(e)
+        var floatation := size
+        object {
+            method isHitAt(shot:Vector2D) {
+                if (shot.onLineFrom(s)to(e)) then {
+                    floatation := floatation -1
+                    if (floatation == 0) then { self.sink }
+                    true
+                } else { false }
             }
+            ...
         }
+    }
 
-The object returned by newShipStartingAt()endingAt() can update the variable floatation from the outer scope, even though it is not
+The object returned by newShipStartingAt()endingAt() can update the variable floatation in the surrounding scope, even though it is not
 accessible to anything inheriting from that object.
 
 # Objects, Classes, and Traits
@@ -678,7 +679,7 @@ is created. In addition to declarations of fields and methods, object
 constructors can also contain expressions (executable code at the top level),
 which are executed as a
 side-effect of evaluating the object constructor. All of the declared
-attributes of the object are in scope throughout the object constructors.
+attributes of the object are in scope throughout the object constructor.
 
 #### Examples
 
@@ -746,9 +747,8 @@ and that `inherit`s nothing.
 
 
 
-
-Modulo these restrictions, Grace's **trait** syntax and semantics is exactly parallel to the class syntax:
-a `trait` defines a method that returns a trait object.
+Aside from these restrictions, Grace's **trait** syntax and semantics is parallel to the class syntax.
+In particular, a `trait` defines a method that returns a trait object.
 
     trait emptiness {
         method isEmpty { size == 0 }
@@ -782,7 +782,8 @@ with type arguments.
 
 ## Reuse
 
-Grace supports reuse in two ways: through **`inherit`** and **`use`** statements.
+Grace supports reuse in two ways: through **`inherit`** 
+statements and through **`use`** statements.
 Object constructors (and classes) can contain one `inherit` statement
 while traits cannot contain an `inherit` statement;  object
 constructors, classes and traits can all contain one or more `use` statements.
