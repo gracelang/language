@@ -12,7 +12,7 @@ title: |
     Draft Specification Version 0.6b9
 ...
 
-  
+
 # Introduction
 
 This is a specification of the Grace Programming Language. This
@@ -189,7 +189,7 @@ equality method.
 ## Elipsis
 
 The token `...` is a valid expression, but evaluating it will lead to a runtime error.
-It is included in the language so that programmers can indicate that their code is 
+It is included in the language so that programmers can indicate that their code is
 incomplete.
 
 ## Numbers
@@ -267,17 +267,17 @@ library supports efficient incremental string construction.
 
 |Escape |  Meaning |  Unicode |
 |:--|:--|:--|
-|    `\\`    | backslash      | U+005C | 
-|    `\n`     | line-feed      | U+000A | 
-|    `\t`     | tab            | U+0009 | 
-|    `\{`     | left brace     | U+007B | 
-|    `\}`     | right brace    | U+007D | 
-|    `\"`   | double quote   | U+0022 | 
-|   `\r`             | carriage return      | U+000D       | 
+|    `\\`    | backslash      | U+005C |
+|    `\n`     | line-feed      | U+000A |
+|    `\t`     | tab            | U+0009 |
+|    `\{`     | left brace     | U+007B |
+|    `\}`     | right brace    | U+007D |
+|    `\"`   | double quote   | U+0022 |
+|   `\r`             | carriage return      | U+000D       |
 |   `\l`            | line separator       | U+2028       |
-|   `\_`            | non-breaking space   | U+00A0       | 
-|   `\uhhhh`       | 4-digit Unicode      | U+hhhh     | 
-|   `\Uhhhhhh`     | 6-digit Unicode      | U+hhhhhh   | 
+|   `\_`            | non-breaking space   | U+00A0       |
+|   `\uhhhh`       | 4-digit Unicode      | U+hhhh     |
+|   `\Uhhhhhh`     | 6-digit Unicode      | U+hhhhhh   |
 
 
 #### Examples
@@ -301,7 +301,7 @@ brace expression.
 
 ## Lineups
 
-A Lineup is a comma separated list of expressions surrounded by `[` and `]`.  
+A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
 
 #### Examples
 
@@ -311,7 +311,7 @@ A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
 
 When executed, a lineup returns an object that supports the `Iterator` interface,
 which includes the methods `size`, `map`, `do(_)`, and `iterator`.
-Lineups are most frequently used to build collections, to control loops, 
+Lineups are most frequently used to build collections, to control loops,
 and to pass collections of options to methods.
 
 #### Examples
@@ -336,7 +336,7 @@ by commas and the list is separated from the body of the block by the `->` symbo
     { i -> i + 1 }
     { i:Number -> i + 1 }
     { sum, next -> sum + next }
-    
+
 Blocks are lexically scoped, and can close over any visible field or parameter.
 The body of a block consists of a sequence of declarations and
 expressions; declarations are local to the block.
@@ -410,8 +410,8 @@ the constant is initialised. Constants cannot be re-bound.
 
 Variable are introduced with the **`var`** keyword.
 Variables can be re-bound to
-new values as often as desired, using an assignment. 
-A variable declaration may optionally provide an initial value; if there is 
+new values as often as desired, using an assignment.
+A variable declaration may optionally provide an initial value; if there is
 no initial value, the variable is *uninitialised* until it is assigned.
 Any attempt to access the value of an uninitialised
 variable is an error, which may be caught either at run time or at
@@ -451,33 +451,72 @@ the method returns. The body of the method is enclosed in braces.
 
 ### Method Names
 
-Method names have several forms.  For each form, we describe its appearance,
+To improve readability, method names have several forms.  
+For each form, we describe its appearance,
 and also a _canonical_ form of the name which is used in dispatching method requests.
 A request "matches" a method if the canonical names are equal.
 
 1. A method can be named by a single identifier, in which case the method
 has no parameters; in this case the _canonical_ name of the method is the identifier.
 
-2. A method can be named by an identifier suffixed with `:=`; this
+#### Examples
+
+```
+    method ping { print "PING!" }
+```
+
+1. A method can be named by an identifier suffixed with `:=`; this
 form of name is conventionally used for writer methods, both
 user-written and automatically-generated, as exemplified by `value:=`
 below.  Such methods _always_ take a single parameter after the `:=`
 
-4. A method can be named by one or more _parts_, where each _part_ is an identifier
+#### Examples
+
+```
+method value:=(n: Number) -> Done {
+    print "value currently {value}, now assigned {n}"
+    outer.value:= n
+}
+```
+
+1. A method can be named by one or more _parts_, where each _part_ is an identifier
 followed by a parenthesized list of parameters.
 In this case
-the  _canonical_ name of the method is a sequence of parts, where 
+the  _canonical_ name of the method is a sequence of parts, where
 each part comprises the identifier for that part followed by `(_, …, _)`,
 the number of underscores between the parentheses being the number of
 parameters of the part.
 
-5. A method can be named by a sequence of operator symbols.
+#### Examples
+
+```
+    method drawLineFromOriginTo (destination)
+    method drawLineFrom (source) to (destination)
+    method max(v1, v2)
+````
+    In the first two examples the canonical names of the methods are
+    `drawLineFromOriginTo(_) `drawLineFrom(_) to(_)`.  The latter
+    comprises two parts, `drawLineFrom(_)` and `to(_)`.
+    In the third example, the canonical name of the method is `max(_,_)`.
+
+1. A method can be named by a sequence of operator symbols.
 Such an "operator method" can have no parameters, in which case
 the method is requested by a prefix operator expression.
 It can also have one parameter, in which
 case it is requested by a binary operator expression.  The canonical name of a
 unary method is **`prefix`** followed by the operator symbols; the canonical
 name of a binary method is the sequence of operator symbols followed by `(_)`
+
+#### Examples
+
+```
+    method + (other : Point) -> Point {
+        (x + other.x) @ (y + other.y)
+    }
+
+    method prefix- -> Point
+        { 0 - self }
+```
 
 As a consequence of the above rules, methods `max(a, b, c)` and
 `max(a, b)` have different canonical names and are therefore treated
@@ -486,27 +525,6 @@ arity" (although it does _not_ allow overloading by type).
 
 Method parameters may optionally be given types: the corresponding arguments will be
     checked against those declared types just before the method body is executed.
-
-[](TODO: need to distribute examples into the above list or something)
-
-#### Examples
-
-    method ping { print "PING!" }
-
-    method +(other : Point) -> Point {
-        (x +other.x) @ (y +other.y)
-    }
-
-    method add (other)
-        { return (x +other.x) @ (y +other.y) }
-
-    method value:=(n : Number) -> Done {
-        print "value currently {value}, now assigned {n}"
-        outer.value:= n
-    }
-
-    method prefix- -> Number
-         { 0 - self }
 
 ### Type Parameters
 
@@ -584,7 +602,7 @@ object that defines them.
 Confidential attributes can be requested
 only on `self` or on some number of cascaded `outer`s, or in an implicit request (which must resolve to one of the former cases).
 Consequently, if _m_ is
-defined in the object, class, or trait _d_, it 
+defined in the object, class, or trait _d_, it
 is accessible to _d_, to objects that inherit from _d_, and to objects lexically enclosed by _d_, but not to clients of _d_.
 
 ### Methods, Classes, Traits and Types
@@ -782,9 +800,9 @@ with type arguments.
 
 ## Reuse
 
-Grace supports reuse in two ways: through **`inherit`** 
+Grace supports reuse in two ways: through **`inherit`**
 statements and through **`use`** statements.
-Object constructors (and classes) can contain one `inherit` statement
+Object constructors (and classes) can contain one `inherit` statement,
 while traits cannot contain an `inherit` statement;  object
 constructors, classes and traits can all contain one or more `use` statements.
 
@@ -793,44 +811,50 @@ called the _parent_ — into the current object (the object under
 construction).  A new declaration in the current object can override a
 declaration from a parent.
 
-An `inherit` or `use` clause takes a
+An `inherit` or `use` clause contains a
 [Manifest Expression](Manifest Expressions)
-that creates a new manifest object, such as a request on a class or trait.
+that creates a new object, such as a request on a class or trait.
 This means that the  request  cannot depend on a `self`, implicitly or
-explicitly: programs cannot inherit (or use) any trait or class that
+explicitly.  This means that programs cannot inherit or use any trait or class that
 can potentially be overridden.
 The object reused by a `use` clause must be a trait object.
 Note that the arguments to [Manifest Expression](Manifest Expressions)
-need not themselves be manifest. 
+need not themselves be manifest.
 
-If it is necessary to access an overridden attribute, the overridden
-attribute of the parent can be given an additional name by attaching
-an **`alias`** clause to the inherit statement: `alias n(_) = m(_)`
-gives a new `confidential` _alias_ `n(_)` for the attribute `m(_)`.
+If it is necessary for the current object to access an overridden attribute
+of a parent, the overridden
+attribute can be given an additional name by attaching
+an **`alias`** clause to the inherit or use statement: `alias n(_) = m(_)`
+creates a new `confidential` _alias_ `n(_)` for the attribute `m(_)`.
 Attributes of the parent that are not wanted can be excluded using
 an **`exclude`** clause: excluded attributes are replaced by a
-`confidential` `required` method with an empty body.
+`confidential` `required` method.
 
 
-### Combination and Initialisation
+### Object Combination and Initialisation
 
 When executed, an object constructor (or trait or class declaration)
 first creates a new object with no attributes, and binds it to `self`.
 
 Next, the attributes of all _parent_ objects (created by any `inherit`
-or `use` clauses, modified by `alias` and `exclude`) and any local
+or `use` clauses, as modified by `alias` and `exclude`), 
+and attributes created by local
 declarations, are installed in the new object.  Local declarations
 override parental declarations.  It is a _trait composition error_ for
 the same concrete attribute to come from more than one parent, and not
-to be overridden by a local definition, or for an alias to be
+to be overridden by a local definition.
+<_apb: my early experience withthsi rule, which treats superobjects in the same way as traits, has shown that it is unsatisfactory.  Look at newCollections, for example._>
+It is also a _trait composition error_ for an alias to be
 overridden by a local declaration.
 
-Next, types must be evaluated and bound within objects. 
-Types cannot depend on runtime values; if they depend on the type of a 
+Next, types must be evaluated and bound within objects.
+Types cannot depend on runtime values; if they depend on the type of a
 constant (because the constant is treated as a [Singleton type](Singleton Types), then that constant, if overriden in a subclass, can only be
 overriden by a new object with the same type.
 
-Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with local declarations. (Note that used traits contain no executable code.)
+Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with the
+initializers of local declarations and local statements.
+(Note that _used_ ojects must be traits, and therefore contain no executable code.)
 Initialisers for all `def`s and `var`s,
 and code in the bodies of parents,
 are executed once in the order they are written, even for `def`s or
@@ -848,19 +872,19 @@ parents' initialisers or executable statements.
 ### Required Methods
 
 Methods may be declared to be **required** by giving them the body `required`.
-(Required methods are similar to what some other languages call abstract methods.) 
+(Required methods are similar to what some other languages call abstract methods.)
 This indicates that a real method
 body must be supplied before that method can be requested.
 Required methods do not conflict with other methods; a required local
-method overrides an inherited method in the normal way. 
+method overrides an inherited method in the normal way.
 Requesting a required method will generate a runtime error.
 
 ### Overriding Methods
 
-Methods may be annotated with  `is override`. A method so annotated must
+Methods may be annotated with `is override`. A method so annotated must
 override a method from its parent with the same name and arity.
 This annotation is optional: local methods override parents' methods
-with or without the *override* annotation.  However, dialects may require it.
+with or without the `override` annotation.  However, dialects may require it.
 
 #### Examples
 
@@ -881,10 +905,11 @@ Traits are designed to be used as fine-grained components of reuse:
     trait feline {
         method independent { "I did it my way" }
         method move {
-        if (isOut) then {
-            comeIn
-        } else {
-            goOut
+            if (isOut) then {
+                comeIn
+            } else {
+                goOut
+            }
         }
     }
 
@@ -892,7 +917,7 @@ Traits are designed to be used as fine-grained components of reuse:
         method loyal { "I'm your best friend" }
         method move {
             if (you.location != self.location) then {
-                self.setPosition(you.heel)
+                self.position := you.heel
             }
         }
     }
@@ -928,34 +953,42 @@ a random variable.
 ### Default Methods
 
 Many objects conventionally implement a number of _default methods_ by
-inheriting from the **`graceObject`** trait. In particular, the
+inheriting from the `graceObject` trait. In particular, the
 objects created by the `class` syntax inherit from `graceObject` if no
 **inherits** clause is supplied (but not objects created by the
 `trait` syntax or by `object` constructors). Programmers can of course
 override some of these implementations, or write those methods _ab initio_.
-The [type Object] conventionally defines a type containing all the default methods.
+The [type Object](Type Object) defines a type containing all the default methods.
+<_apb: I don't like this.  I think that all objects should have the defualt methods, uniformly.  
+It's more reasonable to make the object composition
+rules distinguish between `inherit`, which includes the methods from `graceObject`, and `use`, which does not, and to have used 
+attributes override inherited attributes.
+Briefly, the reason for this is that its useful to have a trait that redefines some of the defualt methods._> 
+
 
 # Method Requests
 
-Grace is a pure object-oriented language. Everything in the language
-is an object, and all computation proceeds by _requesting_ an
-object—the receiver of the request—to execute a method with a
+Grace is a pure object-oriented language. 
+All computation proceeds by _requesting_ an
+object — the target of the request — to execute a method with a
 particular *name*. The response of the receiver is to execute the
-method, and to return as an answer the value returned by the execution
-of the method.
+method, and to answer the return value of the method.
 
 Grace distinguishes the act of *requesting* a method (what Smalltalk calls
 “sending a message”), and *executing* that method. Requesting a method
-happens outside the object receiving the request, and involves only a
-reference to the receiver, the method name, and possibly some arguments.
+happens outside the target object, and involves only a
+reference to the target, the method name, and possibly some arguments.
 In contrast, executing the method involves the code of the method, which
-is local to the receiver.
+is local to the target.
 
 
 ## Self
 
-The reserved word **`self`** refers to the lexically enclosing object.
+The reserved word **`self`** refers to the current object, that is, 
+the object being constructed by the lexically innermost module,
+object constructor, class or trait surrounding the word **`self`** 
 The expression `self.x` requests `x` on the current object.
+The reserved word **`Self`** refers to the type of the current object.
 
 
 #### Examples
@@ -970,8 +1003,8 @@ The expression `self.x` requests `x` on the current object.
 ## Outer
 
 The reserved word **`outer`** refers to the object lexically enclosing
-`self`.  The expression `outer.x` requests `x` on the object lexically
-enclosing the current object.
+the current object.  The expression `outer.x` requests `x` on the object lexically
+enclosing `self`.
 
 #### Examples
 
@@ -985,24 +1018,16 @@ enclosing the current object.
 
 ## Named Requests
 
-A named method request comprises an expression identifying the receiver,
+A named method request comprises a receiver,
 followed by a dot “.”, followed by a
-method name, and within parentheses, a comma-separated list of
-arguments.
-Parentheses are not used if there are no arguments.
+method name, wherein the parameters have been replaced by expressions that
+evaluate to the method's arguments.
+Note that a request without arguments does not contain any parentheses.
 
-
-To improve
-readability, the name of a method that takes more than one parameter
-may comprise multiple parts, with multiple argument lists between the parts and after the last part.
-For example:
-
-        method drawLineFrom (source) to (destination) { ... }
-
-In this example the name of the method is `drawLineFrom(_) to(_)`; it
-comprises two parts, `drawLineFrom(_)` and `to(_)`. The name of a method and
-the position of the argument lists within that name is determined when
-the method is declared. When reading a request of a multi-part method
+Note that the name of a method, which determines
+the position of the argument lists within that name, is chosen when
+the method is declared ([See Methods](Methods)).
+When reading a request of a multi-part method
 name, you should continue accumulating words and argument lists as far
 to the right as possible.
 
@@ -1014,7 +1039,7 @@ in a list does determine the method being requested.
 #### Examples
         self.clear
         self.drawLineFrom (p1) to (p2)
-        self.drawLineFrom (origin) length (9) angle (pi/6)
+        self.drawLineFrom (origin) length (9) angle (π/6)
         self.movePenTo (x, y)
         self.movePenTo (p)
 
@@ -1037,29 +1062,37 @@ that is a numeral, string, lineup, or block.
 
 ### Implicit Requests
 
-If the receiver of a named method request named _m_ is `self` or
+If the receiver of a named method request using the name _m_ is `self` or
 `outer` it may be left implicit, _i.e._, the `self` or `outer` and the
 dot may both be omitted.
-
 Implicit requests are resolved as follows:
 
-* If there is a declaration named _m_ lexically inside but excluding
+* If there is a declaration of an attribute named _m_ lexically inside but excluding
     the single innermost object (or trait, class) then the implicit
-    request resolves to that declaration. Otherwise:
+    request resolves to that declaration. 
+<_apb: I don't understand this. Lexically inside what?_>
+Otherwise:
 
 * If there is a declaration named _m_ lexically visible on `self`
-   (i.e. declared in the single innermost object, trait, or class declaration
-   containing the method, or `use`d or `inherit`ed by that declaraton)
+   (i.e. declared in the object, trait, or class declaration
+   containing the implicit request, or `use`d or `inherit`ed by that 
+   object, trait, or class)
    then the implicit request is treated as a `self` request. Otherwise:
 
-* If there is a lexically visible declaration of _m_, going out as far
+* If there is a lexically visible declaration of _m_ in an enclosing scope, 
+  going out as far
   as the [module object][Modules] and [dialect][Dialects]
   then the request resolves to that declaration. Otherwise:
+  <_apb: These last two rules give precedene to inherited names over
+  lexically enclosing names.  This used to be an error.  
+  When did we change it?_>
 
-* If there is no declaration named _m_, the request is an error.
+* There is no visible declaration of an attrbute named _m_, and the implicit
+  request is an error.
 
 Note that implicit requests are resolved within the site of the
 declaring method, not where they are used.
+<_apb: What does hat mean?  WHat is the declaring method?_>
 
 #### Examples
 
@@ -1091,7 +1124,7 @@ class baz {
 
 app.barf  //prints "outer"
 bar.barf  //prints "outer"
-baz.barf  //prints "bar"
+baz.barf  //prints "bar"    why not ambiguous?
 ```
 
 ##Assignment Requests
@@ -1119,7 +1152,7 @@ receiver must be explicit. So, for example, `+`, `++` and `..` are valid
 operator symbols, but `.` is not, because it is reserved.
 
 Most Grace operators have the same precedence: it is a syntax error for
-two different operator symbols to appear in an expression without
+two distinct operator symbols to appear in an expression without
 parenthesis to indicate order of evaluation. The same operator symbol
 can be requested more than once without parenthesis; such expressions
 are evaluated left-to-right.
@@ -1160,6 +1193,8 @@ explicit receiver, there is no syntactic ambiguity.)
 Prefix operators bind less tightly than named method requests, and more
 tightly than binary operator requests.
 
+<_apb: As a consequence, `-3.sqrt` and `-x.sqrt` are parsed differently.  I wonder if we want to get rid of negative numerals?_>
+
 #### Examples
 
     -3 + 4
@@ -1168,6 +1203,26 @@ tightly than binary operator requests.
     - b.squared     // parses as -(b.squared)
 
     status.ok :=  !engine.isOnFire && wings.areAttached && isOnCourse
+
+
+## Precedence of Method Requests
+
+Grace programs are formally defined by the language’s [Grammar]. The
+grammar gives the following precedence levels; lower numbers bind more
+tightly.
+
+1.  Numerals and constructors for strings, objects, iterables,
+blocks, and types; parenthesized expressions.
+2.  Requests of named methods.
+Multi-part requests accumulate name-parts and arguments as far to
+the right as possible.
+3.  Prefix operators
+4.  “Multiplicative” operators `*` and `/`: associate left to right.
+5.  “Additive” operators `+` and `-`: associate left to right.
+6.  “Other” operators, whose binding must be given explicitly
+using parenthesis.
+7.  Assignments and method requests that use `:=` as a suffix to a
+method name.
 
 
 ## Requesting Methods with Type Parameters
@@ -1191,33 +1246,13 @@ arguments are omitted, they are assumed to be type `Unknown`.
 The parents in `inherit <parent>` and `use <parent>`
 clauses must be _manifest_. This means that Grace must be able to
 determine the _shape_ of the object that is being inherited on a module-by-module
-basis. 
+basis.
 In particular,
 
 1. the meaning of the parent expressions must not be subject to
-   overriding, and 
-2. the result of the parent expression must be a fresh object 
+   overriding, and
+2. the result of the parent expression must be a fresh object
    whose shape is statically determinable.
-
-
-## Precedence of Method Requests
-
-Grace programs are formally defined by the language’s [Grammar]. The
-grammar gives the following precedence levels; lower numbers bind more
-tightly.
-
-1.  Numerals and constructors for strings, objects, iterables,
-    blocks, and types; parenthesized expressions.
-2.  Requests of named methods.
-    Multi-part requests accumulate name-parts and arguments as far to
-    the right as possible.
-3.  Prefix operators
-4.  “Multiplicative” operators `*` and `/`: associate left to right.
-5.  “Additive” operators `+` and `-`: associate left to right.
-6.  “Other” operators, whose binding must be given explicitly
-    using parenthesis.
-7.  Assignments and method requests that use `:=` as a suffix to a
-    method name.
 
 
 # Pattern Matching
@@ -1270,7 +1305,7 @@ argument rule).
 
 The objects created by literals — Strings and Numbers — are patterns that
 match themselves. Matching blocks and self-matching objects are
-often combined in the `match(_)case(_)` family of methods. 
+often combined in the `match(_)case(_)` family of methods.
 That’s what lets things like this work:
 
     method fib(n : Number) -> Number {
@@ -1362,12 +1397,12 @@ primarily describe the requests that objects can answer. Fields do not
 directly influence types, except that a field that is public, readable
 or writable is treated as the appropriate method or methods.
 
-Type names introduced by [type declarations](Type Declarations) 
+Type names introduced by [type declarations](Type Declarations)
 are treated as expressions
 that denote _type objects_.  All type objects are also patterns, so
 they can be used in [pattern matching](Pattern Matching),
 typically to perform dynamic
-type tests. 
+type tests.
 Because type declarations cannot be changed by overriding, the value of
 a type expression can always be determined before the program is executed;
 this means that types can be checked statically.
@@ -1390,7 +1425,7 @@ The type `Object` declares several methods to which most normal
 objects will respond --- the [Default Methods] declared in
 `graceObject`. Some objects, notably `done`, do not conform to `Object`.
 
-``` 
+```
 type Object = {
 	== (other: Object) -> Boolean
 	≠ (other: Object) -> Boolean     // the inverse of ==
@@ -1413,12 +1448,12 @@ Unknown is not actually a type, although it is treated as a type
 by the type checker.  It is similar to the type label "Dynamic" in C#.
 Unknown can be written explicitly as a type annotation; moreover,
 if a declaration is not annotated, then the type of the declared name is
-_implicitly_ `Unknown`.  In additon, omitted type arguments are replaced by 
+_implicitly_ `Unknown`.  In additon, omitted type arguments are replaced by
 `Unknown`.
 
 Static type-checking against `Unknown` will always succeed: any object matches
 type `Unknown`, and type `Unknown` conforms to all other types.
-Consequently, requests made of expressions with type `Unknown` can only be checked at runtime. 
+Consequently, requests made of expressions with type `Unknown` can only be checked at runtime.
 
 #### Examples
 
@@ -1601,14 +1636,20 @@ any of the methods in `T2`.
 
 ### Singleton Types
 
-To keep track of individual objects (especially in variants), a library
-or dialect can offer to lift any object `o` to a type by
-supporting a manifest request such as `Singleton(o)`.  
-The result is the type with exactly the interface
-of the object `o`.  As patterns, singleton types *match* only their singleton object.
+<_apb:  I think this is what you want.  It's more or less what `Singleton` does in minigrace.   I think that it's a bad idea,
+because it confuses objects and types._>
 
-    def null = object {
+To keep track of individual objects (especially in variants),
+any object `o` can be treated as a type.
+This facility is intended to be used to "lift" singleton 
+objects to types, resulting in the type with exactly the interface
+of the object `o`.  As patterns, singleton types *match* only their singleton object.
+<_apb: How do we distinguish between the singleton object and the singleton type?  Do we have both 
+`o.match(o)` and `o == o`?_>
+
+    def Null = object {
         method isNull -> Boolean {return true}
+        method asString { "the Null thing" }
     }
 
     type Some<T> {
@@ -1616,7 +1657,38 @@ of the object `o`.  As patterns, singleton types *match* only their singleton ob
         isNull -> Boolean
     }
 
-    type Option<T> = Some<T> | Singleton(null)
+    type Option<T> = Some<T> | Null
+
+
+```
+o <: S     if (o:T) && (T <: S)
+x:o        if (x:T, o:S) && (T <: S)
+```
+
+#### Here is the old text.
+<_apb: the problem with this is that libraries and dialects
+have no way of implementing a type "just `o`". 
+If we want this, we would have to build it in to the
+language, e.g.,
+by making `Singleton` a primitive that creates what is
+essentially a branded type._> 
+
+To keep track of individual objects (especially in variants) a library
+or dialect can offer to lift any object `o` to a type just `o` by
+supporting a manifest request such as `Singleton(o)`.  
+The result is the type with exactly the interface
+of the object `o`.  As patterns, singleton types *match* only their singleton object.
+
+def null = object {
+method isNull -> Boolean {return true}
+}
+
+type Some<T> {
+thing -> T
+isNull -> Boolean
+}
+
+type Option<T> = Some<T> | Singleton(null)
 
 
 ```
@@ -1656,20 +1728,24 @@ this object constructor is *executed*, resulting in a _module object_.
 
 Modules may begin with one or more `import` _moduleName_ `as` _nickname_
 statements.
-_moduleName_ is a [string literal](String Literals) that identifies the module to be imported in an implementation-dependent manner; for example, moduleName may be a file path.
-_nickname_ is Grace identifier used to refer to the imported module object
+_moduleName_ is a [string literal](String Literals) that identifies the module to be imported in an implementation-dependent manner; for example, _moduleName_ may be a file path.
+_nickname_ is the Grace identifier used to refer to the imported module object
 in the rest of the
 importing module. Because modules are just objects, public
 declarations at the top level of imported modules are accessed
 by requesting a method on the module's nickname.
+<_apb: Confidential declarations are not visible to the importing module, I thought._>
 
-Grace programs may be executed by choosing one module as an entry
-point to run in the operating system. Grace will the load and
-initialise all transitively imported modules in depth-first order,
+Grace programs are be executed asking the execution
+environment to run a particular module, 
+which may bethough of as the "main" module.
+Grace will load and initialise all transitively 
+imported modules in depth-first order,
 thus executing the "main" module _last_, after all its dependencies
-are loaded. Each individual module is loaded just once, the first time
-it is reached: importing the same _moduleName_ again results in the same
-module object.
+are loaded. 
+Each importled module is loaded just once, the first time
+it is reached: importing the same _moduleName_ multiple times
+results in the same module object.
 
 Circular module dependencies are errors.
 
@@ -1678,31 +1754,31 @@ Circular module dependencies are errors.
 cat.grace module:
 
 ```
-import "animalMod" as a
+import "animals" as a
 print "initialising cat module"
 class cat {
-  inherit a.animal
-  method species { "Cat" }
+    inherit a.mammal
+    method species { "cat" }
 }
 print "cat module done"
 ```
 
-animalMod.grace module:
+animals.grace module:
 
 ```
-print "initialising animalMod module"
-class animal {
-  method asString { "I am a {species}" }
-  method species { "Random Animal" }
+print "initialising animals module"
+class mammal {
+    method asString { "I am a {species}" }
+    method species { "mammal" }
 }
-print "animal module done"
+print "animals module done"
 ```
 
 will print:
 
 ```
-initialising animal module
-animal module done
+initialising animals module
+animals module done
 initialising cat module
 cat module done
 ```
@@ -1711,11 +1787,11 @@ cat module done
 
 Grace dialects support language levels for teaching, and
 domain-specific "little" languages. A module may begin with a dialect
-statement `dialect "name"`, 
+statement `dialect "name"`,
 where the `dialect` keyword is followed by a [string literal] (String Literal).
 
 The effect of the dialect statement is to import the dialect like any other
-module, but then arrange that the dialect's module object 
+module, but then arrange that the dialect's module object
 lexically encloses the object defined by the module. This means that
 [Implicit Requests](Implicit Requests) in the module can resolve to the definitions in
 the dialect.
@@ -1736,25 +1812,22 @@ structure that is like `if`, but backwards.
 bcpl.grace module:
 
 ```
-method do (block : Block) unless (test : Boolean)  {
-    if (!test) then (block)
+method do (block: Block0) unless (test: Boolean)  {
+    if (test.not) then (block)
 }
 ```
 
-A module written in that dialect can use that control structure as if
+A module written in this dialect can use that control structure as if
 it was built in:
 
 example.grace module:
 
 ```
 dialect "bcpl"
-import "file" as f
-
-def myfile = f.openFile "foo.txt"
-do {  print "Can't open file" } unless (myfile.isOpen)
+...
+do { average := sum / count } unless (count == 0)
 
 ```
-
 
 
 ## Module and Dialect Scopes
@@ -1765,11 +1838,16 @@ Moving out from module scope, Grace programs can access the following scopes:
 a module.
 
 2. **surrounding module scope** containing the nicknames introduced by
-`import` declarations.
+`import` declarations.  <_apb: why arne't these just like (confidential) defs in the module scope?_>
 
 3. **dialect scope** containing all declarations at the top level of
-a module used as a dialect.  That is, the names at the top level of the dialect
-are treated as being in the outer scope of the module being defined.
+the module providing the dialect.  That is, the names at the top level of the dialect
+are treated as being in a scope surrounding that of the
+    module being defined. 
+    <_apb: I thought that we exclude    
+    confidential names, to allow a dialect to
+    define, for example, helper methods that are not 
+    available to clients._>
 
 Lexical lookup stops at the module's dialect scope: it does not extend
 to the surrounding dialect's scope (containing any nicknames
@@ -1789,7 +1867,7 @@ Grace source files should have the file extension `.grace`. If, for any
 bizarre reason a trigraph extension is required, it should be `.grc`
 
 Grace files may start with one or more lines beginning with `#`: these
-lines are ignored by the language, but may be interpreted as directives 
+lines are ignored by the language, but may be interpreted as directives
 by an implementation.
 
 ## Garbage Collection
@@ -1804,7 +1882,7 @@ Grace will not support finalization.
 ## Concurrency
 
 The core Grace specification does not describe a concurrent language.
-Different concurrency models may be provided as dialects.
+Various concurrency models may be provided as dialects.
 
 Grace does not provide overall sequential consistency. Rather, Grace
 provides sequential consistency within a single thread. Across threads,
@@ -1819,7 +1897,7 @@ with Total Store Ordering (TSO).
 
 Thanks to Josh Bloch, Cay Horstmann, Michael Kölling, Doug Lea, Ewan
 Tempero, and the participants at the Grace Design Workshops and the
-IFIP WG2.16 Programming Language Design for discussions about the
+IFIP WG2.16 on Programming Language Design for discussions about the
 language design.
 
 The Scala language specification 2.8 @scala28 and the Newspeak language
@@ -1854,4 +1932,4 @@ responsibility @HoareHints.
 Grammar
 =======
 
-_(to be attached one James works out how to do it)_
+_(to be attached once James works out how to do it)_
