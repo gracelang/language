@@ -1257,21 +1257,23 @@ In particular,
 
 # Pattern Matching
 
-Pattern matching is based around `Pattern` objects that respond to the
+Pattern matching is based on `Pattern` objects that respond to the
 `match(subject)` request by returning a `MatchResult`, which is either
 `false` if the match fails, or a `SuccessfulMatch<R>` object which
 behaves like `true` but also supports a `result` request.  All type
-objects are Patterns, although there are other Patterns that are not
-types.
+objects are Patterns; in addition, libraries supply non-type Patterns,
+and programmers are free to implement their own Patterns.
 
-In particular, in the scope of this `Point` type:
+#### Example
+
+Suppose that the type `Point` is defined by:
 
     type Point = {
       x -> Number
       y -> Number
     }
 
-implemented by this class:
+and implemented by this class:
 
     class x(x':Number) y(y':Number) -> Point {
       method x { x' }
@@ -1291,47 +1293,55 @@ we can write
 Blocks with a single parameter are called _matching blocks_. Matching
 blocks also conform to  type Pattern, and can be evaluted by
 requesting `match(_)` as well as `apply(_)`. When `apply(_)` would
-raises a type error because the block's argument would not match its
+raise a type error because the block's argument would not conform to its
 parameter type, `match(_)` returns false; when `apply(_)` would return
 a result `r`, `match(_)` returns a `SuccessfulMatch` object whose
 `result` is `r`.
 
-If a matching block parameter declaration takes the form `_ :
-pattern`, then the `_ :` can be omitted, provided the `pattern` here
-is either parenthesized, or a string or numeric literal (the delimited
-argument rule).
+If a the parameter declaration of a matching block takes the form `_:
+pattern`, then the `_:` can be omitted, provided that `pattern` is
+is parenthesized, or is a string or numeric literal.
+This rule (the *delimited argument rule*) means that the pattern can't be
+mistaken for a declaration of a parameter to the block.
 
 ## Self-Matching Objects
 
-The objects created by literals — Strings and Numbers — are patterns that
-match themselves. Matching blocks and self-matching objects are
-often combined in the `match(_)case(_)` family of methods.
-That’s what lets things like this work:
-
-    method fib(n : Number) -> Number {
-      match (n)
-        case { 0 -> 0 }
-        case { 1 -> 1 }
-        case { _ -> fib(n-1) + fib(n-2) }
-    }
-
-The last block matches against a placeholder: without that block, the
-`match(_)case(-)` would raise an error if no block matched.
+The objects created by [String Literals](Strings) and [Numerals](Numbers)
+are patterns that match strings and numbers that are equal to the literal.
 
 #### Examples
+ 
+Matching blocks and self-matching objects can be conveniently used
+in the `match(_)case(_)…` family of methods.
+
+```
+    method fib(n : Number) -> Number {
+        match (n)
+	        case { 0 -> 0 }
+	        case { 1 -> 1 }
+	        case { _ -> fib(n-1) + fib(n-2) }
+    }
+```
+The first two blocks use self-matching objects; the first is short for { _:0 -> 0 }.
+
+The last block has no pattern (or, if you prefer, = has the pattern `Unknown`, 
+which matches any object.  Such a block always matches.
+
+If 
+`match(_)case(_)… does not find a match, it raises a non-exhausive match exception.
+
 
     { 0 -> "Zero" }
-        // match against a literal constant
+        // match against a Sting Literal
 
     { s:String -> print(s) }
-        // typematch, binding s - identical to block with typed parameter
+        // type match, binding s - identical to block with typed parameter
 
     { (pi) -> print("Pi = " ++ pi) }
         // match against the value of an expression - requires parenthesis
 
-    { _ -> print("did not match") }
-        // match against placeholder, matches anything
-
+    { a -> print("did not match") }
+        // match against empty type annotation; matches anything, andbinds to `a`
 
 
 # Exceptions
