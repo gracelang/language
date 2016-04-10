@@ -814,8 +814,10 @@ constructors, classes and traits can all contain one or more `use` statements.
 
 Both `inherit` and `use` introduce the attributes of a reused object —
 called the _parent_ — into the current object (the object under
-construction).  A new declaration in the current object can override a
-declaration from a parent.
+construction).  There are two differences between `inherit` and `use`
+clauses: object reused by a `use` clause must be a trait object; and
+`inherit` clauses include the methods from `graceObject` while `use`
+clauses do not.
 
 An `inherit` or `use` clause contains a
 [Manifest Expression](#manifest-expressions)
@@ -823,7 +825,6 @@ that creates a new object, such as a request on a class or trait.
 This means that the  request  cannot depend on a `self`, implicitly or
 explicitly.  This means that programs cannot inherit or use any trait or class that
 can potentially be overridden.
-The object reused by a `use` clause must be a trait object.
 Note that the arguments to [Manifest Expression](#manifest-expressions)
 need not themselves be manifest.
 
@@ -842,16 +843,27 @@ an **`exclude`** clause: excluded attributes are replaced by a
 When executed, an object constructor (or trait or class declaration)
 first creates a new object with no attributes, and binds it to `self`.
 
-Next, the attributes of all _parent_ objects (created by any `inherit`
-or `use` clauses, as modified by `alias` and `exclude`), 
-and attributes created by local
-declarations, are installed in the new object.  Local declarations
-override parental declarations.  It is a _trait composition error_ for
-the same concrete attribute to come from more than one parent, and not
-to be overridden by a local definition.
-<_apb: my early experience withthsi rule, which treats superobjects in the same way as traits, has shown that it is unsatisfactory.  Look at newCollections, for example._>
+First the attributes of the superclass (created by the `inherit`
+clauses as modified by `alias` and `exclude`) are installed in the new
+object.
+Second, the attributes of any traits 
+(created by the `use`
+clauses as modified by `alias` and `exclude`, and 
+excluding those attributes deriving from `graceObject`) are installed in the new
+object: declarations in traits override declarations in the
+superclass. 
+<_apb: my early experience withthsi rule, which treats superobjects in
+the same way as traits, has shown that it is unsatisfactory.  Look at
+newCollections, for example._>
+<_kjx: should be fixed_>
+Finally attributs create by local declarations are installed in the
+new object: Local declarations
+override parental declarations (declarations from both superclass and
+traits). 
 It is also a _trait composition error_ for an alias to be
 overridden by a local declaration.
+Unlike most other errors in Grace, trait composition errors must be
+caught at compile time.
 
 Next, types must be evaluated and bound within objects.
 Types cannot depend on runtime values; if they depend on the type of a
@@ -887,10 +899,12 @@ Requesting a required method will generate a runtime error.
 
 ### Overriding Methods
 
+A new declaration in the current object overrides a declaration
+from a parent.
 Methods may be annotated with `is override`. A method so annotated must
 override a method from its parent with the same name and arity.
 This annotation is optional: local methods override parents' methods
-with or without the `override` annotation.  However, dialects may require it.
+with or without the `override` annotation, however, dialects may require it.
 
 #### Examples  {-}
 
@@ -958,18 +972,30 @@ a random variable.
 
 ### Default Methods
 
-Many objects conventionally implement a number of _default methods_ by
-inheriting from the `graceObject` trait. In particular, the
-objects created by the `class` syntax inherit from `graceObject` if no
-**inherits** clause is supplied (but not objects created by the
-`trait` syntax or by `object` constructors). Programmers can of course
+All objects implement a number of _default methods_ by inheriting from
+the `graceObject` trait. 
+Programmers can of course
 override some of these implementations, or write those methods _ab initio_.
-The [type Object](#type-object) defines a type containing all the default methods.
+The [type Object](#type-object) defines a type containing all the
+default methods:
+
+| Method | Purpose |
+|:-----|:------|
+| `== (other: Object) -> Boolean` | true if other is equal to self |
+| $\neq$ `(other: Object) -> Boolean` | the inverse of == |
+| `hash -> Number` | the hash code of self, a Number in the range 0 .. 2^32 |
+| `match (other: Object)` |  returns a SuccessfulMatch if self "matches" other | 
+| `   -> SucccessfulMatch | FailedMatch` | returns FailedMatch otherwise |
+| `asString -> String` | a string describing self | 
+| `asDebugString -> String` | a string describing the internals of|self |
+| `:: (other:Object) -> Binding` | a Binding object with self as key and other as value. |
+
 <_apb: I don't like this.  I think that all objects should have the defualt methods, uniformly.  
 It's more reasonable to make the object composition
 rules distinguish between `inherit`, which includes the methods from `graceObject`, and `use`, which does not, and to have used 
 attributes override inherited attributes.
 Briefly, the reason for this is that its useful to have a trait that redefines some of the defualt methods._> 
+<_kjx. sorry fixed)_>
 
 
 # Method Requests
@@ -1071,34 +1097,22 @@ that is a numeral, string, lineup, or block.
 If the receiver of a named method request using the name _m_ is `self` or
 `outer` it may be left implicit, _i.e._, the `self` or `outer` and the
 dot may both be omitted.
-Implicit requests are resolved as follows:
+Implicit requests may be resolved either as a self request or as an
+outer request. An ambiguous implicit request (that could be resolved
+as either) is an error.
 
-* If there is a declaration of an attribute named _m_ lexically inside but excluding
-    the single innermost object (or trait, class) then the implicit
-    request resolves to that declaration. 
 <_apb: I don't understand this. Lexically inside what?_>
-Otherwise:
+<_kjx: sorry. reworded this section_> 
 
-* If there is a declaration named _m_ lexically visible on `self`
-   (i.e. declared in the object, trait, or class declaration
-   containing the implicit request, or `use`d or `inherit`ed by that 
-   object, trait, or class)
-   then the implicit request is treated as a `self` request. Otherwise:
-
-* If there is a lexically visible declaration of _m_ in an enclosing scope, 
-  going out as far
-  as the [module object][Modules] and [dialect][Dialects]
-  then the request resolves to that declaration. Otherwise:
   <_apb: These last two rules give precedene to inherited names over
   lexically enclosing names.  This used to be an error.  
   When did we change it?_>
+  <_kjx: sorry. fixed _>
 
-* There is no visible declaration of an attrbute named _m_, and the implicit
-  request is an error.
-
-Note that implicit requests are resolved within the site of the
-declaring method, not where they are used.
+Implicit requests are always resolved within the scope of their declaration, 
+not within the scope of object (class, or trait) or that may inherit them.
 <_apb: What does hat mean?  WHat is the declaring method?_>
+<_kjx: clarified_>
 
 #### Examples  {-}
 
@@ -1443,8 +1457,8 @@ Type `None` is completely empty; it has no methods.
 
 ### Type Object
 
-The type `Object` declares several methods to which most normal
-objects will respond --- the [Default Methods] declared in
+The type `Object` declares several methods to which all
+objects respond --- the [Default Methods] declared in
 `graceObject`. Some objects, notably `done`, do not conform to `Object`.
 
 ```
@@ -1518,7 +1532,7 @@ Types, including parameterized types, may be named in type declarations.
 By convention, tha names of types start with an uppercase letter.
 The `type` keyword may be omitted from the right-hand-side
 of a type declaration when the right-hand-side is a simple type literal.
-
+Type declarations may not be overridden.
 
 #### Examples  {-}
 
@@ -1594,7 +1608,7 @@ Grace offers a number of operators to build up composite types.
 The expression 
 `T1 | T2 | ... | Tn `
 signifies an untagged, retained variant type.
-When an *variable* or *method* is annotated with a variant type,
+When a *variable* or *method* is annotated with a variant type,
 that variable may be bound to, or that method may return,
 an object of any one of the
 component types `T1`, `T2`, ..., `Tn`. 
@@ -1609,9 +1623,10 @@ needs enough reified type information to distinguish between
 for all possible `Bar` and `Wombat`.  Where does this
 information come from?_>
 
-The only methods that may be requested via a variant type are methods
-with exactly the same declaration across all members of the variant.
-<_apb: What does it mean to "request a method via a type?"_>
+The only methods that may be requested via an expression of variant
+type are methods with exactly the same declaration across all members
+of the variant.  <_apb: What does it mean to "request a method via a
+type?"_> <_kjx: reworded_>
 
 Variant types are *not* equivalent to the
 object type that describes all common methods. This is so that the
@@ -1641,10 +1656,8 @@ An object conforms to an Intersection type, written
 component types. The main uses of intersection types is for augmenting
 types with new operations, and as bounds on `where` clauses.
 
-[Must add rules to provide results if two types have same multi-part method name (and arities), but the
-type of parameters and return types differ.]
-
 <_apb: Actually, I don't think that you do need to say any more; these cases are already covered by the rule for conformance._>
+<_kjx: text deleted _>
 
 ```
 (S & T) <: S
@@ -1697,6 +1710,7 @@ irrelevant.
 
 <_apb:  I think this is what you want.  It's more or less what `Singleton` does in minigrace.   I think that it's a bad idea,
 because it confuses objects and types._>
+<_ kjx: shall we delete? _>
 
 To keep track of individual objects (especially in variants),
 any object `o` can be treated as a type.
@@ -1769,14 +1783,15 @@ This allows types to be declared and imported from other modules.
 Type assertions can be used to check conformance and equality of
 types.
 
-    assert {B <: A}
+    assert (B <: A)
        // B conforms to A.
-    assert {B <: type {foo(_:C) -> D} }
+    assert (B <: type {foo(_:C) -> D} )
        // B had better have a foo method from C returning D
-    assert {B == A | C}
+    assert (B == A | C)
 
 <_apb: Is this `assert` the one in gUnit (which takes a boolean, not a block), or
 an incompatible library, or is this `assert` intended to be a language keyword accessing a built-in facility?_>
+<_kjx: sorry. It must be GUNIT of course. Fixed _>
 
 # Modules and Dialects
 
@@ -1901,19 +1916,19 @@ do { average := sum / count } unless (count == 0)
 Moving out from module scope, Grace programs can access the following scopes:
 
 1. **module scope** containing all declarations at the top level of
-a module.
+a module, and the nicknames introduced by `import` declarations.  
 
-2. **surrounding module scope** containing the nicknames introduced by
-`import` declarations.  <_apb: why aren't these just (confidential) defs in the module scope?  Adding an extra scope here messes up the counting of outers_>
+<_apb: why aren't these just (confidential) defs in the module scope?  Adding an extra scope here messes up the counting of outers_>
+<_kjx: sorry, fixed _>
 
-3. **dialect scope** containing all declarations at the top level of
-the module providing the dialect.  That is, the names at the top level of the dialect
+3. **dialect scope** containing all public declarations at the top level of
+the module providing the dialect.  That is, the public names at the top level of the dialect
 are treated as being in a scope surrounding that of the
     module being defined. 
     <_apb: I thought that we exclude    
     confidential names, to allow a dialect to
     define, for example, helper methods that are not 
-    available to clients._>
+    available to clients._> <_kjx: fixed _>
 
 Lexical lookup stops at the module's dialect scope: it does not extend
 to the surrounding dialect's scope (containing any nicknames
@@ -1961,39 +1976,11 @@ with Total Store Ordering (TSO).
 
 # Acknowledgements
 
-We thank Josh Bloch, Cay Horstmann, Michael Kölling, Doug Lea, Ewan
-Tempero, and the participants at the Grace Design Workshops and the
-IFIP WG2.16 on Programming Language Design meetings for discussions about the
-language design.
-
-The Scala language specification 2.8 @scala28 and the Newspeak language
-specification 0.05 @newspeak005 were used as references for early
-versions of this document. The design of Grace (so far!) has been
-influenced by Algol @algolPerlis [@algolNaur], AmbientTalk @ambientTalk,
-AspectJ @aspectJecoop, BCPL @BCPLBOOK [@cpl2bcpl], Beta @betabook, Blue
-@BlueSIGCSE95 [@BlueSIGCSE96; @BlueSpec], Brainfuck @brainfuckLanguage, C @Cbook, C$++$ @cppnotoo,
-C# @Csharp3 [@Csharp4], Ceylon @Ceylon, Dart @dart, Dylan @dylan, E [@E]Eiffel @oosc [@eiffel],
-Emerald @Black2007, $F_1$ @LucaTypeSystems, F# @fsharp, FORTH
-@FORTH, $FGJ$ @igarashi01, $FJ\vee$ @igarashi07, FORTRESS @fortress10b, gBeta
-@fampoly, Go @Go, Haskell @haskellHistory, IGJ @AlexIGJ, INTERCAL
-@INTERCAL, Java @mrBunny [@JavaConcur], Jigsaw
-[@Jigsaw], Kevo @anteroCloning, Lua @lua, Lisp @goodBadUgly, ML @ml, Modula-2 @Modula2,
-Modula-3 @Modula3, Modular Smalltalk @ModularSmalltalk, Newspeak
-@brachamodules [@newspeak005], Noney @malayeri08, O'CAML @OCAML, the Object Calculus
-@AbadiCardelli, Pascal @Pascal, Perl @perltalk, Quorun @Quorum, Racket
-@HowToDesignPrograms, Scala @SCA [@scala28], Scheme @scheme, Self
-@selfpower, Smalltalk @bluebook [@Ingalls81; @Budd1987; @strongtalk],
-TrumpScript @TrumpScript,
-Turing @OOTuring,
-U2 @someLanguageBeginningWithU,
-VDM @VDM (or VC++ @VC++),
-Whiteoak @whiteoak08, Whitespace @whitespaceLanguage,
-XTend @XTend,
-yes @UnixYesCommand,
-and Z @Zed
-at least: we apologise if we’ve missed any languages out.
-All the good ideas come from these languages: the bad ideas are our own
-responsibility @HoareHints.
+We thank Michael Homer and Tim Jones for working on early
+implementations of Grace, and Josh Bloch, Cay Horstmann, Michael
+Kölling, Doug Lea, Ewan Tempero, and the participants at the Grace
+Design Workshops and the IFIP WG2.16 on Programming Language Design
+meetings for discussions about the language design.
 
 Grammar
 =======
