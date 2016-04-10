@@ -463,13 +463,13 @@ the method returns. The body of the method is enclosed in braces.
 
 ### Method Names
 
-To improve readability, method names have several forms.  
+To improve readability, method names have several forms.
 For each form, we describe its appearance,
 and also a _canonical_ form of the name which is used in dispatching method requests.
 A request "matches" a method if the canonical names are equal.
 
 1. A method can be named by a single identifier, in which case the method
-	has no parameters; in this case the _canonical_ name of the method is 
+	has no parameters; in this case the _canonical_ name of the method is
 	the identifier.
 
 1. A method can be named by a single identifier suffixed with `:=`; this
@@ -493,7 +493,7 @@ A request "matches" a method if the canonical names are equal.
 	unary method is **`prefix`** followed by the operator symbols; the canonical
 	name of a binary method is the sequence of operator symbols followed by `(_)`
 	
-Method parameters may optionally be annotated with types: 
+Method parameters may optionally be annotated with types:
 the corresponding arguments will be
 checked against those types, either at before execution, or
 just before the method body is executed.
@@ -808,7 +808,7 @@ Like methods, classes and traits may be declared to have type
 parameters.  Requests on the class or trait may optionally be provided
 with type arguments.
 
-Type parameters may be constrained with `where` clauses.  
+Type parameters may be constrained with `where` clauses.
 The details have yet to be specified.
 
 **Example**
@@ -867,12 +867,12 @@ first creates a new object with no attributes, and binds it to `self`.
 First the attributes of the superclass (created by the `inherit`
 clauses as modified by `alias` and `exclude`) are installed in the new
 object.
-Second, the attributes of any traits 
+Second, the attributes of any traits
 (created by the `use`
-clauses as modified by `alias` and `exclude`, and 
+clauses as modified by `alias` and `exclude`, and
 excluding those attributes deriving from `graceObject`) are installed in the new
 object: declarations in traits override declarations in the
-superclass. 
+superclass.
 <_apb: my early experience withthsi rule, which treats superobjects in
 the same way as traits, has shown that it is unsatisfactory.  Look at
 newCollections, for example._>
@@ -880,7 +880,7 @@ newCollections, for example._>
 Finally attributs create by local declarations are installed in the
 new object: Local declarations
 override parental declarations (declarations from both superclass and
-traits). 
+traits).
 It is also a _trait composition error_ for an alias to be
 overridden by a local declaration.
 Unlike most other errors in Grace, trait composition errors must be
@@ -995,7 +995,7 @@ a random variable.
 ### Default Methods
 
 All objects implement a number of _default methods_ by inheriting from
-the `graceObject` trait. 
+the `graceObject` trait.
 Programmers can of course
 override some of these implementations, or write those methods _ab initio_.
 The [type Object](#type-object) defines a type containing all the
@@ -1006,23 +1006,23 @@ default methods:
 | `== (other: Object) -> Boolean` | true if other is equal to self |
 | $\neq$ `(other: Object) -> Boolean` | the inverse of == |
 | `hash -> Number` | the hash code of self, a Number in the range 0 .. 2^32 |
-| `match (other: Object)` |  returns a SuccessfulMatch if self "matches" other | 
+| `match (other: Object)` |  returns a SuccessfulMatch if self "matches" other |
 | `   -> SucccessfulMatch | FailedMatch` | returns FailedMatch otherwise |
-| `asString -> String` | a string describing self | 
+| `asString -> String` | a string describing self |
 | `asDebugString -> String` | a string describing the internals of|self |
 | `:: (other:Object) -> Binding` | a Binding object with self as key and other as value. |
 
-<_apb: I don't like this.  I think that all objects should have the defualt methods, uniformly.  
+<_apb: I don't like this.  I think that all objects should have the defualt methods, uniformly.
 It's more reasonable to make the object composition
-rules distinguish between `inherit`, which includes the methods from `graceObject`, and `use`, which does not, and to have used 
+rules distinguish between `inherit`, which includes the methods from `graceObject`, and `use`, which does not, and to have used
 attributes override inherited attributes.
-Briefly, the reason for this is that its useful to have a trait that redefines some of the defualt methods._> 
+Briefly, the reason for this is that its useful to have a trait that redefines some of the defualt methods._>
 <_kjx. sorry fixed)_>
 
 
 # Method Requests
 
-Grace is a pure object-oriented language. 
+Grace is a pure object-oriented language.
 All computation proceeds by _requesting_ an
 object — the target of the request — to execute a method with a
 particular *name*. The response of the receiver is to execute the
@@ -1038,9 +1038,9 @@ is local to the target.
 
 ## Self
 
-The reserved word **`self`** refers to the current object, that is, 
+The reserved word **`self`** refers to the current object, that is,
 the object being constructed by the lexically innermost module,
-object constructor, class or trait surrounding the word **`self`** 
+object constructor, class or trait surrounding the word **`self`**
 The expression `self.x` requests `x` on the current object.
 The reserved word **`Self`** refers to the type of the current object.
 
@@ -1128,14 +1128,14 @@ outer request. An ambiguous implicit request (that could be resolved
 as either) is an error.
 
 <_apb: I don't understand this. Lexically inside what?_>
-<_kjx: sorry. reworded this section_> 
+<_kjx: sorry. reworded this section_>
 
   <_apb: These last two rules give precedene to inherited names over
-  lexically enclosing names.  This used to be an error.  
+  lexically enclosing names.  This used to be an error.
   When did we change it?_>
   <_kjx: sorry. fixed _>
 
-Implicit requests are always resolved within the scope of their declaration, 
+Implicit requests are always resolved within the scope of their declaration,
 not within the scope of object (class, or trait) or that may inherit them.
 <_apb: What does hat mean?  WHat is the declaring method?_>
 <_kjx: clarified_>
@@ -1364,7 +1364,7 @@ are patterns that match strings and numbers that are equal to the literal.
 
 **Examples**
 
- 
+
 Matching blocks and self-matching objects can be conveniently used
 in the `match(_)case(_)...` family of methods.
 
@@ -1378,10 +1378,10 @@ in the `match(_)case(_)...` family of methods.
 ```
 The first two blocks use self-matching objects; the first is short for { _:0 -> 0 }.
 
-The last block has no pattern (or, if you prefer, has the pattern `Unknown`, 
+The last block has no pattern (or, if you prefer, has the pattern `Unknown`,
 which matches any object).  Such a block always matches.
 
-If 
+If
 `match(_)case(_)...` does not find a match, it raises a non-exhausive match exception.
 
 
@@ -1424,10 +1424,10 @@ thrown. Execution continues when the exception is *caught.*
 
 An exception in `expression` can be caught by a dynamically-enclosing
 
-    try(expression) 
-        catch (block 1) 
+    try(expression)
+        catch (block 1)
         ...
-        catch (block n) 
+        catch (block n)
         finally (finalBlock)
 
 in which the `block i`
@@ -1560,7 +1560,7 @@ inherited from `Object` are implicitly included in all types.
 For commonality with method declarations, parameters are normally named
 in type declarations. These names are useful when writing specifications
 of the methods. If a parameter name is omitted, it must be replaced by
-an underscore. The type of a parameter or result may be omitted, 
+an underscore. The type of a parameter or result may be omitted,
 in which case the type is `Unknown`.
 
 ## Type Declarations
@@ -1585,7 +1585,7 @@ Type declarations may not be overridden.
 			at (_:A) put (_:B) -> Boolean
 			cleanup(_:B)
 		} where A <: Hashable,  B <: DisposableReference
-	  
+	
 	type MyParametricType = type <A,B> {
 		at (_:A) put (_:B) -> Boolean
 		cleanup(_:B)
@@ -1622,16 +1622,16 @@ canonical name) in B such that
 The conformance relationship is used in `where` clauses to constrain
 type parameters of classes and methods.
 
-<_apb:  This last statement is wrong.  The relationship in 
-where clauses has to be matching, not conformance.  For 
+<_apb:  This last statement is wrong.  The relationship in
+where clauses has to be matching, not conformance.  For
 example, consider the type
 
-    type Equivalence = type { 
-    	~~ (Self) -> Boolean 
+    type Equivalence = type {
+    	~~ (Self) -> Boolean
     	witness -> Self
     }
 
-No other types *conform* to Equivalence, because it has Self in 
+No other types *conform* to Equivalence, because it has Self in
 both contravariant and covariant positions.  But any type T
 with an `~~` operation and a witness method will *match*
 `Equivalence`, provided that these methods have T as parameter
@@ -1643,19 +1643,19 @@ Grace offers a number of operators to build up composite types.
 
 ### Variant Types
 
-The expression 
+The expression
 `T1 | T2 | ... | Tn `
 signifies an untagged, retained variant type.
 When a *variable* or *method* is annotated with a variant type,
 that variable may be bound to, or that method may return,
 an object of any one of the
-component types `T1`, `T2`, ..., `Tn`. 
+component types `T1`, `T2`, ..., `Tn`.
 No *objects* actually have variant types, only
 expressions. The actual type of an object referred to by a variant
 variable can be determined using that object’s reified type information.
 <_apb: this is the statement that I think implies that we need to do
 type inference.  Do you really want to say this?  It means that every object
-needs enough reified type information to distinguish between 
+needs enough reified type information to distinguish between
 `type { foo -> Bar }` and
 `type { foo -> Wombat }`
 for all possible `Bar` and `Wombat`.  Where does this
@@ -1717,9 +1717,9 @@ U <: S; U <: T; ==> U <: (S & T)
        where T <: (Comparable<T> & Printable & Happyable) {
                ...
     }
-    
-<_apb: The first example works only if Sequence is defined using 
-`Self` and not `Sequence`.  And if we allow `Self`, then the above rules for 
+
+<_apb: The first example works only if Sequence is defined using
+`Self` and not `Sequence`.  And if we allow `Self`, then the above rules for
 conformance of Intersection types don't work — I'm pretty sure._>
 
 ### Union Types
@@ -1754,11 +1754,11 @@ because it confuses objects and types._>
 
 To keep track of individual objects (especially in variants),
 any object `o` can be treated as a type.
-This facility is intended to be used to "lift" singleton 
+This facility is intended to be used to "lift" singleton
 objects to types, resulting in the type with exactly the interface
 of the object `o`.  As patterns, singleton types *match* only their singleton object.
 
-<_apb: The problem that I see is how to distinguish between the singleton object and the singleton type?  Do we have both 
+<_apb: The problem that I see is how to distinguish between the singleton object and the singleton type?  Do we have both
 `o.match(o)` and `o == o`?_>
 
     def Null = object {
@@ -1781,16 +1781,16 @@ Here are the conformance rules for Singleton types:
 
 #### Here is the old text.
 <_apb: the problem with this is that libraries and dialects
-have no way of implementing a type "just `o`". 
+have no way of implementing a type "just `o`".
 If we want this, we would have to build it into the
 language, e.g.,
 by making `Singleton` a primitive that creates what is
-essentially a branded type.  Right now, `Singleton` is a library method 
-that creates a Singleton **object**_> 
+essentially a branded type.  Right now, `Singleton` is a library method
+that creates a Singleton **object**_>
 
 To keep track of individual objects (especially in variants) a library
 or dialect can offer to lift any object `o` to a type just `o` by
-supporting a manifest request such as `Singleton(o)`.  
+supporting a manifest request such as `Singleton(o)`.
 The result is the type with exactly the interface
 of the object `o`.  As patterns, singleton types *match* only their singleton object.
 
@@ -1851,19 +1851,19 @@ Modules may begin with one or more `import` _moduleName_ `as` _nickname_
 statements.
 _moduleName_ is a [string literal](#string-literals) that identifies the module to be imported in an implementation-dependent manner; for example, _moduleName_ may be a file path.
 _nickname_ is the Grace identifier used to refer to the imported module object
-in the importing module. 
+in the importing module.
 Because importing a module creates a module object, public
 declarations at the top level of imported modules are accessed
 by requesting a method on the module's nickname.
 <_apb: Confidential declarations are not visible to the importing module, I thought._>
 
 Grace programs are be executed asking the execution
-environment to run a particular module, 
+environment to run a particular module,
 which may be thought of as the “main” module.
-Grace will load and initialise all transitively 
+Grace will load and initialise all transitively
 imported modules in depth-first order,
 thus executing the “main” module _last_, after all its dependencies
-are loaded. 
+are loaded.
 Each imported module is loaded just once, the first time
 it is reached: importing the same _moduleName_ multiple times
 results in the same module object.
@@ -1958,7 +1958,7 @@ do { average := sum / count } unless (count == 0)
 Moving out from module scope, Grace programs can access the following scopes:
 
 1. **module scope** containing all declarations at the top level of
-a module, and the nicknames introduced by `import` declarations.  
+a module, and the nicknames introduced by `import` declarations.
 
 <_apb: why aren't these just (confidential) defs in the module scope?  Adding an extra scope here messes up the counting of outers_>
 <_kjx: sorry, fixed _>
@@ -1966,10 +1966,10 @@ a module, and the nicknames introduced by `import` declarations.
 3. **dialect scope** containing all public declarations at the top level of
 the module providing the dialect.  That is, the public names at the top level of the dialect
 are treated as being in a scope surrounding that of the
-    module being defined. 
-    <_apb: I thought that we exclude    
+    module being defined.
+    <_apb: I thought that we exclude
     confidential names, to allow a dialect to
-    define, for example, helper methods that are not 
+    define, for example, helper methods that are not
     available to clients._> <_kjx: fixed _>
 
 Lexical lookup stops at the module's dialect scope: it does not extend
