@@ -787,7 +787,8 @@ Like methods, classes and traits may be declared to have type
 parameters.  Requests on the class or trait may optionally be provided
 with type arguments.
 
-[](Type parameters may be constrained with `where` clauses.)
+Type parameters may be constrained with `where` clauses.  
+The details have yet to be specified.
 
 #### Example
 
