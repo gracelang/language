@@ -366,7 +366,7 @@ annotations, it is a `TypeError` if the arguments do not conform to those types.
 
 The looping construct
 
-    for (1 .. 10) do {
+    for (1..10) do {
         i -> print i
     }
 
@@ -382,8 +382,8 @@ might be implemented as a method with a block parameter
 Here is another example:
 
     var sum := 0
-    def summingBlock : Block<Number,Number> =
-        { i : Number ->  sum := sum + i }
+    def summingBlock: Block1<Number, Number> =
+        { i: Number ->  sum := sum + i }
     summingBlock.apply(4)       // sum now 4
     summingBlock.apply(32)      // sum now 36
 
@@ -1468,7 +1468,8 @@ this means that types can be checked statically.
 
 A number of types are declared in the standard prelude and included in
 most dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`](#type-object),
-[`Number`](#numbers), [`String`](#strings), `Block`, `Iterator`, `Pattern`, `Exception`, and
+[`Number`](#numbers), [`String`](#strings), `Block0`, `Block1`,
+`Block2`, `Fun`, `Iterator`, `Pattern`, `Exception`, and
 `ExceptionKind`.  Some particular types are treated specially:
 
 ### Type None
