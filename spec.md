@@ -99,32 +99,32 @@ ASCII | Unicode
 ## Layout
 
 Grace uses braces for grouping.  Code layout must be consistent with
-grouping.  Indentation must increase by at least two spaces after a
+grouping: indentation must increase by at least two spaces after a
 brace.
 Statements are terminated by line breaks when the
 following line has the same or lesser indentation than the indentation
 of the line containing the start of the current statement.  Statements
-may also optionally be terminated by semicolons
+may optionally be terminated by semicolons.
 
-### code with punctuation
+### Example code with punctuation {-}
 
     def x =
-       muble "3"
+       mumble "3"
        fratz 7;
     while {stream.hasNext} do {
        print(stream.read);
     };
 
-### code without punctuation
+### Example code without punctuation {-}
 
     def x =
-       muble "3"
+       mumble "3"
        fratz 7
     while {stream.hasNext} do {
        print(stream.read)
     }
 
-This defines `x` to be the result of the single request `muble ("3") fratz (7)`.
+This defines `x` to be the result of the single request `mumble ("3") fratz (7)`.
 
 ## Comments
 
@@ -134,6 +134,8 @@ white-space. Each comment is conceptually attached to the smallest
 immediately preceding syntactic unit, except that comments following a
 blank line are attached to the largest immediately following syntactic
 unit.
+
+#### Example {-}
 
     // comment, to end of line
 
@@ -178,7 +180,6 @@ control characters in strings; see [the Table of StringEscapes](#strings).
 # Built-in Objects
 
 ## Done
-
 
 Assignments, and methods without an explicit result, have the value
 `done`, of type `Done`. The type `Done` plays a role similar to *void*
@@ -391,7 +392,7 @@ lexically-enclosing field, method, or parameter.
 
 ## Fields
 
-Grace has two kinds of fields: [constants](#constants) and [variables](#variables).
+Grace has two kinds of fields: [constants](#constants) and [variables](#variables).
 
 ### Constants
 
