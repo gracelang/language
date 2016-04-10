@@ -135,7 +135,8 @@ immediately preceding syntactic unit, except that comments following a
 blank line are attached to the largest immediately following syntactic
 unit.
 
-#### Example {-}
+**Example**
+
 
     // comment, to end of line
 
@@ -220,7 +221,8 @@ denote `Number` objects).
     a minus.
 
 
-#### Examples  {-}
+**Examples**
+
 
     1
     -1
@@ -238,7 +240,8 @@ The predefined constants `true` and `false` denote values of Grace’s
 `Boolean` type. Boolean operators are written using `&&` for and, `||`
 for or, and prefix `!` for not.
 
-#### Examples  {-}
+**Examples**
+
 
     p && q
     toBe || toBe.not
@@ -247,7 +250,8 @@ In addition to `&&` and `||` taking boolean arguments, they also accept
 parmameterless blocks that return `Boolean`.  This gives them
 “short circuit” (a.k.a. "non-commutative") semantics.
 
-#### Examples  {-}
+**Examples**
+
 
     p && { q }
     toBe || { ! toBe }
@@ -281,7 +285,8 @@ library supports efficient incremental string construction.
 |   `\Uhhhhhh`     | 6-digit Unicode      | U+hhhhhh   |
 
 
-#### Examples  {-}
+**Examples**
+
 
     "Hello World!"
     "\t"
@@ -296,7 +301,8 @@ expressions inside braces, requesting `asString` of the resulting object,
 and inserting the resulting string into the string literal in place of the
 brace expression.
 
-#### Example  {-}
+**Example**
+
 
     "Adding {a} to {b} gives {a+b}"
 
@@ -304,7 +310,8 @@ brace expression.
 
 A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
 
-#### Examples  {-}
+**Examples**
+
 
     [ ]        //empty lineup
     [ 1 ]
@@ -315,7 +322,8 @@ which includes the methods `size`, `map`, `do(_)`, and `iterator`.
 Lineups are most frequently used to build collections, to control loops,
 and to pass collections of options to methods.
 
-#### Examples  {-}
+**Examples**
+
 
     set [ 1, 2, 4, 5 ]           //make a set
     sequence [ "a", "b", "c" ]   //make a sequence
@@ -351,7 +359,8 @@ is the same as the number of parameters of the block. Requesting the
 number of arguments. If block parameters are declared with type
 annotations, it is a `TypeError` if the arguments do not conform to those types.
 
-#### Examples  {-}
+**Examples**
+
 
 The looping construct
 
@@ -401,7 +410,8 @@ an identifier to the value of an initialising expression, and may
 optionally be given a type.  This type is checked when
 the constant is initialised. Constants cannot be re-bound.
 
-#### Examples  {-}
+**Examples**
+
 
     def x = 3 * 100 * 0.01
     def x:Number = 3
@@ -420,7 +430,8 @@ compile time.
 Variables may be optionally given a type: this type is checked when
 the variable is initialised and assigned.
 
-#### Examples  {-}
+**Examples**
+
 
     var x:Rational := 3     // explicit type
     var x:Rational          // x must be initialised before access
@@ -488,14 +499,16 @@ checked against those types, either at before execution, or
 just before the method body is executed.
 
 	
-#### Examples  {-} of single identifiers
+**Examples**
+ of single identifiers
 
 ```
 method ping { print "PING!" }
 method isEmpty { elements.size == 0 }
 ```
 
-#### Examples  {-} of assignment methods
+**Examples**
+ of assignment methods
 
 ```
 method value:= (n: Number) -> Done {
@@ -504,7 +517,8 @@ method value:= (n: Number) -> Done {
 }
 ```
 	
-#### Examples  {-} of multi-part names
+**Examples**
+ of multi-part names
 
     method drawLineFromOriginTo (destination)
     method drawLineFrom (source) to (destination)
@@ -515,7 +529,8 @@ In the first two examples, the canonical names of the methods are
 comprises two parts: `drawLineFrom(_)` and `to(_)`.
 In the third example, the canonical name of the method is `max(_,_)`.
 	
-#### Examples  {-} of operator symbols
+**Examples**
+ of operator symbols
 
 ```
     method + (other : Point) -> Point {
@@ -545,7 +560,8 @@ names the method by a space.
 
 The presence or absence of type parameters does not change the canonical name of the method.
 
-#### Examples  {-}
+**Examples**
+
 
     method sumSq<T>(a : T, b : T) -> T where T <: Numeric {
         (a * a) + (b * b)
@@ -583,7 +599,8 @@ annotations:
 
 Additional annotations may be defined by dialect or libraries.
 
-#### Examples  {-}
+**Examples**
+
 
     var x is readable, writeable := 3
     def y: Number is public
@@ -641,7 +658,8 @@ assignment method. This means that an object cannot have a field and a
 method with the same name, and cannot have a method `x:=(_)`
 as well as a `var` field named `x`.
 
-#### Examples  {-}
+**Examples**
+
 
     object {
         def a = 1                  // Confidential access to a
@@ -661,7 +679,8 @@ to an object itself, and not to clients or inheritors. Grace does not
 have private fields or methods; all can be accessed from subobjects.
 However, identifiers from outer scopes can be used to obtain an effect similar to privacy.
 
-#### Examples  {-}
+**Examples**
+
 
     method newShipStartingAt(s:Point)endingAt(e:Point) {
         // returns a battleship object extending from s to e.  This object cannot
@@ -704,7 +723,8 @@ which are executed as a
 side-effect of evaluating the object constructor. All of the declared
 attributes of the object are in scope throughout the object constructor.
 
-#### Examples  {-}
+**Examples**
+
 
     object {
         def colour:Colour = Colour.tabby
@@ -791,7 +811,8 @@ with type arguments.
 Type parameters may be constrained with `where` clauses.  
 The details have yet to be specified.
 
-#### Example  {-}
+**Example**
+
 
     class vectorOfSize(size)<T> {
         var contents := Array.size(size)
@@ -892,7 +913,8 @@ override a method from its parent with the same name and arity.
 This annotation is optional: local methods override parents' methods
 with or without the `override` annotation.  However, dialects may require it.
 
-#### Examples  {-}
+**Examples**
+
 
 The example below shows how a class can use a method to override an
 accessor method for an inherited variable.
@@ -997,7 +1019,8 @@ The expression `self.x` requests `x` on the current object.
 The reserved word **`Self`** refers to the type of the current object.
 
 
-#### Examples  {-}
+**Examples**
+
 
       self
       self.value
@@ -1012,7 +1035,8 @@ The reserved word **`outer`** refers to the object lexically enclosing
 the current object.  The expression `outer.x` requests `x` on the object lexically
 enclosing `self`.
 
-#### Examples  {-}
+**Examples**
+
 
       outer
       outer.outer.outer.outer
@@ -1042,7 +1066,8 @@ method names by type:  the type of the arguments supplied to the request does
 not influence the method being requested.  However, the _number_ of arguments
 in a list does determine the method being requested.
 
-#### Examples  {-}
+**Examples**
+
         self.clear
         self.drawLineFrom (p1) to (p2)
         self.drawLineFrom (origin) length (9) angle (pi/6)
@@ -1055,7 +1080,8 @@ in a list does determine the method being requested.
 Parenthesis may be omitted where they would enclose a single argument
 that is a numeral, string, lineup, or block.
 
-#### Examples  {-}
+**Examples**
+
 
         self.drawLineFrom (p1) to (p2)
         self.drawLineFrom (origin) length 9 angle (pi/6)
@@ -1100,7 +1126,8 @@ Note that implicit requests are resolved within the site of the
 declaring method, not where they are used.
 <_apb: What does hat mean?  WHat is the declaring method?_>
 
-#### Examples  {-}
+**Examples**
+
 
 Implicit requests:
 
@@ -1141,7 +1168,8 @@ followed by a single argument, which need not be surrounded by
 parentheses. Spaces are optional before and after the
 `:=`.
 
-#### Examples  {-}
+**Examples**
+
 
        x := 3
        y:=2
@@ -1166,7 +1194,8 @@ are evaluated left-to-right.
 Four binary operators do have precedence defined between them: `/` and
 `*` bind more tightly than `+` and `-`.
 
-#### Examples  {-}
+**Examples**
+
 
     1 + 2 + 3                  // evaluates to 6
     1 + (2 * 3)                // evaluates to 7
@@ -1174,7 +1203,8 @@ Four binary operators do have precedence defined between them: `/` and
     1 + 2 * 3                  // evaluates to 7
     1 +*+ 4 -*- 4              // precedence error
 
-#### Examples  {-}
+**Examples**
+
 
 Named method requests without arguments bind more tightly than operator
 requests.
@@ -1201,7 +1231,8 @@ tightly than binary operator requests.
 
 <_apb: As a consequence, `-3.sqrt` and `-x.sqrt` are parsed differently.  I wonder if we want to get rid of negative numerals?_>
 
-#### Examples  {-}
+**Examples**
+
 
     -3 + 4
     (-b).squared
@@ -1240,7 +1271,8 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 
 
-#### Examples  {-}
+**Examples**
+
 
     sumSq<Number>(10.i64, 20.i64)
 
@@ -1270,7 +1302,8 @@ behaves like `true` but also supports a `result` request.  All type
 objects are Patterns; in addition, libraries supply non-type Patterns,
 and programmers are free to implement their own Patterns.
 
-#### Example  {-}
+**Example**
+
 
 Suppose that the type `Point` is defined by:
 
@@ -1315,7 +1348,8 @@ mistaken for a declaration of a parameter to the block.
 The objects created by [String Literals](#strings) and [Numerals](#numbers)
 are patterns that match strings and numbers that are equal to the literal.
 
-#### Examples  {-}
+**Examples**
+
  
 Matching blocks and self-matching objects can be conveniently used
 in the `match(_)case(_)...` family of methods.
@@ -1366,7 +1400,8 @@ resume that execution, although reflection (and thus debuggers) should have
 access to the stack at the point the exception is
 thrown. Execution continues when the exception is *caught.*
 
-#### Examples  {-}
+**Examples**
+
 
         BoundsError.raise "index {ix} not in range 1..{n}"
         UserException.raise "impossible happened"
@@ -1396,7 +1431,8 @@ Finally clauses can return early, either by executing a `return`, or by
 raising an exception. In such a situation, any prior `return` or raised
 exception is silently dropped.
 
-#### Example  {-}
+**Example**
+
 
     try {
         def f = io.open("data.store", "r")
@@ -1476,7 +1512,8 @@ _implicitly_ `Unknown`.  In additon, omitted type arguments are replaced by
 Type-checking against `Unknown` will always succeed: any object matches
 type `Unknown`, and type `Unknown` conforms to all other types.
 
-#### Examples  {-}
+**Examples**
+
 
     var x: Unknown := 5   //who knows what the type is?
     var x := 5            //same here, but Unknown is implicit
@@ -1520,7 +1557,8 @@ The `type` keyword may be omitted from the right-hand-side
 of a type declaration when the right-hand-side is a simple type literal.
 
 
-#### Examples  {-}
+**Examples**
+
 
 	type MyCatType = {
 		color -> Colour
@@ -1623,7 +1661,8 @@ S <: (S | T)
 T <: (S | T)
 (S' <: S) & (T' <: T)  ==>  (S' | T') <: (S | T)
 ```
-#### Example  {-}
+**Example**
+
 
 To illustrates the limitations of variant types, suppose
 
@@ -1653,7 +1692,8 @@ U <: S; U <: T; ==> U <: (S & T)
 ```
 <_apb: Isn't that last rule actually an equivalence, not an implication?_>
 
-#### Examples  {-}
+**Examples**
+
 
     type List<T> = Sequence<T> & type {
         add(_:T) -> List<T>
@@ -1815,7 +1855,8 @@ results in the same module object.
 
 Circular module dependencies are errors.
 
-##### Examples  {-}
+#**Examples**
+
 
 cat.grace module:
 
@@ -1870,7 +1911,8 @@ declarations, classes, traits, control structures, and even the
 Modules that do not declare a 'dialect' implicitly belong to the
 `standardGrace` dialect.
 
-##### Examples  {-}
+#**Examples**
+
 
 The `bcpl.grace` module declares an `unless(_)do(_)` control
 structure that is like `if`, but backwards.

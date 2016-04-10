@@ -351,7 +351,8 @@ type String =  {
   // returns a string like self, except that the initial letters of all words are in upper case
 
   compare (other:String) -> Number
-
+  // a three-way comparison: -1 if (self < other), 0 if (self == other), and +1 if (self > other).
+  // This is useful when writing a comparison function for sortBy
 
   contains (other:String) -> Number
   // returns true if other is a substring of \textsf{self}
@@ -1163,20 +1164,17 @@ any identifier of your choice `m`. The object
     abs(r: Number) -> Number
     // absolute value
 
-    random -> Number
-    // random number between 0 and 1
-
     lg(n: Number) -> Number
-    // log_2 n
+    // $log_2 n$
 
     ln (n: Number) -> Number
-    // log_e n $
+    // $log_e n$
 
     exp(n: Number) -> Number
-    // e^n
+    // $e^n$
 
     log10 (n: Number) -> Number
-    // log_10 n
+    // $log_10 n$
 ```
 
 Sys
