@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.6b9
+    Draft Specification Version 0.6b12
 ...
 
 
@@ -160,8 +160,8 @@ and the following ASCII operator characters:
 
 Grace has the following reserved tokens:
 
-    alias as class def dialect exclude inherit import is method object
-    outer prefix required return self Self trait type var use where
+    alias as class def dialect exclude import inherit is method object
+    outer prefix required return self Self trait type use var where
 
     . ... := = ; { } [ ] ( ) : -> < >
 
