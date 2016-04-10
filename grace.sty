@@ -1,0 +1,92 @@
+% Syntax highlighting for the Grace language
+% Based on the syntax from the specification,
+% modified by Michael Homer, Andrew Black.
+\usepackage{needspace}
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{BlueGrey}{rgb}{0.4,0.4,0.5}
+\lstdefinelanguage{Grace}{
+%   keywords={self,true,false,match,case,catch,raise,returns,
+%        prefix,
+%        super,outer,finally,using,extends,Selftype,trait},
+   morendkeywords={class,object,return,inherits,inherit,def,var,type,where,method,is,
+   	super,outer,use,self,Self,prefix,import,as,dialect,true,false, alias,exclude,trait},
+   sensitive,
+   morecomment=[s]{/*}{*/},%
+   morecomment=[l]{//},%
+   morestring=[b]",%
+   basicstyle=\sffamily\small,
+   xleftmargin=1em,
+   showstringspaces=false,
+   keywordstyle=\color{black}\bfseries,
+   ndkeywordstyle=\color{Mahogany}\bfseries,
+   identifierstyle=\color{black},
+   commentstyle=\color{BlueGrey}\rmfamily\itshape,
+%   stringstyle=\color{MidnightBlue}\ttfamily,
+   stringstyle=\color{MidnightBlue},
+   aboveskip=0.6ex plus 1pt minus 1pt,
+   belowskip=0.6ex plus 1pt minus 1pt,
+   breaklines=true,
+   literate={+}{{$+$}}1 {-}{{$-$}}1 {—}{{---}}1 {>>=}{$>\!\!>=$}2 {\#}{{\small \#}}1%
+   	{->}{$-\hspace*{-0.42em}>$}2 {>>}{$>\!>$}2 {├}{{$\vdash$}}1 %
+	{⟦}{{$\llbracket$}}1 {⟧}{{$\rrbracket$}}1 {←}{{\raisebox{1pt}{$\leftarrowtriangle$}}}1 {÷}{$\div$}1 {”}{"}1 {“}{"}1,
+   upquote=true,
+   columns=fullflexible,
+   keepspaces=true
+}[keywords,comments,strings]
+\newcommand{\choosehaskell}{\lstset{language=Haskell}}
+\newcommand{\choosegrace}{
+\lstset{language=Grace,
+	keywordstyle=\color{black}\bfseries,
+	mathescape=true,
+	showstringspaces=false,
+	keepspaces=true,
+	breaklines=true,
+	extendedchars=true,
+	literate={+}{{$+$}}1 {-}{{$-$}}1 {—}{{---}}1 {>>=}{$>\!\!>=$}2 {\#}{{\small \#}}1%
+   	{->}{$-\hspace*{-0.42em}>$}2 {>>}{$>\!>$}2 {├}{{$\vdash$}}1 %
+	{⟦}{{$\llbracket$}}1 {⟧}{{$\rrbracket$}}1 {←}{{\raisebox{1pt}{$\leftarrowtriangle$}}}1 {÷}{$\div$}1 {”}{"}1 {“}{"}1,
+	upquote=true,
+	columns=fullflexible} % no fixed width fonts
+}
+\lstnewenvironment{grace} {\lstset{language=Grace,
+	keywordstyle=\color{black}\bfseries,
+	mathescape=true,
+	showstringspaces=false,
+	keepspaces=true,
+	breaklines=true,
+	extendedchars=true,
+	literate={+}{{$+$}}1 {-}{{$-$}}1 {—}{{---}}1 {>>=}{$>\!\!>=$}2 {\#}{{\small \#}}1%   	{->}{$-\hspace*{-0.42em}>$}2 {>>}{$>\!>$}2 {├}{{$\vdash$}}1 %
+	{⟦}{{$\llbracket$}}1 {⟧}{{$\rrbracket$}}1 {←}{{\raisebox{1pt}{$\leftarrowtriangle$}}}1 {÷}{$\div$}1 {”}{"}1 {“}{"}1,
+	upquote=true,
+	columns=fullflexible}} {}
+	
+
+\definecolor{lightgray}{rgb}{0.87, 0.87, 0.87}
+\newcommand{\inputgrace}[2]{%
+\needspace{1in}
+\vspace{0.5ex}
+\par
+\noindent
+%\small{\textsf{module "#1"}}
+\hspace{6pt}\fcolorbox{lightgray}{lightgray}{\small{\textsf{module "#1"}}}
+\vspace*{0.25pt plus 0pt minus 0pt}
+\lstinputlisting[language=Grace,frame=single,
+%	framexleftmargin=8pt,
+	framexrightmargin=-8pt,
+	firstnumber=last,
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=2,
+	extendedchars=true,
+	numbersep=6pt]{#2/#1.grace}
+}
+% In-line code (literal)
+% Normally use this for all in-line code:
+\newcommand{\code}{\lstinline[mathescape=false,backgroundcolor=\color{white},basicstyle={\sffamily\upshape}]}
+% apb 2007.8.28 added the \upshape declaration to avoid getting italicized code in \dothis{ } sections.
+% In-line code (latex enabled)
+% Use this only in special situations where \ct does not work
+% (within section headings ...):
+\newcommand{\lct}[1]{{\textsf{\textup{#1}}}}
+% \newcommand{\paragraph*}[1]{\paragraph{#1}}
+\choosegrace

@@ -1,3 +1,7 @@
+##no emacs backups
+*~
+*.bak
+
 ## SWITCHING TO MARKDOWN - we don't want tex in this repo!
 *.tex
 *.html
