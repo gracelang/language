@@ -1993,10 +1993,11 @@ by an implementation.
 
 Grace implementations should be garbage collected. Points where GC
 may occur are at any backwards branch and at any method request.
-(Why is this here at all?  What about execution of object constrictors, which
-will presumably trigger allocation?)
+Grace does not support finalization.
 
-Grace will not support finalization.
+<_apb: Why is this here at all?  What about execution of object constrictors, which
+will presumably trigger allocation?  Seems like that would be a good time to GC…_>
+
 
 ## Concurrency
 
@@ -2011,6 +2012,9 @@ that interfere.
 
 Grace’s memory model should support efficient execution on architectures
 with Total Store Ordering (TSO).
+
+<_apb: given how little we have discussed concurrency, I wonder if we should 
+remove all of these definitive statements?_>
 
 # Acknowledgements
 
