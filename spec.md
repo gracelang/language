@@ -154,7 +154,7 @@ Operators are sequences of [unicode mathematical operator symbols](
 https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode)
 and the following ASCII operator characters:
 
-    ! ? @ # $ % ^ & | ~ = + - * / \ > < : .
+`! ? @ # % ^ & | ~ = + - * / \ > < : . ` $\$\,$
 
 ## Reserved Tokens
 
@@ -1045,7 +1045,7 @@ in a list does determine the method being requested.
 #### Examples  {-}
         self.clear
         self.drawLineFrom (p1) to (p2)
-        self.drawLineFrom (origin) length (9) angle ($\pi$/6)
+        self.drawLineFrom (origin) length (9) angle (pi/6)
         self.movePenTo (x, y)
         self.movePenTo (p)
 
@@ -1058,7 +1058,7 @@ that is a numeral, string, lineup, or block.
 #### Examples  {-}
 
         self.drawLineFrom (p1) to (p2)
-        self.drawLineFrom (origin) length 9 angle ($\pi$/6)
+        self.drawLineFrom (origin) length 9 angle (pi/6)
         print "Hello World"
         while {x < 10} then {
             print [a, x, b]
@@ -1450,7 +1450,7 @@ objects will respond --- the [Default Methods] declared in
 ```
 type Object = {
 	== (other: Object) -> Boolean
-	$\neq$ (other: Object) -> Boolean     // the inverse of ==
+	!= (other: Object) -> Boolean     // the inverse of ==
 	hash -> Number
 	match (other: Object) -> MatchResult
 	asString -> String
