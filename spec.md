@@ -173,7 +173,7 @@ follows a carriage return is ignored.
 
 Tabs and all other non-printing control characters are syntax errors,
 even in a string literal. Escape sequences are provided to denote
-control characters in strings; see [the Table of StringEscapes](Strings).
+control characters in strings; see [the Table of StringEscapes](#Strings).
 
 # Built-in Objects
 
@@ -289,7 +289,7 @@ library supports efficient incremental string construction.
 
 ### String Constructors
 
-String Constructors are a generalization of [String Literals](String Literals) that contain expressions enclosed in braces.
+String Constructors are a generalization of [String Literals](#String Literals) that contain expressions enclosed in braces.
 The value of a String Constructor is obtained by first evaluating any
 expressions inside braces, requesting `asString` of the resulting object,
 and inserting the resulting string into the string literal in place of the
@@ -391,7 +391,7 @@ lexically-enclosing field, method, or parameter.
 
 ## Fields
 
-Grace has two kinds of fields: [constants](Constants) and [variables](Variables).
+Grace has two kinds of fields: [constants](#Constants) and [variables](#Variables).
 
 ### Constants
 
@@ -576,9 +576,9 @@ annotations:
 | `confidential` | method may be requested only on self — [see Encapsulation](#Encapsulation) |
 | `manifest` | method must return a manifest object - [Manifest Expressions](#Manifest Expressions) |
 | `overrides` | method must override another method - [Overriding Methods] |
-| `public` | method may be requested from anywhere; field can be read and written from any object - [see Encapsulation](Encapsulation) |
-| `readable`  | field may be read from anywhere - [see Encapsulation](Encapsulation) |
-| `writeable` | variable may be assigned from anywhere - [see Encapsulation](Encapsulation) |
+| `public` | method may be requested from anywhere; field can be read and written from any object - [see Encapsulation](#Encapsulation) |
+| `readable`  | field may be read from anywhere - [see Encapsulation](#Encapsulation) |
+| `writeable` | variable may be assigned from anywhere - [see Encapsulation](#Encapsulation) |
 
 Additional annotations may be defined by dialect or libraries.
 
@@ -817,13 +817,13 @@ construction).  A new declaration in the current object can override a
 declaration from a parent.
 
 An `inherit` or `use` clause contains a
-[Manifest Expression](Manifest Expressions)
+[Manifest Expression](#Manifest Expressions)
 that creates a new object, such as a request on a class or trait.
 This means that the  request  cannot depend on a `self`, implicitly or
 explicitly.  This means that programs cannot inherit or use any trait or class that
 can potentially be overridden.
 The object reused by a `use` clause must be a trait object.
-Note that the arguments to [Manifest Expression](Manifest Expressions)
+Note that the arguments to [Manifest Expression](#Manifest Expressions)
 need not themselves be manifest.
 
 If it is necessary for the current object to access an overridden attribute
@@ -854,7 +854,7 @@ overridden by a local declaration.
 
 Next, types must be evaluated and bound within objects.
 Types cannot depend on runtime values; if they depend on the type of a
-constant (because the constant is treated as a [Singleton type](Singleton Types), then that constant, if overriden in a subclass, can only be
+constant (because the constant is treated as a [Singleton type](#Singleton Types), then that constant, if overriden in a subclass, can only be
 overriden by a new object with the same type.
 
 Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with the
@@ -963,7 +963,7 @@ objects created by the `class` syntax inherit from `graceObject` if no
 **inherits** clause is supplied (but not objects created by the
 `trait` syntax or by `object` constructors). Programmers can of course
 override some of these implementations, or write those methods _ab initio_.
-The [type Object](Type Object) defines a type containing all the default methods.
+The [type Object](#Type Object) defines a type containing all the default methods.
 <_apb: I don't like this.  I think that all objects should have the defualt methods, uniformly.  
 It's more reasonable to make the object composition
 rules distinguish between `inherit`, which includes the methods from `graceObject`, and `use`, which does not, and to have used 
@@ -1031,7 +1031,7 @@ Note that a request without arguments does not contain any parentheses.
 
 Note that the name of a method, which determines
 the position of the argument lists within that name, is chosen when
-the method is declared ([See Methods](Methods)).
+the method is declared ([See Methods](#Methods)).
 When reading a request of a multi-part method
 name, you should continue accumulating words and argument lists as far
 to the right as possible.
@@ -1311,7 +1311,7 @@ mistaken for a declaration of a parameter to the block.
 
 ## Self-Matching Objects
 
-The objects created by [String Literals](Strings) and [Numerals](Numbers)
+The objects created by [String Literals](#Strings) and [Numerals](#Numbers)
 are patterns that match strings and numbers that are equal to the literal.
 
 #### Examples
@@ -1418,10 +1418,10 @@ primarily describe the requests that objects can answer. Fields do not
 directly influence types, except that a field that is public, readable
 or writable is treated as the appropriate method or methods.
 
-Type names introduced by [type declarations](Type Declarations)
+Type names introduced by [type declarations](#Type Declarations)
 are treated as expressions
 that denote _type objects_.  All type objects are also patterns, so
-they can be used in [pattern matching](Pattern Matching),
+they can be used in [pattern matching](#Pattern Matching),
 typically to perform dynamic
 type tests.
 Because type declarations cannot be changed by overriding, the value of
@@ -1431,8 +1431,8 @@ this means that types can be checked statically.
 ## Predeclared Types
 
 A number of types are declared in the standard prelude and included in
-most dialects, including [`None`](None), [`Done`](Done), `Boolean`, [`Object`](Type Object),
-[`Number`](Number), `String`, `Block`, `Iterator`, `Pattern`, `Exception`, and
+most dialects, including [`None`](#None), [`Done`](#Done), `Boolean`, [`Object`](#Type Object),
+[`Number`](#Number), `String`, `Block`, `Iterator`, `Pattern`, `Exception`, and
 `ExceptionKind`.  Some paticular types are treated specially:
 
 ### Type None
@@ -1494,7 +1494,7 @@ contain definitions of other types to describe types nested
 inside objects.
 
 The various `Cat` object and class descriptions (see
-[Objects, Classes, and Traits](Objects, Classes, and Traits)) would create objects that conform to an interface
+[Objects, Classes, and Traits](#Objects, Classes, and Traits)) would create objects that conform to an interface
 type such as the following. Notice that the public methods implicitly
 inherited from `Object` are implicitly included in all types.
 
@@ -1752,7 +1752,7 @@ x:Singleton(o)        if (x:T, o:S) && (T <: S)
 
 Type definitions may be nested inside other expressions, for example,
 they may be defined inside object, class, method, and other type
-definitions, and typically accessed via [Manifest Requests](Manifest Requests).
+definitions, and typically accessed via [Manifest Requests](#Manifest Requests).
 This allows types to be declared and imported from other modules.
 
 ### Type Assertions
@@ -1785,7 +1785,7 @@ this object constructor is *executed*, resulting in a _module object_.
 
 Modules may begin with one or more `import` _moduleName_ `as` _nickname_
 statements.
-_moduleName_ is a [string literal](String Literals) that identifies the module to be imported in an implementation-dependent manner; for example, _moduleName_ may be a file path.
+_moduleName_ is a [string literal](#String Literals) that identifies the module to be imported in an implementation-dependent manner; for example, _moduleName_ may be a file path.
 _nickname_ is the Grace identifier used to refer to the imported module object
 in the importing module. 
 Because importing a module creates a module object, public
@@ -1845,12 +1845,12 @@ cat module done
 Grace dialects support language levels for teaching, and
 domain-specific "little" languages. A module may begin with a dialect
 statement `dialect "name"`,
-where the `dialect` keyword is followed by a [string literal](String Literal).
+where the `dialect` keyword is followed by a [string literal](#String Literal).
 
 The effect of the dialect statement is to import the dialect like any other
 module, but then arrange that the dialect's module object
 lexically encloses the object defined by the module. This means that
-[Implicit Requests](Implicit Requests) in the module can resolve to the definitions in
+[Implicit Requests](#Implicit Requests) in the module can resolve to the definitions in
 the dialect.
 
 Many features built in to other programming languages are obtained
