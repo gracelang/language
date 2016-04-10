@@ -2,7 +2,7 @@
 author:
 - 'Andrew P. Black'
 - 'Kim B. Bruce'
-- James Noble
+- 'James Noble'
 
 bibliography:
 - 'spec.bib'
