@@ -457,57 +457,64 @@ and also a _canonical_ form of the name which is used in dispatching method requ
 A request "matches" a method if the canonical names are equal.
 
 1. A method can be named by a single identifier, in which case the method
-has no parameters; in this case the _canonical_ name of the method is the identifier.
+	has no parameters; in this case the _canonical_ name of the method is 
+	the identifier.
 
-#### Examples
+1. A method can be named by a single identifier suffixed with `:=`; this
+	form of name is conventionally used for writer methods, both
+	user-written and automatically-generated, as exemplified by `value:=`
+	below.  Such methods _always_ take a single parameter after the `:=`
+
+1. A method can be named by one or more _parts_, where each _part_ is an identifier
+	followed by a parenthesized list of parameters.
+	In this case
+	the  _canonical_ name of the method is a sequence of parts, where
+	each part comprises the identifier for that part followed by `(_, …, _)`,
+	the number of underscores between the parentheses being the number of
+	parameters of the part.
+
+2. A method can be named by a sequence of operator symbols.
+	Such an "operator method" can have no parameters, in which case
+	the method is requested by a prefix operator expression.
+	It can also have one parameter, in which
+	case it is requested by a binary operator expression.  The canonical name of a
+	unary method is **`prefix`** followed by the operator symbols; the canonical
+	name of a binary method is the sequence of operator symbols followed by `(_)`
+	
+Method parameters may optionally be annotated with types: 
+the corresponding arguments will be
+checked against those types, either at before execution, or
+just before the method body is executed.
+
+	
+#### Examples of single identifiers
 
 ```
-    method ping { print "PING!" }
+method ping { print "PING!" }
+method isEmpty { elements.size == 0 }
 ```
 
-1. A method can be named by an identifier suffixed with `:=`; this
-form of name is conventionally used for writer methods, both
-user-written and automatically-generated, as exemplified by `value:=`
-below.  Such methods _always_ take a single parameter after the `:=`
-
-#### Examples
+#### Examples of assignment methods
 
 ```
-method value:=(n: Number) -> Done {
+method value:= (n: Number) -> Done {
     print "value currently {value}, now assigned {n}"
     outer.value:= n
 }
 ```
+	
+#### Examples of multi-part names
 
-1. A method can be named by one or more _parts_, where each _part_ is an identifier
-followed by a parenthesized list of parameters.
-In this case
-the  _canonical_ name of the method is a sequence of parts, where
-each part comprises the identifier for that part followed by `(_, …, _)`,
-the number of underscores between the parentheses being the number of
-parameters of the part.
-
-#### Examples
-
-```
     method drawLineFromOriginTo (destination)
     method drawLineFrom (source) to (destination)
     method max(v1, v2)
-````
-    In the first two examples the canonical names of the methods are
-    `drawLineFromOriginTo(_) `drawLineFrom(_) to(_)`.  The latter
-    comprises two parts, `drawLineFrom(_)` and `to(_)`.
-    In the third example, the canonical name of the method is `max(_,_)`.
 
-1. A method can be named by a sequence of operator symbols.
-Such an "operator method" can have no parameters, in which case
-the method is requested by a prefix operator expression.
-It can also have one parameter, in which
-case it is requested by a binary operator expression.  The canonical name of a
-unary method is **`prefix`** followed by the operator symbols; the canonical
-name of a binary method is the sequence of operator symbols followed by `(_)`
-
-#### Examples
+In the first two examples, the canonical names of the methods are
+`drawLineFromOriginTo(_)`, and `drawLineFrom(_) to(_)`.  The latter
+comprises two parts: `drawLineFrom(_)` and `to(_)`.
+In the third example, the canonical name of the method is `max(_,_)`.
+	
+#### Examples of operator symbols
 
 ```
     method + (other : Point) -> Point {
@@ -522,9 +529,6 @@ As a consequence of the above rules, methods `max(a, b, c)` and
 `max(a, b)` have different canonical names and are therefore treated
 as distinct methods.  In other words, Grace allows "overloading by
 arity" (although it does _not_ allow overloading by type).
-
-Method parameters may optionally be given types: the corresponding arguments will be
-    checked against those declared types just before the method body is executed.
 
 ### Type Parameters
 
@@ -569,8 +573,8 @@ annotations:
 
 | Annotation | Semantics |
 |:--|:--|
-| `confidential` | method may be requested only on self — [see Encapsulation](Encapsulation) |
-| `manifest` | method must return a manifest object - [Manifest Expressions] |
+| `confidential` | method may be requested only on self — [see Encapsulation](#Encapsulation) |
+| `manifest` | method must return a manifest object - [Manifest Expressions](#Manifest Expressions) |
 | `overrides` | method must override another method - [Overriding Methods] |
 | `public` | method may be requested from anywhere; field can be read and written from any object - [see Encapsulation](Encapsulation) |
 | `readable`  | field may be read from anywhere - [see Encapsulation](Encapsulation) |
@@ -1324,8 +1328,8 @@ in the `match(_)case(_)…` family of methods.
 ```
 The first two blocks use self-matching objects; the first is short for { _:0 -> 0 }.
 
-The last block has no pattern (or, if you prefer, = has the pattern `Unknown`, 
-which matches any object.  Such a block always matches.
+The last block has no pattern (or, if you prefer, has the pattern `Unknown`, 
+which matches any object).  Such a block always matches.
 
 If 
 `match(_)case(_)… does not find a match, it raises a non-exhausive match exception.
@@ -1341,7 +1345,7 @@ If
         // match against the value of an expression - requires parenthesis
 
     { a -> print("did not match") }
-        // match against empty type annotation; matches anything, andbinds to `a`
+        // match against empty type annotation; matches anything, and binds to `a`
 
 
 # Exceptions
@@ -1356,8 +1360,8 @@ with a string argument explaining the problem.
 Raising an exception does two things: it creates an `exception` object
 of the specified kind, and terminates the execution of the expression
 containing the `raise` request; it is not possible to restart or
-resume that execution although reflection or debuggers should have
-access to the whole stack at the point the exception is
+resume that execution, although reflection (and thus debuggers) should have
+access to the stack at the point the exception is
 thrown. Execution continues when the exception is *caught.*
 
 #### Examples
@@ -1367,33 +1371,39 @@ thrown. Execution continues when the exception is *caught.*
 
 ## Catching Exceptions
 
-An exception can be caught by a dynamically-enclosing
-`try(exp) catch (block 1)`
-…`catch(block`n`) finally(finalBlock)`, in which the `block`i
+An exception in `expression` can be caught by a dynamically-enclosing
+
+    try(expression) 
+        catch (block 1) 
+        … 
+        catch (block n) 
+        finally (finalBlock)
+
+in which the `block i`
 are pattern-matching blocks. More precisely, if an exception is raised
 during the evaluation of the `try` block `exp`, the `catch` blocks
-`block`1, `block`2, …`block`n, are attempted in order
+`block 1`, `block 2`, …, `block n`, are attempted, in order,
 until one of them matches the exception. If none of them matches, then
 the process of matching the exception continues in the
-dynamically-surrounding `try() catch()` …`catch() finally()`. The
+dynamically-surrounding `try(_) catch(_) … catch(_) finally(_)`. The
 `finalBlock` is always executed before control leaves the
-`try() catch()` …` catch()` `finally()` construct, whether or not an
-exception is raised, or one of the `catch` blocks returns.
+`try(_) catch(_) … catch(_) finally(_)` construct, whether or not an
+exception is raised, and whether or not one of the catch blocks returns.
 
 Finally clauses can return early, either by executing a `return`, or by
 raising an exception. In such a situation, any prior `return` or raised
 exception is silently dropped.
 
-#### Examples
+#### Example
 
     try {
-        def f = file.open("data.store")
+        def f = io.open("data.store", "r")
     } catch {
-        e : NoSuchFile -> print "No Such File"
+        e: NoSuchFile -> print "No Such File"
     } catch {
-        e : PermissionError -> print "Permission denied"
+        e: PermissionError -> print "Permission denied"
     } catch {
-        _ : Exception -> print "Unidentified Error"
+        _: Exception -> print "Unidentified Error"
         system.exit
     } finally {
         f.close
@@ -1420,7 +1430,7 @@ this means that types can be checked statically.
 ## Predeclared Types
 
 A number of types are declared in the standard prelude and included in
-most dialects, including `None`, [`Done`](Done), `Boolean`, [`Object`](Type Object),
+most dialects, including [`None`](None), [`Done`](Done), `Boolean`, [`Object`](Type Object),
 [`Number`](Number), `String`, `Block`, `Iterator`, `Pattern`, `Exception`, and
 `ExceptionKind`.  Some paticular types are treated specially:
 
@@ -1461,30 +1471,29 @@ if a declaration is not annotated, then the type of the declared name is
 _implicitly_ `Unknown`.  In additon, omitted type arguments are replaced by
 `Unknown`.
 
-Static type-checking against `Unknown` will always succeed: any object matches
+Type-checking against `Unknown` will always succeed: any object matches
 type `Unknown`, and type `Unknown` conforms to all other types.
-Consequently, requests made of expressions with type `Unknown` can only be checked at runtime.
 
 #### Examples
 
-    var x : Unknown := 5  //who knows what the type is
+    var x: Unknown := 5   //who knows what the type is?
     var x := 5            //same here, but Unknown is implicit
     x := "five"           //who cares
     x.gilad               //almost certainly crash at run time
 
     method id(x) { x }    //argument and return types both implicitly unknown
-    method id(x : Unknown) -> Unknown { x }  // same thing, explicitly
+    method id(x: Unknown) -> Unknown { x }  // same thing, explicitly
 
 
 ## Interface Types
 
 Types define the interface of objects by detailing their public methods,
-and the types of the arguments and results of those methods. Types can
+and the types of the parameters and results of those methods. Types can also
 contain definitions of other types to describe types nested
 inside objects.
 
 The various `Cat` object and class descriptions (see
-[Objects, Classes, and Traits]) would create objects that conform to an interface
+[Objects, Classes, and Traits](Objects, Classes, and Traits)) would create objects that conform to an interface
 type such as the following. Notice that the public methods implicitly
 inherited from `Object` are implicitly included in all types.
 
@@ -1498,37 +1507,38 @@ inherited from `Object` are implicitly included in all types.
 For commonality with method declarations, parameters are normally named
 in type declarations. These names are useful when writing specifications
 of the methods. If a parameter name is omitted, it must be replaced by
-an underscore. The type of a parameter may be omitted, in which case the
-type is `Unknown`.
+an underscore. The type of a parameter or result may be omitted, 
+in which case the type is `Unknown`.
 
 ## Type Declarations
 
-Types—and parameterized types—may be named in type declarations:
+Types, including parameterized types, may be named in type declarations.
+By convention, tha names of types start with an uppercase letter.
+The `type` keyword may be omitted from the right-hand-side
+of a type declaration when the right-hand-side is a simple type literal.
 
-    type MyCatType = {
-       color -> Colour
-       name -> String
-    }
-       // I care only about names and colours
 
-    type MyParametricType<A,B> =
-        where A <: Hashable,  B <: DisposableReference
-      type {
-        at (_:A) put (_:B) -> Boolean
-        cleanup(_:B)
-      }
+#### Examples
 
-Notice that the `type` keyword may be omitted from the right-hand-side
-of a type declaration when it is a simple type literal.
-
-Grace has a single namespace: types live in the same namespace as
-everything else.
-
-    type MyParametricType = type <A,B>
-     {
-        at (_:A) put (_:B) -> Boolean
-        cleanup(_:B)
-     }
+	type MyCatType = {
+		color -> Colour
+		name -> String
+	}
+	// I care only about names and colours
+	
+	type MyParametricType<A,B> =
+		type {
+			at (_:A) put (_:B) -> Boolean
+			cleanup(_:B)
+		} where A <: Hashable,  B <: DisposableReference
+	  
+	type MyParametricType = type <A,B> {
+		at (_:A) put (_:B) -> Boolean
+		cleanup(_:B)
+	}
+	
+<_apb: Is the last one legal?  Where are A and B bound if I say `MyParametricType`?	_>
+	
 
 ## Type Conformance
 
@@ -1536,7 +1546,7 @@ The key relation between types is **conformance**. We write `B <: A`
 to mean B conforms to A; that is, that B has all of the methods
 of A, and perhaps additional methods (and that the corresponding methods
 have conforming signatures). This can also be read as “B is a subtype of
-A”, “A is a supertype of B”.
+A”, or “A is a supertype of B”.
 
 We now define the conformance relation more rigorously. This section
 draws heavily on the wording of the Modula-3 report @Modula3.
@@ -1546,10 +1556,7 @@ of type A. The converse does not apply.
 
 If A and B are ground object types, then B `<:` A iff for
 every method m in A, there is a corresponding method `m` (with the same
-name) in B such that
-
--   The method `m` in B must have the same number of arguments as `m` in
-    A, with the same distribution in multi-part method names.
+canonical name) in B such that
 
 -   If the method `m` in A has signature “`m(P1,…,Pk)n(Pk+1,…,Pn)… -> R`, and
     `m` in B has signature “`m(Q1,…,Qk)n(Qk+1,…,Qn)… -> S`”, then
@@ -1561,34 +1568,56 @@ name) in B such that
 The conformance relationship is used in `where` clauses to constrain
 type parameters of classes and methods.
 
+<_apb:  This last statement is wrong.  The ralationship in where clauses has to be matching, not conformance.  For example, consider the type 
+    type Equivalence = type { 
+    	~~ (Self) -> Boolean 
+    	witness -> Self
+    }
+No other types *conform* to `Equivalence`, because it has `Self` in both contravariant and covariant positions.  But any type `T` with an `~~` operation and a `witness` method will *match* `Equivalence`, provided that they have `T` as parameter and result._>
+
 ## Composite types
 
 Grace offers a number of operators to build up composite types.
 
 ### Variant Types
 
-Variables with untagged, retained variant types, written
-`T1 | T2 … | Tn `, may refer to an object of any one of their
-component types. No *objects* actually have variant types, only
+The expression 
+`T1 | T2 | … | Tn `
+signifies an untagged, retained variant type.
+When an *variable* or *method* is annotated with a variant type,
+that variable may be bound to, or that method may return,
+an object of any one of the
+component types `T1`, `T2`, …, `Tn`. 
+No *objects* actually have variant types, only
 expressions. The actual type of an object referred to by a variant
 variable can be determined using that object’s reified type information.
+<_apb: this is the statement that I think implies that we need to do
+type inference.  Do you really want to say this?  It means that every object
+needs enough reified type information to distinguish between 
+`type { foo -> Bar }` and
+`type { foo -> Wombat }`
+for all possible `Bar` and `Wombat`.  Where does this
+information come from?_>
 
 The only methods that may be requested via a variant type are methods
 with exactly the same declaration across all members of the variant.
+<_apb: What does it mean to "request a method via a type?"_>
 
-Variant types are retained as variants: they are *not* equivalent to the
+Variant types are *not* equivalent to the
 object type that describes all common methods. This is so that the
 exhaustiveness of match/case statements can be determined statically.
 Thus the rules for conformance are more restrictive:
 
 ```
-S <: (S | T);    T <: (S | T)
-(S' <: S) & (T' <: T)  ==>  (S' | T')  <: (S | T)
+S <: (S | T)
+T <: (S | T)
+(S' <: S) & (T' <: T)  ==>  (S' | T') <: (S | T)
 ```
+#### Example
 
 To illustrates the limitations of variant types, suppose
 
-    type S = {m: A -> B, n:C -> D}
+    type S = {m: A -> B, n: C -> D}
     type T = {m: A -> B, k: E -> F}
     type U = {m: A -> B}
 
@@ -1599,16 +1628,20 @@ methods contained in both `S` and `T`.
 
 An object conforms to an Intersection type, written
 `T1 & T2 & … & Tn`, if and only if that object conforms to all of the
-component types. The main use of intersection types is for augmenting
-types with new operations, and as as bounds on `where` clauses.
+component types. The main uses of intersection types is for augmenting
+types with new operations, and as bounds on `where` clauses.
 
 [Must add rules to provide results if two types have same multi-part method name (and arities), but the
 type of parameters and return types differ.]
 
+<_apb: Actually, I don't think that you do need to say any more; these cases are already covered by the rule for conformance._>
+
 ```
+(S & T) <: S
+(S & T) <: T
 U <: S; U <: T; ==> U <: (S & T)
-(S & T) <: S;    (S & T) <: T
 ```
+<_apb: Isn't that last rule actually an equivalence, not an implication?_>
 
 #### Examples
 
@@ -1621,26 +1654,32 @@ U <: S; U <: T; ==> U <: (S & T)
        where T <: (Comparable<T> & Printable & Happyable) {
                …
     }
+    
+<_apb: The first example works only if Sequence is defined using 
+`Self` and not `Sequence`.  And if we allow `Self`, then the above rules for 
+conformance of Intersection types don't work — I'm pretty sure._>
 
 ### Union Types
 
-Structural union types (sum types), written `1 + `2 + … + Tn\*, are
+Structural union types (sum types), written `1 + 2 + … + Tn`, are
 the dual of intersection types. A union type `T1 + T2` has the interface
 common to `T1` and `T2`. Thus, a type `U` conforms to `T1 + T2` if it
 has a method that conforms to each of the methods common to `T1` and
-`T2`. Unions are mostly included for completeness: variant types subsume
+`T2`. Union types are included for completeness: variant types subsume
 most uses.
 
 
 ```
-S <: (S + T);    T <: (S + T)
+S <: (S + T)
+T <: (S + T)
 ```
 
 
 ### Type Subtraction
 
 A type subtraction, written `T1 - T2` has the interface of `T1` without
-any of the methods in `T2`.
+any of the methods in `T2`.  The signatures of the methods in `T2` are
+irrelevant.
 
 
 
@@ -1654,7 +1693,8 @@ any object `o` can be treated as a type.
 This facility is intended to be used to "lift" singleton 
 objects to types, resulting in the type with exactly the interface
 of the object `o`.  As patterns, singleton types *match* only their singleton object.
-<_apb: How do we distinguish between the singleton object and the singleton type?  Do we have both 
+
+<_apb: The problem that I see is how to distinguish between the singleton object and the singleton type?  Do we have both 
 `o.match(o)` and `o == o`?_>
 
     def Null = object {
@@ -1669,19 +1709,20 @@ of the object `o`.  As patterns, singleton types *match* only their singleton ob
 
     type Option<T> = Some<T> | Null
 
+Here are the conformance rules for Singleton types:
 
-```
-o <: S     if (o:T) && (T <: S)
-x:o        if (x:T, o:S) && (T <: S)
-```
+	o <: S     if (o:T) && (T <: S)
+	x:o        if (x:T, o:S) && (T <: S)
+
 
 #### Here is the old text.
 <_apb: the problem with this is that libraries and dialects
 have no way of implementing a type "just `o`". 
-If we want this, we would have to build it in to the
+If we want this, we would have to build it into the
 language, e.g.,
 by making `Singleton` a primitive that creates what is
-essentially a branded type._> 
+essentially a branded type.  Right now, `Singleton` is a library method 
+that creates a Singleton **object**_> 
 
 To keep track of individual objects (especially in variants) a library
 or dialect can offer to lift any object `o` to a type just `o` by
@@ -1689,16 +1730,16 @@ supporting a manifest request such as `Singleton(o)`.
 The result is the type with exactly the interface
 of the object `o`.  As patterns, singleton types *match* only their singleton object.
 
-def null = object {
-method isNull -> Boolean {return true}
-}
-
-type Some<T> {
-thing -> T
-isNull -> Boolean
-}
-
-type Option<T> = Some<T> | Singleton(null)
+	def null = object {
+		method isNull -> Boolean {return true}
+	}
+	
+	type Some<T> {
+		thing -> T
+		isNull -> Boolean
+	}
+	
+	type Option<T> = Some<T> | Singleton(null)
 
 
 ```
@@ -1719,11 +1760,13 @@ Type assertions can be used to check conformance and equality of
 types.
 
     assert {B <: A}
-       // B 'conforms to' A.
+       // B conforms to A.
     assert {B <: type {foo(_:C) -> D} }
        // B had better have a foo method from C returning D
     assert {B == A | C}
 
+<_apb: Is this `assert` the one in gUnit (which takes a boolean, not a block), or
+an incompatible library, or is this `assert` intended to be a language keyword accessing a built-in facility?_>
 
 # Modules and Dialects
 
@@ -1731,29 +1774,32 @@ Grace programs can be divided into multiple modules.
 
 ## Modules
 
-A module is typically defined in a single Grace file. The text of the
+A module is typically defined in a implementation-dependent fashion,
+typically by creating a file containing Grace code. The text of the
 file is treated as the body of an object constructor, so it may
 contain both declarations and executable code. When a module is loaded,
 this object constructor is *executed*, resulting in a _module object_.
+
+### Import
 
 Modules may begin with one or more `import` _moduleName_ `as` _nickname_
 statements.
 _moduleName_ is a [string literal](String Literals) that identifies the module to be imported in an implementation-dependent manner; for example, _moduleName_ may be a file path.
 _nickname_ is the Grace identifier used to refer to the imported module object
-in the rest of the
-importing module. Because modules are just objects, public
+in the importing module. 
+Because importing a module creates a module object, public
 declarations at the top level of imported modules are accessed
 by requesting a method on the module's nickname.
 <_apb: Confidential declarations are not visible to the importing module, I thought._>
 
 Grace programs are be executed asking the execution
 environment to run a particular module, 
-which may bethough of as the "main" module.
+which may be thought of as the “main” module.
 Grace will load and initialise all transitively 
 imported modules in depth-first order,
-thus executing the "main" module _last_, after all its dependencies
+thus executing the “main” module _last_, after all its dependencies
 are loaded. 
-Each importled module is loaded just once, the first time
+Each imported module is loaded just once, the first time
 it is reached: importing the same _moduleName_ multiple times
 results in the same module object.
 
@@ -1798,7 +1844,7 @@ cat module done
 Grace dialects support language levels for teaching, and
 domain-specific "little" languages. A module may begin with a dialect
 statement `dialect "name"`,
-where the `dialect` keyword is followed by a [string literal] (String Literal).
+where the `dialect` keyword is followed by a [string literal](String Literal).
 
 The effect of the dialect statement is to import the dialect like any other
 module, but then arrange that the dialect's module object
@@ -1812,7 +1858,7 @@ declarations, classes, traits, control structures, and even the
 'graceObject' trait that defines the default methods.
 
 Modules that do not declare a 'dialect' implicitly belong to the
-`standardPrelude` dialect.
+`standardGrace` dialect.
 
 ##### Examples
 
@@ -1828,7 +1874,7 @@ method do (block: Block0) unless (test: Boolean)  {
 ```
 
 A module written in this dialect can use that control structure as if
-it was built in:
+it were built in:
 
 example.grace module:
 
@@ -1848,7 +1894,7 @@ Moving out from module scope, Grace programs can access the following scopes:
 a module.
 
 2. **surrounding module scope** containing the nicknames introduced by
-`import` declarations.  <_apb: why arne't these just like (confidential) defs in the module scope?_>
+`import` declarations.  <_apb: why aren't these just (confidential) defs in the module scope?  Adding an extra scope here messes up the counting of outers_>
 
 3. **dialect scope** containing all declarations at the top level of
 the module providing the dialect.  That is, the names at the top level of the dialect
@@ -1905,9 +1951,9 @@ with Total Store Ordering (TSO).
 
 # Acknowledgements
 
-Thanks to Josh Bloch, Cay Horstmann, Michael Kölling, Doug Lea, Ewan
+We thank Josh Bloch, Cay Horstmann, Michael Kölling, Doug Lea, Ewan
 Tempero, and the participants at the Grace Design Workshops and the
-IFIP WG2.16 on Programming Language Design for discussions about the
+IFIP WG2.16 on Programming Language Design meetings for discussions about the
 language design.
 
 The Scala language specification 2.8 @scala28 and the Newspeak language
@@ -1936,7 +1982,7 @@ XTend @XTend,
 yes @UnixYesCommand,
 and Z @Zed
 at least: we apologise if we’ve missed any languages out.
-All the good ideas come from these languages: the bad ideas are our
+All the good ideas come from these languages: the bad ideas are our own
 responsibility @HoareHints.
 
 Grammar
