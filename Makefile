@@ -1,6 +1,6 @@
 all: pdf html
 
-PANDOCOPTS= --table-of-contents --number-sections
+PANDOCOPTS= --table-of-contents --number-sections --from=markdown+tex_math_dollars
 
 pdf:
 	@$(MAKE) spec.pdf standard.pdf 
@@ -8,22 +8,11 @@ pdf:
 html:
 	@$(MAKE) spec.html standard.html
 
-spec.pdf: spec.md
-	pandoc --standalone $(PANDOCOPTS) -o spec.pdf --to=latex spec.md
+%.pdf: %.md Makefile
+	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex --listings $<
 
-spec.html: spec.md
-	pandoc --standalone $(PANDOCOPTS) -o spec.html --to=html spec.md
+%.html: %.md Makefile
+	pandoc --standalone $(PANDOCOPTS) -o $@ --to=html --self-contained $<
 
-spec.tex: spec.md
-	pandoc --standalone $(PANDOCOPTS) -o spec.tex --to=latex spec.md
-
-
-
-standard.pdf: standard.md
-	pandoc --standalone $(PANDOCOPTS) -o standard.pdf --to=latex standard.md
-
-standard.html: standard.md
-	pandoc --standalone $(PANDOCOPTS) -o standard.html --to=html standard.md
-
-standard.tex: standard.md
-	pandoc --standalone $(PANDOCOPTS) -o standard.tex --to=latex standard.md
+%.tex: %.md Makefile
+	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex --listings $<

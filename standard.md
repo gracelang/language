@@ -1136,14 +1136,14 @@ any identifier of your choice `m`. The object
 `m` responds to the following methods.
 
 ``` 
-    sin(θ: Number) -> Number
-    // trigonometric sine (θ in radians)
+    sin($\theta$: Number) -> Number
+    // trigonometric sine ($\theta$ in radians)
 
-    cos(θ: Number) -> Number
-    // cosine (θ in radians)
+    cos($\theta$: Number) -> Number
+    // cosine ($\theta$ in radians)
 
-    tan(θ: Number) -> Number
-    // tangent (θ in radians)
+    tan($\theta$: Number) -> Number
+    // tangent ($\theta$ in radians)
 
     asin(r: Number) -> Number
     // arcsine (result in radians)
@@ -1154,7 +1154,7 @@ any identifier of your choice `m`. The object
     atan(r: Number) -> Number
     //arctangent (result in radians)
 
-    π -> Number
+    $\pi$ -> Number
     // 3.14159265...
 
     infinity -> Number

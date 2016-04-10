@@ -91,10 +91,10 @@ The following ASCII sequences are treated as equivalent to the corresponding Uni
 
 ASCII | Unicode
 ---------| ----------
->=  |  ≥
-<=  |  ≤
-!=   |  ≠
-->  | →
+>=  |  $\geq$
+<=  |  $\leq$
+!=   |  $\neq$
+->  | $\rightarrow$
 
 ## Layout
 
@@ -347,7 +347,7 @@ A `return` statement inside a block returns from the enclosing method.
 Blocks construct objects containing a method named `apply`, or
 `apply(n)`, or `apply(n, m)`, …, where the number of parameters to `apply`
 is the same as the number of parameters of the block. Requesting the
-`apply(…)` method evaluates the block; it is an error to provide the wrong
+`apply(...)` method evaluates the block; it is an error to provide the wrong
 number of arguments. If block parameters are declared with type
 annotations, it is a `TypeError` if the arguments do not conform to those types.
 
@@ -470,7 +470,7 @@ A request "matches" a method if the canonical names are equal.
 	followed by a parenthesized list of parameters.
 	In this case
 	the  _canonical_ name of the method is a sequence of parts, where
-	each part comprises the identifier for that part followed by `(_, …, _)`,
+	each part comprises the identifier for that part followed by `(_, ..., _)`,
 	the number of underscores between the parentheses being the number of
 	parameters of the part.
 
@@ -621,7 +621,7 @@ Variables and definitions (`var` and `def` declarations) immediately
 inside an object constructor create *fields* in that object.
 
 A field declared as `var x` can be read using the request `x` and
-assigned to using the assignment request `x:=(_)`.
+assigned to using the assignment request `x:=(...)`.
 A field declared as `def y` can be read using the request `y`, and
 cannot be assigned. By default, fields are *confidential*.
 
@@ -1045,7 +1045,7 @@ in a list does determine the method being requested.
 #### Examples  {-}
         self.clear
         self.drawLineFrom (p1) to (p2)
-        self.drawLineFrom (origin) length (9) angle (π/6)
+        self.drawLineFrom (origin) length (9) angle ($\pi$/6)
         self.movePenTo (x, y)
         self.movePenTo (p)
 
@@ -1058,7 +1058,7 @@ that is a numeral, string, lineup, or block.
 #### Examples  {-}
 
         self.drawLineFrom (p1) to (p2)
-        self.drawLineFrom (origin) length 9 angle (pi/6)
+        self.drawLineFrom (origin) length 9 angle ($\pi$/6)
         print "Hello World"
         while {x < 10} then {
             print [a, x, b]
@@ -1318,7 +1318,7 @@ are patterns that match strings and numbers that are equal to the literal.
 #### Examples  {-}
  
 Matching blocks and self-matching objects can be conveniently used
-in the `match(_)case(_)…` family of methods.
+in the `match(_)case(_)...` family of methods.
 
 ```
     method fib(n : Number) -> Number {
@@ -1334,7 +1334,7 @@ The last block has no pattern (or, if you prefer, has the pattern `Unknown`,
 which matches any object).  Such a block always matches.
 
 If 
-`match(_)case(_)… does not find a match, it raises a non-exhausive match exception.
+`match(_)case(_)...` does not find a match, it raises a non-exhausive match exception.
 
 
     { 0 -> "Zero" }
@@ -1377,7 +1377,7 @@ An exception in `expression` can be caught by a dynamically-enclosing
 
     try(expression) 
         catch (block 1) 
-        … 
+        ...
         catch (block n) 
         finally (finalBlock)
 
@@ -1387,9 +1387,9 @@ during the evaluation of the `try` block `exp`, the `catch` blocks
 `block 1`, `block 2`, …, `block n`, are attempted, in order,
 until one of them matches the exception. If none of them matches, then
 the process of matching the exception continues in the
-dynamically-surrounding `try(_) catch(_) … catch(_) finally(_)`. The
+dynamically-surrounding `try(_) catch(_) ... catch(_) finally(_)`. The
 `finalBlock` is always executed before control leaves the
-`try(_) catch(_) … catch(_) finally(_)` construct, whether or not an
+`try(_) catch(_) ... catch(_) finally(_)` construct, whether or not an
 exception is raised, and whether or not one of the catch blocks returns.
 
 Finally clauses can return early, either by executing a `return`, or by
@@ -1450,7 +1450,7 @@ objects will respond --- the [Default Methods] declared in
 ```
 type Object = {
 	== (other: Object) -> Boolean
-	≠ (other: Object) -> Boolean     // the inverse of ==
+	$\neq$ (other: Object) -> Boolean     // the inverse of ==
 	hash -> Number
 	match (other: Object) -> MatchResult
 	asString -> String
@@ -1560,8 +1560,8 @@ If A and B are ground object types, then B `<:` A iff for
 every method m in A, there is a corresponding method `m` (with the same
 canonical name) in B such that
 
--   If the method `m` in A has signature “`m(P1,…,Pk)n(Pk+1,…,Pn)… -> R`, and
-    `m` in B has signature “`m(Q1,…,Qk)n(Qk+1,…,Qn)… -> S`”, then
+-   If the method `m` in A has signature “`m(P1,...,Pk)n(Pk+1,...,Pn)... -> R`, and
+    `m` in B has signature “`m(Q1,...,Qk)n(Qk+1,...,Qn)... -> S`”, then
 
     -   parameter types must be contravariant: `Pi <: Qi`
 
@@ -1570,12 +1570,20 @@ canonical name) in B such that
 The conformance relationship is used in `where` clauses to constrain
 type parameters of classes and methods.
 
-<_apb:  This last statement is wrong.  The ralationship in where clauses has to be matching, not conformance.  For example, consider the type 
+<_apb:  This last statement is wrong.  The relationship in 
+where clauses has to be matching, not conformance.  For 
+example, consider the type
+
     type Equivalence = type { 
     	~~ (Self) -> Boolean 
     	witness -> Self
     }
-No other types *conform* to `Equivalence`, because it has `Self` in both contravariant and covariant positions.  But any type `T` with an `~~` operation and a `witness` method will *match* `Equivalence`, provided that they have `T` as parameter and result._>
+
+No other types *conform* to Equivalence, because it has Self in 
+both contravariant and covariant positions.  But any type T
+with an `~~` operation and a witness method will *match*
+`Equivalence`, provided that these methods have T as parameter
+and result._ >
 
 ## Composite types
 
@@ -1584,12 +1592,12 @@ Grace offers a number of operators to build up composite types.
 ### Variant Types
 
 The expression 
-`T1 | T2 | … | Tn `
+`T1 | T2 | ... | Tn `
 signifies an untagged, retained variant type.
 When an *variable* or *method* is annotated with a variant type,
 that variable may be bound to, or that method may return,
 an object of any one of the
-component types `T1`, `T2`, …, `Tn`. 
+component types `T1`, `T2`, ..., `Tn`. 
 No *objects* actually have variant types, only
 expressions. The actual type of an object referred to by a variant
 variable can be determined using that object’s reified type information.
@@ -1629,7 +1637,7 @@ methods contained in both `S` and `T`.
 ### Intersection Types
 
 An object conforms to an Intersection type, written
-`T1 & T2 & … & Tn`, if and only if that object conforms to all of the
+`T1 & T2 & ... & Tn`, if and only if that object conforms to all of the
 component types. The main uses of intersection types is for augmenting
 types with new operations, and as bounds on `where` clauses.
 
@@ -1654,7 +1662,7 @@ U <: S; U <: T; ==> U <: (S & T)
 
     class happy<T>(param: T) -> Done
        where T <: (Comparable<T> & Printable & Happyable) {
-               …
+               ...
     }
     
 <_apb: The first example works only if Sequence is defined using 
@@ -1663,7 +1671,7 @@ conformance of Intersection types don't work — I'm pretty sure._>
 
 ### Union Types
 
-Structural union types (sum types), written `1 + 2 + … + Tn`, are
+Structural union types (sum types), written `1 + 2 + ... + Tn`, are
 the dual of intersection types. A union type `T1 + T2` has the interface
 common to `T1` and `T2`. Thus, a type `U` conforms to `T1 + T2` if it
 has a method that conforms to each of the methods common to `T1` and
@@ -1964,8 +1972,8 @@ versions of this document. The design of Grace (so far!) has been
 influenced by Algol @algolPerlis [@algolNaur], AmbientTalk @ambientTalk,
 AspectJ @aspectJecoop, BCPL @BCPLBOOK [@cpl2bcpl], Beta @betabook, Blue
 @BlueSIGCSE95 [@BlueSIGCSE96; @BlueSpec], Brainfuck @brainfuckLanguage, C @Cbook, C$++$ @cppnotoo,
-C$\sharp$ @Csharp3 [@Csharp4], Ceylon @Ceylon, Dart @dart, Dylan @dylan, E [@E]Eiffel @oosc [@eiffel],
-Emerald @Black2007, $F_1$ @LucaTypeSystems, $F\sharp$ @fsharp, FORTH
+C# @Csharp3 [@Csharp4], Ceylon @Ceylon, Dart @dart, Dylan @dylan, E [@E]Eiffel @oosc [@eiffel],
+Emerald @Black2007, $F_1$ @LucaTypeSystems, F# @fsharp, FORTH
 @FORTH, $FGJ$ @igarashi01, $FJ\vee$ @igarashi07, FORTRESS @fortress10b, gBeta
 @fampoly, Go @Go, Haskell @haskellHistory, IGJ @AlexIGJ, INTERCAL
 @INTERCAL, Java @mrBunny [@JavaConcur], Jigsaw
