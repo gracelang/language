@@ -42,6 +42,7 @@ change. In particular, this version does *not* address:
 > Frederick P. Brooks, *The Design of Design*.
 
 ------------------------------------------------------------------------
+
 Grace has been designed with the following users in mind.
 
 1.  First year university students learning programming in CS1 and CS2
@@ -69,6 +70,7 @@ Grace has been designed with the following users in mind.
 
 5.  Designers of other programming or scripting languages in search of a
     good example of contemporary OO language design.
+
 
 # Syntax
 
@@ -2018,7 +2020,6 @@ Kölling, Doug Lea, Ewan Tempero, and the participants at the Grace
 Design Workshops and the IFIP WG2.16 on Programming Language Design
 meetings for discussions about the language design.
 
-Grammar
-=======
+# Grammar
 
 _(to be attached once James works out how to do it)_
