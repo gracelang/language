@@ -1,8 +1,7 @@
 all: pdf html
 
-PANDOCOPTS= --table-of-contents --number-sections --from=markdown+tex_math_dollars
-
-TEXOPTS= --include-in-header=grace.sty
+PANDOCOPTS = --table-of-contents --number-sections --from=markdown+tex_math_dollars
+LATEXOPTS = --listings --template=grace.latex
 
 pdf:
 	@$(MAKE) spec.pdf standard.pdf 
@@ -10,11 +9,11 @@ pdf:
 html:
 	@$(MAKE) spec.html standard.html
 
-%.pdf: %.md Makefile grace.sty
-	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex --listings $(TEXOPTS) $<
+%.pdf: %.md Makefile grace.sty grace.latex
+	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex $(LATEXOPTS) $<
 
 %.html: %.md Makefile
 	pandoc --standalone $(PANDOCOPTS) -o $@ --to=html --self-contained $<
 
-%.tex: %.md Makefile grace.sty
-	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex --listings $(TEXOPTS) $<
+%.tex: %.md Makefile grace.sty grace.latex
+	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex $(LATEXOPTS) $<

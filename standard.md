@@ -2,7 +2,7 @@
 author:
 - 'Andrew P. Black'
 - 'Kim B. Bruce'
-- James Noble
+- 'James Noble'
 
 bibliography:
 - 'spec.bib'
@@ -207,7 +207,6 @@ double-precision). `Number`s are represented with a
 precision of approximately 51 bits.
 
 ``` 
-
 type Number = {
 
   + (other: Number) -> Number
