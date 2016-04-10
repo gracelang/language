@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.6b12
+    Draft Specification Version 0.6b13
 ...
 
 
@@ -47,13 +47,13 @@ Grace has been designed with the following users in mind.
 1.  First year university students learning programming in CS1 and CS2
     courses that use object-oriented programming.
 
-    i.  The courses may be structured objects first, or
+    -  The courses may be structured objects first, or
         procedures first.
 
-    ii.  The courses may be taught using dynamic types, static types, or
+    -  The courses may be taught using dynamic types, static types, or
         both in combination (in either order).
 
-    iii.  Grace offers some (but not necessarily complete) support for
+    -  Grace offers some (but not necessarily complete) support for
         “functional first” curricula, primarily for courses that proceed
         rapidly to procedural and object-oriented programming.
 
@@ -247,7 +247,7 @@ for or, and prefix `!` for not.
     toBe || toBe.not
 
 In addition to `&&` and `||` taking boolean arguments, they also accept
-parmameterless blocks that return `Boolean`.  This gives them
+parameterless blocks that return `Boolean`.  This gives them
 “short circuit” (a.k.a. "non-commutative") semantics.
 
 **Examples**
@@ -873,11 +873,14 @@ clauses as modified by `alias` and `exclude`, and
 excluding those attributes deriving from `graceObject`) are installed in the new
 object: declarations in traits override declarations in the
 superclass.
-<_apb: my early experience withthsi rule, which treats superobjects in
+
+<_apb: my early experience with this rule, which treats superobjects in
 the same way as traits, has shown that it is unsatisfactory.  Look at
 newCollections, for example._>
+
 <_kjx: should be fixed_>
-Finally attributs create by local declarations are installed in the
+
+Finally attributes create by local declarations are installed in the
 new object: Local declarations
 override parental declarations (declarations from both superclass and
 traits).
@@ -888,12 +891,12 @@ caught at compile time.
 
 Next, types must be evaluated and bound within objects.
 Types cannot depend on runtime values; if they depend on the type of a
-constant (because the constant is treated as a [Singleton type](#singleton- types), then that constant, if overriden in a subclass, can only be
-overriden by a new object with the same type.
+constant (because the constant is treated as a [Singleton type](#singleton- types), then that constant, if overridden in a subclass, can only be
+overridden by a new object with the same type.
 
 Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with the
 initializers of local declarations and local statements.
-(Note that _used_ ojects must be traits, and therefore contain no executable code.)
+(Note that _used_ objects must be traits, and therefore contain no executable code.)
 Initialisers for all `def`s and `var`s,
 and code in the bodies of parents,
 are executed once in the order they are written, even for `def`s or
@@ -1012,13 +1015,6 @@ default methods:
 | `asDebugString -> String` | a string describing the internals of|self |
 | `:: (other:Object) -> Binding` | a Binding object with self as key and other as value. |
 
-<_apb: I don't like this.  I think that all objects should have the defualt methods, uniformly.
-It's more reasonable to make the object composition
-rules distinguish between `inherit`, which includes the methods from `graceObject`, and `use`, which does not, and to have used
-attributes override inherited attributes.
-Briefly, the reason for this is that its useful to have a trait that redefines some of the defualt methods._>
-<_kjx. sorry fixed)_>
-
 
 # Method Requests
 
@@ -1124,32 +1120,20 @@ If the receiver of a named method request using the name _m_ is `self` or
 `outer` it may be left implicit, _i.e._, the `self` or `outer` and the
 dot may both be omitted.
 Implicit requests may be resolved either as a self request or as an
-outer request. An ambiguous implicit request (that could be resolved
+outer request. An ambiguous implicit request (a request that could be resolved
 as either) is an error.
 
-<_apb: I don't understand this. Lexically inside what?_>
-<_kjx: sorry. reworded this section_>
+Implicit requests are always resolved within the scope in which they are written,
+not within the scope of object (class, or trait) that may inherit the
+method containing them.
 
-  <_apb: These last two rules give precedene to inherited names over
-  lexically enclosing names.  This used to be an error.
-  When did we change it?_>
-  <_kjx: sorry. fixed _>
+**Examples of Implicit Requests**
 
-Implicit requests are always resolved within the scope of their declaration,
-not within the scope of object (class, or trait) or that may inherit them.
-<_apb: What does hat mean?  WHat is the declaring method?_>
-<_kjx: clarified_>
+    print "Hello world"
+    size
+    canvas
 
-**Examples**
-
-
-Implicit requests:
-
-        print "Hello world"
-        size
-        canvas
-
-Resolving implicit requests:
+**Example of Implicit Request Resolution**
 
 ```
 method foo { print "outer" }
@@ -1165,13 +1149,12 @@ class bar {
 
 class baz {
   inherit bar
-  method barf { foo }
+  method barf { foo }   // ambiguous - could be self.foo or outer.foo
 }
 
 
-app.barf  //prints "outer"
-bar.barf  //prints "outer"
-baz.barf  //prints "bar"    why not ambiguous?
+app.barf  // prints "outer"
+bar.barf  // prints "outer"
 ```
 
 ##Assignment Requests
@@ -1183,7 +1166,6 @@ parentheses. Spaces are optional before and after the
 `:=`.
 
 **Examples**
-
 
        x := 3
        y:=2
@@ -1243,7 +1225,8 @@ explicit receiver, there is no syntactic ambiguity.)
 Prefix operators bind less tightly than named method requests, and more
 tightly than binary operator requests.
 
-<_apb: As a consequence, `-3.sqrt` and `-x.sqrt` are parsed differently.  I wonder if we want to get rid of negative numerals?_>
+<_apb: As a consequence, `-3.sqrt` and `-x.sqrt` are parsed differently.  
+I wonder if we want to get rid of negative numerals?_>
 
 **Examples**
 
@@ -1344,7 +1327,7 @@ we can write
 ## Matching Blocks
 
 Blocks with a single parameter are called _matching blocks_. Matching
-blocks also conform to  type Pattern, and can be evaluted by
+blocks also conform to  type Pattern, and can be evaluated by
 requesting `match(_)` as well as `apply(_)`. When `apply(_)` would
 raise a type error because the block's argument would not conform to its
 parameter type, `match(_)` returns false; when `apply(_)` would return
@@ -1382,7 +1365,7 @@ The last block has no pattern (or, if you prefer, has the pattern `Unknown`,
 which matches any object).  Such a block always matches.
 
 If
-`match(_)case(_)...` does not find a match, it raises a non-exhausive match exception.
+`match(_)case(_)...` does not find a match, it raises a non-exhaustive match exception.
 
 
     { 0 -> "Zero" }
@@ -1432,7 +1415,7 @@ An exception in `expression` can be caught by a dynamically-enclosing
 
 in which the `block i`
 are pattern-matching blocks. More precisely, if an exception is raised
-during the evaluation of the `try` block `exp`, the `catch` blocks
+during the evaluation of the `try` block `expression`, the `catch` blocks
 `block 1`, `block 2`, …, `block n`, are attempted, in order,
 until one of them matches the exception. If none of them matches, then
 the process of matching the exception continues in the
@@ -1484,7 +1467,7 @@ this means that types can be checked statically.
 A number of types are declared in the standard prelude and included in
 most dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`](#type-object),
 [`Number`](#numbers), [`String`](#strings), `Block`, `Iterator`, `Pattern`, `Exception`, and
-`ExceptionKind`.  Some paticular types are treated specially:
+`ExceptionKind`.  Some particular types are treated specially:
 
 ### Type None
 
@@ -1520,7 +1503,7 @@ Unknown is not actually a type, although it is treated as a type
 by the type checker.  It is similar to the type label "Dynamic" in C#.
 Unknown can be written explicitly as a type annotation; moreover,
 if a declaration is not annotated, then the type of the declared name is
-_implicitly_ `Unknown`.  In additon, omitted type arguments are replaced by
+_implicitly_ `Unknown`.  In addition, omitted type arguments are replaced by
 `Unknown`.
 
 Type-checking against `Unknown` will always succeed: any object matches
@@ -1532,7 +1515,7 @@ type `Unknown`, and type `Unknown` conforms to all other types.
     var x: Unknown := 5   //who knows what the type is?
     var x := 5            //same here, but Unknown is implicit
     x := "five"           //who cares
-    x.gilad               //almost certainly crash at run time
+    x.gilad               //almost certainly raises NoSuchMethod
 
     method id(x) { x }    //argument and return types both implicitly unknown
     method id(x: Unknown) -> Unknown { x }  // same thing, explicitly
@@ -1566,7 +1549,7 @@ in which case the type is `Unknown`.
 ## Type Declarations
 
 Types, including parameterized types, may be named in type declarations.
-By convention, tha names of types start with an uppercase letter.
+By convention, the names of types start with an uppercase letter.
 The `type` keyword may be omitted from the right-hand-side
 of a type declaration when the right-hand-side is a simple type literal.
 Type declarations may not be overridden.
@@ -1623,7 +1606,7 @@ The conformance relationship is used in `where` clauses to constrain
 type parameters of classes and methods.
 
 <_apb:  This last statement is wrong.  The relationship in
-where clauses has to be matching, not conformance.  For
+`where` clauses has to be matching, not conformance.  For
 example, consider the type
 
     type Equivalence = type {
@@ -1653,6 +1636,7 @@ component types `T1`, `T2`, ..., `Tn`.
 No *objects* actually have variant types, only
 expressions. The actual type of an object referred to by a variant
 variable can be determined using that object’s reified type information.
+
 <_apb: this is the statement that I think implies that we need to do
 type inference.  Do you really want to say this?  It means that every object
 needs enough reified type information to distinguish between
@@ -1661,10 +1645,20 @@ needs enough reified type information to distinguish between
 for all possible `Bar` and `Wombat`.  Where does this
 information come from?_>
 
-The only methods that may be requested via an expression of variant
+The only methods that may be requested on a receiver with a variant
 type are methods with exactly the same declaration across all members
-of the variant.  <_apb: What does it mean to "request a method via a
-type?"_> <_kjx: reworded_>
+of the variant.  <_apb: what if the declarations differ in a parameter type.
+Can I request it with an argument in the meet of the parameter types?_>
+
+<_apb: What does it mean to "request a method via a
+type?"_> 
+
+<_kjx: reworded_>
+
+<_apb: so this one place suggests that method requests must be type correct.
+If a request breaks this rule (but succeeds because the expression happens to
+evaluate to the correct variant), are we promising to report a (dynamic) type
+error?_>
 
 Variant types are *not* equivalent to the
 object type that describes all common methods. This is so that the
@@ -1695,8 +1689,6 @@ An object conforms to an Intersection type, written
 component types. The main uses of intersection types is for augmenting
 types with new operations, and as bounds on `where` clauses.
 
-<_apb: Actually, I don't think that you do need to say any more; these cases are already covered by the rule for conformance._>
-<_kjx: text deleted _>
 
 ```
 (S & T) <: S
@@ -1748,8 +1740,10 @@ irrelevant.
 
 ### Singleton Types
 
-<_apb:  I think this is what you want.  It's more or less what `Singleton` does in minigrace.   I think that it's a bad idea,
+<_apb:  I think this is what you want.  It's more or less what `Singleton` 
+does in minigrace.   I think that it's a bad idea,
 because it confuses objects and types._>
+
 <_ kjx: shall we delete? _>
 
 To keep track of individual objects (especially in variants),
@@ -1785,7 +1779,7 @@ have no way of implementing a type "just `o`".
 If we want this, we would have to build it into the
 language, e.g.,
 by making `Singleton` a primitive that creates what is
-essentially a branded type.  Right now, `Singleton` is a library method
+essentially a branded type.  Right now (in minigrace) `Singleton` is a library method
 that creates a Singleton **object**_>
 
 To keep track of individual objects (especially in variants) a library
@@ -1829,15 +1823,12 @@ types.
        // B had better have a foo method from C returning D
     assert (B == A | C)
 
-<_apb: Is this `assert` the one in gUnit (which takes a boolean, not a block), or
-an incompatible library, or is this `assert` intended to be a language keyword accessing a built-in facility?_>
-<_kjx: sorry. It must be GUNIT of course. Fixed _>
-
 # Modules and Dialects
 
-Grace programs can be divided into multiple modules.
+Grace programs can be divided into multiple modules.  
+A module is typically used to define library functionality.
 
-## Modules
+## Modules 
 
 A module is typically defined in a implementation-dependent fashion,
 typically by creating a file containing Grace code. The text of the
@@ -1845,19 +1836,25 @@ file is treated as the body of an object constructor, so it may
 contain both declarations and executable code. When a module is loaded,
 this object constructor is *executed*, resulting in a _module object_.
 
-### Import
+## Importing Modules
 
 Modules may begin with one or more `import` _moduleName_ `as` _nickname_
 statements.
-_moduleName_ is a [string literal](#string-literals) that identifies the module to be imported in an implementation-dependent manner; for example, _moduleName_ may be a file path.
+_moduleName_ is a [string literal](#string-literals) that identifies the module
+to be imported in an implementation-dependent manner; for example, 
+_moduleName_ may be a file path.
 _nickname_ is the Grace identifier used to refer to the imported module object
 in the importing module.
+The nickname is confidential by default, but can be annotated as public.
+
 Because importing a module creates a module object, public
 declarations at the top level of imported modules are accessed
 by requesting a method on the module's nickname.
-<_apb: Confidential declarations are not visible to the importing module, I thought._>
+Confidential declarations are not visible to the importing module.
 
-Grace programs are be executed asking the execution
+## Executing a Module
+
+Grace programs are executed by asking the execution
 environment to run a particular module,
 which may be thought of as the “main” module.
 Grace will load and initialise all transitively
@@ -1867,10 +1864,9 @@ are loaded.
 Each imported module is loaded just once, the first time
 it is reached: importing the same _moduleName_ multiple times
 results in the same module object.
-
 Circular module dependencies are errors.
 
-#**Examples**
+**Examples**
 
 
 cat.grace module:
@@ -1926,7 +1922,13 @@ declarations, classes, traits, control structures, and even the
 Modules that do not declare a 'dialect' implicitly belong to the
 `standardGrace` dialect.
 
-#**Examples**
+In addition to declarations, a dialect can also define a _checker_ that
+examines the parse tree or syntax tree of any module written in the dialect,
+and generates errors. 
+This enables a dialect to restrict the language of its modules to a subset
+of the full Grace language.
+
+**Examples**
 
 
 The `bcpl.grace` module declares an `unless(_)do(_)` control
@@ -1955,27 +1957,19 @@ do { average := sum / count } unless (count == 0)
 
 ## Module and Dialect Scopes
 
-Moving out from module scope, Grace programs can access the following scopes:
+The **module scope** of a Grace module contains all declarations at the top 
+level of the module, including the nicknames introduced by `import` declarations.
 
-1. **module scope** containing all declarations at the top level of
-a module, and the nicknames introduced by `import` declarations.
+Surrounding the module scope is the
+**dialect scope**, which contains all public declarations at the top level of
+the module providing the dialect.  
+That is, the public names at the top level of the dialect
+are treated as being in a scope surrounding that of any
+module written in that dialect.
 
-<_apb: why aren't these just (confidential) defs in the module scope?  Adding an extra scope here messes up the counting of outers_>
-<_kjx: sorry, fixed _>
-
-3. **dialect scope** containing all public declarations at the top level of
-the module providing the dialect.  That is, the public names at the top level of the dialect
-are treated as being in a scope surrounding that of the
-    module being defined.
-    <_apb: I thought that we exclude
-    confidential names, to allow a dialect to
-    define, for example, helper methods that are not
-    available to clients._> <_kjx: fixed _>
-
-Lexical lookup stops at the module's dialect scope: it does not extend
-to the surrounding dialect's scope (containing any nicknames
-introduced by imports in the module); nor to the scopes of e.g. any
-dialects used to implement the dialect module.
+Lexical lookup stops at the dialect scope: it does not extend
+to the scope surrounding the dialect (which would contain any
+other dialects used to implement the current dialect).
 
 This allows dialects to import modules, and to be defined via other
 (module-defining) dialects, without those other definitions polluting
