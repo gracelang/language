@@ -856,9 +856,11 @@ of a parent, the overridden
 attribute can be given an additional name by attaching
 an **`alias`** clause to the inherit or use statement: `alias n(_) = m(_)`
 creates a new `confidential` _alias_ `n(_)` for the attribute `m(_)`.
+It is a _object composition error_ to alias an attribute to its own name.
 Attributes of the parent that are not wanted can be excluded using
 an **`exclude`** clause: excluded attributes are replaced by a
-`confidential` `required` method.
+`confidential`, `required` method.
+It is an _object composition error_ to alias or exclude attributes that are not present in the class or trait being inherited.
 
 
 ### Object Combination and Initialisation
@@ -866,38 +868,38 @@ an **`exclude`** clause: excluded attributes are replaced by a
 When executed, an object constructor (or trait or class declaration)
 first creates a new object with no attributes, and binds it to `self`.
 
-First the attributes of the superclass (created by the `inherit`
-clauses as modified by `alias` and `exclude`) are installed in the new
+Second, the attributes of the superobject (created by the `inherit`
+clause as modified by `alias` and `exclude`) are installed in the new
 object.
-Second, the attributes of any traits
+
+Third, the methods of all traits
 (created by the `use`
 clauses as modified by `alias` and `exclude`, and
-excluding those attributes deriving from `graceObject`) are installed in the new
-object: declarations in traits override declarations in the
-superclass.
+excluding those methods inherited unchanged from `graceObject`) are
+combined.  
+It is a _object composition error_ for there to be multiple
+definitions of a method.
+This combination of methods is then 
+installed in the new
+object: methods in the trait combination override declarations in the
+superobject.
 
-<_apb: my early experience with this rule, which treats superobjects in
-the same way as traits, has shown that it is unsatisfactory.  Look at
-newCollections, for example._>
-
-<_kjx: should be fixed_>
-
-Finally attributes create by local declarations are installed in the
-new object: Local declarations
-override parental declarations (declarations from both superclass and
-traits).
-It is also a _trait composition error_ for an alias to be
+Fourth, attributes create by local declarations are installed in the
+new object: local declarations
+override declarations from both superobject and
+traits, except that 
+it is a _object composition error_ for an alias to be
 overridden by a local declaration.
-Unlike most other errors in Grace, trait composition errors must be
-caught at compile time.
 
-Next, types must be evaluated and bound within objects.
+Fifth, types are evaluated and bound to their declarations.
 Types cannot depend on runtime values; if they depend on the type of a
-constant (because the constant is treated as a [Singleton type](#singleton- types), then that constant, if overridden in a subclass, can only be
+constant (because the constant is treated as a [Singleton type](#singleton- types),
+then that constant, if overridden in a subclass, can only be
 overridden by a new object with the same type.
 
-Finally, the initializers and executable statements are executed, starting with the most superior inherited superobject, and finishing with the
-initializers of local declarations and local statements.
+Finally, field initializers and executable statements are executed,
+starting with the most superior inherited superobject, and finishing with the
+initializers of local fields, and local statements.
 (Note that _used_ objects must be traits, and therefore contain no executable code.)
 Initialisers for all `def`s and `var`s,
 and code in the bodies of parents,
