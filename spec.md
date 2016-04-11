@@ -207,31 +207,26 @@ full specification of numeric types is yet to be completed.
 Grace has three forms of numerals (that is, literals that
 denote `Number` objects).
 
-1.  Decimal numerals, written as strings of digits, optionally preceded
-    by a minus.
+1.  Decimal numerals, written as strings of digits.
 
 2.  Base-exponent numerals, always in decimal, which contain a decimal
     point, or an exponent, or both. Grace uses `e` as the
-    exponent indicator. Base-exponent numerals may optionally be
-    preceded by a minus, and may have a minus in front of the exponent.
+    exponent indicator. Base-exponent numerals may have a minus in front of the exponent.
 
 3.  Explicit radix numerals, written as a (decimal) number between 2 and
     35 representing the radix, a leading `x`, and a string of digits,
     where the digits from 10 to 35 are represented by the letters A to
     Z, in either upper or lower case. A radix of 0 is taken to mean a
-    radix of 16. Explicit radix numerals may optionally be preceded by
-    a minus.
-
+    radix of 16.
 
 **Examples**
 
 
     1
-    -1
     42
     3.14159265
     13.343e-12
-    -414.45e3
+    414.45e3
     16xF00F00
     2x10110100
     0xdeadbeef // Radix zero treated as 16
@@ -1229,9 +1224,6 @@ explicit receiver, there is no syntactic ambiguity.)
 Prefix operators bind less tightly than named method requests, and more
 tightly than binary operator requests.
 
-<_apb: As a consequence, `-3.sqrt` and `-x.sqrt` are parsed differently.  
-I wonder if we want to get rid of negative numerals?_>
-
 **Examples**
 
 
@@ -1500,7 +1492,9 @@ type Object = {
 ### Type Self
 
 The type `Self` represents the public interface of the current
-object.
+object.  
+Self is prohibited as the annotation on parameters, but
+can be used to annotate results.
 
 ### Type Unknown
 
@@ -1561,7 +1555,6 @@ Type declarations may not be overridden.
 
 **Examples**
 
-
 	type MyCatType = {
 		color -> Colour
 		name -> String
@@ -1573,14 +1566,6 @@ Type declarations may not be overridden.
 			at (_:A) put (_:B) -> Boolean
 			cleanup(_:B)
 		} where A <: Hashable,  B <: DisposableReference
-	
-	type MyParametricType = type <A,B> {
-		at (_:A) put (_:B) -> Boolean
-		cleanup(_:B)
-	}
-	
-<_apb: Is the last one legal?  Where are A and B bound if I say `MyParametricType`?	_>
-	
 
 ## Type Conformance
 
@@ -1607,23 +1592,8 @@ canonical name) in B such that
 
     -   results types must be covariant: `S <: R`
 
-The conformance relationship is used in `where` clauses to constrain
-type parameters of classes and methods.
-
-<_apb:  This last statement is wrong.  The relationship in
-`where` clauses has to be matching, not conformance.  For
-example, consider the type
-
-    type Equivalence = type {
-    	~~ (Self) -> Boolean
-    	witness -> Self
-    }
-
-No other types *conform* to Equivalence, because it has Self in
-both contravariant and covariant positions.  But any type T
-with an `~~` operation and a witness method will *match*
-`Equivalence`, provided that these methods have T as parameter
-and result._ >
+The relationship used in `where` clauses to constrain
+type parameters of classes and methods has yet to be specified.
 
 ## Composite types
 
@@ -1639,31 +1609,15 @@ that variable may be bound to, or that method may return,
 an object of any one of the
 component types `T1`, `T2`, ..., `Tn`.
 No *objects* actually have variant types, only
-expressions. The actual type of an object referred to by a variant
-variable can be determined using that object’s reified type information.
+expressions. 
+The type of an object referred to by a variant
+variable 
+(as determined by the type annotations in its declaration)
+can be examined using that object’s reified type information.
 
-<_apb: this is the statement that I think implies that we need to do
-type inference.  Do you really want to say this?  It means that every object
-needs enough reified type information to distinguish between
-`type { foo -> Bar }` and
-`type { foo -> Wombat }`
-for all possible `Bar` and `Wombat`.  Where does this
-information come from?_>
-
-The only methods that may be requested on a receiver with a variant
-type are methods with exactly the same declaration across all members
-of the variant.  <_apb: what if the declarations differ in a parameter type.
-Can I request it with an argument in the meet of the parameter types?_>
-
-<_apb: What does it mean to "request a method via a
-type?"_> 
-
-<_kjx: reworded_>
-
-<_apb: so this one place suggests that method requests must be type correct.
-If a request breaks this rule (but succeeds because the expression happens to
-evaluate to the correct variant), are we promising to report a (dynamic) type
-error?_>
+The only methods in the static type of a receiver with a variant
+type are methods present in all members
+of the variant.
 
 Variant types are *not* equivalent to the
 object type that describes all common methods. This is so that the
@@ -1698,9 +1652,8 @@ types with new operations, and as bounds on `where` clauses.
 ```
 (S & T) <: S
 (S & T) <: T
-U <: S; U <: T; ==> U <: (S & T)
+U <: S; U <: T; <==> U <: (S & T)
 ```
-<_apb: Isn't that last rule actually an equivalence, not an implication?_>
 
 **Examples**
 
@@ -1714,10 +1667,6 @@ U <: S; U <: T; ==> U <: (S & T)
        where T <: (Comparable<T> & Printable & Happyable) {
                ...
     }
-
-<_apb: The first example works only if Sequence is defined using
-`Self` and not `Sequence`.  And if we allow `Self`, then the above rules for
-conformance of Intersection types don't work — I'm pretty sure._>
 
 ### Union Types
 
@@ -1994,30 +1943,16 @@ by an implementation.
 
 ## Garbage Collection
 
-Grace implementations should be garbage collected. Points where GC
-may occur are at any backwards branch and at any method request.
+Grace implementations should be garbage collected. GC
+may occur at any backwards branch, at any method request, and
+at any point where an object is constructed.
 Grace does not support finalization.
-
-<_apb: Why is this here at all?  What about execution of object constrictors, which
-will presumably trigger allocation?  Seems like that would be a good time to GC…_>
-
 
 ## Concurrency
 
 The core Grace specification does not describe a concurrent language.
 Various concurrency models may be provided as dialects.
-
-Grace does not provide overall sequential consistency. Rather, Grace
-provides sequential consistency within a single thread. Across threads,
-any value that is read has been written by some thread sometime—but
-Grace does not provide any stronger guarantee for concurrent operations
-that interfere.
-
-Grace’s memory model should support efficient execution on architectures
-with Total Store Ordering (TSO).
-
-<_apb: given how little we have discussed concurrency, I wonder if we should 
-remove all of these definitive statements?_>
+The details remain to be sepcified.
 
 # Acknowledgements
 
