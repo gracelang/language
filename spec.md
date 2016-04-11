@@ -108,7 +108,7 @@ following line has the same or lesser indentation than the indentation
 of the line containing the start of the current statement.  Statements
 may optionally be terminated by semicolons.
 
-### Example code with punctuation {-}
+**Example code with punctuation**
 
     def x =
        mumble "3"
@@ -117,7 +117,7 @@ may optionally be terminated by semicolons.
        print(stream.read);
     };
 
-### Example code without punctuation {-}
+**Example code without punctuation**
 
     def x =
        mumble "3"
