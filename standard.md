@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Standard Prelude\
-    Draft Specification Version 0.6b9
+    Draft Specification Version 0.6b15
 ...
 
 
@@ -359,10 +359,10 @@ type String =  {
   endsWith (possibleSuffix: String)
   // true if self ends with possibleSuffix
 
-  filter (predicate: Block1<String,Boolean>) -> String
+  filter (predicate: Block1[[String,Boolean>) -> String
   // returns the String containing those characters of self for which predicate returns true
 
-  fold<U> (binaryFunction: Block2<U,String,U>) startingWith(initial: U) -> U
+  fold[[U]] (binaryFunction: Block2[[U,String,U]]) startingWith(initial: U) -> U
   // performs a left fold of binaryFunction over self, starting with initial.  For example, 
   // fold a, b -> a + b.ord startingWith 0 will compute the sum of the ords of the characters in self
 
@@ -372,13 +372,13 @@ type String =  {
   indexOf (pattern:String) -> Number
   // returns the leftmost index at which pattern appears in self, or 0 if it is not there.
 
-  indexOf (pattern:String) ifAbsent (absent:Block0<W>) -> Number | W
+  indexOf (pattern:String) ifAbsent (absent:Block0[[W]]) -> Number | W
   // returns the leftmost index at which pattern appears in self; applies absent if it is not there.
 
   indexOf (pattern:String) startingAt (offset) -> Number
   // like indexOf(pattern), except that it returns the first index >= offset, or 0 if  pattern is not found.
 
-  indexOf<W> (pattern:String) startingAt(offset) ifAbsent (action:Block0<W>) -> Number | W
+  indexOf[[W]] (pattern:String) startingAt(offset) ifAbsent (action:Block0[[W]]) -> Number | W
   // like the above, except that it answers the result of applying action if there is no such index.
 
   indices -> Sequence
@@ -387,20 +387,20 @@ type String =  {
   isEmpty -> Boolean
   // true if self is the empty string
 
-  iterator -> Iterator<String>
+  iterator -> Iterator[[String>
   // an iterator over the characters of self
 
   lastIndexOf (sub:String) -> Number
   // returns the rightmost index at which sub appears in self, or 0 if it is not there.
 
-  lastIndexOf<W> (sub:String) ifAbsent (absent:Block0<W>) -> Number | W
+  lastIndexOf[[W]] (sub:String) ifAbsent (absent:Block0[[W]]) -> Number | W
   // returns the rightmost index at which sub appears in self; applies absent if it is not there.
 
-  lastIndexOf<W> (pattern:String) startingAt (offset) ifAbsent (action:Block0<W>) -> 
+  lastIndexOf[[W]] (pattern:String) startingAt (offset) ifAbsent (action:Block0[[W]]) -> 
       Number | W
   // like the above, except that it returns the rightmost index <=  offset.
 
-  map<U> (function:Block<String,U>) -> Iterable<U>
+  map[[U]] (function:Block[[String,U]]) -> Iterable[[U]]
   // returns an Iterable object containing the results of successive applications of function to the
   // individual characters of self. Note that the result is not a String, even if type U happens to be String.
   // If a String is desired, use fold()startingWith "" with a function that concatenates.
@@ -534,7 +534,7 @@ A binding is an immutable pair comprising a `key` and a
 `::` operator, as in `k::v`, or by
 requesting `binding.key(k) value(v)`.
 
-    type Binding<K, T> = {
+    type Binding[[K, T]] = {
         key -> K
         // returns the key
         value -> T
@@ -548,9 +548,9 @@ The objects described in this section are made available to all standard
 Grace programs. (This means that they are defined as part of the
 *standardGrace* dialect.) As is natural for collections, the types are
 parameterized by the types of the elements of the collection. Type
-arguments are enclosed in `<` and `>`
+arguments are enclosed in `[[` and `]]`
 used as brackets. This enables us to distinguish, for example, between
-and `Set<String>`. In Grace programs, type arguments
+and `Set[[String]]`. In Grace programs, type arguments
 and their brackets can be omitted; this is equivalent to using
 `Unknown` as the argument, which says that the programmer
 either does not know, or does not care to state, the type.
@@ -565,16 +565,16 @@ details, they share many common properties. First, they can all be
 created by similar methods:
 
 ```
-    type CollectionFactory<T> = type {
-        with (*elts:Object) -> Collection<T>
+    type CollectionFactory[[T]] = type {
+        with (*elts:Object) -> Collection[[T]]
         //  creates a collection of my kind that contains *elts, which is a variable-length argument list.   
         // Thus, set.with(5, 2) returns a set with members 2 and 5, and list.with(1, 2, 3, 5) returns a
         // list containing the elements 1, 2, 3 and 5, in that order.
        
-        empty -> Collection<T>
+        empty -> Collection[[T]]
         // creates and returns an empty collection of my kind.
         
-        withAll (elts:Collection<T>) -> Collection<T>
+        withAll (elts:Collection[[T]]) -> Collection[[T]]
         // like with, except that elts is a single argument, which is a collection, rather than a 
         // variable-length list of arguments.
     }
@@ -582,13 +582,13 @@ created by similar methods:
 
 Second, they share many common methods, which are defined in a hierarchy
 of types, each extending the one above it in the hierarchy. The simplest
-is the type `Iterable\<T>`, which captures the idea of a
+is the type `Iterable\[[T]]`, which captures the idea of a
 (potentially unordered) collection of *elements*, each of type
 `T`, over which a client can iterate: [type:Iterable]
 
 ``` 
-type Iterable<T> = Object & type {
-    iterator -> Iterator<T>       
+type Iterable[[T]] = Object & type {
+    iterator -> Iterator[[T]]       
     // Returns an iterator over my elements.  It is an error to modify self while iterating over it.
     // Note: all other methods can be defined using iterator.  
     
@@ -598,26 +598,26 @@ type Iterable<T> = Object & type {
     first -> T
     // The first element of self; raises BoundsError if there is none.
     
-    do(action: Block1<T,Unknown>) -> Done
+    do(action: Block1[[T,Unknown]]) -> Done
     //  Applies action yo each element of self.
     
-    do(action:Block1<T, Unknown>) separatedBy(sep:Block0<Unknown>) -> Done
+    do(action:Block1[[T, Unknown]]) separatedBy(sep:Block0[[Unknown]]) -> Done
     // applies action to each element of self, and applies sep (to no arguments) in between.
 
-    map<R>(unaryFunction:Block1<T, R>) -> Selftype<R>
+    map[[R]](unaryFunction:Block1[[T, R]]) -> Selftype[[R]]
     // returns a new collection whose elements are obtained by applying unaryFunction to
     // each element of self.  If self is ordered, then the result is ordered.
     
-    fold<R>(binaryFunction:Block2<R, T, R>) startingWith(initial:R) -> R
+    fold[[R]](binaryFunction:Block2[[R, T, R]]) startingWith(initial:R) -> R
     // folds binaryFunction over self, starting with initial.  If self is ordered, this is 
     // the left fold.  For example, fold {a, b -> a + b} startingWith 0
     // will compute the sum, and fold {a, b -> a * b} startingWith 1 the product.
     
-    filter(condition:Block1<T, Boolean>) -> Selftype<T>
+    filter(condition:Block1[[T, Boolean]]) -> Selftype[[T]]
     // returns a new collection containing only those elements of self for which
     // condition holds.  The result is ordered if self is ordered.
     
-    ++(other: Iterable<T>) -> Selftype<T>
+    ++(other: Iterable[[T]]) -> Selftype[[T]]
     // returns a new object whose elements include those of self and those of other.
 }
 ```
@@ -625,14 +625,14 @@ type Iterable<T> = Object & type {
 The type `Collection` adds some conversion methods to
 `Iterable`:
 ```
-    type Collection<T> = Iterable<T> & type {
-         asList -> List<T>
+    type Collection[[T]] = Iterable[[T]] & type {
+         asList -> List[[T]]
         // returns a (mutable) list containing my elements.
         
-        asSequence -> Sequence<T>
+        asSequence -> Sequence[[T]]
         // returns a sequence containing my elements.
 
-        asSet -> Set<T>
+        asSet -> Set[[T]]
         // returns a (mutable) Set containing my elements, with duplicates eliminated.
         // The == operation on my elements is used to identify duplicates.
     }
@@ -650,35 +650,35 @@ is that `Enumerable`s have a natural order, so lists are
 `Enumerable`, whereas sets are just
 `Iterable`.
 
-    type Enumerable<T> = Collection<T> & type {
+    type Enumerable[[T]] = Collection[[T]] & type {
         size -> Number
         // the number elements in self.  If it is computationally expensive to 
         // calculate size, it's permissible to raise the exception SizeUnknown.
         // A client who really needs to know my size should iterate through my elements and
         // count them, or convert me to a list or sequence.
          
-        values -> Enumerable<T>
+        values -> Enumerable[[T]]
         // an enumeration of my values: the elements in the case of  sequence or list,
         // the values the case of a dictionary.
         
-        asDictionary -> Dictionary<Number, T>
+        asDictionary -> Dictionary[[Number, T]]
         // returns a dictionary containing my indices as keys and my elements as values, so that
         // my i^th element is self.asDictionary.at(i).
 
-        keysAndValuesDo (action:Block2<Number, T, Object>) -> Done
+        keysAndValuesDo (action:Block2[[Number, T, Object]]) -> Done
         // applies action, in sequence, to each of my keys and the corresponding element. 
         
-        onto(f:CollectionFactory<T>) -> Collection<T>
+        onto(f:CollectionFactory[[T]]) -> Collection[[T]]
         // uses the factory f to create a new collection, then populates it with my elements;
         // returns the new collection.
         
-        into(existing:Collection<T>) -> Collection<T>
+        into(existing:Collection[[T]]) -> Collection[[T]]
         // adds my elements to existing, and returns existing.
         
-        sorted -> List<T>
+        sorted -> List[[T]]
         // returns a new List containing all of my elements, but sorted by their < and == operations.
 
-        sortedBy(sortBlock:Block2<T, T, Number>) -> Sequence<T>
+        sortedBy(sortBlock:Block2[[T, T, Number]]) -> Sequence[[T]]
         // returns a new List containing all of my elements, but sorted according to the ordering 
         // established by sortBlock, which should return -1 if its first argument is less than its second
         //  argument, 0 if they are equal, and +1 otherwise.
@@ -687,12 +687,12 @@ is that `Enumerable`s have a natural order, so lists are
 Sequence
 --------
 
-The type `Sequence\<T>` describes sequences of values of
+The type `Sequence[[T]]` describes sequences of values of
 type `T`. Sequence objects are immutable; they can be
 constructed either explicitly, using `sequence.with(1, 3, 5,
 7)`, or as ranges like `1..10`.
 
-    type Sequence<T> = Enumerable<T> & type {
+    type Sequence[[T]] = Enumerable[[T]] & type {
 
         at(ix:Number) -> T
         // returns my x^th element, provided ix is integral and l <= \leq ix <=  size
@@ -715,19 +715,19 @@ constructed either explicitly, using `sequence.with(1, 3, 5,
         last -> T
         // returns my last element
         
-        indices -> Sequence<Number>
+        indices -> Sequence[[Number]]
         // returns the sequence of my indices.  
         
-        keys -> Sequence<Number>
+        keys -> Sequence[[Number]]
         // same as indices; the name keys is for compatibility with dictionaries.
 
         indexOf(sought:T)  -> Number
         // returns the index of my first element v such that v == sought.  Raises NoSuchObject if there is none.
         
-        indexOf<W>(sought:T) ifAbsent(action:Block0<W>)  -> Number | W
+        indexOf[[W]](sought:T) ifAbsent(action:Block0[[W]])  -> Number | W
         // returns the index of the first element v such that v == sought.  Performs action if there is no such element.
 
-        reversed -> Sequence<T>
+        reversed -> Sequence[[T]]
         // returns a Sequence containing my values, but in the reverse order.
         
         contains(sought:T) -> Boolean
@@ -759,32 +759,32 @@ is the same as `range.from 9 downTo 3`.
 List
 ----
 
-The type `List<T>` describes objects that are mutable
+The type `List[[T]]` describes objects that are mutable
 lists of elements that have type `T`. Like sets and
 sequences, list objects can be constructed using the
 `empty`, `with`, and
 `withAll` requests, as in
-`list.empty<T>`, `list.with<T>(a, b, c,
+`list.empty[[T]]`, `list.with[[T]](a, b, c,
 ...)`, or
-`list.withAll<T>(existingCollection)`.
+`list.withAll[[T]](existingCollection)`.
 
 ``` 
 
-type List<T> = Sequence<T> & type {
+type List[[T]] = Sequence[[T]] & type {
 
-    at(n: Number) put(new:T) -> List<T>
+    at(n: Number) put(new:T) -> List[[T]]
     // updates self so that my n^th element is new.  Returns self.
     // Requires 1 <= n <= size+1; when n = size+1, equivalent to addLast(new).
     
 
-    add(*new:T) -> List<T>
-    addLast(*new:T) -> List<T>
+    add(*new:T) -> List[[T]]
+    addLast(*new:T) -> List[[T]]
     // adds new to end of self.  (The first form can be also be applied to sets, which are not Indexable.)
 
-    addFirst(*new:T) -> List<T>
+    addFirst(*new:T) -> List[[T]]
     // adds new as the first element(s) of self.  Change the index of all of the existing elements.
     
-    addAllFirst(news:Collection<T>) -> List<T>
+    addAllFirst(news:Collection[[T]]) -> List[[T]]
     // adds news as the first elements of self.  Change the index of all of the existing elements.
 
     removeFirst -> T
@@ -796,24 +796,24 @@ type List<T> = Sequence<T> & type {
     removeAt(n:Number) -> T
     // removes and returns n^th element of self
 
-    remove(*element:T) -> List<T>
+    remove(*element:T) -> List[[T]]
     // removes element(s) from self.  Raises a NoSuchObject exception if not.self.contains(element). 
     // Returns self
 
-    remove(*element:T) ifAbsent(action:Block0<Unknown>) -> List<T>
+    remove(*element:T) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
     // removes element(s) from self; executes action if any of them is not contained in self.  Returns self
 
-    removeAll(elements:Collection<T>) -> List<T>
+    removeAll(elements:Collection[[T]]) -> List[[T]]
     // removes elements from self.  Raises a NoSuchObject exception if any one of 
     // them is not contained in self.  Returns self
 
-    removeAll(elements:Collection<T>) ifAbsent(action:Block0<Unknown>) -> List<T>
+    removeAll(elements:Collection[[T]]) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
     // removes elements from self;  executes action if any of them is not contained in self.  Returns self
 
-    ++ (other:List<T>) -> List<T>
+    ++ (other:List[[T]]) -> List[[T]]
     // returns a new list formed by concatenating self and other
 
-    addAll(extension:List<T>) -> List<T>
+    addAll(extension:List[[T]]) -> List[[T]]
     // extends self by appending extension; returns self.
 
     contains(sought:T) -> Boolean
@@ -823,19 +823,19 @@ type List<T> = Sequence<T> & type {
     // returns true when other is a Sequence of the same size as self, containing the same elements 
     // in the same order.
 
-    sort -> List<T>
+    sort -> List[[T]]
     // sorts self, using the < and == operations on my elements.  Returns self.
     // Compare with sorted, which constructs a new list.
     
-    sortBy(sortBlock:Block2<T, T, Number>) -> List<T>
+    sortBy(sortBlock:Block2[[T, T, Number]]) -> List[[T]]
     // sorts self according to the ordering determined by sortBlock, which should return -1 if its first 
     // argument is less than its second argument, 0 if they are equal, and +1 otherwise.  Returns self.
     // Compare with sortedBy, which constructs a new list.
 
-    copy -> List<T>
+    copy -> List[[T]]
     // returns a list that is a (shallow) copy of self
     
-    reverse -> List<T>
+    reverse -> List[[T]]
     // mutates self in-place so that its elements are in the reverse order.  Returns self.
     // Compare with reversed, which creates a new collection.
 }
@@ -848,61 +848,61 @@ Sets are unordered collections of elements without duplicates. The
 `==` method on the elements is used to detect and
 eliminate duplicates; it must be symmetric.
 
-    type Set<T> = Collection<T> & type {
+    type Set[[T]] = Collection[[T]] & type {
         size -> Number
         // the number of elements in self.
         
-        add(*element:T) -> Set<T>
+        add(*element:T) -> Set[[T]]
         // adds element(s) to self.  Returns self.    
         
-        addAll(elements:Collection<T>) -> Set<T>
+        addAll(elements:Collection[[T]]) -> Set[[T]]
         // adds elements to self.  Returns self. 
         
-        remove(*element: T) -> Set<T>
+        remove(*element: T) -> Set[[T]]
         // removes element(s) from self.  It is an error if element is not present.   Returns self.
         
-        remove(*elements: T) ifAbsent(block: Block0<Done>) -> Set<T>
+        remove(*elements: T) ifAbsent(block: Block0[[Done]]) -> Set[[T]]
         // removes element(s) from self.  Executes action if element is not present.   Returns self.
         
-        removeAll(elems:Collection<T>)
+        removeAll(elems:Collection[[T]])
         // removes elems from self.  It is an error if any of the elems is not present.   Returns self.
 
-        removeAll(elems:Collection<T>)ifAbsent(action:Block0<Done>) -> Set<T>
+        removeAll(elems:Collection[[T]])ifAbsent(action:Block0[[Done]]) -> Set[[T]]
         // removes elems from self.  Executes action if any of elems is not present.   Returns self.
         
         contains(elem:T) -> Boolean
         // true if self contains elem
 
-        includes(predicate: Block1<T,Boolean>) -> Boolean
+        includes(predicate: Block1[[T,Boolean]]) -> Boolean
         // true if predicate holds for any of the elements of self
         
-        find(predicate: Block1<T,Boolean>) ifNone(notFoundBlock: Block0<T>) -> T
+        find(predicate: Block1[[T,Boolean]]) ifNone(notFoundBlock: Block0[[T]]) -> T
         // returns an element of self for which predicate holds, or the result of applying notFoundBlock is there is none.
         
-        copy -> Set<T>
+        copy -> Set[[T]]
         // returns a copy of self
         
-        ** (other:Set<T>) -> Set<T>
+        ** (other:Set[[T]]) -> Set[[T]]
         // set intersection; returns a new set that is the intersection of self and other
         
-        -- (other:Set<T>) -> Set<T>
+        -- (other:Set[[T]]) -> Set[[T]]
         // set difference (relative complement); the result contains all of my elements that are not also in other.
         
-        ++ (other:Set<T>) -> Set<T>
+        ++ (other:Set[[T]]) -> Set[[T]]
         // set union; the result contains elements that were in self or in other (or in both).
         
-        onto(f:CollectionFactory<T>) -> Collection<T>
+        onto(f:CollectionFactory[[T]]) -> Collection[[T]]
         // uses the factory f to create a new collection,  then populates it with my elements;
         // returns the new collection.
         
-        into(existing:Collection<T>) -> Collection<T>
+        into(existing:Collection[[T]]) -> Collection[[T]]
         // adds my elements to existing, and returns existing.
     }
 
 Dictionary
 ----------
 
-The type `Dictionary<K, T>` describes objects that are
+The type `Dictionary[[K, T]]` describes objects that are
 mappings from *keys* of type `K` to *values* of type
 `T`. Like sets and sequences, dictionary objects can be
 constructed using the `empty`, and
@@ -910,14 +910,14 @@ constructed using the `empty`, and
 `with` must be of type `Binding`, i.e.,
 they must have methods `key` and `value`.
 Bindings can be conveniently created using the infix `::`
-operator, as in `dictionary.empty<K, T>`,
-`dictionary.with<K, T>(k::v, m::w, n::x, ...)`, or .
+operator, as in `dictionary.empty[[K, T]]`,
+`dictionary.with[[K, T]](k::v, m::w, n::x, ...)`, or .
 
-    type Dictionary<K, T> = Collection<T> & type {
+    type Dictionary[[K, T]] = Collection[[T]] & type {
         size -> Number
         // the number of key::value bindings in self
 
-        at(key:K) put(value:T) -> Dictionary<K, T>
+        at(key:K) put(value:T) -> Dictionary[[K, T]]
         // puts value at key; returns self
         
         []:=(key:K, value:T)  -> Done
@@ -927,7 +927,7 @@ operator, as in `dictionary.empty<K, T>`,
         [](k) -> T
         // returns my value at key k; raises NoSuchObject if there is none.
         
-        at(k:K) ifAbsent(action:Block0<T>) -> T
+        at(k:K) ifAbsent(action:Block0[[T]]) -> T
         // returns my value at key k; returns the result of applying action if there is none.
 
         containsKey(k:K) -> Boolean 
@@ -937,55 +937,55 @@ operator, as in `dictionary.empty<K, T>`,
         containsValue(v) 
         // returns true if one of my values == v
 
-        removeAllKeys(keys: Collection<K>) -> Dictionary<K, T>
+        removeAllKeys(keys: Collection[[K]]) -> Dictionary[[K, T]]
         // removes all of the keys from self, along with the corresponding values.  Returns self.
 
-        removeKey(*keys: K) -> Dictionary<K, T>
+        removeKey(*keys: K) -> Dictionary[[K, T]]
         // removes keys from self, along with the corresponding values.  Returns self.
 
-        removeAllValues(removals: Collection(V)) -> Dictionary<K, T>
+        removeAllValues(removals: Collection(V)) -> Dictionary[[K, T]]
         // removes from self all of the values in removals, along with the corresponding keys.  Returns self.
 
         removeValue(*removals) 
         // removes from self removals, along with the corresponding keys.  Returns self.
 
-        keys -> Enumerable<K>
+        keys -> Enumerable[[K]]
         // returns my keys as a lazy sequence
 
-        values -> Enumerable<K>
+        values -> Enumerable[[K]]
         // returns my values as a lazy sequence
         
-        bindings -> Enumerable<Binding<K, V>>
+        bindings -> Enumerable[[Binding[[K, V]] ]]
         // returns my bindings as a lazy sequence
 
-        keysAndValuesDo(action:Block2<K, T, Object>) -> Done
+        keysAndValuesDo(action:Block2[[K, T, Object]] ) -> Done
         // applies action, in arbitrary order, to each of my keys and the corresponding value. 
 
-        keysDo(action:Block2<K, Object>) -> Done
+        keysDo(action:Block2[[K, Object]]) -> Done
         // applies action, in arbitrary order, to each of my keys.
 
-        valuesDo(action:Block2<T, Object>) -> Done
-        do(action:Block2<T, Object>) -> Done
+        valuesDo(action:Block2[[T, Object]]) -> Done
+        do(action:Block2[[T, Object]]) -> Done
         // applies action, in arbitrary order, to each of my values.
 
-        copy -> Dictionary <K, V>
+        copy -> Dictionary [[K, V]]
         // returns a new dictionary that is a(shallow) copy of self
 
-        asDictionary -> Dictionary<K, T>
+        asDictionary -> Dictionary[[K, T]]
         // returns self
 
-        ++ (other:Dictionary<K, T>) -> Dictionary<K, T>
+        ++ (other:Dictionary[[K, T]]) -> Dictionary[[K, T]]
         // returns a new dictionary that merges the entries from self and other.
         // A value in other at key k overrides the value in self at key k.
         
-        -- (other:Dictionary<K, T>) -> Dictionary<K, T>
+        -- (other:Dictionary[[K, T]]) -> Dictionary[[K, T]]
         // returns a new dictionary that contains all of my entries except for those whose keys are in other
     }
 
 Iterables and ***for*** loops {#sec:forLoop}
 -----------------------------
 
-Collections that implement the type `Iteratable<T>`
+Collections that implement the type `Iteratable[[T]]`
 (defined in Section [type:Iterable]) implement the internal and external
 iterator patterns, which provide for iteration through a collection of
 elements of type `T`, one element at a time. The method
@@ -995,7 +995,7 @@ external iterator object, with the following interface:
 
 ``` 
 
-type Iterator<T> = type {
+type Iterator[[T]] = type {
     next -> T
     // returns the next element of the collection over which I am the iterator; raises the Exhausted
     // exception if there are no more elements. Repeated request of this method will yield all of the 
@@ -1109,7 +1109,7 @@ for more user-friendly objects. Most programmers should use
 `dictionary` rather than `primitiveArray`.
 
 ``` 
-type Array<T> =  {
+type Array[[T]] =  {
     size -> Number
     // return the number of elements in self
 
@@ -1119,7 +1119,7 @@ type Array<T> =  {
     at(index: Number) put (newValue: T) -> Done
     // update element of list at given index to newValue
 
-    sortInitial(n:Number) by(sortBlock:block2<T, T, Number>) -> Boolean
+    sortInitial(n:Number) by(sortBlock:block2[[T, T, Number]]) -> Boolean
     // sorts elements 0..n.  The ordering is determined by sortBlock, which should return -1 
     // if its first argument is less than its second argument, 0 if they are equal, and +1 otherwise.
 }
@@ -1190,7 +1190,7 @@ for any identifier of your choice `system`. The object
         contains(key:String) -> Boolean
     }
 
-    argv -> Sequence<String>
+    argv -> Sequence[[String]]
     // the command-line arguments to this program
     
     elapsedTime -> Number

@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.6b13
+    Draft Specification Version 0.6b15
 ...
 
 
@@ -377,7 +377,7 @@ might be implemented as a method with a block parameter
 Here is another example:
 
     var sum := 0
-    def summingBlock: Block1<Number, Number> =
+    def summingBlock: Block1[[Number, Number]] =
         { i: Number ->  sum := sum + i }
     summingBlock.apply(4)       // sum now 4
     summingBlock.apply(32)      // sum now 36
@@ -545,10 +545,10 @@ arity" (although it does _not_ allow overloading by type).
 
 ### Type Parameters
 
-Methods may be declared with one or more type parameters, which are listed between **`<`** and **`>`** used as brackets.
+Methods may be declared with one or more type parameters, which are listed between **`[[`** and **`]]`** used as brackets.
 If present, type parameters must appear after the identifier of the first part of
-a multipart name.   There must be no space between the opening `<` and the first type parameter (or,
-in a request, the first type argument), or between the last type parameter (or argument) and the closing `>`.
+a multipart name.   There must be no space between the opening `[[` and the first type parameter (or,
+in a request, the first type argument), or between the last type parameter (or argument) and the closing `]]`.
 The purpose of this rule is to disambiguate this use of `<` and `>` from their use as operator symbols, when
 they must be surrounded by spaces.
 
@@ -560,11 +560,11 @@ The presence or absence of type parameters does not change the canonical name of
 **Examples**
 
 
-    method sumSq<T>(a : T, b : T) -> T where T <: Numeric {
+    method sumSq[[T]](a : T, b : T) -> T where T <: Numeric {
         (a * a) + (b * b)
     }
 
-    method prefix- <T> -> Number
+    method prefix- [[T]] -> Number
          { 0 - self }
 
 
@@ -602,7 +602,7 @@ Additional annotations may be defined by dialect or libraries.
     var x is readable, writeable := 3
     def y: Number is public
     method foo is confidential  { }
-    method id<T> is required  { }
+    method id[[T]] is required  { }
 
 
 ## Encapsulation
@@ -811,14 +811,14 @@ The details have yet to be specified.
 **Example**
 
 
-    class vectorOfSize(size)<T> {
+    class vectorOfSize(size)[[T]] {
         var contents := Array.size(size)
         method at(index : Number) -> T {return contents.at() }
         method at(index : Number) put(elem : T) { }
     }
 
-    class sortedVectorOfSize(size)<T>
-        where T <: Comparable<T> {
+    class sortedVectorOfSize(size)[[T]]
+        where T <: Comparable[[T]] {
           ...
     }
 
@@ -1267,7 +1267,7 @@ arguments are omitted, they are assumed to be type `Unknown`.
 **Examples**
 
 
-    sumSq<Number>(10.i64, 20.i64)
+    sumSq[[Number]](10.i64, 20.i64)
 
     sumSq(10.i64, 20.i64)
 
@@ -1290,7 +1290,7 @@ In particular,
 
 Pattern matching is based on `Pattern` objects that respond to the
 `match(subject)` request by returning a `MatchResult`, which is either
-`false` if the match fails, or a `SuccessfulMatch<R>` object which
+`false` if the match fails, or a `SuccessfulMatch[[R]]` object which
 behaves like `true` but also supports a `result` request.  All type
 objects are Patterns; in addition, libraries supply non-type Patterns,
 and programmers are free to implement their own Patterns.
@@ -1561,7 +1561,7 @@ Type declarations may not be overridden.
 	}
 	// I care only about names and colours
 	
-	type MyParametricType<A,B> =
+	type MyParametricType[[A,B]] =
 		type {
 			at (_:A) put (_:B) -> Boolean
 			cleanup(_:B)
@@ -1658,13 +1658,13 @@ U <: S; U <: T; <==> U <: (S & T)
 **Examples**
 
 
-    type List<T> = Sequence<T> & type {
-        add(_:T) -> List<T>
-        remove(_:T) -> List<T>
+    type List[[T]] = Sequence[[T]] & type {
+        add(_:T) -> List[[T]]
+        remove(_:T) -> List[[T]]
     }
 
-    class happy<T>(param: T) -> Done
-       where T <: (Comparable<T> & Printable & Happyable) {
+    class happy[[T]](param: T) -> Done
+       where T <: (Comparable[[T]] & Printable & Happyable) {
                ...
     }
 
@@ -1714,12 +1714,12 @@ of the object `o`.  As patterns, singleton types *match* only their singleton ob
         method asString { "the Null thing" }
     }
 
-    type Some<T> {
+    type Some[[T]] {
         thing -> T
         isNull -> Boolean
     }
 
-    type Option<T> = Some<T> | Null
+    type Option[[T]] = Some[[T]] | Null
 
 Here are the conformance rules for Singleton types:
 
@@ -1746,12 +1746,12 @@ of the object `o`.  As patterns, singleton types *match* only their singleton ob
 		method isNull -> Boolean {return true}
 	}
 	
-	type Some<T> {
+	type Some[[T> {
 		thing -> T
 		isNull -> Boolean
 	}
 	
-	type Option<T> = Some<T> | Singleton(null)
+	type Option[[T]] = Some[[T]] | Singleton(null)
 
 
 ```
