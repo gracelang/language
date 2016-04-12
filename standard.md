@@ -94,7 +94,7 @@ the *repeat–times* loop is to execute the block `n.ceiling` times.
 
 The *for–do* and *for–and–do* loops are governed by collections. They
 execute a block of code repeatedly, depending on the elements of the
-collection, and are described in Section [sec:forLoop].
+collection, and are described in the [Section on Iterables and **for** loops](#Iterables-and-for-loops).
 
 Unbounded Loops
 ---------------
@@ -162,9 +162,9 @@ Grace supports built-in objects with types `Object`,
 Object
 ------
 
-All Grace objects understand the methods in type
-`Object`. These methods will often be omitted when other
-types are described.
+All Grace objects (except `done`) understand the methods in type
+`Object`. These methods will often be omitted when other types are
+described.
 
 ``` 
 
@@ -215,14 +215,14 @@ type Number = {
   - (other: Number) -> Number
   //  difference of self and other
 
-  * (Other: Number) -> Number
+  * (other: Number) -> Number
   //  product of self and other
 
   / (other: Number) -> Number
   //  quotient of self divided by other (in general, a fraction).
 
   % (other: Number) -> Number
-  //  remainder r of self after integer division by other: 0 \leq r < | self;  see also *
+  //  remainder r after integer division of self by other: 0 <= r < self;  see also ÷
 
   ÷ (other: Number) -> Number
    // quotient q of self after integer division by other: self = (other * q) + r, where r = self % other
@@ -278,25 +278,23 @@ String
 String constructors are written surrounded by double quote characters.
 There are three commonly-used escape characters:
 
--   `` means the newline character
+-   `\n` means the newline character
 
--   `\
-    ` means a single backslash chracter
+-   `\\` means a single backslash character
 
--   `` means a double quote character.
+-   `\"` means a double quote character.
 
 There are also escapes for a few other characters and for arbitrary
 Unicode codepoints; for more information, see the Grace language
 specification.
 
-String constructors can also contain simple Grace expressions
-enclosed in braces, like this: `count = {count}` These are
-called string interpolations. The value of the interpolated expression
-is calculated, converted to a string (by requesting its
-`asString` method), and concatenated between the
-surrounding fragments of literal string. Thus, if the value of
-`count` is `7`, the above example will
-evaluate to the string `“count = 7.”`
+String constructors can also contain simple Grace expressions[^1]
+enclosed in braces, like this: `"count = {count}."` These are called
+string interpolations. The value of the interpolated expression is
+calculated, converted to a string (by requesting its `asString` method),
+and concatenated between the surrounding fragments of literal string.
+Thus, if the value of `count` is `7`, the above example will evaluate to
+the string `"count = 7."`
 
 Strings are immutable. Methods like `replace(_)with(_)`
 always return a new string; they never change the receiver.
@@ -363,8 +361,9 @@ type String =  {
   // returns the String containing those characters of self for which predicate returns true
 
   fold[[U]] (binaryFunction: Block2[[U,String,U]]) startingWith(initial: U) -> U
-  // performs a left fold of binaryFunction over self, starting with initial.  For example, 
-  // fold a, b -> a + b.ord startingWith 0 will compute the sum of the ords of the characters in self
+  // performs a left fold of binaryFunction over self, starting with initial.   
+  // For example, fold a, b -> a + b.ord startingWith 0 will compute the sum
+  // of the ords of the characters in self
 
   hash -> Number
   // the hash of self
@@ -491,7 +490,7 @@ Point
 
 Points can be thought of as locations in the cartesian plane, or as
 2-dimensional vectors from the origin to a specified location. Points
-are created from Numbers using the ``@ infix operator.
+are created from Numbers using the `@` infix operator.
 Thus, `3 @ 4` represents the point with coordinates (3, 4).
 
 ``` 
@@ -515,8 +514,8 @@ type Point =  {
     * (factor:Number) -> Point
     // this point scaled by factor,  i.e. (self.x*factor) @ (self.y*factor)
     
-    / (factor:Number) -> Point
-    // this point scaled by 1/factor, i.e. (self.x/factor) @ (self.y/factor)
+    / (divisor:Number) -> Point
+    // this point scaled by 1/factor, i.e. (self.x/divisor) @ (self.y/divisor)
 
     length -> Number
     // distance from self to the origin
@@ -558,35 +557,15 @@ either does not know, or does not care to state, the type.
 Common Abstractions 
 -------------------
 
-The major kinds of collection are `sequence`,
-`list`, `set` and
-`dictionary`. Although these objects differ in their
-details, they share many common properties. First, they can all be
-created by similar methods:
+The major kinds of collection are `sequence`, `list`, `set` and
+`dictionary`. Although these objects differ in their details, they share
+many common methods, which are defined in a hierarchy of types, each
+extending the one above it in the hierarchy. The simplest is the type
+`Iterable<T>`, which captures the idea of a (potentially unordered)
+collection of *elements*, each of type `T`, over which a client can
+iterate:
 
 ```
-    type CollectionFactory[[T]] = type {
-        with (*elts:Object) -> Collection[[T]]
-        //  creates a collection of my kind that contains *elts, which is a variable-length argument list.   
-        // Thus, set.with(5, 2) returns a set with members 2 and 5, and list.with(1, 2, 3, 5) returns a
-        // list containing the elements 1, 2, 3 and 5, in that order.
-       
-        empty -> Collection[[T]]
-        // creates and returns an empty collection of my kind.
-        
-        withAll (elts:Collection[[T]]) -> Collection[[T]]
-        // like with, except that elts is a single argument, which is a collection, rather than a 
-        // variable-length list of arguments.
-    }
-```
-
-Second, they share many common methods, which are defined in a hierarchy
-of types, each extending the one above it in the hierarchy. The simplest
-is the type `Iterable\[[T]]`, which captures the idea of a
-(potentially unordered) collection of *elements*, each of type
-`T`, over which a client can iterate: [type:Iterable]
-
-``` 
 type Iterable[[T]] = Object & type {
     iterator -> Iterator[[T]]       
     // Returns an iterator over my elements.  It is an error to modify self while iterating over it.
@@ -594,6 +573,12 @@ type Iterable[[T]] = Object & type {
     
     isEmpty -> Boolean
     // True if self has no elements
+    
+    size -> Number
+    // The number of elements in self; raises $\textsf{SizeUnknown}$ if size is not known.
+    
+    sizeIfUnknown(action: Block0<Number>) -> Number
+    // The number of elements in self; if size is not known, then action is evaluated and its value returned.
     
     first -> T
     // The first element of self; raises BoundsError if there is none.
@@ -627,15 +612,15 @@ The type `Collection` adds some conversion methods to
 ```
     type Collection[[T]] = Iterable[[T]] & type {
          asList -> List[[T]]
-        // returns a (mutable) list containing my elements.
-        
+    // returns a (mutable) list containing my elements.
+    
         asSequence -> Sequence[[T]]
-        // returns a sequence containing my elements.
+    // returns a sequence containing my elements.
 
         asSet -> Set[[T]]
-        // returns a (mutable) Set containing my elements, with duplicates eliminated.
-        // The == operation on my elements is used to identify duplicates.
-    }
+    // returns a (mutable) Set containing my elements, with duplicates eliminated.
+    // The == operation on my elements is used to identify duplicates.
+}
 ```
 
 Additional methods are available in the type
@@ -650,90 +635,94 @@ is that `Enumerable`s have a natural order, so lists are
 `Enumerable`, whereas sets are just
 `Iterable`.
 
-    type Enumerable[[T]] = Collection[[T]] & type {
-        size -> Number
-        // the number elements in self.  If it is computationally expensive to 
-        // calculate size, it's permissible to raise the exception SizeUnknown.
-        // A client who really needs to know my size should iterate through my elements and
-        // count them, or convert me to a list or sequence.
-         
+type Enumerable[[T]] = Collection[[T]] & type {
+
         values -> Enumerable[[T]]
-        // an enumeration of my values: the elements in the case of  sequence or list,
-        // the values the case of a dictionary.
-        
+    // an enumeration of my values: the elements in the case of  sequence or list,
+    // the values the case of a dictionary.
+    
         asDictionary -> Dictionary[[Number, T]]
-        // returns a dictionary containing my indices as keys and my elements as values, so that
+    // returns a dictionary containing my indices as keys and my elements as values, so that
         // my i^th element is self.asDictionary.at(i).
 
         keysAndValuesDo (action:Block2[[Number, T, Object]]) -> Done
-        // applies action, in sequence, to each of my keys and the corresponding element. 
-        
-        onto(f:CollectionFactory[[T]]) -> Collection[[T]]
-        // uses the factory f to create a new collection, then populates it with my elements;
-        // returns the new collection.
-        
-        into(existing:Collection[[T]]) -> Collection[[T]]
+    // applies action, in sequence, to each of my keys and the corresponding element. 
+    
+    into(existing:Collection[[T]]) -> Collection[[T]]
         // adds my elements to existing, and returns existing.
-        
-        sorted -> List[[T]]
-        // returns a new List containing all of my elements, but sorted by their < and == operations.
+    
+    sorted -> List[[T]]
+    // returns a new List containing all of my elements, but sorted by their < and == operations.
 
-        sortedBy(sortBlock:Block2[[T, T, Number]]) -> Sequence[[T]]
-        // returns a new List containing all of my elements, but sorted according to the ordering 
-        // established by sortBlock, which should return -1 if its first argument is less than its second
-        //  argument, 0 if they are equal, and +1 otherwise.
-    }
+    sortedBy(sortBlock:Block2[[T, T, Number]]) -> Sequence[[T]]
+    // returns a new List containing all of my elements, but sorted according to the ordering 
+    // established by sortBlock, which should return -1 if its first argument is less than its second
+    //  argument, 0 if they are equal, and +1 otherwise.
+}
+
+Lineup
+------
+
+The Grace language uses brackets as a syntax for constructing `lineup`
+objects. `[2, 3, 4]` is a lineup containing the three numbers $2$, $3$
+and $4$. `[ ]` constructs the empty lineup.
+
+Lineup objects have type `Iterable`. They are not indexable, so can’t be
+used like arrays or lists. They are primarily intended for initializing
+more capable collections, as in `list [2, 3, 4]`, which creates a list,
+or `set ["red", "green", "yellow"]`, which creates a set. Notice that a
+space must separate the name of the method from the lineup.
 
 Sequence
 --------
 
-The type `Sequence[[T]]` describes sequences of values of
-type `T`. Sequence objects are immutable; they can be
-constructed either explicitly, using `sequence.with(1, 3, 5,
-7)`, or as ranges like `1..10`.
+The type `Sequence[[T]]` describes sequences of values of type `T`.
+Sequence objects are immutable; they can be constructed either
+explicitly, using a request such as `sequence [1, 3, 5, 7]`, or as
+ranges such as `1..10`.
+```
+type Sequence[[T]] = Enumerable[[T]] & type {
 
-    type Sequence[[T]] = Enumerable[[T]] & type {
-
-        at(ix:Number) -> T
+    at(ix:Number) -> T
         // returns my x^th element, provided ix is integral and l <= \leq ix <=  size
-        
-        first -> T
-        // returns my first element
-        
-        second -> T
-        // returns my second element
+    
+    first -> T
+    // returns my first element
+    
+    second -> T
+    // returns my second element
 
-        third -> T
-        // returns my third element
-        
-        fourth -> T
-        // returns my fourth element
-        
-        fifth -> T
-        // returns my fifth element
-        
-        last -> T
-        // returns my last element
-        
+    third -> T
+    // returns my third element
+    
+    fourth -> T
+    // returns my fourth element
+    
+    fifth -> T
+    // returns my fifth element
+    
+    last -> T
+    // returns my last element
+    
         indices -> Sequence[[Number]]
-        // returns the sequence of my indices.  
-        
+    // returns the sequence of my indices.  
+    
         keys -> Sequence[[Number]]
-        // same as indices; the name keys is for compatibility with dictionaries.
+    // same as indices; the name keys is for compatibility with dictionaries.
 
-        indexOf(sought:T)  -> Number
-        // returns the index of my first element v such that v == sought.  Raises NoSuchObject if there is none.
-        
+    indexOf(sought:T)  -> Number
+    // returns the index of my first element v such that v == sought.  Raises NoSuchObject if there is none.
+    
         indexOf[[W]](sought:T) ifAbsent(action:Block0[[W]])  -> Number | W
-        // returns the index of the first element v such that v == sought.  Performs action if there is no such element.
+    // returns the index of the first element v such that v == sought.  Performs action if there is no such element.
 
         reversed -> Sequence[[T]]
-        // returns a Sequence containing my values, but in the reverse order.
-        
-        contains(sought:T) -> Boolean
-        // returns true if I contain an element v such that v == sought
-    }
-
+    // returns a Sequence containing my values, but in the reverse order.
+    
+    contains(sought:T) -> Boolean
+    // returns true if I contain an element v such that v == sought
+}
+```
 Ranges
 ------
 
@@ -771,74 +760,74 @@ sequences, list objects can be constructed using the
 ``` 
 
 type List[[T]] = Sequence[[T]] & type {
-
+    
     at(n: Number) put(new:T) -> List[[T]]
-    // updates self so that my n^th element is new.  Returns self.
-    // Requires 1 <= n <= size+1; when n = size+1, equivalent to addLast(new).
+        // updates self so that my n^th element is new.  Returns self.
+        // Requires 1 <= n <= size+1; when n = size+1, equivalent to addLast(new).
     
 
-    add(*new:T) -> List[[T]]
-    addLast(*new:T) -> List[[T]]
-    // adds new to end of self.  (The first form can be also be applied to sets, which are not Indexable.)
-
-    addFirst(*new:T) -> List[[T]]
-    // adds new as the first element(s) of self.  Change the index of all of the existing elements.
+        add(new:T) -> List[[T]]
+        addLast(*new:T) -> List[[T]]
+        // adds new to end of self.  (The first form can be also be applied to sets, which are not Indexable.)
     
-    addAllFirst(news:Collection[[T]]) -> List[[T]]
-    // adds news as the first elements of self.  Change the index of all of the existing elements.
-
-    removeFirst -> T
-    // removes and returns first element of self.  Changes the index of the remaining elements.
-
-    removeLast -> T
-    // remove and return last element of self.
-
-    removeAt(n:Number) -> T
-    // removes and returns n^th element of self
-
-    remove(*element:T) -> List[[T]]
-    // removes element(s) from self.  Raises a NoSuchObject exception if not.self.contains(element). 
-    // Returns self
-
-    remove(*element:T) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
-    // removes element(s) from self; executes action if any of them is not contained in self.  Returns self
-
+        addFirst(new:T) -> List[[T]]
+        // adds new as the first element(s) of self.  Changes the index of all of the existing elements.
+        
+        addAllFirst(news: Iterable[[T]]) -> List<T>
+        // adds news as the first elements of self.  Changes the index of all of the existing elements.
+    
+        removeFirst -> T
+        // removes and returns first element of self.  Changes the index of the remaining elements.
+    
+        removeLast -> T
+        // remove and return last element of self.
+    
+        removeAt(n:Number) -> T
+        // removes and returns n^th element of self
+    
+        remove(element:T) -> List[[T]]
+        // removes element from self.  Raises NoSuchObject if not.self.contains(element). 
+        // Returns self
+    
+        remove(element:T) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
+        // removes element from self; executes action if it is not contained in self.  Returns self
+    
     removeAll(elements:Collection[[T]]) -> List[[T]]
-    // removes elements from self.  Raises a NoSuchObject exception if any one of 
-    // them is not contained in self.  Returns self
-
+        // removes elements from self.  Raises a NoSuchObject exception if any one of 
+        // them is not contained in self.  Returns self
+    
     removeAll(elements:Collection[[T]]) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
-    // removes elements from self;  executes action if any of them is not contained in self.  Returns self
-
+        // removes elements from self;  executes action if any of them is not contained in self.  Returns self
+    
     ++ (other:List[[T]]) -> List[[T]]
-    // returns a new list formed by concatenating self and other
-
+        // returns a new list formed by concatenating self and other
+    
     addAll(extension:List[[T]]) -> List[[T]]
-    // extends self by appending extension; returns self.
-
-    contains(sought:T) -> Boolean
-    // returns true when sought is an element of self.
-
-    == (other: Object) -> Boolean
-    // returns true when other is a Sequence of the same size as self, containing the same elements 
-    // in the same order.
-
+        // extends self by appending extension; returns self.
+    
+        contains(sought:T) -> Boolean
+        // returns true when sought is an element of self.
+    
+        == (other: Object) -> Boolean
+        // returns true when other is a Sequence of the same size as self, containing the same elements 
+        // in the same order.
+    
     sort -> List[[T]]
-    // sorts self, using the < and == operations on my elements.  Returns self.
-    // Compare with sorted, which constructs a new list.
-    
+        // sorts self, using the < and == operations on my elements.  Returns self.
+        // Compare with sorted, which constructs a new list.
+        
     sortBy(sortBlock:Block2[[T, T, Number]]) -> List[[T]]
-    // sorts self according to the ordering determined by sortBlock, which should return -1 if its first 
-    // argument is less than its second argument, 0 if they are equal, and +1 otherwise.  Returns self.
-    // Compare with sortedBy, which constructs a new list.
-
-    copy -> List[[T]]
-    // returns a list that is a (shallow) copy of self
+        // sorts self according to the ordering determined by sortBlock, which should return -1 if its first 
+        // argument is less than its second argument, 0 if they are equal, and +1 otherwise.  Returns self.
+        // Compare with sortedBy, which constructs a new list.
     
+    copy -> List[[T]]
+        // returns a list that is a (shallow) copy of self
+        
     reverse -> List[[T]]
-    // mutates self in-place so that its elements are in the reverse order.  Returns self.
-    // Compare with reversed, which creates a new collection.
-}
+        // mutates self in-place so that its elements are in the reverse order.  Returns self.
+        // Compare with reversed, which creates a new collection.
+    }
 ```
 
 Sets
@@ -847,22 +836,22 @@ Sets
 Sets are unordered collections of elements without duplicates. The
 `==` method on the elements is used to detect and
 eliminate duplicates; it must be symmetric.
-
+```
     type Set[[T]] = Collection[[T]] & type {
         size -> Number
         // the number of elements in self.
         
-        add(*element:T) -> Set[[T]]
-        // adds element(s) to self.  Returns self.    
+        add(element:T) -> Set[[T]]
+        // adds element to self.  Returns self.    
         
         addAll(elements:Collection[[T]]) -> Set[[T]]
         // adds elements to self.  Returns self. 
         
-        remove(*element: T) -> Set[[T]]
-        // removes element(s) from self.  It is an error if element is not present.   Returns self.
+        remove(element: T) -> Set[[T]]
+        // removes element from self.  It is an error if element is not present.   Returns self.
         
-        remove(*elements: T) ifAbsent(block: Block0[[Done]]) -> Set[[T]]
-        // removes element(s) from self.  Executes action if element is not present.   Returns self.
+        remove(elements: T) ifAbsent(block: Block0[[Done]]) -> Set[[T]]
+        // removes element from self.  Executes action if element is not present.   Returns self.
         
         removeAll(elems:Collection[[T]])
         // removes elems from self.  It is an error if any of the elems is not present.   Returns self.
@@ -891,28 +880,23 @@ eliminate duplicates; it must be symmetric.
         ++ (other:Set[[T]]) -> Set[[T]]
         // set union; the result contains elements that were in self or in other (or in both).
         
-        onto(f:CollectionFactory[[T]]) -> Collection[[T]]
-        // uses the factory f to create a new collection,  then populates it with my elements;
-        // returns the new collection.
-        
         into(existing:Collection[[T]]) -> Collection[[T]]
         // adds my elements to existing, and returns existing.
     }
+```
 
 Dictionary
 ----------
 
-The type `Dictionary[[K, T]]` describes objects that are
-mappings from *keys* of type `K` to *values* of type
-`T`. Like sets and sequences, dictionary objects can be
-constructed using the `empty`, and
-`withAll` requests, but in this case the arguments to
-`with` must be of type `Binding`, i.e.,
-they must have methods `key` and `value`.
-Bindings can be conveniently created using the infix `::`
-operator, as in `dictionary.empty[[K, T]]`,
-`dictionary.with[[K, T]](k::v, m::w, n::x, ...)`, or .
+The type `Dictionary[[K, T]]` describes objects that are mappings from
+*keys* of type `K` to *values* of type `T`. Like sets and sequences,
+dictionary objects can be constructed using the class `dictionary`, but
+the argument to `dictionary` must be of type `Iterable[[Binding]]`. This
+means that each element of the argument must have methods `key` and
+`value`. Bindings can be conveniently created using the infix `::`
+operator, as in `dictionary[[K, T]] [k::v, m::w, n::x, ...]`, or .
 
+```
     type Dictionary[[K, T]] = Collection[[T]] & type {
         size -> Number
         // the number of key::value bindings in self
@@ -920,11 +904,7 @@ operator, as in `dictionary.empty[[K, T]]`,
         at(key:K) put(value:T) -> Dictionary[[K, T]]
         // puts value at key; returns self
         
-        []:=(key:K, value:T)  -> Done
-        // puts value at key; returns done
-        
         at(k:K) -> T
-        [](k) -> T
         // returns my value at key k; raises NoSuchObject if there is none.
         
         at(k:K) ifAbsent(action:Block0[[T]]) -> T
@@ -937,25 +917,25 @@ operator, as in `dictionary.empty[[K, T]]`,
         containsValue(v) 
         // returns true if one of my values == v
 
-        removeAllKeys(keys: Collection[[K]]) -> Dictionary[[K, T]]
+        removeAllKeys(keys: Iterable[[K]]) -> Dictionary[[K, T]]
         // removes all of the keys from self, along with the corresponding values.  Returns self.
 
-        removeKey(*keys: K) -> Dictionary[[K, T]]
-        // removes keys from self, along with the corresponding values.  Returns self.
+        removeKey(key: K) -> Dictionary[[K, T]]
+        // removes key from self, along with the corresponding value.  Returns self.
 
-        removeAllValues(removals: Collection(V)) -> Dictionary[[K, T]]
+        removeAllValues(removals: Iterable[[V]]) -> Dictionary[[K, T]]
         // removes from self all of the values in removals, along with the corresponding keys.  Returns self.
 
-        removeValue(*removals) 
-        // removes from self removals, along with the corresponding keys.  Returns self.
+        removeValue(removal:V) 
+        // removes from self the value removal, along with the corresponding key.  Returns self.
 
-        keys -> Enumerable[[K]]
-        // returns my keys as a lazy sequence
+        keys -> Iterable[[K]]
+        // returns my keys as a lazy sequence in arbitrary order
 
-        values -> Enumerable[[K]]
-        // returns my values as a lazy sequence
+        values -> Iterable[[K]]
+        // returns my values as a lazy sequence in arbitrary order
         
-        bindings -> Enumerable[[Binding[[K, V]] ]]
+        bindings -> Iterable[[ Binding[[K, V]] ]]
         // returns my bindings as a lazy sequence
 
         keysAndValuesDo(action:Block2[[K, T, Object]] ) -> Done
@@ -981,6 +961,7 @@ operator, as in `dictionary.empty[[K, T]]`,
         -- (other:Dictionary[[K, T]]) -> Dictionary[[K, T]]
         // returns a new dictionary that contains all of my entries except for those whose keys are in other
     }
+```
 
 Iterables and ***for*** loops {#sec:forLoop}
 -----------------------------
@@ -994,7 +975,6 @@ implement internal iterators, and `iterator` returns an
 external iterator object, with the following interface:
 
 ``` 
-
 type Iterator[[T]] = type {
     next -> T
     // returns the next element of the collection over which I am the iterator; raises the Exhausted
@@ -1024,10 +1004,12 @@ a one-parameter block `body`. It repeatedly applies
 `body` to the elements of `collection`.
 For example:
 
-    def fruits = sequence.with("orange", "apple", "mango", "guava")
+```
+    def fruits = sequence ["orange", "apple", "mango", "guava"]
     for (fruits) do { each ->
         print(each)
     }
+```
 
 The elements of the sequence `fruits` are bound in turn
 to the parameter `each` of the block that follows
@@ -1040,28 +1022,28 @@ executing a `return`.
 `do` method of the `Iterable`, which is
 usually both faster and clearer:
 
+```
     fruits.do { each ->
         print(each)
     }
-
+```
 A variant `for()and()do()` allows one to iterate through
 two collections in parallel, terminating when the smaller is exhausted:
 
-            def result = list.empty
+            def result = list [ ]
             def xs = [1, 2, 3, 4, 5]
             def ys = ["one", "two", "three"]
             for (xs) and (ys) do { x, y ->
                 result.add(x::y)
             }
 
-After executing this code, `result == [1::“one”, 2::“two”,
-3::“three”]`.
+After executing this code, `result == [1::"one", 2::"two", 3::"three"]`.
 
 The need for external iterators becomes apparent when it is necessary to
 iterate through two collections, but not precisely in parallel. For
 example, this method merges two sorted `Iterable`s into a
 sorted list:
-
+```
     method merge (cs) and (ds) -> List {
         def cIter = cs.iterator
         def dIter = ds.iterator
@@ -1088,8 +1070,9 @@ sorted list:
         while {dIter.hasNext} do { result.addLast(dIter.next) }
         result
     }
+```
 
-[](I find it annoying that
+[apb](I find it annoying that
 this code is so complicated. Can it be simplified? I think that the
 source of the complexity is that both modifies the iterator *and*
 returns a result. If we had a method on Iterators, the need to pre-load
@@ -1122,6 +1105,10 @@ type Array[[T]] =  {
     sortInitial(n:Number) by(sortBlock:block2[[T, T, Number]]) -> Boolean
     // sorts elements 0..n.  The ordering is determined by sortBlock, which should return -1 
     // if its first argument is less than its second argument, 0 if they are equal, and +1 otherwise.
+
+    iterator -> Iterator<T>
+    // returns iterator through the elements of self.  It is an error to modify the array while
+    // iterating through it.
 }
 ```
 
@@ -1131,9 +1118,9 @@ Built-In Libraries
 Math
 ----
 
-The *math* module object can be imported using +import “math” as m+, for
-any identifier of your choice `m`. The object
-`m` responds to the following methods.
+The *math* module object can be imported using `import "math" as m`, for
+any identifier of your choice `m`. The object `m` responds to the
+following methods.
 
 ``` 
     sin($\theta$: Number) -> Number
@@ -1154,11 +1141,9 @@ any identifier of your choice `m`. The object
     atan(r: Number) -> Number
     //arctangent (result in radians)
 
+    pi -> Number
     $\pi$ -> Number
     // 3.14159265...
-
-    infinity -> Number
-    // infinity
 
     abs(r: Number) -> Number
     // absolute value
@@ -1176,12 +1161,29 @@ any identifier of your choice `m`. The object
     // $log_10 n$
 ```
 
+Random
+------
+
+The *random* module object can be imported using
+`import "random" as rand`, for any identifier of your choice `rand`. The
+object `rand` responds to the following methods.
+
+
+        between0And1 -> Number
+        // A pseudo-random number between in the interval $[0..1)$
+
+        between (m: Number) and (n: Number) -> Number
+        // A pseudo-random number in the interval $[m..n)$
+
+        integerIn (m: Number) to (n: Number) -> Number
+        // A pseudo-random integer in the interval $[m..n]$
+
 Sys
 ---
 
-The *sys* module object can be imported using +import “sys” as system+,
-for any identifier of your choice `system`. The object
-`system` responds to the following methods.
+The *sys* module object can be imported using `import "sys" as system`,
+for any identifier of your choice `system`. The object `system` responds
+to the following methods.
 
 ```
     type Environment = type {
@@ -1207,3 +1209,6 @@ for any identifier of your choice `system`. The object
     // the current environment.
  
 ```
+
+[^1]: It is a limitation of *minigrace* that expressions containing
+    {braces} and “quotes” cannot be interpolated into strings.
