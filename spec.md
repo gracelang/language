@@ -547,7 +547,7 @@ arity" (although it does _not_ allow overloading by type).
 
 Methods may be declared with one or more type parameters, which are listed between **`[[`** and **`]]`** used as brackets.
 If present, type parameters must appear after the identifier of the first part of
-a multipart name.  
+a multipart name.
 
 If an operator method has a type parameter list, it must be separated from the sequence of operator symbols that
 names the method by a space.
@@ -868,10 +868,10 @@ Third, the methods of all traits
 (created by the `use`
 clauses as modified by `alias` and `exclude`, and
 excluding those methods inherited unchanged from `graceObject`) are
-combined.  
+combined.
 It is a _object composition error_ for there to be multiple
 definitions of a method.
-This combination of methods is then 
+This combination of methods is then
 installed in the new
 object: methods in the trait combination override declarations in the
 superobject.
@@ -879,7 +879,7 @@ superobject.
 Fourth, attributes create by local declarations are installed in the
 new object: local declarations
 override declarations from both superobject and
-traits, except that 
+traits, except that
 it is a _object composition error_ for an alias to be
 overridden by a local declaration.
 
@@ -1489,7 +1489,7 @@ type Object = {
 ### Type Self
 
 The type `Self` represents the public interface of the current
-object.  
+object.
 Self is prohibited as the annotation on parameters, but
 can be used to annotate results.
 
@@ -1606,9 +1606,9 @@ that variable may be bound to, or that method may return,
 an object of any one of the
 component types `T1`, `T2`, ..., `Tn`.
 No *objects* actually have variant types, only
-expressions. 
+expressions.
 The type of an object referred to by a variant
-variable 
+variable
 (as determined by the type annotations in its declaration)
 can be examined using that object’s reified type information.
 
@@ -1691,7 +1691,7 @@ irrelevant.
 
 ### Singleton Types
 
-<_apb:  I think this is what you want.  It's more or less what `Singleton` 
+<_apb:  I think this is what you want.  It's more or less what `Singleton`
 does in minigrace.   I think that it's a bad idea,
 because it confuses objects and types._>
 
@@ -1776,10 +1776,10 @@ types.
 
 # Modules and Dialects
 
-Grace programs can be divided into multiple modules.  
+Grace programs can be divided into multiple modules.
 A module is typically used to define library functionality.
 
-## Modules 
+## Modules
 
 A module is typically defined in a implementation-dependent fashion,
 typically by creating a file containing Grace code. The text of the
@@ -1792,7 +1792,7 @@ this object constructor is *executed*, resulting in a _module object_.
 Modules may begin with one or more `import` _moduleName_ `as` _nickname_
 statements.
 _moduleName_ is a [string literal](#string-literals) that identifies the module
-to be imported in an implementation-dependent manner; for example, 
+to be imported in an implementation-dependent manner; for example,
 _moduleName_ may be a file path.
 _nickname_ is the Grace identifier used to refer to the imported module object
 in the importing module.
@@ -1875,7 +1875,7 @@ Modules that do not declare a 'dialect' implicitly belong to the
 
 In addition to declarations, a dialect can also define a _checker_ that
 examines the parse tree or syntax tree of any module written in the dialect,
-and generates errors. 
+and generates errors.
 This enables a dialect to restrict the language of its modules to a subset
 of the full Grace language.
 
@@ -1908,12 +1908,12 @@ do { average := sum / count } unless (count == 0)
 
 ## Module and Dialect Scopes
 
-The **module scope** of a Grace module contains all declarations at the top 
+The **module scope** of a Grace module contains all declarations at the top
 level of the module, including the nicknames introduced by `import` declarations.
 
 Surrounding the module scope is the
 **dialect scope**, which contains all public declarations at the top level of
-the module providing the dialect.  
+the module providing the dialect.
 That is, the public names at the top level of the dialect
 are treated as being in a scope surrounding that of any
 module written in that dialect.
