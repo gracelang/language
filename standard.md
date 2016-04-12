@@ -142,14 +142,15 @@ beginners.
 ValueOf
 -------
 
-Grace's 'valueOf' allows a statement list where an expression is
+Grace's `valueOf` allows a statement list where an expression is
 required.
 
 ```
-def constant = valof {
+def constant = valueOf {
     def local1 = ...
     def local2 = ...
-    complicated expression involving locals }
+    complicated expression involving locals
+}
 ```
 
 Built-in Types
@@ -209,66 +210,66 @@ precision of approximately 51 bits.
 ``` 
 type Number = {
 
-  + (other: Number) -> Number
-  //  sum of self and other
+    + (other: Number) -> Number
+    //  sum of self and other
 
-  - (other: Number) -> Number
-  //  difference of self and other
+    - (other: Number) -> Number
+    //  difference of self and other
 
-  * (other: Number) -> Number
-  //  product of self and other
+    * (other: Number) -> Number
+    //  product of self and other
 
-  / (other: Number) -> Number
-  //  quotient of self divided by other (in general, a fraction).
+    / (other: Number) -> Number
+    //  quotient of self divided by other (in general, a fraction).
 
-  % (other: Number) -> Number
-  //  remainder r after integer division of self by other: 0 ≤ r < self;  see also ÷
+    % (other: Number) -> Number
+    //  remainder r after integer division of self by other: 0 ≤ r < self;  see also ÷
 
-  ÷ (other: Number) -> Number
-   // quotient q of self after integer division by other: self = (other * q) + r, where r = self % other
-   
-  .. (last: Number) -> Sequence
-  //  the Sequence of numbers from self to last
+    ÷ (other: Number) -> Number
+    // quotient q of self after integer division by other: self = (other * q) + r, where r = self % other
 
-  < (other: Number) -> Boolean
-  //  true iff self is less than other
+    .. (last: Number) -> Sequence
+    //  the Sequence of numbers from self to last
 
-  <= (other: Number) -> Boolean
-  //  true iff self is less than or equal to other
+    < (other: Number) -> Boolean
+    //  true iff self is less than other
 
-  > (other: Number) -> Boolean
-  //  true iff self is greater than other
+    <= (other: Number) -> Boolean
+    //  true iff self is less than or equal to other
 
-  >= (other: Number) -> Boolean
-  //  true iff self is greater than or equal to other
+    > (other: Number) -> Boolean
+    //  true iff self is greater than other
 
-  prefix- -> Number
-  // negation of self
+    >= (other: Number) -> Boolean
+    //  true iff self is greater than or equal to other
 
-  compare (other:Number) -> Number
-  // a three-way comparison: -1 if (self < other), 0 if (self == other), and +1 if (self > other).
-  // This is useful when writing a comparison function for sortBy
+    prefix- -> Number
+    // negation of self
 
-  inBase (base:Number) -> String
-  // a string representing self as a base number (e.g., 5.inBase 2 = "101")
+    compare (other:Number) -> Number
+    // a three-way comparison: -1 if (self < other), 0 if (self == other), and +1 if (self > other).
+    // This is useful when writing a comparison function for sortBy
 
-  truncated -> Number
-  // number obtained by throwing away self's fractional part
+    inBase (base:Number) -> String
+    // a string representing self as a base number (e.g., 5.inBase 2 = "101")
 
-  rounded -> Number
-  // whole number closest to self
-  
-  floor -> Number
-  // largest whole number less than or equal to self
-  
-  ceiling -> Number
-  // smallest number greater than or equal to self
-  
-  abs -> Number
-  // the absolute value of self
+    truncated -> Number
+    // number obtained by throwing away self's fractional part
 
-  isNan -> Boolean
-  // true if this Number is a NaN
+    rounded -> Number
+    // whole number closest to self
+
+    floor -> Number
+    // largest whole number less than or equal to self
+
+    ceiling -> Number
+    // smallest number greater than or equal to self
+
+    abs -> Number
+    // the absolute value of self
+
+    isNan -> Boolean
+    // true if this Number is a NaN
 }
 ```
 
@@ -302,161 +303,161 @@ always return a new string; they never change the receiver.
 ``` 
 
 type String =  {
-  * (n: Number) -> String
-  // returns a string that contains n repetitions of self, so "abc" * 3 = "abcabcabc"
+    * (n: Number) -> String
+    // returns a string that contains n repetitions of self, so "abc" * 3 = "abcabcabc"
 
-  ++(other: Object) -> String
-  // returns a string that is the concatenation of self and other.asString
+    ++(other: Object) -> String
+    // returns a string that is the concatenation of self and other.asString
 
-  < (other: String)
-  // true if self precedes other lexicographically
+    < (other: String)
+    // true if self precedes other lexicographically
 
-  <= (other: String)
-  // (self == other) || (self < other)
+    <= (other: String)
+    // (self == other) || (self < other)
 
-  == (other: Object)
-  // true if other is a String and is equal to self
+    == (other: Object)
+    // true if other is a String and is equal to self
 
-  != (other: Object)
-  // !(self == other)
+    != (other: Object)
+    // !(self == other)
 
-  > (other: String)
-  // true if self follows other lexicographically
+    > (other: String)
+    // true if self follows other lexicographically
 
-  >= (other: String)
-  // (self == other) || (self > other)
+    >= (other: String)
+    // (self == other) || (self > other)
 
-  at(index: Number) -> String
-  // returns the character in position index (as a string of size 1); index must be in the range 1..size
+    at(index: Number) -> String
+    // returns the character in position index (as a string of size 1); index must be in the range 1..size
 
-  first -> String
-  // returns the first character of the string, as a String of size 1.  String must not be empty
+    first -> String
+    // returns the first character of the string, as a String of size 1.  String must not be empty
 
-  asDebugString -> String
-  // returns self enclosed in quotes, and with embedded special characters quoted.  See also quoted.
-  
-  asLower -> String
-  // returns a string like self, except that all letters are in lower case
+    asDebugString -> String
+    // returns self enclosed in quotes, and with embedded special characters quoted.  See also quoted.
 
-  asNumber -> Number
-  // attempts to parse self as a number;  returns that number, or NaN if it can't.
+    asLower -> String
+    // returns a string like self, except that all letters are in lower case
 
-  asString -> String
-  // returns self, naturally.
+    asNumber -> Number
+    // attempts to parse self as a number;  returns that number, or NaN if it can't.
 
-  asUpper -> String
-  // returns a string like self, except that all letters are in upper case
+    asString -> String
+    // returns self, naturally.
 
-  capitalized -> String
-  // returns a string like self, except that the initial letters of all words are in upper case
+    asUpper -> String
+    // returns a string like self, except that all letters are in upper case
 
-  compare (other:String) -> Number
-  // a three-way comparison: -1 if (self < other), 0 if (self == other), and +1 if (self > other).
-  // This is useful when writing a comparison function for sortBy
+    capitalized -> String
+    // returns a string like self, except that the initial letters of all words are in upper case
 
-  contains (other:String) -> Number
-  // returns true if other is a substring of self
+    compare (other:String) -> Number
+    // a three-way comparison: -1 if (self < other), 0 if (self == other), and +1 if (self > other).
+    // This is useful when writing a comparison function for sortBy
 
-  endsWith (possibleSuffix: String)
-  // true if self ends with possibleSuffix
+    contains (other:String) -> Number
+    // returns true if other is a substring of self
 
-  filter (predicate: Block1[[String,Boolean>) -> String
-  // returns the String containing those characters of self for which predicate returns true
+    endsWith (possibleSuffix: String)
+    // true if self ends with possibleSuffix
 
-  fold[[U]] (binaryFunction: Block2[[U,String,U]]) startingWith(initial: U) -> U
-  // performs a left fold of binaryFunction over self, starting with initial.   
-  // For example, fold a, b -> a + b.ord startingWith 0 will compute the sum
-  // of the ords of the characters in self
+    filter (predicate: Block1[[String,Boolean>) -> String
+    // returns the String containing those characters of self for which predicate returns true
 
-  hash -> Number
-  // the hash of self
+    fold[[U]] (binaryFunction: Block2[[U,String,U]]) startingWith(initial: U) -> U
+    // performs a left fold of binaryFunction over self, starting with initial.   
+    // For example, fold a, b -> a + b.ord startingWith 0 will compute the sum
+    // of the ords of the characters in self
 
-  indexOf (pattern:String) -> Number
-  // returns the leftmost index at which pattern appears in self, or 0 if it is not there.
+    hash -> Number
+    // the hash of self
 
-  indexOf (pattern:String) ifAbsent (absent:Block0[[W]]) -> Number | W
-  // returns the leftmost index at which pattern appears in self; applies absent if it is not there.
+    indexOf (pattern:String) -> Number
+    // returns the leftmost index at which pattern appears in self, or 0 if it is not there.
 
-  indexOf (pattern:String) startingAt (offset) -> Number
-  // like indexOf(pattern), except that it returns the first index ≥ offset, or 0 if  pattern is not found.
+    indexOf (pattern:String) ifAbsent (absent:Block0[[W]]) -> Number | W
+    // returns the leftmost index at which pattern appears in self; applies absent if it is not there.
 
-  indexOf[[W]] (pattern:String) startingAt(offset) ifAbsent (action:Block0[[W]]) -> Number | W
-  // like the above, except that it answers the result of applying action if there is no such index.
+    indexOf (pattern:String) startingAt (offset) -> Number
+    // like indexOf(pattern), except that it returns the first index ≥ offset, or 0 if  pattern is not found.
 
-  indices -> Sequence
-  // an object representing the range of indices of self (1..self.size)
+    indexOf[[W]] (pattern:String) startingAt(offset) ifAbsent (action:Block0[[W]]) -> Number | W
+    // like the above, except that it answers the result of applying action if there is no such index.
 
-  isEmpty -> Boolean
-  // true if self is the empty string
+    indices -> Sequence
+    // an object representing the range of indices of self (1..self.size)
 
-  iterator -> Iterator[[String]]
-  // an iterator over the characters of self
+    isEmpty -> Boolean
+    // true if self is the empty string
 
-  lastIndexOf (sub:String) -> Number
-  // returns the rightmost index at which sub appears in self, or 0 if it is not there.
+    iterator -> Iterator[[String]]
+    // an iterator over the characters of self
 
-  lastIndexOf[[W]] (sub:String) ifAbsent (absent:Block0[[W]]) -> Number | W
-  // returns the rightmost index at which sub appears in self; applies absent if it is not there.
+    lastIndexOf (sub:String) -> Number
+    // returns the rightmost index at which sub appears in self, or 0 if it is not there.
 
-  lastIndexOf[[W]] (pattern:String) startingAt (offset) ifAbsent (action:Block0[[W]]) -> 
+    lastIndexOf[[W]] (sub:String) ifAbsent (absent:Block0[[W]]) -> Number | W
+    // returns the rightmost index at which sub appears in self; applies absent if it is not there.
+
+    lastIndexOf[[W]] (pattern:String) startingAt (offset) ifAbsent (action:Block0[[W]]) -> 
       Number | W
-  // like the above, except that it returns the rightmost index ≤  offset.
+    // like the above, except that it returns the rightmost index ≤  offset.
 
-  map[[U]] (function:Block[[String,U]]) -> Iterable[[U]]
-  // returns an Iterable object containing the results of successive applications of function to the
-  // individual characters of self. Note that the result is not a String, even if type U happens to be String.
-  // If a String is desired, use fold()startingWith "" with a function that concatenates.
+    map[[U]] (function:Block[[String,U]]) -> Iterable[[U]]
+    // returns an Iterable object containing the results of successive applications of function to the
+    // individual characters of self. Note that the result is not a String, even if type U happens to be String.
+    // If a String is desired, use fold()startingWith "" with a function that concatenates.
 
-  match (other:Object) -> SuccessfulMatch | FailedMatch
-  // returns SuccessfulMatch match if self matches other, otherwise FailedMatch
+    match (other:Object) -> SuccessfulMatch | FailedMatch
+    // returns SuccessfulMatch match if self matches other, otherwise FailedMatch
 
-  ord -> Number
-  // a numeric representation of the first character of self, or NaN if self is empty.
+    ord -> Number
+    // a numeric representation of the first character of self, or NaN if self is empty.
 
-  replace (pattern: String) with (new: String) -> String
-  // a string like self, but with all occurrences of pattern replaced by new
+    replace (pattern: String) with (new: String) -> String
+    // a string like self, but with all occurrences of pattern replaced by new
 
-  size -> Number
-  // returns the size of self, i.e., the number of characters it contains.
+    size -> Number
+    // returns the size of self, i.e., the number of characters it contains.
 
-  startsWith (possiblePrefix: String) -> Boolean
-  // true when possiblePrefix is a prefix of self
+    startsWith (possiblePrefix: String) -> Boolean
+    // true when possiblePrefix is a prefix of self
 
-  startsWithDigit -> Boolean
-  // true if the first character of self is a (Unicode) digit.
+    startsWithDigit -> Boolean
+    // true if the first character of self is a (Unicode) digit.
 
-  startsWithLetter -> Boolean
-  // true if the first character of self is a (Unicode) letter
+    startsWithLetter -> Boolean
+    // true if the first character of self is a (Unicode) letter
 
-  startsWithPeriod -> Boolean
-  // true if the first character of self is a period
+    startsWithPeriod -> Boolean
+    // true if the first character of self is a period
 
-  startsWithSpace -> Boolean
-  // true if the first character of self is a (Unicode) space.
+    startsWithSpace -> Boolean
+    // true if the first character of self is a (Unicode) space.
 
-  substringFrom (start: Number) size (max:Number) -> String
-  // returns the substring of self starting at index start and of length max characters,
-  // or extending to the end of self if that is less than max.    If start = self.size + 1 or
-  // stop < start, the empty string is returned.   If start is outside the range
-  // 1..self.size+1, BoundsError is raised.
+    substringFrom (start: Number) size (max:Number) -> String
+    // returns the substring of self starting at index start and of length max characters,
+    // or extending to the end of self if that is less than max.    If start = self.size + 1 or
+    // stop < start, the empty string is returned.   If start is outside the range
+    // 1..self.size+1, BoundsError is raised.
 
-  substringFrom (start: Number) to (stop: Number) -> String
-  // returns the substring of self starting at index start and extending
-  // either to the end of self, or to stop.    If start = self.size + 1, or
-  // stop < start, the empty string is returned.   If start is outside the range
-  // 1..self.size+1, BoundsError is raised.
+    substringFrom (start: Number) to (stop: Number) -> String
+    // returns the substring of self starting at index start and extending
+    // either to the end of self, or to stop.    If start = self.size + 1, or
+    // stop < start, the empty string is returned.   If start is outside the range
+    // 1..self.size+1, BoundsError is raised.
 
-  substringFrom (start: Number) -> String
-  // returns the substring of self starting at index start and extending
-  // to the end of self.    If start = self.size + 1, the empty string is returned.
-  // If start is outside the range 1..self.size+1, BoundsError is raised.
+    substringFrom (start: Number) -> String
+    // returns the substring of self starting at index start and extending
+    // to the end of self.    If start = self.size + 1, the empty string is returned.
+    // If start is outside the range 1..self.size+1, BoundsError is raised.
 
-  trim -> String
-  // a string like self except that leading and trailing spaces are omitted.
+    trim -> String
+    // a string like self except that leading and trailing spaces are omitted.
 
-  quoted -> String
-  // returns a quoted version of self, with internal characters like " and \ and newline escaped, 
-  // but without surrounding quotes.
+    quoted -> String
+    // returns a quoted version of self, with internal characters like " and \ and newline escaped, 
+    // but without surrounding quotes.
 }
 ```
 
@@ -642,20 +643,20 @@ is that `Enumerable`s have a natural order, so lists are
 
 type Enumerable[[T]] = Collection[[T]] & type {
 
-        values -> Enumerable[[T]]
+    values -> Enumerable[[T]]
     // an enumeration of my values: the elements in the case of  sequence or list,
     // the values the case of a dictionary.
-    
-        asDictionary -> Dictionary[[Number, T]]
-    // returns a dictionary containing my indices as keys and my elements as values, so that
-        // my i^th element is self.asDictionary.at(i).
 
-        keysAndValuesDo (action:Block2[[Number, T, Object]]) -> Done
+    asDictionary -> Dictionary[[Number, T]]
+    // returns a dictionary containing my indices as keys and my elements as values, so that
+    // my i^th element is self.asDictionary.at(i).
+
+    keysAndValuesDo (action:Block2[[Number, T, Object]]) -> Done
     // applies action, in sequence, to each of my keys and the corresponding element. 
-    
+
     into(existing:Collection[[T]]) -> Collection[[T]]
-        // adds my elements to existing, and returns existing.
-    
+    // adds my elements to existing, and returns existing.
+
     sorted -> List[[T]]
     // returns a new List containing all of my elements, but sorted by their < and == operations.
 
@@ -689,7 +690,7 @@ ranges such as `1..10`.
 type Sequence[[T]] = Enumerable[[T]] & type {
 
     at(ix:Number) -> T
-        // returns my x^th element, provided ix is integral and l ≤ \leq ix ≤  size
+    // returns my x^th element, provided ix is integral and l ≤ \leq ix ≤  size
     
     first -> T
     // returns my first element
@@ -709,19 +710,19 @@ type Sequence[[T]] = Enumerable[[T]] & type {
     last -> T
     // returns my last element
     
-        indices -> Sequence[[Number]]
+    indices -> Sequence[[Number]]
     // returns the sequence of my indices.  
     
-        keys -> Sequence[[Number]]
+    keys -> Sequence[[Number]]
     // same as indices; the name keys is for compatibility with dictionaries.
 
     indexOf(sought:T)  -> Number
     // returns the index of my first element v such that v == sought.  Raises NoSuchObject if there is none.
     
-        indexOf[[W]](sought:T) ifAbsent(action:Block0[[W]])  -> Number | W
+    indexOf[[W]](sought:T) ifAbsent(action:Block0[[W]])  -> Number | W
     // returns the index of the first element v such that v == sought.  Performs action if there is no such element.
 
-        reversed -> Sequence[[T]]
+    reversed -> Sequence[[T]]
     // returns a Sequence containing my values, but in the reverse order.
     
     contains(sought:T) -> Boolean
@@ -736,13 +737,13 @@ other sequences, but are stored compactly. Ranges are created by two
 methods on the `range` class:
 
 ```
-        range.from(lower:Number) to(upper:Number)
-        // the sequence of integers from lower to upper, inclusive.  If lower = upper, the range contains a single value.
-        // if lower > upper, the range is empty.  It is an error for lower or upper not to be an integer.
-        
-        range.from(upper:Number) downTo(lower:Number)
-        // the sequence from upper to lower, inclusive.  If upper = lower, the range contains a single value.
-        // if upper < lower, the range is empty.  It is an error for lower or upper not to be an integer.
+    range.from(lower:Number) to(upper:Number)
+    // the sequence of integers from lower to upper, inclusive.  If lower = upper, the range contains a single value.
+    // if lower > upper, the range is empty.  It is an error for lower or upper not to be an integer.
+    
+    range.from(upper:Number) downTo(lower:Number)
+    // the sequence from upper to lower, inclusive.  If upper = lower, the range contains a single value.
+    // if upper < lower, the range is empty.  It is an error for lower or upper not to be an integer.
 ```
 
 The `..` operation on Numbers can also be conveniently
@@ -756,83 +757,81 @@ List
 The type `List[[T]]` describes objects that are mutable
 lists of elements that have type `T`. Like sets and
 sequences, list objects can be constructed using the
-`empty`, `with`, and
-`withAll` requests, as in
-`list.empty[[T]]`, `list.with[[T]](a, b, c,
-...)`, or
-`list.withAll[[T]](existingCollection)`.
+`list request, as in
+`list [[T]] [ ]`, `list [[T]] [a, b, c]`, or
+`list (existingCollection)`.
 
 ``` 
 
 type List[[T]] = Sequence[[T]] & type {
     
     at(n: Number) put(new:T) -> List[[T]]
-        // updates self so that my n^th element is new.  Returns self.
-        // Requires 1 ≤ n ≤ size+1; when n = size+1, equivalent to addLast(new).
-    
+    // updates self so that my n^th element is new.  Returns self.
+    // Requires 1 ≤ n ≤ size+1; when n = size+1, equivalent to addLast(new).
 
-        add(new:T) -> List[[T]]
-        addLast(*new:T) -> List[[T]]
-        // adds new to end of self.  (The first form can be also be applied to sets, which are not Indexable.)
+
+    add(new:T) -> List[[T]]
+    addLast(*new:T) -> List[[T]]
+    // adds new to end of self.  (The first form can be also be applied to sets, which are not Indexable.)
+
+    addFirst(new:T) -> List[[T]]
+    // adds new as the first element(s) of self.  Changes the index of all of the existing elements.
     
-        addFirst(new:T) -> List[[T]]
-        // adds new as the first element(s) of self.  Changes the index of all of the existing elements.
-        
-        addAllFirst(news: Iterable[[T]]) -> List<T>
-        // adds news as the first elements of self.  Changes the index of all of the existing elements.
-    
-        removeFirst -> T
-        // removes and returns first element of self.  Changes the index of the remaining elements.
-    
-        removeLast -> T
-        // remove and return last element of self.
-    
-        removeAt(n:Number) -> T
-        // removes and returns n^th element of self
-    
-        remove(element:T) -> List[[T]]
-        // removes element from self.  Raises NoSuchObject if not.self.contains(element). 
-        // Returns self
-    
-        remove(element:T) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
-        // removes element from self; executes action if it is not contained in self.  Returns self
-    
+    addAllFirst(news: Iterable[[T]]) -> List<T>
+    // adds news as the first elements of self.  Changes the index of all of the existing elements.
+
+    removeFirst -> T
+    // removes and returns first element of self.  Changes the index of the remaining elements.
+
+    removeLast -> T
+    // remove and return last element of self.
+
+    removeAt(n:Number) -> T
+    // removes and returns n^th element of self
+
+    remove(element:T) -> List[[T]]
+    // removes element from self.  Raises NoSuchObject if not.self.contains(element). 
+    // Returns self
+
+    remove(element:T) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
+    // removes element from self; executes action if it is not contained in self.  Returns self
+
     removeAll(elements:Collection[[T]]) -> List[[T]]
-        // removes elements from self.  Raises a NoSuchObject exception if any one of 
-        // them is not contained in self.  Returns self
+    // removes elements from self.  Raises a NoSuchObject exception if any one of 
+    // them is not contained in self.  Returns self
     
     removeAll(elements:Collection[[T]]) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
-        // removes elements from self;  executes action if any of them is not contained in self.  Returns self
+    // removes elements from self;  executes action if any of them is not contained in self.  Returns self
     
     ++ (other:List[[T]]) -> List[[T]]
-        // returns a new list formed by concatenating self and other
+    // returns a new list formed by concatenating self and other
     
     addAll(extension:List[[T]]) -> List[[T]]
-        // extends self by appending extension; returns self.
+    // extends self by appending extension; returns self.
     
-        contains(sought:T) -> Boolean
-        // returns true when sought is an element of self.
-    
-        == (other: Object) -> Boolean
-        // returns true when other is a Sequence of the same size as self, containing the same elements 
-        // in the same order.
-    
+    contains(sought:T) -> Boolean
+    // returns true when sought is an element of self.
+
+    == (other: Object) -> Boolean
+    // returns true when other is a Sequence of the same size as self, containing the same elements 
+    // in the same order.
+
     sort -> List[[T]]
-        // sorts self, using the < and == operations on my elements.  Returns self.
-        // Compare with sorted, which constructs a new list.
+    // sorts self, using the < and == operations on my elements.  Returns self.
+    // Compare with sorted, which constructs a new list.
         
     sortBy(sortBlock:Block2[[T, T, Number]]) -> List[[T]]
-        // sorts self according to the ordering determined by sortBlock, which should return -1 if its first 
-        // argument is less than its second argument, 0 if they are equal, and +1 otherwise.  Returns self.
-        // Compare with sortedBy, which constructs a new list.
-    
+    // sorts self according to the ordering determined by sortBlock, which should return -1 if its first 
+    // argument is less than its second argument, 0 if they are equal, and +1 otherwise.  Returns self.
+    // Compare with sortedBy, which constructs a new list.
+
     copy -> List[[T]]
-        // returns a list that is a (shallow) copy of self
+    // returns a list that is a (shallow) copy of self
         
     reverse -> List[[T]]
-        // mutates self in-place so that its elements are in the reverse order.  Returns self.
-        // Compare with reversed, which creates a new collection.
-    }
+    // mutates self in-place so that its elements are in the reverse order.  Returns self.
+    // Compare with reversed, which creates a new collection.
+}
 ```
 
 Sets
@@ -842,52 +841,52 @@ Sets are unordered collections of elements without duplicates. The
 `==` method on the elements is used to detect and
 eliminate duplicates; it must be symmetric.
 ```
-    type Set[[T]] = Collection[[T]] & type {
-        size -> Number
-        // the number of elements in self.
-        
-        add(element:T) -> Set[[T]]
-        // adds element to self.  Returns self.    
-        
-        addAll(elements:Collection[[T]]) -> Set[[T]]
-        // adds elements to self.  Returns self. 
-        
-        remove(element: T) -> Set[[T]]
-        // removes element from self.  It is an error if element is not present.   Returns self.
-        
-        remove(elements: T) ifAbsent(block: Block0[[Done]]) -> Set[[T]]
-        // removes element from self.  Executes action if element is not present.   Returns self.
-        
-        removeAll(elems:Collection[[T]])
-        // removes elems from self.  It is an error if any of the elems is not present.   Returns self.
+type Set[[T]] = Collection[[T]] & type {
+    size -> Number
+    // the number of elements in self.
+    
+    add(element:T) -> Set[[T]]
+    // adds element to self.  Returns self.    
+    
+    addAll(elements:Collection[[T]]) -> Set[[T]]
+    // adds elements to self.  Returns self. 
+    
+    remove(element: T) -> Set[[T]]
+    // removes element from self.  It is an error if element is not present.   Returns self.
+    
+    remove(elements: T) ifAbsent(block: Block0[[Done]]) -> Set[[T]]
+    // removes element from self.  Executes action if element is not present.   Returns self.
+    
+    removeAll(elems:Collection[[T]])
+    // removes elems from self.  It is an error if any of the elems is not present.   Returns self.
 
-        removeAll(elems:Collection[[T]])ifAbsent(action:Block0[[Done]]) -> Set[[T]]
-        // removes elems from self.  Executes action if any of elems is not present.   Returns self.
-        
-        contains(elem:T) -> Boolean
-        // true if self contains elem
+    removeAll(elems:Collection[[T]])ifAbsent(action:Block0[[Done]]) -> Set[[T]]
+    // removes elems from self.  Executes action if any of elems is not present.   Returns self.
+    
+    contains(elem:T) -> Boolean
+    // true if self contains elem
 
-        includes(predicate: Block1[[T,Boolean]]) -> Boolean
-        // true if predicate holds for any of the elements of self
-        
-        find(predicate: Block1[[T,Boolean]]) ifNone(notFoundBlock: Block0[[T]]) -> T
-        // returns an element of self for which predicate holds, or the result of applying notFoundBlock is there is none.
-        
-        copy -> Set[[T]]
-        // returns a copy of self
-        
-        ** (other:Set[[T]]) -> Set[[T]]
-        // set intersection; returns a new set that is the intersection of self and other
-        
-        -- (other:Set[[T]]) -> Set[[T]]
-        // set difference (relative complement); the result contains all of my elements that are not also in other.
-        
-        ++ (other:Set[[T]]) -> Set[[T]]
-        // set union; the result contains elements that were in self or in other (or in both).
-        
-        into(existing:Collection[[T]]) -> Collection[[T]]
-        // adds my elements to existing, and returns existing.
-    }
+    includes(predicate: Block1[[T,Boolean]]) -> Boolean
+    // true if predicate holds for any of the elements of self
+    
+    find(predicate: Block1[[T,Boolean]]) ifNone(notFoundBlock: Block0[[T]]) -> T
+    // returns an element of self for which predicate holds, or the result of applying notFoundBlock is there is none.
+    
+    copy -> Set[[T]]
+    // returns a copy of self
+    
+    ** (other:Set[[T]]) -> Set[[T]]
+    // set intersection; returns a new set that is the intersection of self and other
+    
+    -- (other:Set[[T]]) -> Set[[T]]
+    // set difference (relative complement); the result contains all of my elements that are not also in other.
+    
+    ++ (other:Set[[T]]) -> Set[[T]]
+    // set union; the result contains elements that were in self or in other (or in both).
+    
+    into(existing:Collection[[T]]) -> Collection[[T]]
+    // adds my elements to existing, and returns existing.
+}
 ```
 
 Dictionary
@@ -902,70 +901,70 @@ means that each element of the argument must have methods `key` and
 operator, as in `dictionary[[K, T]] [k::v, m::w, n::x, ...]`, or .
 
 ```
-    type Dictionary[[K, T]] = Collection[[T]] & type {
-        size -> Number
-        // the number of key::value bindings in self
+type Dictionary[[K, T]] = Collection[[T]] & type {
+    size -> Number
+    // the number of key::value bindings in self
 
-        at(key:K) put(value:T) -> Dictionary[[K, T]]
-        // puts value at key; returns self
-        
-        at(k:K) -> T
-        // returns my value at key k; raises NoSuchObject if there is none.
-        
-        at(k:K) ifAbsent(action:Block0[[T]]) -> T
-        // returns my value at key k; returns the result of applying action if there is none.
+    at(key:K) put(value:T) -> Dictionary[[K, T]]
+    // puts value at key; returns self
+    
+    at(k:K) -> T
+    // returns my value at key k; raises NoSuchObject if there is none.
+    
+    at(k:K) ifAbsent(action:Block0[[T]]) -> T
+    // returns my value at key k; returns the result of applying action if there is none.
 
-        containsKey(k:K) -> Boolean 
-        // returns true if one of my keys == k
-        
-        contains(v)
-        containsValue(v) 
-        // returns true if one of my values == v
+    containsKey(k:K) -> Boolean 
+    // returns true if one of my keys == k
+    
+    contains(v)
+    containsValue(v) 
+    // returns true if one of my values == v
 
-        removeAllKeys(keys: Iterable[[K]]) -> Dictionary[[K, T]]
-        // removes all of the keys from self, along with the corresponding values.  Returns self.
+    removeAllKeys(keys: Iterable[[K]]) -> Dictionary[[K, T]]
+    // removes all of the keys from self, along with the corresponding values.  Returns self.
 
-        removeKey(key: K) -> Dictionary[[K, T]]
-        // removes key from self, along with the corresponding value.  Returns self.
+    removeKey(key: K) -> Dictionary[[K, T]]
+    // removes key from self, along with the corresponding value.  Returns self.
 
-        removeAllValues(removals: Iterable[[V]]) -> Dictionary[[K, T]]
-        // removes from self all of the values in removals, along with the corresponding keys.  Returns self.
+    removeAllValues(removals: Iterable[[V]]) -> Dictionary[[K, T]]
+    // removes from self all of the values in removals, along with the corresponding keys.  Returns self.
 
-        removeValue(removal:V) 
-        // removes from self the value removal, along with the corresponding key.  Returns self.
+    removeValue(removal:V) 
+    // removes from self the value removal, along with the corresponding key.  Returns self.
 
-        keys -> Iterable[[K]]
-        // returns my keys as a lazy sequence in arbitrary order
+    keys -> Iterable[[K]]
+    // returns my keys as a lazy sequence in arbitrary order
 
-        values -> Iterable[[K]]
-        // returns my values as a lazy sequence in arbitrary order
-        
-        bindings -> Iterable[[ Binding[[K, V]] ]]
-        // returns my bindings as a lazy sequence
+    values -> Iterable[[K]]
+    // returns my values as a lazy sequence in arbitrary order
+    
+    bindings -> Iterable[[ Binding[[K, V]] ]]
+    // returns my bindings as a lazy sequence
 
-        keysAndValuesDo(action:Block2[[K, T, Object]] ) -> Done
-        // applies action, in arbitrary order, to each of my keys and the corresponding value. 
+    keysAndValuesDo(action:Block2[[K, T, Object]] ) -> Done
+    // applies action, in arbitrary order, to each of my keys and the corresponding value. 
 
-        keysDo(action:Block2[[K, Object]]) -> Done
-        // applies action, in arbitrary order, to each of my keys.
+    keysDo(action:Block2[[K, Object]]) -> Done
+    // applies action, in arbitrary order, to each of my keys.
 
-        valuesDo(action:Block2[[T, Object]]) -> Done
-        do(action:Block2[[T, Object]]) -> Done
-        // applies action, in arbitrary order, to each of my values.
+    valuesDo(action:Block2[[T, Object]]) -> Done
+    do(action:Block2[[T, Object]]) -> Done
+    // applies action, in arbitrary order, to each of my values.
 
-        copy -> Dictionary [[K, V]]
-        // returns a new dictionary that is a(shallow) copy of self
+    copy -> Dictionary [[K, V]]
+    // returns a new dictionary that is a(shallow) copy of self
 
-        asDictionary -> Dictionary[[K, T]]
-        // returns self
+    asDictionary -> Dictionary[[K, T]]
+    // returns self
 
-        ++ (other:Dictionary[[K, T]]) -> Dictionary[[K, T]]
-        // returns a new dictionary that merges the entries from self and other.
-        // A value in other at key k overrides the value in self at key k.
-        
-        -- (other:Dictionary[[K, T]]) -> Dictionary[[K, T]]
-        // returns a new dictionary that contains all of my entries except for those whose keys are in other
-    }
+    ++ (other:Dictionary[[K, T]]) -> Dictionary[[K, T]]
+    // returns a new dictionary that merges the entries from self and other.
+    // A value in other at key k overrides the value in self at key k.
+    
+    -- (other:Dictionary[[K, T]]) -> Dictionary[[K, T]]
+    // returns a new dictionary that contains all of my entries except for those whose keys are in other
+}
 ```
 
 Iterables and ***for*** loops {#sec:forLoop}
@@ -1173,15 +1172,16 @@ The *random* module object can be imported using
 `import "random" as rand`, for any identifier of your choice `rand`. The
 object `rand` responds to the following methods.
 
+```
+    between0And1 -> Number
+    // A pseudo-random number between in the interval $[0..1)$
 
-        between0And1 -> Number
-        // A pseudo-random number between in the interval $[0..1)$
+    between (m: Number) and (n: Number) -> Number
+    // A pseudo-random number in the interval $[m..n)$
 
-        between (m: Number) and (n: Number) -> Number
-        // A pseudo-random number in the interval $[m..n)$
-
-        integerIn (m: Number) to (n: Number) -> Number
-        // A pseudo-random integer in the interval $[m..n]$
+    integerIn (m: Number) to (n: Number) -> Number
+    // A pseudo-random integer in the interval $[m..n]$
+```
 
 Sys
 ---
