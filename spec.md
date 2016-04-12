@@ -1629,7 +1629,7 @@ T <: (S | T)
 **Example**
 
 
-To illustrates the limitations of variant types, suppose
+To illustrate the limitations of variant types, suppose
 
     type S = {m: A -> B, n: C -> D}
     type T = {m: A -> B, k: E -> F}
@@ -1743,7 +1743,7 @@ of the object `o`.  As patterns, singleton types *match* only their singleton ob
 		method isNull -> Boolean {return true}
 	}
 	
-	type Some[[T> {
+	type Some[[T]] {
 		thing -> T
 		isNull -> Boolean
 	}

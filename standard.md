@@ -387,7 +387,7 @@ type String =  {
   isEmpty -> Boolean
   // true if self is the empty string
 
-  iterator -> Iterator[[String>
+  iterator -> Iterator[[String]]
   // an iterator over the characters of self
 
   lastIndexOf (sub:String) -> Number
