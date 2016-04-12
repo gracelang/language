@@ -1764,16 +1764,46 @@ they may be defined inside object, class, method, and other type
 definitions, and typically accessed via [Manifest Requests](#manifest-requests).
 This allows types to be declared and imported from other modules.
 
-### Type Assertions
+## Type Assertions
 
-Type assertions can be used to check conformance and equality of
-types.
+When parameters, fields, and method results are annoatated with types,
+the programmer can be confident that objects bound to those parameters and
+fields,
+and returned from those methods, do indeed have the specified types, insofar
+as Grace has the required type information.  The checks necessary to implement 
+this guarantee may be performed statically or dynamically. 
 
-    assert (B <: A)
-       // B conforms to A.
-    assert (B <: type {foo(_:C) -> D} )
-       // B had better have a foo method from C returning D
-    assert (B == A | C)
+When implementing the type check, types specified as `Unknown` will always 
+conform.  So, if a variable is annotated with type
+```
+    type { 
+        add(Number) -> Collection[[Number]]
+        removeLast -> Number
+    }
+```
+an object with type
+```
+    type {
+        add(Unknown) -> Collection[[Unknown]]
+        removeLast -> Unknown
+        size -> Number
+    }
+```
+will pass the type test.  Of course, the presence of `Unknown` in the type
+of the object means that a subsequent type error may still occur. 
+For example, the code of the `add(_)` method 
+might actually depend on being given a `String` argument, 
+or the collection returned from `add(_)` might contain `Boolean`s.
+
+The same type check can be requested explicitly by using the operators `<:`,
+`:>` and `==` between types.
+
+**Examples**
+
+    assert (B <: A) description "B does not conform to A"
+    assert (B <: type { foo(_) } ) description "B has no foo(_) method"
+    assert (B <: type {foo(_:C) -> D} ) description "B doesn't have a method foo(_:C)->D"
+    assert (B == (A | C)) description "B is neither an A or a C"
 
 # Modules and Dialects
 
@@ -1950,15 +1980,15 @@ Grace does not support finalization.
 
 The core Grace specification does not describe a concurrent language.
 Various concurrency models may be provided as dialects.
-The details remain to be sepcified.
+The details remain to be sepecified.
 
 # Acknowledgements
 
 We thank Michael Homer and Tim Jones for working on early
 implementations of Grace, and Josh Bloch, Cay Horstmann, Michael
-Kölling, Doug Lea, Ewan Tempero, and the participants at the Grace
-Design Workshops and the IFIP WG2.16 on Programming Language Design
-meetings for discussions about the language design.
+Kölling, Doug Lea, Ewan Tempero, Laurence Tratt, and the participants at the Grace
+Design Workshops and IFIP WG2.16 on Programming Language Design
+meetings for discussions about the design of Grace.
 
 # Grammar
 
