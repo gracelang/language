@@ -28,7 +28,8 @@
    breaklines=true,
    literate={+}{{$+$}}1 {-}{{$-$}}1 {—}{{---}}1 {>>=}{$>\!\!>=$}2 {\#}{{\small \#}}1%
    	{->}{$-\hspace*{-0.42em}>$}2 {>>}{$>\!>$}2 {├}{{$\vdash$}}1 %
-	{⟦}{{$\llbracket$}}1 {⟧}{{$\rrbracket$}}1 {←}{{\raisebox{1pt}{$\leftarrowtriangle$}}}1 {÷}{$\div$}1 {”}{"}1 {“}{"}1,
+	{⟦}{{$\llbracket$}}1 {⟧}{{$\rrbracket$}}1 {←}{{\raisebox{1pt}{$\leftarrowtriangle$}}}1%
+    {÷}{$\div$}1 {”}{"}1 {“}{"}1 {≥}{$\geq$}1 {≤}{$\leq$}1,
    upquote=true,
    columns=fullflexible,
    keepspaces=true
@@ -42,24 +43,9 @@
 	keepspaces=true,
 	breaklines=true,
 	extendedchars=true,
-	literate={+}{{$+$}}1 {-}{{$-$}}1 {—}{{---}}1 {>>=}{$>\!\!>=$}2 {\#}{{\small \#}}1%
-   	{->}{$-\hspace*{-0.42em}>$}2 {>>}{$>\!>$}2 {├}{{$\vdash$}}1 %
-	{⟦}{{$\llbracket$}}1 {⟧}{{$\rrbracket$}}1 {←}{{\raisebox{1pt}{$\leftarrowtriangle$}}}1 {÷}{$\div$}1 {”}{"}1 {“}{"}1,
 	upquote=true,
 	columns=fullflexible} % no fixed width fonts
 }
-\lstnewenvironment{grace} {\lstset{language=Grace,
-	keywordstyle=\color{black}\bfseries,
-	mathescape=true,
-	showstringspaces=false,
-	keepspaces=true,
-	breaklines=true,
-	extendedchars=true,
-	literate={+}{{$+$}}1 {-}{{$-$}}1 {—}{{---}}1 {>>=}{$>\!\!>=$}2 {\#}{{\small \#}}1%   	{->}{$-\hspace*{-0.42em}>$}2 {>>}{$>\!>$}2 {├}{{$\vdash$}}1 %
-	{⟦}{{$\llbracket$}}1 {⟧}{{$\rrbracket$}}1 {←}{{\raisebox{1pt}{$\leftarrowtriangle$}}}1 {÷}{$\div$}1 {”}{"}1 {“}{"}1,
-	upquote=true,
-	columns=fullflexible}} {}
-	
 
 \definecolor{lightgray}{rgb}{0.87, 0.87, 0.87}
 \newcommand{\inputgrace}[2]{%
