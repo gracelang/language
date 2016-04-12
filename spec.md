@@ -587,7 +587,8 @@ annotations:
 | `confidential` | method may be requested only on self — [see Encapsulation](#encapsulation) |
 | `manifest` | method must return a manifest object - [Manifest Expressions](#manifest-expressions) |
 | `overrides` | method must override another method - [Overriding Methods] |
-| `public` | method may be requested from anywhere; field can be read and written from any object - [see Encapsulation](#encapsulation) |
+| `public` | method may be requested from anywhere |
+| |  field can be read and written from any object - [see Encapsulation](#encapsulation) |
 | `readable`  | field may be read from anywhere - [see Encapsulation](#encapsulation) |
 | `writeable` | variable may be assigned from anywhere - [see Encapsulation](#encapsulation) |
 
