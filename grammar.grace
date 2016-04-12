@@ -55,6 +55,7 @@ class exports {
   def methodReturnType = rule { opt(arrow ~ nonEmptyTypeExpression )  } 
 
   def methodFormals = rule { lParen ~ rep1sep( identifier ~ opt(colon ~ opt(ws) ~ typeExpression), comma) ~ rParen}
+
   def oneMethodFormal = rule { lParen ~ identifier ~ opt(colon ~ typeExpression) ~ rParen}
   def blockFormals = rule { repsep( identifier ~ opt(colon ~ typeExpression), comma) }
 

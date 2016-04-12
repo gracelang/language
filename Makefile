@@ -3,14 +3,12 @@ all: pdf html
 PANDOCOPTS = --table-of-contents --number-sections --from=markdown+tex_math_dollars
 LATEXOPTS = --listings --template=grace.latex
 
-munged.md:
-	perl grammarator.perl spec.md  > munged.md 
+spec_with_grammar.md: spec.md grammarator.perl
+	perl grammarator.perl $<  > $@
 
-pdf:
-	@$(MAKE) spec.pdf standard.pdf munged.pdf
+pdf: standard.pdf spec_with_grammar.pdf
 
-html:
-	@$(MAKE) spec.html standard.html munged.html
+html: standard.html spec_with_grammar.html
 
 %.pdf: %.md Makefile grace.sty grace.latex
 	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex $(LATEXOPTS) $<

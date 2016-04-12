@@ -1923,4 +1923,9 @@ meetings for discussions about the design of Grace.
 
 # Grammar
 
-_(to be attached once James works out how to do it)_
+The following PEG defines the context-free syntax of Grace.
+Productions are arranged in alphabetical order.
+
+```
+GRAMMAR
+```
