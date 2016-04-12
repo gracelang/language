@@ -222,7 +222,7 @@ type Number = {
   //  quotient of self divided by other (in general, a fraction).
 
   % (other: Number) -> Number
-  //  remainder r after integer division of self by other: 0 <= r < self;  see also ÷
+  //  remainder r after integer division of self by other: 0 ≤ r < self;  see also ÷
 
   ÷ (other: Number) -> Number
    // quotient q of self after integer division by other: self = (other * q) + r, where r = self % other
@@ -321,7 +321,10 @@ type String =  {
   // !(self == other)
 
   > (other: String)
-  // true if other precedes self lexicographically
+  // true if self follows other lexicographically
+
+  >= (other: String)
+  // (self == other) || (self > other)
 
   at(index: Number) -> String
   // returns the character in position index (as a string of size 1); index must be in the range 1..size
@@ -352,7 +355,7 @@ type String =  {
   // This is useful when writing a comparison function for sortBy
 
   contains (other:String) -> Number
-  // returns true if other is a substring of \textsf{self}
+  // returns true if other is a substring of self
 
   endsWith (possibleSuffix: String)
   // true if self ends with possibleSuffix
@@ -375,7 +378,7 @@ type String =  {
   // returns the leftmost index at which pattern appears in self; applies absent if it is not there.
 
   indexOf (pattern:String) startingAt (offset) -> Number
-  // like indexOf(pattern), except that it returns the first index >= offset, or 0 if  pattern is not found.
+  // like indexOf(pattern), except that it returns the first index ≥ offset, or 0 if  pattern is not found.
 
   indexOf[[W]] (pattern:String) startingAt(offset) ifAbsent (action:Block0[[W]]) -> Number | W
   // like the above, except that it answers the result of applying action if there is no such index.
@@ -397,7 +400,7 @@ type String =  {
 
   lastIndexOf[[W]] (pattern:String) startingAt (offset) ifAbsent (action:Block0[[W]]) -> 
       Number | W
-  // like the above, except that it returns the rightmost index <=  offset.
+  // like the above, except that it returns the rightmost index ≤  offset.
 
   map[[U]] (function:Block[[String,U]]) -> Iterable[[U]]
   // returns an Iterable object containing the results of successive applications of function to the
@@ -463,26 +466,28 @@ Boolean
 The Boolean literals are `true` and `false`.
 
 ```
-    type Boolean =  {
+type Boolean =  {
 
-        not -> Boolean
-        prefix ! -> Boolean
-        // the negation of self
+    not -> Boolean
+    prefix ! -> Boolean
+    // the negation of self
 
-        && (other: BlockOrBoolean) -> Boolean
-        // return true when self and other are both true
+    && (other: BlockOrBoolean) -> Boolean
+    // return true when self and other are both true
 
-        || (other: BlockOrBoolean) -> Boolean
-        // return true when either self or other (or both) are true
-    }
+    || (other: BlockOrBoolean) -> Boolean
+    // return true when either self or other (or both) are true
+}
 ```
 
-In conditions in `if` statements, and in shortcircult Boolean
-operators, a Block returning a boolean may be used instead of a Boolean.
+In conditions in `if` statements, and in the operators `&&` and `||`, a Block returning a boolean may be used instead of a Boolean.  
+This means that `&&` and `||` can be used as “shortcircuit”, also known as
+“non-commutative”, operators: they will evaluate their argument only
+if necessary.
 
 ``` 
 type BlockBoolean = { apply -> Boolean }
-type BlockOrBoolean = BlockBoolean | Block 
+type BlockOrBoolean = BlockBoolean | Boolean 
 ```
 
 Point
@@ -575,7 +580,7 @@ type Iterable[[T]] = Object & type {
     // True if self has no elements
     
     size -> Number
-    // The number of elements in self; raises $\textsf{SizeUnknown}$ if size is not known.
+    // The number of elements in self; raises SizeUnknown if size is not known.
     
     sizeIfUnknown(action: Block0<Number>) -> Number
     // The number of elements in self; if size is not known, then action is evaluated and its value returned.
@@ -684,7 +689,7 @@ ranges such as `1..10`.
 type Sequence[[T]] = Enumerable[[T]] & type {
 
     at(ix:Number) -> T
-        // returns my x^th element, provided ix is integral and l <= \leq ix <=  size
+        // returns my x^th element, provided ix is integral and l ≤ \leq ix ≤  size
     
     first -> T
     // returns my first element
@@ -763,7 +768,7 @@ type List[[T]] = Sequence[[T]] & type {
     
     at(n: Number) put(new:T) -> List[[T]]
         // updates self so that my n^th element is new.  Returns self.
-        // Requires 1 <= n <= size+1; when n = size+1, equivalent to addLast(new).
+        // Requires 1 ≤ n ≤ size+1; when n = size+1, equivalent to addLast(new).
     
 
         add(new:T) -> List[[T]]
@@ -1053,7 +1058,7 @@ sorted list:
         var c := cIter.next
         var d := dIter.next
         while {cIter.hasNext && dIter.hasNext} do {
-            if (c <= d) then { 
+            if (c ≤ d) then { 
                 result.addLast(c) 
                 c := cIter.next
             } else {
@@ -1061,7 +1066,7 @@ sorted list:
                 d := dIter.next
             }
         }
-        if (c <= d) then {
+        if (c ≤ d) then {
             result.addLast(c, d)
         } else {
             result.addLast(d, c)
