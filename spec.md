@@ -547,10 +547,7 @@ arity" (although it does _not_ allow overloading by type).
 
 Methods may be declared with one or more type parameters, which are listed between **`[[`** and **`]]`** used as brackets.
 If present, type parameters must appear after the identifier of the first part of
-a multipart name.   There must be no space between the opening `[[` and the first type parameter (or,
-in a request, the first type argument), or between the last type parameter (or argument) and the closing `]]`.
-The purpose of this rule is to disambiguate this use of `<` and `>` from their use as operator symbols, when
-they must be surrounded by spaces.
+a multipart name.  
 
 If an operator method has a type parameter list, it must be separated from the sequence of operator symbols that
 names the method by a space.
