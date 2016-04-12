@@ -139,7 +139,6 @@ unit.
 
 **Example**
 
-
     // comment, to end of line
 
 ## Identifiers and Operators
@@ -282,6 +281,7 @@ library supports efficient incremental string construction.
 |   `\Uhhhhhh`     | 6-digit Unicode      | U+hhhhhh   |
 
 
+
 **Examples**
 
 
@@ -306,6 +306,7 @@ brace expression.
 ## Lineups
 
 A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
+
 
 **Examples**
 
@@ -355,6 +356,8 @@ is the same as the number of parameters of the block. Requesting the
 `apply(...)` method evaluates the block; it is an error to provide the wrong
 number of arguments. If block parameters are declared with type
 annotations, it is a `TypeError` if the arguments do not conform to those types.
+
+
 
 **Examples**
 
@@ -407,6 +410,7 @@ an identifier to the value of an initialising expression, and may
 optionally be given a type.  This type is checked when
 the constant is initialised. Constants cannot be re-bound.
 
+
 **Examples**
 
 
@@ -426,6 +430,9 @@ variable is an error, which may be caught either at run time or at
 compile time.
 Variables may be optionally given a type: this type is checked when
 the variable is initialised and assigned.
+
+
+
 
 **Examples**
 
@@ -456,6 +463,8 @@ the method returns. The body of the method is enclosed in braces.
         if (random.nextBoolean)
             then {a.apply} else {b.apply}
     }
+
+
 
 
 ### Method Names
@@ -543,6 +552,7 @@ As a consequence of the above rules, methods `max(a, b, c)` and
 as distinct methods.  In other words, Grace allows "overloading by
 arity" (although it does _not_ allow overloading by type).
 
+
 ### Type Parameters
 
 Methods may be declared with one or more type parameters, which are listed between **`[[`** and **`]]`** used as brackets.
@@ -554,6 +564,8 @@ names the method by a space.
 
 The presence or absence of type parameters does not change the canonical name of the method.
 
+
+ 
 **Examples**
 
 
@@ -1961,4 +1973,7 @@ meetings for discussions about the language design.
 
 # Grammar
 
-_(to be attached once James works out how to do it)_
+```
+GRAMMAR
+```
+
