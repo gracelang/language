@@ -522,13 +522,13 @@ return once result.  There is a family of `Block` types that describe
 block objcets.
 
 ```
-type Block0<R> = type {
+type Block0[[R]] = type {
     apply -> R
 }
-type Block1<T,R> = type {
+type Block1[[T,R]] = type {
     apply(a:T) -> R
 }
-type Block2<S,T,R> = type {
+type Block2[[S,T,R]] = type {
     apply(a:S, b:T) -> R
 }
 ```
