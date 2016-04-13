@@ -92,11 +92,14 @@ The following ASCII sequences are treated as equivalent to the corresponding Uni
 
 
 ASCII | Unicode
----------| ----------
->=  |  $\geq$
-<=  |  $\leq$
-!=   |  $\neq$
-->  | $\rightarrow$
+:---: | :-----:
+>=    | $\geq$
+<=    | $\leq$
+!=    | $\neq$
+->    | $\rightarrow$
+]]    | $\rrbracket$
+[[    | $\llbracket$
+
 
 ## Layout
 
@@ -522,7 +525,7 @@ method value:= (n: Number) -> Done {
     method max(v1, v2)
 
 In the first two examples, the canonical names of the methods are
-`drawLineFromOriginTo(_)`, and `drawLineFrom(_) to(_)`.  The latter
+`drawLineFromOriginTo(_)`, and `drawLineFrom(_)to(_)`.  The latter
 comprises two parts: `drawLineFrom(_)` and `to(_)`.
 In the third example, the canonical name of the method is `max(_,_)`.
 	
