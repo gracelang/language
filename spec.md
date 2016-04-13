@@ -2,14 +2,14 @@
 author:
 - 'Andrew P. Black'
 - 'Kim B. Bruce'
-- James Noble
+- 'James Noble'
 
 bibliography:
 - 'spec.bib'
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.6b15
+    Draft Specification Version 0.7.0
 ...
 
 
@@ -1343,7 +1343,6 @@ The objects created by [String Literals](#strings) and [Numerals](#numbers)
 are patterns that match strings and numbers that are equal to the literal.
 
 **Examples**
-
 
 Matching blocks and self-matching objects can be conveniently used
 in the `match(_)case(_)...` family of methods.

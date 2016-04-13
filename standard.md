@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Standard Prelude\
-    Draft Specification Version 0.6b15
+    Draft Specification Version 0.7.0
 ...
 
 
@@ -137,6 +137,28 @@ times that a *while* or *do* loop will execute cannot usually be
 determined in advance. This is what we mean by “unbounded loop”. The
 number of times may even be infinite—a common coding error for
 beginners.
+
+Match Case
+----------
+
+Matching blocks and self-matching objects can be conveniently used
+in the `match(_)case(_)...` family of methods to support multiway branching.
+
+```
+    method fib(n : Number) -> Number {
+        match (n)
+	        case { 0 -> 0 }
+	        case { 1 -> 1 }
+	        case { _ -> fib(n-1) + fib(n-2) }
+    }
+```
+
+The first two blocks use self-matching objects; the first is short for
+{ _:0 -> 0 }.  The last block has no pattern (or, if you prefer, has
+the pattern `Unknown`, which matches any object).  Such a block always matches.
+
+If `match(_)case(_)...` does not find a match, it raises a
+non-exhaustive match exception.  
 
 
 ValueOf
@@ -361,7 +383,7 @@ type String =  {
     endsWith (possibleSuffix: String)
     // true if self ends with possibleSuffix
 
-    filter (predicate: Block1[[String,Boolean>) -> String
+    filter (predicate: Block1[[String,Boolean]]) -> String
     // returns the String containing those characters of self for which predicate returns true
 
     fold[[U]] (binaryFunction: Block2[[U,String,U]]) startingWith(initial: U) -> U
@@ -399,8 +421,9 @@ type String =  {
     lastIndexOf[[W]] (sub:String) ifAbsent (absent:Block0[[W]]) -> Number | W
     // returns the rightmost index at which sub appears in self; applies absent if it is not there.
 
-    lastIndexOf[[W]] (pattern:String) startingAt (offset) ifAbsent (action:Block0[[W]]) -> 
-      Number | W
+    lastIndexOf[[W]] (pattern:String)
+       startingAt (offset)
+       ifAbsent (action:Block0[[W]]) ->  Number | W
     // like the above, except that it returns the rightmost index ≤  offset.
 
     map[[U]] (function:Block[[String,U]]) -> Iterable[[U]]
@@ -491,6 +514,26 @@ type BlockBoolean = { apply -> Boolean }
 type BlockOrBoolean = BlockBoolean | Boolean 
 ```
 
+Blocks
+------
+
+Blocks are anonymous functions, that take zero or more arguments and
+return once result.  There is a family of `Block` types that describe
+block objcets.
+
+```
+type Block0<R> = type {
+    apply -> R
+}
+type Block1<T,R> = type {
+    apply(a:T) -> R
+}
+type Block2<S,T,R> = type {
+    apply(a:S, b:T) -> R
+}
+```
+
+
 Point
 -----
 
@@ -572,7 +615,7 @@ collection of *elements*, each of type `T`, over which a client can
 iterate:
 
 ```
-type Iterable[[T]] = Object & type {
+type Iterable[[T]] = type {
     iterator -> Iterator[[T]]       
     // Returns an iterator over my elements.  It is an error to modify self while iterating over it.
     // Note: all other methods can be defined using iterator.  
@@ -583,7 +626,7 @@ type Iterable[[T]] = Object & type {
     size -> Number
     // The number of elements in self; raises SizeUnknown if size is not known.
     
-    sizeIfUnknown(action: Block0<Number>) -> Number
+    sizeIfUnknown(action: Block0[[Number]]) -> Number
     // The number of elements in self; if size is not known, then action is evaluated and its value returned.
     
     first -> T
@@ -595,7 +638,7 @@ type Iterable[[T]] = Object & type {
     do(action:Block1[[T, Unknown]]) separatedBy(sep:Block0[[Unknown]]) -> Done
     // applies action to each element of self, and applies sep (to no arguments) in between.
 
-    map[[R]](unaryFunction:Block1[[T, R]]) -> Selftype[[R]]
+    map[[R]](unaryFunction:Block1[[T, R]]) -> Self
     // returns a new collection whose elements are obtained by applying unaryFunction to
     // each element of self.  If self is ordered, then the result is ordered.
     
@@ -604,11 +647,11 @@ type Iterable[[T]] = Object & type {
     // the left fold.  For example, fold {a, b -> a + b} startingWith 0
     // will compute the sum, and fold {a, b -> a * b} startingWith 1 the product.
     
-    filter(condition:Block1[[T, Boolean]]) -> Selftype[[T]]
+    filter(condition:Block1[[T, Boolean]]) -> Self
     // returns a new collection containing only those elements of self for which
     // condition holds.  The result is ordered if self is ordered.
     
-    ++(other: Iterable[[T]]) -> Selftype[[T]]
+    ++(other: Iterable[[T]]) -> Self
     // returns a new object whose elements include those of self and those of other.
 }
 ```
@@ -640,7 +683,7 @@ between an `Iterable` and an `Enumerable`
 is that `Enumerable`s have a natural order, so lists are
 `Enumerable`, whereas sets are just
 `Iterable`.
-
+```
 type Enumerable[[T]] = Collection[[T]] & type {
 
     values -> Enumerable[[T]]
@@ -665,7 +708,7 @@ type Enumerable[[T]] = Collection[[T]] & type {
     // established by sortBlock, which should return -1 if its first argument is less than its second
     //  argument, 0 if they are equal, and +1 otherwise.
 }
-
+```
 Lineup
 ------
 
@@ -757,12 +800,12 @@ List
 The type `List[[T]]` describes objects that are mutable
 lists of elements that have type `T`. Like sets and
 sequences, list objects can be constructed using the
-`list request, as in
-`list [[T]] [ ]`, `list [[T]] [a, b, c]`, or
+`list` request, as in
+`list[[T]] [ ]`, `list[[T]] [a, b, c]`, or
 `list (existingCollection)`.
 
-``` 
 
+``` 
 type List[[T]] = Sequence[[T]] & type {
     
     at(n: Number) put(new:T) -> List[[T]]
@@ -771,7 +814,7 @@ type List[[T]] = Sequence[[T]] & type {
 
 
     add(new:T) -> List[[T]]
-    addLast(*new:T) -> List[[T]]
+    addLast(new:T) -> List[[T]]
     // adds new to end of self.  (The first form can be also be applied to sets, which are not Indexable.)
 
     addFirst(new:T) -> List[[T]]
@@ -898,7 +941,7 @@ dictionary objects can be constructed using the class `dictionary`, but
 the argument to `dictionary` must be of type `Iterable[[Binding]]`. This
 means that each element of the argument must have methods `key` and
 `value`. Bindings can be conveniently created using the infix `::`
-operator, as in `dictionary[[K, T]] [k::v, m::w, n::x, ...]`, or .
+operator, as in `dictionary[[K, T]] [k::v, m::w, n::x, ...]`.
 
 ```
 type Dictionary[[K, T]] = Collection[[T]] & type {
@@ -1076,13 +1119,6 @@ sorted list:
     }
 ```
 
-[apb](I find it annoying that
-this code is so complicated. Can it be simplified? I think that the
-source of the complexity is that both modifies the iterator *and*
-returns a result. If we had a method on Iterators, the need to pre-load
-and would go away, as well as most of the
-complexity)
-
 Primitive Array
 ---------------
 
@@ -1123,7 +1159,7 @@ Math
 ----
 
 The *math* module object can be imported using `import "math" as m`, for
-any identifier of your choice `m`. The object `m` responds to the
+any identifier of your choice, e.g. `m`. The object `m` responds to the
 following methods.
 
 ``` 
@@ -1169,7 +1205,7 @@ Random
 ------
 
 The *random* module object can be imported using
-`import "random" as rand`, for any identifier of your choice `rand`. The
+`import "random" as rand`, for any identifier of your choice, e.g. `rand`. The
 object `rand` responds to the following methods.
 
 ```
@@ -1187,7 +1223,7 @@ Sys
 ---
 
 The *sys* module object can be imported using `import "sys" as system`,
-for any identifier of your choice `system`. The object `system` responds
+for any identifier of your choice, e.g. `system`. The object `system` responds
 to the following methods.
 
 ```
