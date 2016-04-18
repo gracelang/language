@@ -289,9 +289,43 @@ type Number = {
 
     abs -> Number
     // the absolute value of self
+    
+    sgn -> Number
+    // the signum function: 0 when self == 0, 
+    // -1 when self < 0, and +1 when self > 0
 
     isNan -> Boolean
     // true if this Number is a NaN
+    
+    sin -> Number
+    // trigonometric sine (self in radians)
+
+    cos -> Number
+    // cosine (self in radians)
+
+    tan -> Number
+    // tangent (self in radians)
+
+    asin -> Number
+    // arcsine of self (result in radians)
+
+    acos -> Number
+    // arccosine of self (result in radians)
+
+    atan -> Number
+    // arctangent of self (result in radians)
+
+    lg -> Number
+    // log base 2 of self
+
+    ln -> Number
+    // the natural log of self 
+
+    exp -> Number
+    // e raised to the power of self
+
+    log10 (n: Number) -> Number
+    // log base 10 of self
 }
 ```
 
