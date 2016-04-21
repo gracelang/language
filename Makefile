@@ -1,6 +1,6 @@
 all: pdf html
 
-PANDOCOPTS = --table-of-contents --number-sections --from=markdown+tex_math_dollars
+PANDOCOPTS = --table-of-contents --number-sections --from=markdown+tex_math_dollars+superscript
 LATEXOPTS = --listings --template=grace.latex
 
 spec_with_grammar.md: spec.md grammarator.perl

@@ -694,15 +694,15 @@ The type `Collection` adds some conversion methods to
 `Iterable`:
 ```
     type Collection[[T]] = Iterable[[T]] & type {
-         asList -> List[[T]]
-    // returns a (mutable) list containing my elements.
+        asList -> List[[T]]
+    	  // returns a (mutable) list containing my elements.
     
         asSequence -> Sequence[[T]]
-    // returns a sequence containing my elements.
+        // returns a sequence containing my elements.
 
         asSet -> Set[[T]]
-    // returns a (mutable) Set containing my elements, with duplicates eliminated.
-    // The == operation on my elements is used to identify duplicates.
+        // returns a (mutable) Set containing my elements, with duplicates eliminated.
+        // The == operation on my elements is used to identify duplicates.
 }
 ```
 
@@ -726,7 +726,7 @@ type Enumerable[[T]] = Collection[[T]] & type {
 
     asDictionary -> Dictionary[[Number, T]]
     // returns a dictionary containing my indices as keys and my elements as values, so that
-    // my i^th element is self.asDictionary.at(i).
+    // my self.at(i) is self.asDictionary.at(i).
 
     keysAndValuesDo (action:Block2[[Number, T, Object]]) -> Done
     // applies action, in sequence, to each of my keys and the corresponding element. 
@@ -766,8 +766,8 @@ ranges such as `1..10`.
 ```
 type Sequence[[T]] = Enumerable[[T]] & type {
 
-    at(ix:Number) -> T
-    // returns my x^th element, provided ix is integral and l ≤ \leq ix ≤  size
+    at(n:Number) -> T
+    // returns my element at index n (starting from 1), provided ix is integral and l ≤ n ≤  size
     
     first -> T
     // returns my first element
@@ -843,7 +843,7 @@ sequences, list objects can be constructed using the
 type List[[T]] = Sequence[[T]] & type {
     
     at(n: Number) put(new:T) -> List[[T]]
-    // updates self so that my n^th element is new.  Returns self.
+    // updates self so that my element at index n is new.  Returns self.
     // Requires 1 ≤ n ≤ size+1; when n = size+1, equivalent to addLast(new).
 
 
@@ -873,18 +873,18 @@ type List[[T]] = Sequence[[T]] & type {
     remove(element:T) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
     // removes element from self; executes action if it is not contained in self.  Returns self
 
-    removeAll(elements:Collection[[T]]) -> List[[T]]
+    removeAll(elements:Iterable[[T]]) -> List[[T]]
     // removes elements from self.  Raises a NoSuchObject exception if any one of 
     // them is not contained in self.  Returns self
     
-    removeAll(elements:Collection[[T]]) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
+    removeAll(elements:Iterable[[T]]) ifAbsent(action:Block0[[Unknown]]) -> List[[T]]
     // removes elements from self;  executes action if any of them is not contained in self.  Returns self
     
     ++ (other:List[[T]]) -> List[[T]]
     // returns a new list formed by concatenating self and other
     
-    addAll(extension:List[[T]]) -> List[[T]]
-    // extends self by appending extension; returns self.
+    addAll(extension:Iterable[[T]]) -> List[[T]]
+    // extends self by appending the contents of extension; returns self.
     
     contains(sought:T) -> Boolean
     // returns true when sought is an element of self.
@@ -925,7 +925,7 @@ type Set[[T]] = Collection[[T]] & type {
     add(element:T) -> Set[[T]]
     // adds element to self.  Returns self.    
     
-    addAll(elements:Collection[[T]]) -> Set[[T]]
+    addAll(elements:Iterable[[T]]) -> Set[[T]]
     // adds elements to self.  Returns self. 
     
     remove(element: T) -> Set[[T]]
@@ -934,11 +934,13 @@ type Set[[T]] = Collection[[T]] & type {
     remove(elements: T) ifAbsent(block: Block0[[Done]]) -> Set[[T]]
     // removes element from self.  Executes action if element is not present.   Returns self.
     
-    removeAll(elems:Collection[[T]])
-    // removes elems from self.  It is an error if any of the elems is not present.   Returns self.
+    removeAll(elems:Iterable[[T]])
+    // removes elems from self.  Raises NoSuchObject if any of the elems is
+    // not present.   Returns self.
 
-    removeAll(elems:Collection[[T]])ifAbsent(action:Block0[[Done]]) -> Set[[T]]
-    // removes elems from self.  Executes action if any of elems is not present.   Returns self.
+    removeAll(elems:Iterable[[T]]) ifAbsent(action:Block1[[T, Done]]) -> Set[[T]]
+    // removes elems from self.  Executes action.apply(e) for each e in elems that is
+    // not present.   Returns self.
     
     contains(elem:T) -> Boolean
     // true if self contains elem
@@ -960,6 +962,12 @@ type Set[[T]] = Collection[[T]] & type {
     
     ++ (other:Set[[T]]) -> Set[[T]]
     // set union; the result contains elements that were in self or in other (or in both).
+
+    isSubset(s2: Set<T>) -> Boolean
+    // true if I am a subset of s2
+
+    isSuperset(s2: Iterable<T>) -> Boolean
+    // true if I contain all the elements of s2
     
     into(existing:Collection[[T]]) -> Collection[[T]]
     // adds my elements to existing, and returns existing.
@@ -1030,7 +1038,7 @@ type Dictionary[[K, T]] = Collection[[T]] & type {
     // applies action, in arbitrary order, to each of my values.
 
     copy -> Dictionary [[K, V]]
-    // returns a new dictionary that is a(shallow) copy of self
+    // returns a new dictionary that is a (shallow) copy of self
 
     asDictionary -> Dictionary[[K, T]]
     // returns self
@@ -1197,14 +1205,14 @@ any identifier of your choice, e.g. `m`. The object `m` responds to the
 following methods.
 
 ``` 
-    sin($\theta$: Number) -> Number
+    sin(θ: Number) -> Number
     // trigonometric sine ($\theta$ in radians)
 
-    cos($\theta$: Number) -> Number
-    // cosine ($\theta$ in radians)
+    cos(θ: Number) -> Number
+    // cosine (θ in radians)
 
-    tan($\theta$: Number) -> Number
-    // tangent ($\theta$ in radians)
+    tan(θ: Number) -> Number
+    // tangent (θ in radians)
 
     asin(r: Number) -> Number
     // arcsine (result in radians)
@@ -1216,23 +1224,23 @@ following methods.
     //arctangent (result in radians)
 
     pi -> Number
-    $\pi$ -> Number
+    π -> Number
     // 3.14159265...
 
     abs(r: Number) -> Number
     // absolute value
 
     lg(n: Number) -> Number
-    // $log_2 n$
+    // logarithm base 2 of n
 
     ln (n: Number) -> Number
-    // $log_e n$
+    // natural logarithm of n
 
     exp(n: Number) -> Number
-    // $e^n$
+    // e to the power n
 
     log10 (n: Number) -> Number
-    // $log_10 n$
+    // logarithm base 10 of n
 ```
 
 Random
@@ -1244,7 +1252,7 @@ object `rand` responds to the following methods.
 
 ```
     between0And1 -> Number
-    // A pseudo-random number between in the interval $[0..1)$
+    // A pseudo-random number in the interval $[0..1)$
 
     between (m: Number) and (n: Number) -> Number
     // A pseudo-random number in the interval $[m..n)$
