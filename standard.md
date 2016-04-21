@@ -197,7 +197,7 @@ type Object = {
    // true if other is equal to self
 
    != (other: Object) -> Boolean
-   // the inverse of ==. There are unicode aliases for this opreator.
+   // the inverse of ==. There is a unicode alias for this operator.
 
    hash -> Number
    // the hash code of self, a Number in the range 0 .. 2^32
@@ -1200,6 +1200,10 @@ Built-In Libraries
 Math
 ----
 
+The *math* module is deprecated.  All of the facilities formerly provided by *math*
+are available either in the module *random*, or built-in-identifiers ($\pi$), 
+or as method on numbers (`tan`, `log10`, etc.)
+
 The *math* module object can be imported using `import "math" as m`, for
 any identifier of your choice, e.g. `m`. The object `m` responds to the
 following methods.
@@ -1260,6 +1264,31 @@ object `rand` responds to the following methods.
     integerIn (m: Number) to (n: Number) -> Number
     // A pseudo-random integer in the interval $[m..n]$
 ```
+
+Option
+------
+
+The *option* module object can be imported using
+`import "option" as option`, for any identifier of your choice, e.g. `option`.
+The object `option` responds to the following methods.
+
+```
+    type Option⟦T⟧ = type {
+        value -> T
+        do(action:Block1⟦T, Done⟧) -> Done
+        isSome -> Boolean
+        isNone -> Boolean
+    }
+    
+    some⟦T⟧(contents:T) -> Option⟦T⟧
+    // creates an object s such that s.value is contents, s.do(action) 
+    // applies action to contents, isSome answers true and isNone answers false
+    
+    none⟦T⟧ -> Option⟦T⟧ 
+    // creates an object s such that s.value raises a ProgrammingError, 
+    // s.do(action) does nothing, isSome answers false and isNone answers true
+```
+
 
 Sys
 ---
