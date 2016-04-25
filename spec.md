@@ -1331,9 +1331,9 @@ parameter type, `match(_)` returns false; when `apply(_)` would return
 a result `r`, `match(_)` returns a `SuccessfulMatch` object whose
 `result` is `r`.
 
-If a the parameter declaration of a matching block takes the form `_:
-pattern`, then the `_:` can be omitted, provided that `pattern` is
-is parenthesized, or is a string or numeric literal.
+If the parameter declaration of a matching block takes the form `_:pattern`,
+then the `_:` can be omitted, provided that `pattern` is
+is parenthesized, or is a string literal or a numeral.
 This rule (the *delimited argument rule*) means that the pattern can't be
 mistaken for a declaration of a parameter to the block.
 
