@@ -3,7 +3,7 @@ all: pdf html
 PANDOCOPTS = --table-of-contents --number-sections --from=markdown+tex_math_dollars+superscript
 LATEXOPTS = --listings --template=grace.latex
 
-spec_with_grammar.md: spec.md grammarator.perl
+spec_with_grammar.md: spec.md grammar.grace grammarator.perl
 	perl grammarator.perl $<  > $@
 
 pdf: standard.pdf spec_with_grammar.pdf

@@ -32,7 +32,7 @@ class exports {
   def classOrTraitDeclaration = rule { (classId | traitId) ~ classHeader ~ methodReturnType ~ whereClause ~ lBrace ~ rep(reuseClause) ~ codeSequence ~ rBrace }
 
   //def oldClassDeclaration = rule { classId ~ identifier ~ lBrace ~ 
-  //                             opt(genericFormals ~ blockFormals ~ arrow) ~ codeSequence ~ rBrace }
+  //                             opt(genericParams ~ blockParams ~ arrow) ~ codeSequence ~ rBrace }
 
 
   //warning: order here is significant!
@@ -44,20 +44,20 @@ class exports {
   def excludeClause = rule { excludeId ~ methodHeader ~ semicolon }
   def aliasClause = rule { aliasId ~ methodHeader ~ equals ~ methodHeader ~ semicolon }
 
-  def unaryMethodHeader = rule { identifier ~ genericFormals } 
+  def unaryMethodHeader = rule { identifier ~ genericParams } 
   def methodWithArgsHeader = rule { firstArgumentHeader ~ repsep(argumentHeader,opt(ws)) }
-  def firstArgumentHeader = rule { identifier ~ genericFormals ~ methodFormals }
-  def argumentHeader = rule { identifier ~ methodFormals }
-  def operatorMethodHeader = rule { otherOp ~ genericFormals ~ oneMethodFormal } 
-  def prefixMethodHeader = rule { opt(ws) ~ token("prefix") ~ otherOp ~ genericFormals }
-  def assignmentMethodHeader = rule { identifier ~ assign ~ genericFormals ~ oneMethodFormal }
+  def firstArgumentHeader = rule { identifier ~ genericParams ~ methodParams }
+  def argumentHeader = rule { identifier ~ methodParams }
+  def operatorMethodHeader = rule { otherOp ~ genericParams ~ oneMethodParam } 
+  def prefixMethodHeader = rule { opt(ws) ~ token("prefix") ~ otherOp ~ genericParams }
+  def assignmentMethodHeader = rule { identifier ~ assign ~ genericParams ~ oneMethodParam }
 
   def methodReturnType = rule { opt(arrow ~ nonEmptyTypeExpression )  } 
 
-  def methodFormals = rule { lParen ~ rep1sep( identifier ~ opt(colon ~ opt(ws) ~ typeExpression), comma) ~ rParen}
+  def methodParams = rule { lParen ~ rep1sep( identifier ~ opt(colon ~ opt(ws) ~ typeExpression), comma) ~ rParen} 
 
-  def oneMethodFormal = rule { lParen ~ identifier ~ opt(colon ~ typeExpression) ~ rParen}
-  def blockFormals = rule { repsep( identifier ~ opt(colon ~ typeExpression), comma) }
+  def oneMethodParam = rule { lParen ~ identifier ~ opt(colon ~ typeExpression) ~ rParen}
+  def blockParams = rule { repsep( identifier ~ opt(colon ~ typeExpression), comma) }
 
   def matchBinding = rule { (stringLiteral | numberLiteral | (lParen ~ identifier ~ rParen)) ~ opt(colon ~ nonEmptyTypeExpression) }
 
@@ -67,7 +67,7 @@ class exports {
 
   def matchingBlockTail = rule { lParen ~ rep1sep(matchBinding, comma)  ~ rParen }
 
-  def typeDeclaration = rule { typeId ~ identifier ~ genericFormals ~ equals ~ nonEmptyTypeExpression ~ (semicolon | whereClause)}
+  def typeDeclaration = rule { typeId ~ identifier ~ genericParams ~ equals ~ nonEmptyTypeExpression ~ (semicolon | whereClause)}
 
   //these are the things that work - 24 July with EELCO
   def typeExpression = rule { (opt(ws) ~ typeOpExpression ~ opt(ws)) | opt(ws) }
@@ -169,12 +169,12 @@ class exports {
   // "generics" 
   def genericActuals = rule { opt(lGeneric ~ opt(ws) ~ rep1sep(opt(ws) ~ typeExpression ~ opt(ws), opt(ws) ~ comma ~ opt(ws)) ~ opt(ws) ~ rGeneric) }
 
-  def genericFormals = rule {  opt(lGeneric ~ rep1sep(identifier, comma) ~ rGeneric) }
+  def genericParams = rule {  opt(lGeneric ~ rep1sep(identifier, comma) ~ rGeneric) }
 
   def whereClause = rule { repdel(whereId ~ typePredicate, semicolon) }
   def typePredicate = rule { expression }
 
-  //wherever genericFormals appear, there should be a whereClause nearby.
+  //wherever genericParams appear, there should be a whereClause nearby.
 
 
   // "literals"
@@ -183,40 +183,40 @@ class exports {
 
   def stringLiteral = rule { opt(ws) ~ doubleQuote ~ rep( stringChar ) ~ doubleQuote ~ opt(ws) } 
   def stringChar = rule { (drop(backslash) ~ escapeChar) | anyChar | space }
-  def blockLiteral = rule { lBrace ~ opt(ws) ~ opt(genericFormals ~ opt(matchBinding) ~ blockFormals ~ opt(ws)~ arrow) ~ innerCodeSequence ~ rBrace }
+  def blockLiteral = rule { lBrace ~ opt(ws) ~ opt(genericParams ~ opt(matchBinding) ~ blockParams ~ opt(ws)~ arrow) ~ innerCodeSequence ~ rBrace }
   def selfLiteral = symbol "self" 
   def numberLiteral = trim(digitStringParser)
-  def objectLiteral = rule { objectId ~ lBrace ~ rep(reuseClause) ~ codeSequence ~ rBrace }
+  def objectLiteral = rule { objectId ~ lBrace ~ rep(reuseClause) ~ codeSequence ~ rBrace } 
 
   //these are *not* in the spec - EELCO 
-  def lineupLiteral = rule { lBrack ~ repsep( expression, comma ) ~ rBrack }
+  def lineupLiteral = rule { lBrack ~ repsep( expression, comma ) ~ rBrack } 
 
-  def typeLiteral = rule { typeId ~ opt(ws) ~ nakedTypeLiteral }
+  def typeLiteral = rule { typeId ~ opt(ws) ~ nakedTypeLiteral } 
   
   //kernan
-  def nakedTypeLiteral = rule { lBrace ~ opt(ws) ~ repdel(methodHeader ~ methodReturnType, (semicolon | whereClause)) ~ opt(ws) ~ rBrace }
+  def nakedTypeLiteral = rule { lBrace ~ opt(ws) ~ repdel(methodHeader ~ methodReturnType, (semicolon | whereClause)) ~ opt(ws) ~ rBrace } 
 
   // terminals
   def backslash = token "\\"    // doesn't belong here, doesn't work if left below!
-  def doubleQuote = token "\""
+  def doubleQuote = token "\"" 
   def space = token " " 
 
-  def semicolon = rule { (symbol(";") ~ opt(newLine)) | (opt(ws) ~ lineBreak("left" | "same") ~ opt(ws)) }
+  def semicolon = rule { (symbol(";") ~ opt(newLine)) | (opt(ws) ~ lineBreak("left" | "same") ~ opt(ws)) } 
 
   // broken
   // def semicolon = rule { (symbol(";") ~ opt(newLine)) | (opt(ws) ~ lineBreak("left" | "same") ~ opt(ws)) | end }
 
-  def colon = rule {both(symbol ":", not(assign))}
+  def colon = rule {both(symbol ":", not(assign))} 
   def newLine = symbol "\n" 
-  def lParen = symbol "("
-  def rParen = symbol ")" 
-  def lBrace = symbol "\{"
-  def rBrace = symbol "\}"
-  def lBrack = rule {both(symbol "[", not(lGeneric))}
-  def rBrack = rule {both(symbol "]", not(rGeneric))}
-  def arrow = symbol "->"
-  def dot = symbol "."
-  def assign = symbol ":="
+  def lParen = symbol "(" 
+  def rParen = symbol ")"  
+  def lBrace = symbol "\{" 
+  def rBrace = symbol "\}" 
+  def lBrack = rule {both(symbol "[", not(lGeneric))} 
+  def rBrack = rule {both(symbol "]", not(rGeneric))} 
+  def arrow = symbol "->" 
+  def dot = symbol "." 
+  def assign = symbol ":=" 
   def equals = symbol "="
 
   def lGeneric = symbol "[["

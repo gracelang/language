@@ -438,7 +438,7 @@ the variable is initialised and assigned.
     var x:Rational := 3     // explicit type
     var x:Rational          // x must be initialised before access
     var x := 3              // x has type Unknown
-    var x                   // x has Unknown type is uninitialised
+    var x                   // x has type Unknown, value is uninitialised
 
 ## Methods
 
