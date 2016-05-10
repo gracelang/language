@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.7.0
+    Draft Specification Version 0.7.1
 ...
 
 
@@ -25,18 +25,20 @@ change. In particular, this version does *not* address:
 
 -   reflection
 
--   assertions, data-structure invariants, pre- & post-conditions,
+-   assertions, data-structure invariants, pre- & post-conditions, and
     contracts
 -   concurrency
 
--   libraries and dialects, including implementations of Number, and testing
+-   libraries and dialects, including implementations of Number, and 
+
+-   testing.
 
 # User Model
 
 ------------------------------------------------------------------------
 
 > *All designers in fact have user and use models consciously or
-> subconsciously in mind as they work. Team design …requires explicit
+> subconsciously in mind as they work. Team design … requires explicit
 > models and assumptions.*
 >
 > Frederick P. Brooks, *The Design of Design*.
@@ -91,14 +93,14 @@ ASCII subset of Unicode.
 The following ASCII sequences are treated as equivalent to the corresponding Unicode characters everywhere except in strings.
 
 
-ASCII | Unicode
-:---: | :-----:
->=    | $\geq$
-<=    | $\leq$
-!=    | $\neq$
-->    | $\rightarrow$
-]]    | $\rrbracket$
-[[    | $\llbracket$
+ASCII | Unicode			| Codepoint
+:---: | :-----:			| :-------:
+>=    | $\geq$			| U+2265
+<=    | $\leq$			| U+2264
+!=    | $\neq$			| U+2260
+->    | $\rightarrow$	| U+2192
+]]    | $\rrbracket$	| U+27E6
+[[    | $\llbracket$	| U+27E7
 
 
 ## Layout
