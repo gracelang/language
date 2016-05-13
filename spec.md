@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.7.1
+    Draft Specification Version 0.7.2
 ...
 
 
@@ -836,8 +836,10 @@ constructors, classes and traits can all contain one or more `use` statements.
 Both `inherit` and `use` introduce the attributes of a reused object —
 called the _parent_ — into the current object (the object under
 construction).  There are two differences between `inherit` and `use`
-clauses: object reused by a `use` clause must be a trait object; and
-`inherit` clauses include the methods from `graceObject` while `use`
+clauses: 
+
+  1. the object reused by a `use` clause must be a trait object; and
+  2. `inherit` clauses include the methods from `graceObject`, while `use`
 clauses do not.
 
 An `inherit` or `use` clause contains a
@@ -915,7 +917,7 @@ parents' initialisers or executable statements.
 
 ### Required Methods
 
-Methods may be declared to be **required** by giving them the body `required`.
+Methods may be declared to be *required* by giving them the body `required`.
 (Required methods are similar to what some other languages call abstract methods.)
 This indicates that a real method
 body must be supplied before that method can be requested.
@@ -1006,16 +1008,20 @@ override some of these implementations, or write those methods _ab initio_.
 The [type Object](#type-object) defines a type containing all the
 default methods:
 
-| Method | Purpose |
-|:-----|:------|
-| `== (other: Object) -> Boolean` | true if other is equal to self |
-| $\neq$ `(other: Object) -> Boolean` | the inverse of == |
-| `hash -> Number` | the hash code of self, a Number in the range 0 .. 2^32 |
-| `match (other: Object)` |  returns a SuccessfulMatch if self "matches" other |
-| `   -> SucccessfulMatch | FailedMatch` | returns FailedMatch otherwise |
-| `asString -> String` | a string describing self |
-| `asDebugString -> String` | a string describing the internals of|self |
-| `:: (other:Object) -> Binding` | a Binding object with self as key and other as value. |
++------------------------------------+------------------------------------------------------+
+|  Method                            |    Purpose                                           |
++====================================+======================================================+
+| `isMe (other: Object) -> Boolean`  |    a _confidential_ method that returns true if                   |
+|                                    |    other is the same object as self                  |
++------------------------------------+------------------------------------------------------+
+| $\neq$ `(other: Object) -> Boolean`|    the inverse of ==                                 |
++------------------------------------+------------------------------------------------------+
+| `asString -> String`               |    a string describing self                          |
++------------------------------------+------------------------------------------------------+
+| `asDebugString -> String`          |    a string describing the internals of self         |
++------------------------------------+------------------------------------------------------+
+| `:: (other:Object) -> Binding`     |  a Binding object with self as key and other as value|
++------------------------------------+------------------------------------------------------+
 
 
 # Method Requests
@@ -1023,7 +1029,7 @@ default methods:
 Grace is a pure object-oriented language.
 All computation proceeds by _requesting_ an
 object — the target of the request — to execute a method with a
-particular *name*. The response of the receiver is to execute the
+particular *name*. The response of the target is to execute the
 method, and to answer the return value of the method.
 
 Grace distinguishes the act of *requesting* a method (what Smalltalk calls
@@ -1031,15 +1037,19 @@ Grace distinguishes the act of *requesting* a method (what Smalltalk calls
 happens outside the target object, and involves only a
 reference to the target, the method name, and possibly some arguments.
 In contrast, executing the method involves the code of the method, which
-is local to the target.
+is internal to the target.
 
 
 ## Self
 
-The reserved word **`self`** refers to the current object, that is,
-the object being constructed by the lexically innermost module,
+The reserved word **`self`** refers to the current object.
+Inside a method, self always refers to the target of the method-request
+that caused the method to execute.
+Elsewhere, **`self`** refers to
+the object being constructed by the lexically-innermost module,
 object constructor, class or trait surrounding the word **`self`**
-The expression `self.x` requests `x` on the current object.
+Hence, the expression `self.x` requests `x` on the current object.
+
 The reserved word **`Self`** refers to the type of the current object.
 
 
@@ -1072,13 +1082,15 @@ enclosing `self`.
 
 ## Named Requests
 
-A named method request comprises a receiver,
-followed by a dot “.”, followed by a
+A named method request comprises a _receiver_,
+followed by a dot **`.`**, followed by a
 method name, wherein the parameters have been replaced by expressions that
 evaluate to the method's arguments.
 Note that a request without arguments does not contain any parentheses.
 
-Note that the name of a method, which determines
+The _reciever_ is an expression, which when evaluated designates the
+_target_ of the request.
+The name of a method, which determines
 the position of the argument lists within that name, is chosen when
 the method is declared ([See Methods](#methods)).
 When reading a request of a multi-part method
@@ -1137,27 +1149,25 @@ method containing them.
 
 **Example of Implicit Request Resolution**
 
-```
-method foo { print "outer" }
-
-class app {
-  method barf { foo }
-}
-
-class bar {
-  inherit app
-  method foo { print "bar" }
-}
-
-class baz {
-  inherit bar
-  method barf { foo }   // ambiguous - could be self.foo or outer.foo
-}
-
-
-app.barf  // prints "outer"
-bar.barf  // prints "outer"
-```
+    method foo { print "outer" }
+    
+    class app {
+      method barf { foo }
+    }
+    
+    class bar {
+      inherit app
+      method foo { print "bar" }
+    }
+    
+    class baz {
+      inherit bar
+      method barf { foo }   // ambiguous - could be self.foo or outer.foo
+    }
+    
+    
+    app.barf  // prints "outer"
+    bar.barf  // prints "outer"
 
 ##Assignment Requests
 
