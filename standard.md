@@ -652,7 +652,8 @@ iterate:
 type Iterable⟦T⟧ = type {
     iterator -> Iterator⟦T⟧       
     // Returns an iterator over my elements.  It is an error to modify self while iterating over it.
-    // Note: all other methods can be defined using iterator.  
+    // Note: all other methods can be defined using iterator. Iterating over a dictionary
+    // yields its values.
     
     isEmpty -> Boolean
     // True if self has no elements
@@ -664,15 +665,16 @@ type Iterable⟦T⟧ = type {
     // The number of elements in self; if size is not known, then action is evaluated and its value returned.
     
     first -> T
-    // The first element of self; raises BoundsError if there is none.
+    // The first element of self; raises BoundsError if there is none.  
+    // If self is unordered, then first answers an arbitrary element. 
     
     do(action: Block1⟦T,Unknown⟧) -> Done
-    //  Applies action yo each element of self.
+    //  Applies action to each element of self.
     
     do(action:Block1⟦T, Unknown⟧) separatedBy(sep:Block0⟦Unknown⟧) -> Done
     // applies action to each element of self, and applies sep (to no arguments) in between.
 
-    map⟦R⟧(unaryFunction:Block1⟦T, R⟧) -> Self
+    map⟦R⟧(unaryFunction:Block1⟦T, R⟧) -> Iterable⟦T⟧
     // returns a new collection whose elements are obtained by applying unaryFunction to
     // each element of self.  If self is ordered, then the result is ordered.
     
@@ -681,28 +683,29 @@ type Iterable⟦T⟧ = type {
     // the left fold.  For example, fold {a, b -> a + b} startingWith 0
     // will compute the sum, and fold {a, b -> a * b} startingWith 1 the product.
     
-    filter(condition:Block1⟦T, Boolean⟧) -> Self
+    filter(condition:Block1⟦T, Boolean⟧) -> Iterable⟦T⟧
     // returns a new collection containing only those elements of self for which
     // condition holds.  The result is ordered if self is ordered.
     
-    ++(other: Iterable⟦T⟧) -> Self
+    ++(other: Iterable⟦T⟧) -> Iterable⟦T⟧
     // returns a new object whose elements include those of self and those of other.
 }
 ```
 
 The type `Collection` adds some conversion methods to
 `Iterable`:
-```
-    type Collection⟦T⟧ = Iterable⟦T⟧ & type {
-        asList -> List⟦T⟧
-    	  // returns a (mutable) list containing my elements.
-    
-        asSequence -> Sequence⟦T⟧
-        // returns a sequence containing my elements.
 
-        asSet -> Set⟦T⟧
-        // returns a (mutable) Set containing my elements, with duplicates eliminated.
-        // The == operation on my elements is used to identify duplicates.
+```
+type Collection⟦T⟧ = Iterable⟦T⟧ & type {
+    asList -> List⟦T⟧
+	  // returns a (mutable) list containing my elements.
+    
+    asSequence -> Sequence⟦T⟧
+    // returns a sequence containing my elements.
+
+    asSet -> Set⟦T⟧
+    // returns a (mutable) Set containing my elements, with duplicates eliminated.
+    // The == operation on my elements is used to identify duplicates.
 }
 ```
 
@@ -717,11 +720,12 @@ between an `Iterable` and an `Enumerable`
 is that `Enumerable`s have a natural order, so lists are
 `Enumerable`, whereas sets are just
 `Iterable`.
+
 ```
 type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
 
     values -> Enumerable⟦T⟧
-    // an enumeration of my values: the elements in the case of  sequence or list,
+    // an enumeration of my values: the elements in the case of sequence or list,
     // the values the case of a dictionary.
 
     asDictionary -> Dictionary⟦Number, T⟧
@@ -743,7 +747,8 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
     //  argument, 0 if they are equal, and +1 otherwise.
 }
 ```
-Lineup
+
+Lineups
 ------
 
 The Grace language uses brackets as a syntax for constructing `lineup`
@@ -763,6 +768,7 @@ The type `Sequence⟦T⟧` describes sequences of values of type `T`.
 Sequence objects are immutable; they can be constructed either
 explicitly, using a request such as `sequence [1, 3, 5, 7]`, or as
 ranges such as `1..10`.
+
 ```
 type Sequence⟦T⟧ = Enumerable⟦T⟧ & type {
 
@@ -815,15 +821,17 @@ methods on the `range` class:
 
 ```
     range.from(lower:Number) to(upper:Number)
-    // the sequence of integers from lower to upper, inclusive.  If lower = upper, the range contains a single value.
-    // if lower > upper, the range is empty.  It is an error for lower or upper not to be an integer.
+    // The sequence of integers from lower to upper, inclusive.  If lower = upper,
+    // the range contains a single value.  If lower > upper, the range is empty.
+    // It is an error for lower or upper not to be an integer.
     
     range.from(upper:Number) downTo(lower:Number)
-    // the sequence from upper to lower, inclusive.  If upper = lower, the range contains a single value.
-    // if upper < lower, the range is empty.  It is an error for lower or upper not to be an integer.
+    // The sequence from upper to lower, inclusive.  If upper = lower, 
+    // the range contains a single value. If upper < lower, the range is empty. 
+    // It is an error for lower or upper not to be an integer.
 ```
 
-The `..` operation on Numbers can also be conveniently
+The `..` operation on Numbers can also be
 used to create ranges. Thus, `3..9` is the same as
 `range.from 3 to 9`, and `(3..9).reversed`
 is the same as `range.from 9 downTo 3`.
@@ -917,6 +925,7 @@ Sets
 Sets are unordered collections of elements without duplicates. The
 `==` method on the elements is used to detect and
 eliminate duplicates; it must be symmetric.
+
 ```
 type Set⟦T⟧ = Collection⟦T⟧ & type {
     size -> Number
@@ -1002,29 +1011,31 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     containsKey(k:K) -> Boolean 
     // returns true if one of my keys == k
     
-    contains(v)
-    containsValue(v) 
+    contains(v:T) -> Boolean
+    containsValue(v:T) -> Boolean
     // returns true if one of my values == v
 
-    removeAllKeys(keys: Iterable⟦K⟧) -> Dictionary⟦K, T⟧
+    removeAllKeys(keys: Iterable⟦K⟧) -> Self
     // removes all of the keys from self, along with the corresponding values.  Returns self.
 
-    removeKey(key: K) -> Dictionary⟦K, T⟧
+    removeKey(key: K) -> Self
     // removes key from self, along with the corresponding value.  Returns self.
 
-    removeAllValues(removals: Iterable⟦V⟧) -> Dictionary⟦K, T⟧
-    // removes from self all of the values in removals, along with the corresponding keys.  Returns self.
+    removeAllValues(removals: Iterable⟦T⟧) -> Self
+    // removes from self all of the values in removals, along with the corresponding keys.  
+    // Returns self.
 
-    removeValue(removal:V) 
-    // removes from self the value removal, along with the corresponding key.  Returns self.
+    removeValue(removal:T) -> Self
+    // removes from self the value removal, along with the corresponding key.
+    // Returns self.
 
     keys -> Iterable⟦K⟧
     // returns my keys as a lazy sequence in arbitrary order
 
-    values -> Iterable⟦K⟧
+    values -> Iterable⟦T⟧
     // returns my values as a lazy sequence in arbitrary order
     
-    bindings -> Iterable⟦ Binding⟦K, V⟧ ⟧
+    bindings -> Iterable⟦ Binding⟦K, T⟧ ⟧
     // returns my bindings as a lazy sequence
 
     keysAndValuesDo(action:Block2⟦K, T, Object⟧ ) -> Done
@@ -1037,7 +1048,7 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     do(action:Block2⟦T, Object⟧) -> Done
     // applies action, in arbitrary order, to each of my values.
 
-    copy -> Dictionary ⟦K, V⟧
+    copy -> Self
     // returns a new dictionary that is a (shallow) copy of self
 
     asDictionary -> Dictionary⟦K, T⟧
@@ -1048,11 +1059,12 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     // A value in other at key k overrides the value in self at key k.
     
     -- (other:Dictionary⟦K, T⟧) -> Dictionary⟦K, T⟧
-    // returns a new dictionary that contains all of my entries except for those whose keys are in other
+    // returns a new dictionary that contains all of my entries except 
+    // for those whose keys are in other
 }
 ```
 
-Iterables and ***for*** loops {#sec:forLoop}
+Iterables and ***for*** loops
 -----------------------------
 
 Collections that implement the type `Iteratable⟦T⟧`
@@ -1119,12 +1131,12 @@ usually both faster and clearer:
 A variant `for()and()do()` allows one to iterate through
 two collections in parallel, terminating when the smaller is exhausted:
 
-            def result = list [ ]
-            def xs = [1, 2, 3, 4, 5]
-            def ys = ["one", "two", "three"]
-            for (xs) and (ys) do { x, y ->
-                result.add(x::y)
-            }
+        def result = list [ ]
+        def xs = [1, 2, 3, 4, 5]
+        def ys = ["one", "two", "three"]
+        for (xs) and (ys) do { x, y ->
+            result.add(x::y)
+        }
 
 After executing this code, `result == [1::"one", 2::"two", 3::"three"]`.
 
@@ -1132,6 +1144,7 @@ The need for external iterators becomes apparent when it is necessary to
 iterate through two collections, but not precisely in parallel. For
 example, this method merges two sorted `Iterable`s into a
 sorted list:
+
 ```
     method merge (cs) and (ds) -> List {
         def cIter = cs.iterator
@@ -1201,8 +1214,8 @@ Math
 ----
 
 The *math* module is deprecated.  All of the facilities formerly provided by *math*
-are available either in the module *random*, or built-in-identifiers ($\pi$), 
-or as method on numbers (`tan`, `log10`, etc.)
+are available either in the module *random*, or as built-in-identifiers ($\pi$), 
+or as methods on numbers (`tan`, `log10`, etc.)
 
 The *math* module object can be imported using `import "math" as m`, for
 any identifier of your choice, e.g. `m`. The object `m` responds to the
@@ -1273,20 +1286,20 @@ The *option* module object can be imported using
 The object `option` responds to the following methods.
 
 ```
-    type Option⟦T⟧ = type {
-        value -> T
-        do(action:Block1⟦T, Done⟧) -> Done
-        isSome -> Boolean
-        isNone -> Boolean
-    }
+type Option⟦T⟧ = type {
+    value -> T
+    do(action:Block1⟦T, Done⟧) -> Done
+    isSome -> Boolean
+    isNone -> Boolean
+}
     
-    some⟦T⟧(contents:T) -> Option⟦T⟧
-    // creates an object s such that s.value is contents, s.do(action) 
-    // applies action to contents, isSome answers true and isNone answers false
+some⟦T⟧(contents:T) -> Option⟦T⟧
+// creates an object s such that s.value is contents, s.do(action) 
+// applies action to contents, isSome answers true and isNone answers false
     
-    none⟦T⟧ -> Option⟦T⟧ 
-    // creates an object s such that s.value raises a ProgrammingError, 
-    // s.do(action) does nothing, isSome answers false and isNone answers true
+none⟦T⟧ -> Option⟦T⟧ 
+// creates an object s such that s.value raises a ProgrammingError, 
+// s.do(action) does nothing, isSome answers false and isNone answers true
 ```
 
 
@@ -1298,27 +1311,27 @@ for any identifier of your choice, e.g. `system`. The object `system` responds
 to the following methods.
 
 ```
-    type Environment = type {
-        at(key:String) -> String
-        at(key:String) put(value:String) -> Boolean
-        contains(key:String) -> Boolean
-    }
+type Environment = type {
+    at(key:String) -> String
+    at(key:String) put(value:String) -> Boolean
+    contains(key:String) -> Boolean
+}
 
-    argv -> Sequence⟦String⟧
-    // the command-line arguments to this program
+argv -> Sequence⟦String⟧
+// the command-line arguments to this program
     
-    elapsedTime -> Number
-    // the time in seconds, since an arbitrary epoch.  Take the difference of two elapsedTime
-    // values to measure a duration.
+elapsedTime -> Number
+// the time in seconds, since an arbitrary epoch.  Take the difference of two elapsedTime
+// values to measure a duration.
     
-    exit(exitCode:Number) -> Done
-    // terminates the whole program, with exitCode.
+exit(exitCode:Number) -> Done
+// terminates the whole program, with exitCode.
 
-    execPath -> String
-    // the directory in which the currently-running executable was found.
+execPath -> String
+// the directory in which the currently-running executable was found.
     
-    environ -> Environment
-    // the current environment.
+environ -> Environment
+// the current environment.
  
 ```
 
