@@ -1004,8 +1004,9 @@ a random variable.
 All objects implement a number of _default methods_ by inheriting from
 the `graceObject` trait.
 Programmers can of course
-override some of these implementations, or write those methods _ab initio_.
-The [type Object](#type-object) defines a type containing all the
+override some of these implementations, or write alternative implementations 
+of these methods _ab initio_.
+The [type Object](#type-object) defines a type containing all the public
 default methods:
 
 +------------------------------------+------------------------------------------------------+
@@ -1362,14 +1363,13 @@ are patterns that match strings and numbers that are equal to the literal.
 Matching blocks and self-matching objects can be conveniently used
 in the `match(_)case(_)...` family of methods.
 
-```
     method fib(n : Number) -> Number {
         match (n)
 	        case { 0 -> 0 }
 	        case { 1 -> 1 }
 	        case { _ -> fib(n-1) + fib(n-2) }
     }
-```
+
 The first two blocks use self-matching objects; the first is short for { _:0 -> 0 }.
 
 The last block has no pattern (or, if you prefer, has the pattern `Unknown`,
@@ -1492,16 +1492,17 @@ The type `Object` includes methods to which most
 objects respond --- the [Default Methods] declared in
 `graceObject`. Some objects, notably `done`, do not conform to `Object`.
 
-```
-type Object = {
-	match (other: Object) -> MatchResult
-	asString -> String
-	asDebugString -> String
-	:: (other:Object) -> Binding
-}
-```
-Notice that neither `graceObject` nor type `Object` include `==`.
+    
+    type Object = {
+    	!= (other: Object) -> Boolean          // the inverse of ==
+    	asString -> String                     // a string for use by the client
+    	asDebugString -> String                // a string for use by the implementor
+    	:: (other:Object) -> Binding           // a binding with self as the key
+    }
 
+Notice that `isMe`, although present in [`graceObject`](#default-methods), is not present in 
+type `Object`, because it is *confidential*.
+Also notice that neither `graceObject` nor type `Object` include `==`.
 
 ### Type Self
 
