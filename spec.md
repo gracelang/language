@@ -1097,7 +1097,7 @@ method name, wherein the parameters have been replaced by expressions that
 evaluate to the method's arguments.
 Note that a request without arguments does not contain any parentheses.
 
-The _reciever_ is an expression, which when evaluated designates the
+The _reciever_ is an expression; when evaluated it designates the
 _target_ of the request.
 The name of a method, which determines
 the position of the argument lists within that name, is chosen when
@@ -1485,8 +1485,8 @@ this means that types can be checked statically.
 A number of types are declared in the standard prelude and included in
 most dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`](#type-object),
 [`Number`](#numbers), [`String`](#strings), `Block0`, `Block1`,
-`Block2`, `Fun`, `Iterator`, `Pattern`, `Exception`, and
-`ExceptionKind`.  Some particular types are treated specially:
+`Block2`, `Fun`, `Iterator`, `Pattern`, `Exception`,
+`ExceptionKind`, and [`Type`](#type).
 
 ### Type None
 
@@ -1540,19 +1540,48 @@ type `Unknown`, and type `Unknown` conforms to all other types.
 
     method id(x) { x }    //argument and return types both implicitly unknown
     method id(x: Unknown) -> Unknown { x }  // same thing, explicitly
+    
+### Type Type
+
+All types have type Type, which is defined as
+
+    type Type = type {
+	    match (o:Unknown) -> MatchResult
+	    & (other:Type) -> Type
+	    | (other:Type) -> Type
+	    + (other:Type) -> Type
+	    - (other:Type) -> Type
+	    asString -> String
+	    asDebugString -> String
+	    inferfaces -> Sequence⟦Interface⟧	    
+	}
+
+This type captures the idea that a type is a disjunction of interfaces.  The type literal syntax 
+defines a type containing a single interface.
+
+    type Interface = interface {
+	    methodNames -> Set⟦String⟧
+	    methods -> Set⟦Signature⟧
+	 }
+	 
+	 type Signature = interface {
+	     name -> String
+	     arguments -> Sequence⟦Type⟧
+	     result -> Type
+	 }
+	 
+These types say that each interface comprises a set of method signatures, and each Signature comprises the (canonical) name of the method, the types of its arguments, and the type of its result.    
 
 
-## Interface Types
+## Interfaces and Type Literals
 
-Types define the interface of objects by detailing their public methods,
+Types characterize the interface of objects by detailing their public methods,
 and the types of the parameters and results of those methods. Types can also
 contain definitions of other types to describe types nested
 inside objects.
 
 The various `Cat` object and class descriptions (see
-[Objects, Classes, and Traits](#objects-classes-and-traits)) would create objects that conform to an interface
-type such as the following. Notice that the public methods implicitly
-inherited from `Object` are implicitly included in all types.
+[Objects, Classes, and Traits](#objects-classes-and-traits)) would create objects that conform to an interface represented by this type literal:
 
     interface {
         colour -> Colour
@@ -1561,8 +1590,11 @@ inherited from `Object` are implicitly included in all types.
         miceEaten:= (n : Number) -> Done
     }
 
+Note that the public methods of `Object` are implicitly included in the type
+denoted by a type literal.
+
 For commonality with method declarations, parameters are normally named
-in type declarations. These names are useful when writing specifications
+in type literals. These names are useful when writing specifications
 of the methods. If a parameter name is omitted, it must be replaced by
 an underscore. The type of a parameter or result may be omitted,
 in which case the type is `Unknown`.
@@ -1571,7 +1603,7 @@ in which case the type is `Unknown`.
 
 Types, including parameterized types, may be named in type declarations.
 By convention, the names of types start with an uppercase letter.
-A simple type literal consists of the keyword interface followed by
+A simple type literal consists of the keyword `interface` followed by
 an open curly brace, a sequence of method signatures, and a closed
 curly brace.
 The `interface` keyword may be omitted from the right-hand-side
