@@ -589,7 +589,7 @@ annotations:
 
 | Annotation | Semantics |
 |:--|:--|
-| `confidential` | method may be requested only on self — [see Encapsulation](#encapsulation) |
+| `confidential` | method may be requested only on self or outer — [see Encapsulation](#encapsulation) |
 | `manifest` | method must return a manifest object - [Manifest Expressions](#manifest-expressions) |
 | `overrides` | method must override another method - [Overriding Methods] |
 | `public` | method may be requested from anywhere |
@@ -1023,6 +1023,9 @@ default methods:
 | `:: (other:Object) -> Binding`     |  a Binding object with self as key and other as value|
 +------------------------------------+------------------------------------------------------+
 
+Notice that `graceObject` implements $\neq$ but not `==`.
+This is to help ensure that, when an object chooses to implement `==`,
+$\neq$ is also available, and is the inverse of `==`.
 
 # Method Requests
 
@@ -1485,21 +1488,20 @@ Type `None` is completely empty; it has no methods.
 
 ### Type Object
 
-The type `Object` declares several methods to which all
+The type `Object` includes methods to which most
 objects respond --- the [Default Methods] declared in
 `graceObject`. Some objects, notably `done`, do not conform to `Object`.
 
 ```
 type Object = {
-	== (other: Object) -> Boolean
-	!= (other: Object) -> Boolean     // the inverse of ==
-	hash -> Number
 	match (other: Object) -> MatchResult
 	asString -> String
 	asDebugString -> String
 	:: (other:Object) -> Binding
 }
 ```
+Notice that neither `graceObject` nor type `Object` include `==`.
+
 
 ### Type Self
 
