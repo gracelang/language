@@ -6,9 +6,9 @@ LATEXOPTS = --listings --template=grace.latex
 spec_with_grammar.md: spec.md grammar.grace grammarator.perl
 	perl grammarator.perl $<  > $@
 
-pdf: standard.pdf spec_with_grammar.pdf
+pdf: standard.pdf spec_with_grammar.pdf spec.pdf
 
-html: standard.html spec_with_grammar.html
+html: standard.html spec_with_grammar.html spec.html
 
 %.pdf: %.md Makefile grace.sty grace.latex
 	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex $(LATEXOPTS) $<

@@ -23,6 +23,7 @@
 # *.ps
 # *.eps
 # *.pdf
+spec_with_grammar.md
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
