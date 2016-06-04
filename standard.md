@@ -1269,13 +1269,13 @@ object `rand` responds to the following methods.
 
 ```
     between0And1 -> Number
-    // A pseudo-random number in the interval $[0..1)$
+    // A pseudo-random number in the interval [0..1)
 
     between (m: Number) and (n: Number) -> Number
-    // A pseudo-random number in the interval $[m..n)$
+    // A pseudo-random number in the interval [m..n)
 
     integerIn (m: Number) to (n: Number) -> Number
-    // A pseudo-random integer in the interval $[m..n]$
+    // A pseudo-random integer in the interval [m..n]
 ```
 
 Option
