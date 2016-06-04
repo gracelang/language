@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Standard Prelude\
-    Draft Specification Version 0.7.0
+    Draft Specification Version 0.7.3
 ...
 
 
