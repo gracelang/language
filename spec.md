@@ -1547,7 +1547,7 @@ The various `Cat` object and class descriptions (see
 type such as the following. Notice that the public methods implicitly
 inherited from `Object` are implicitly included in all types.
 
-    type {
+    interface {
         colour -> Colour
         name -> String
         miceEaten -> Number
