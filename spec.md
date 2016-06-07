@@ -1563,20 +1563,23 @@ in which case the type is `Unknown`.
 
 Types, including parameterized types, may be named in type declarations.
 By convention, the names of types start with an uppercase letter.
-The `type` keyword may be omitted from the right-hand-side
+A simple type literal consists of the keyword interface followed by
+an open curly brace, a sequence of method signatures, and a closed
+curly brace.
+The `interface` keyword may be omitted from the right-hand-side
 of a type declaration when the right-hand-side is a simple type literal.
 Type declarations may not be overridden.
 
 **Examples**
 
-	type MyCatType = {
+	type MyCatType = interface {  // the word interface may be omitted
 		color -> Colour
 		name -> String
 	}
 	// I care only about names and colours
 	
 	type MyParametricType[[A,B]] =
-		type {
+		interface {
 			at (_:A) put (_:B) -> Boolean
 			cleanup(_:B)
 		} where A <: Hashable,  B <: DisposableReference
@@ -1595,7 +1598,7 @@ draws heavily on the wording of the Modula-3 report @Modula3.
 If B `<:` A, then every object of type B is also an object
 of type A. The converse does not apply.
 
-If A and B are ground object types, then B `<:` A iff for
+If A and B are interfaces, then B `<:` A iff for
 every method m in A, there is a corresponding method `m` (with the same
 canonical name) in B such that
 
@@ -1646,7 +1649,7 @@ T <: (S | T)
 **Example**
 
 
-To illustrate the limitations of variant types, suppose
+To illustrate the limitations on conformance of variant types, suppose
 
     type S = {m: A -> B, n: C -> D}
     type T = {m: A -> B, k: E -> F}
@@ -1672,7 +1675,7 @@ U <: S; U <: T; <==> U <: (S & T)
 **Examples**
 
 
-    type List[[T]] = Sequence[[T]] & type {
+    type List[[T]] = Sequence[[T]] & interface {
         add(_:T) -> List[[T]]
         remove(_:T) -> List[[T]]
     }
@@ -1723,14 +1726,14 @@ this guarantee may be performed statically or dynamically.
 When implementing the type check, types specified as `Unknown` will always 
 conform.  So, if a variable is annotated with type
 ```
-    type { 
+    interface { 
         add(Number) -> Collection[[Number]]
         removeLast -> Number
     }
 ```
 an object with type
 ```
-    type {
+    interface {
         add(Unknown) -> Collection[[Unknown]]
         removeLast -> Unknown
         size -> Number
