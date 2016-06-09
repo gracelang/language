@@ -422,7 +422,7 @@ type String =  {
 
     fold⟦U⟧ (binaryFunction: Block2⟦U,String,U⟧) startingWith(initial: U) -> U
     // performs a left fold of binaryFunction over self, starting with initial.   
-    // For example, fold a, b -> a + b.ord startingWith 0 will compute the sum
+    // For example, fold {a, b -> a + b.ord} startingWith 0 will compute the sum
     // of the ords of the characters in self
 
     hash -> Number
@@ -440,7 +440,7 @@ type String =  {
     indexOf⟦W⟧ (pattern:String) startingAt(offset) ifAbsent (action:Block0⟦W⟧) -> Number | W
     // like the above, except that it answers the result of applying action if there is no such index.
 
-    indices -> Sequence
+    indices -> Sequence⟦T⟧
     // an object representing the range of indices of self (1..self.size)
 
     isEmpty -> Boolean
@@ -553,7 +553,7 @@ Blocks
 
 Blocks are anonymous functions, that take zero or more arguments and
 return once result.  There is a family of `Block` types that describe
-block objcets.
+block objects.
 
 ```
 type Block0⟦R⟧ = type {
@@ -632,7 +632,7 @@ Grace programs. (This means that they are defined as part of the
 parameterized by the types of the elements of the collection. Type
 arguments are enclosed in `⟦` and `⟧`
 used as brackets. This enables us to distinguish, for example, between
-and `Set⟦String⟧`. In Grace programs, type arguments
+`Set⟦Number⟧` and `Set⟦String⟧`. In Grace programs, type arguments
 and their brackets can be omitted; this is equivalent to using
 `Unknown` as the argument, which says that the programmer
 either does not know, or does not care to state, the type.
@@ -1146,32 +1146,36 @@ example, this method merges two sorted `Iterable`s into a
 sorted list:
 
 ```
-    method merge (cs) and (ds) -> List {
-        def cIter = cs.iterator
-        def dIter = ds.iterator
-        def result = list.empty
-        if (cIter.hasNext.not) then { return result.addAll(ds) }
-        if (dIter.hasNext.not) then { return result.addAll(cs) }
-        var c := cIter.next
-        var d := dIter.next
-        while {cIter.hasNext && dIter.hasNext} do {
-            if (c ≤ d) then { 
-                result.addLast(c) 
-                c := cIter.next
-            } else {
-                result.addLast(d)
-                d := dIter.next
-            }
-        }
-        if (c ≤ d) then {
-            result.addLast(c, d)
+method merge [[T]](cs: List[[T]]) and (ds: List[[T]]) -> List[[T]] { 
+    def cIter = cs.iterator
+    def dIter = ds.iterator
+    def result = emptyList
+
+    if (cIter.hasNext.not) then { return result.addAll(ds) } 
+    if (dIter.hasNext.not) then { return result.addAll(cs) } 
+    
+    var c := cIter.next
+    var d := dIter.next
+    
+    while {cIter.hasNext && dIter.hasNext} do { 
+        if (c <= d) then {
+            result.addLast(c)
+            c := cIter.next 
         } else {
-            result.addLast(d, c)
+            result.addLast(d)
+            d := dIter.next 
         }
-        while {cIter.hasNext} do { result.addLast(cIter.next) }
-        while {dIter.hasNext} do { result.addLast(dIter.next) }
-        result
     }
+        
+    if (c <= d) then {
+        result.addAll [c,d]
+    } else {
+        result.addAll [d,c]
+    }
+    while {cIter.hasNext} do { result.addLast(cIter.next) } 
+    while {dIter.hasNext} do { result.addLast(dIter.next) } 
+    result
+}
 ```
 
 Primitive Array
