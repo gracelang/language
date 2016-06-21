@@ -193,9 +193,6 @@ described.
 
 type Object = {
 
-   == (other: Object) -> Boolean
-   // true if other is equal to self
-
    != (other: Object) -> Boolean
    // the inverse of ==. There is a unicode alias for this operator.
 
