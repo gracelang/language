@@ -183,7 +183,7 @@ follows a carriage return is ignored.
 
 Tabs and all other non-printing control characters are syntax errors,
 even in a string literal. Escape sequences are provided to denote
-control characters in strings; see [the Table of StringEscapes](#strings).
+control characters in strings; see [the Table of String Escapes](#strings).
 
 # Built-in Objects
 
