@@ -1545,23 +1545,28 @@ type `Unknown`, and type `Unknown` conforms to all other types.
 
 All types have type Type, which is defined as
 
-    type Type = type {
+    type Type = interface {
 	    match (o:Unknown) -> MatchResult
 	    & (other:Type) -> Type
 	    | (other:Type) -> Type
 	    + (other:Type) -> Type
-	    - (other:Type) -> Type
+	    :> (other:Type) -> Boolean
+	    <: (other:Type) -> Boolean
+	    == (other:Type) -> Boolean
+	    ≠ (other:Type) -> Boolean
+	    hash -> Number
 	    asString -> String
 	    asDebugString -> String
-	    inferfaces -> Sequence⟦Interface⟧	    
+	    interfaces -> Sequence⟦Interface⟧	    
 	}
 
 This type captures the idea that a type is a disjunction of interfaces.  The type literal syntax 
 defines a type containing a single interface.
 
-    type Interface = interface {
+    type Interface = Type & interface {
 	    methodNames -> Set⟦String⟧
 	    methods -> Set⟦Signature⟧
+	    - (other:Interface) -> Interface
 	 }
 	 
 	 type Signature = interface {
@@ -1581,7 +1586,8 @@ contain definitions of other types to describe types nested
 inside objects.
 
 The various `Cat` object and class descriptions (see
-[Objects, Classes, and Traits](#objects-classes-and-traits)) would create objects that conform to an interface represented by this type literal:
+[Objects, Classes, and Traits](#objects-classes-and-traits)) would create objects that 
+conform to this interface:
 
     interface {
         colour -> Colour
@@ -1791,8 +1797,8 @@ The same type check can be requested explicitly by using the operators `<:`,
 **Examples**
 
     assert (B <: A) description "B does not conform to A"
-    assert (B <: type { foo(_) } ) description "B has no foo(_) method"
-    assert (B <: type {foo(_:C) -> D} ) description "B doesn't have a method foo(_:C)->D"
+    assert (B <: interface { foo(_) } ) description "B has no foo(_) method"
+    assert (B <: interface {foo(_:C) -> D} ) description "B doesn't have a method foo(_:C)->D"
     assert (B == (A | C)) description "B is neither an A or a C"
 
 # Modules and Dialects
