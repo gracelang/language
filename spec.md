@@ -168,8 +168,8 @@ and the following ASCII operator characters:
 
 Grace has the following reserved tokens:
 
-    alias as class def dialect exclude import inherit is method object
-    outer prefix required return self Self trait type use var where
+    alias as class def dialect exclude import inherit interface is method
+    object outer prefix required return self Self trait type use var where
 
     . ... := = ; { } [ ] ( ) : -> < >
 
@@ -1553,36 +1553,43 @@ All types have type Type, which is defined as
 	    :> (other:Type) -> Boolean
 	    <: (other:Type) -> Boolean
 	    == (other:Type) -> Boolean
-	    ≠ (other:Type) -> Boolean
+	    != (other:Type) -> Boolean
 	    hash -> Number
 	    asString -> String
 	    asDebugString -> String
 	    interfaces -> Sequence⟦Interface⟧	    
 	}
 
-This type captures the idea that a type is a disjunction of interfaces.  The type literal syntax 
-defines a type containing a single interface.
+This type captures the idea that a type is a disjunction of interfaces.  The interface literal syntax 
+defines a type containing a single interface, so the `interfaces` method of an interface returns a sequence of length 1 containing itself.
 
     type Interface = Type & interface {
-	    methodNames -> Set⟦String⟧
-	    methods -> Set⟦Signature⟧
+	    methods -> Dictionary⟦String, Signature⟧
+            // keys are the canonical names of the methods, and values their signatures
+        types -> Dictionary⟦String, Type⟧
+            // keys are the declared names of the types; values objects representing those types
 	    - (other:Interface) -> Interface
 	 }
 	 
 	 type Signature = interface {
 	     name -> String
+            // the canonical name of the method
 	     arguments -> Sequence⟦Type⟧
+            // the type of the agruments, in order
 	     result -> Type
+            // the type of the result
 	 }
 	 
-These types say that each interface comprises a set of method signatures, and each Signature comprises the (canonical) name of the method, the types of its arguments, and the type of its result.    
+These types say that each interface comprises a mapping from (canonical) method names to method signatures,
+and a mapping from type names to type objects.  
+Each Signature comprises the (canonical) name of the method, the types of its arguments, and the type of its result.    
 
 
 ## Interfaces and Type Literals
 
-Types characterize the interface of objects by detailing their public methods,
-and the types of the parameters and results of those methods. Types can also
-contain definitions of other types to describe types nested
+Interfaces characterize objects by detailing their public methods,
+and the types of the parameters and results of those methods. Interfaces can also
+contain definitions of other types; this enables interfaces to describe types nested
 inside objects.
 
 The various `Cat` object and class descriptions (see
