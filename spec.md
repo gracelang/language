@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.7.5
+    Draft Specification Version 0.7.4
 ...
 
 
@@ -307,6 +307,18 @@ brace expression.
 
 
     "Adding {a} to {b} gives {a+b}"
+    
+### Uninterpreted Strings
+
+String literals can also be written between single guillemet quotation marks, ‹thus›.  Between the ‹ and the ›, characters from the input become characters of the string value without interpretations, and without any escapes (not even for ›).
+
+**Example**
+
+    lexer.lex ‹// This is input for a test of the lexer.  
+    // The input ends with a newline.
+    def s = "This is a String"
+    def n = 17
+    ›  
 
 ## Lineups
 
@@ -1106,6 +1118,10 @@ When reading a request of a multi-part method
 name, you should continue accumulating words and argument lists as far
 to the right as possible.
 
+Unlike some other languages, Grace does _not_ allow the overloading of
+method names by type:  the type of the arguments supplied to the request does
+not influence the method being requested.  However, the _number_ of arguments
+in a list does determine the method being requested.
 
 **Examples**
 
