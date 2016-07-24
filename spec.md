@@ -495,11 +495,6 @@ A request "matches" a method if the canonical names are equal.
 	unary method is **`prefix`** followed by the operator symbols; the canonical
 	name of a binary method is the sequence of operator symbols followed by `(_)`
 	
-Method parameters may optionally be annotated with types:
-the corresponding arguments will be
-checked against those types, either at before execution, or
-just before the method body is executed.
-
 	
 **Examples**
  of single identifiers
@@ -547,6 +542,16 @@ As a consequence of the above rules, methods `max(a, b, c)` and
 `max(a, b)` have different canonical names and are therefore treated
 as distinct methods.  In other words, Grace allows "overloading by
 arity" (although it does _not_ allow overloading by type).
+
+### Method parameters
+
+Depending on their syntatic form, method declarations may include one
+or more paramter lists. Inside method bodies, method paramters are
+treated as **'def'**ss: they may not be reassigned.
+Method parameters may optionally be annotated with types:
+the corresponding arguments will be
+checked against those types, either at before execution, or
+just before the method body is executed.
 
 ### Type Parameters
 
