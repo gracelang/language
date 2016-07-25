@@ -216,7 +216,8 @@ denote `Number` objects).
 
 2.  Base-exponent numerals, always in decimal, which contain a decimal
     point, or an exponent, or both. Grace uses `e` as the
-    exponent indicator. Base-exponent numerals may have a minus in front of the exponent.
+    exponent indicator. Base-exponent numerals may have a minus in front of the _exponent_.  A decimal point, if present, must not be
+    the first or last character of the numeral
 
 3.  Explicit radix numerals, written as a (decimal) number between 2 and
     35 representing the radix, a leading `x`, and a string of digits,
@@ -230,6 +231,9 @@ denote `Number` objects).
     1
     42
     3.14159265
+    0.25    // leading 0 is required
+    17.0    // the trailing 0 is required because of the decimal point
+    17      // same as the above
     13.343e-12
     414.45e3
     16xF00F00
