@@ -1142,11 +1142,17 @@ that is a numeral, string, lineup, or block.
 If the receiver of a named method request using the name _m_ is `self` or
 `outer` it may be left implicit, _i.e._, the `self` or `outer` and the
 dot may both be omitted.
-Implicit requests may be resolved either as a self request or as an
-outer request. An ambiguous implicit request (a request that could be resolved
-as either) is an error.
+Implicit requests are interpreted as a `self` request, or as an
+`outer` request, or as an `outer.outer.…` request with the appropriate number of `outer`s.
 
-Implicit requests are always resolved within the scope in which they are written,
+When resolving an implicit request, the usual rules of lexical scoping apply,
+so a definition of _m_ in
+the current scope will take precedence over any definitions in enclosing scopes.
+However, if _m_ is defined in the current scope by inheritance or trait use, 
+rather than directly, and *also* defined directly in an enclosing scope, then
+an implicit request of _m_ is ambiguous and is an error.
+
+Implicit requests are always resolved lexically, that is, within the scope in which they are written, and
 not within the scope of object (class, or trait) that may inherit the
 method containing them.
 
