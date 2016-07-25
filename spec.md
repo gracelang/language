@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.7.3
+    Draft Specification Version 0.7.5
 ...
 
 
@@ -342,6 +342,7 @@ and to pass collections of options to methods.
 Grace blocks are lambda expressions, with or without
 parameters. If a parameter list is present, the parameters are separated
 by commas and the list is separated from the body of the block by the `->` symbol.
+Within the body of the block, the parameters cannot be assiged.
 
     { do.something }
     { i -> i + 1 }
@@ -541,13 +542,13 @@ In the third example, the canonical name of the method is `max(_,_)`.
 As a consequence of the above rules, methods `max(a, b, c)` and
 `max(a, b)` have different canonical names and are therefore treated
 as distinct methods.  In other words, Grace allows "overloading by
-arity" (although it does _not_ allow overloading by type).
+arity". (Grace does _not_ allow overloading by type).
 
 ### Method parameters
 
 Depending on their syntatic form, method declarations may include one
 or more paramter lists. Inside method bodies, method paramters are
-treated as **'def'**ss: they may not be reassigned.
+treated as **'def'**s: they may not be reassigned.
 Method parameters may optionally be annotated with types:
 the corresponding arguments will be
 checked against those types, either before execution, or
@@ -1105,10 +1106,6 @@ When reading a request of a multi-part method
 name, you should continue accumulating words and argument lists as far
 to the right as possible.
 
-Unlike some other languages, Grace does _not_ allow the overloading of
-method names by type:  the type of the arguments supplied to the request does
-not influence the method being requested.  However, the _number_ of arguments
-in a list does determine the method being requested.
 
 **Examples**
 
