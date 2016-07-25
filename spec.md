@@ -495,7 +495,7 @@ A request "matches" a method if the canonical names are equal.
 	unary method is **`prefix`** followed by the operator symbols; the canonical
 	name of a binary method is the sequence of operator symbols followed by `(_)`
 	
-	
+
 **Examples**
  of single identifiers
 
@@ -550,7 +550,7 @@ or more paramter lists. Inside method bodies, method paramters are
 treated as **'def'**ss: they may not be reassigned.
 Method parameters may optionally be annotated with types:
 the corresponding arguments will be
-checked against those types, either at before execution, or
+checked against those types, either before execution, or
 just before the method body is executed.
 
 ### Type Parameters
@@ -874,15 +874,15 @@ When executed, an object constructor (or trait or class declaration)
 first creates a new object with no attributes, and binds it to `self`.
 
 Second, the attributes of the superobject (created by the `inherit`
-clause as modified by `alias` and `exclude`) are installed in the new
+clause, possibly modified by `alias` and `exclude`) are installed in the new
 object.
 
 Third, the methods of all traits
-(created by the `use`
-clauses as modified by `alias` and `exclude`, and
+(created by `use`
+clauses, possibly modified by `alias` and `exclude`, and
 excluding those methods inherited unchanged from `graceObject`) are
 combined.
-It is a _object composition error_ for there to be multiple
+It is an _object composition error_ for there to be multiple
 definitions of a method.
 This combination of methods is then
 installed in the new
@@ -893,14 +893,14 @@ Fourth, attributes create by local declarations are installed in the
 new object: local declarations
 override declarations from both superobject and
 traits, except that
-it is a _object composition error_ for an alias to be
+it is an _object composition error_ for an alias to be
 overridden by a local declaration.
 
 Fifth, types are evaluated and bound to their declarations.
 Types cannot depend on runtime values; if they depend on the type of a
 constant (because the constant is treated as a [Singleton type](#singleton- types),
-then that constant, if overridden in a subclass, can only be
-overridden by a new object with the same type.
+then that constant, if overridden in a subclass, can be
+overridden only by a new object with the same type.
 
 Finally, field initializers and executable statements are executed,
 starting with the most superior inherited superobject, and finishing with the
@@ -911,13 +911,12 @@ and code in the bodies of parents,
 are executed once in the order they are written, even for `def`s or
 `var`s that are excluded from the new object, or aliased to one or
 more new names.
-During initialisation, `self` is always bound to the new object being
-created, even while executing code and initialisers from parent
-objects, classes or traits.
+During initialisation, `self` is bound to the new object being
+created, even while executing code and initialisers of parents.
 
 As a consequence of these rules, a new object can change the
-initialization of its parents, by overriding self requests invoked by
-parents' initialisers or executable statements.
+initialization of its parents, by overriding the method requested on self
+by the parents' initialisers.
 
 
 ### Required Methods
@@ -934,10 +933,10 @@ Requesting a required method will generate a runtime error.
 
 A new declaration in the current object overrides a declaration
 from a parent.
-Methods may be annotated with `is override`. A method so annotated must
+Methods may be annotated with `override`. A method so annotated must
 override a method from its parent with the same name and arity.
-This annotation is optional: local methods override parents' methods
-with or without the `override` annotation, however, dialects may require it.
+The `override` annotation is optional: local methods override parents' methods
+with or without the `override` annotation.  Dialects may require the annotation.
 
 **Examples**
 
@@ -1143,7 +1142,7 @@ If the receiver of a named method request using the name _m_ is `self` or
 `outer` it may be left implicit, _i.e._, the `self` or `outer` and the
 dot may both be omitted.
 Implicit requests are interpreted as a `self` request, or as an
-`outer` request, or as an `outer.outer.…` request with the appropriate number of `outer`s.
+`outer` request, or as an `outer.outer. ...` request with the appropriate number of `outer`s.
 
 When resolving an implicit request, the usual rules of lexical scoping apply,
 so a definition of _m_ in
