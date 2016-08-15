@@ -3,7 +3,15 @@
 % modified by Michael Homer, Andrew Black.
 \usepackage{needspace}
 \usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{stmaryrd}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \definecolor{BlueGrey}{rgb}{0.4,0.4,0.5}
+\DeclareUnicodeCharacter{27E6}{\ensuremath{\llbracket}} %⟦
+\DeclareUnicodeCharacter{27E7}{\ensuremath{\rrbracket}} % ⟧
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}} % →
 \lstdefinelanguage{Grace}{
 %   keywords={self,true,false,match,case,catch,raise,returns,
 %        prefix,
@@ -27,7 +35,7 @@
    belowskip=0.6ex plus 1pt minus 1pt,
    breaklines=true,
    literate={+}{{$+$}}1 {-}{{$-$}}1 {—}{{---}}1 {>>=}{$>\!\!>=$}2 {\#}{{\small \#}}1%
-   	{->}{$-\hspace*{-0.42em}>$}2 {>>}{$>\!>$}2 {├}{{$\vdash$}}1 %
+   	{->}{$-\hspace*{-0.42em}>$}2 {→}{$\rightarrow$}1 {>>}{$>\!>$}2 {├}{{$\vdash$}}1 %
 	{⟦}{{$\llbracket$}}1 {⟧}{{$\rrbracket$}}1 {←}{{\raisebox{1pt}{$\leftarrowtriangle$}}}1%
     {÷}{$\div$}1 {”}{"}1 {“}{"}1 {≥}{$\geq$}1 {≤}{$\leq$}1 {θ}{$\theta$}1 {π}{$\pi$}1 %
     {‹}{\guilsinglleft}1 {›}{\guilsinglright}1,
@@ -76,4 +84,5 @@
 % (within section headings ...):
 \newcommand{\lct}[1]{{\textsf{\textup{#1}}}}
 % \newcommand{\paragraph*}[1]{\paragraph{#1}}
+\lstnewenvironment{grace} {\lstset{language=Grace}}{}
 \choosegrace
