@@ -21,4 +21,6 @@ build:
 	@echo ${LAST_EXIT}
 
 deploy:
+	@[ -n "$(WEB_SERVER)" ] || { echo "Please set the WEB_SERVER variable to something like user@hostname" && false; }
 	rsync -a -l -z --delete _site/ $(WEB_SERVER):$(WEB_DIRECTORY)
+

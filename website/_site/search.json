@@ -726,6 +726,16 @@
 
 
 {
+"title": "Grace Documentation",
+"tags": "",
+"keywords": "mydoc",
+"url": "/~grace/doc/doc-landing/",
+"summary": ""
+},
+
+
+
+{
 "title": "Language Specifications",
 "tags": "",
 "keywords": "language",
@@ -895,8 +905,6 @@
 
 
 
-
-
 {
 "title": "Class: r()g()b",
 "tags": "",
@@ -948,6 +956,16 @@
 },
 
 
+
+
+
+{
+"title": "Language Specifications",
+"tags": "",
+"keywords": "language",
+"url": "/~grace/doc/lang-spec/",
+"summary": ""
+},
 
 
 
@@ -1040,10 +1058,6 @@
 "url": "/~grace/doc/textFieldUnlabeled/",
 "summary": ""
 },
-
-
-
-
 
 
 

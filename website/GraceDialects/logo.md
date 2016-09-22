@@ -63,20 +63,20 @@ left and right a number of degrees. The number of units or the number of degrees
 An example to get us started! The code below draws a square. Modify it to draw a rectangle with
 sides whose length = 75.
 
-<object id="example-1" data="{{site.baseurl}}/embedded-web-editor/?square" width="100%" height="550px"> </object>
+<object id="example-1" data="{{site.editor}}?square" width="100%" height="550px"> </object>
 
 ### Example 2 ###
 
 This example will iterate across the integers from 50 to 80. Each time the turtle will move forward by i,  
 and then turn right by i-7. In this type of iteration (loop), "i" is the current number between 50 and 80.
 
-<object id="example-2" data="{{site.baseurl}}/embedded-web-editor/?logoFor" width="100%" height="550px"> </object>
+<object id="example-2" data="{{site.editor}}?logoFor" width="100%" height="550px"> </object>
 
 ### Example 3 ###
 
 This is a more complex example that draws a house. Modify it to make it more interesting. 
 
-<object id="example-3" data="{{site.baseurl}}/embedded-web-editor/?LogoExample" width="100%" height="550px"> </object>
+<object id="example-3" data="{{site.editor}}?LogoExample" width="100%" height="550px"> </object>
 
 
 ***

@@ -460,6 +460,12 @@
   
   
   <url>
+    <loc>http://web.cecs.pdx.edu/~grace/doc/~grace/doc/doc-landing/</loc>
+  </url>
+  
+  
+  
+  <url>
     <loc>http://web.cecs.pdx.edu/~grace/doc/~grace/doc/lang-spec1/</loc>
   </url>
   
@@ -561,8 +567,6 @@
   
   
   
-  
-  
   <url>
     <loc>http://web.cecs.pdx.edu/~grace/doc/~grace/doc/r()g()b/</loc>
   </url>
@@ -594,6 +598,12 @@
   </url>
   
   
+  
+  
+  
+  <url>
+    <loc>http://web.cecs.pdx.edu/~grace/doc/~grace/doc/lang-spec/</loc>
+  </url>
   
   
   
@@ -658,10 +668,6 @@
   <url>
     <loc>http://web.cecs.pdx.edu/~grace/doc/~grace/doc/textFieldUnlabeled/</loc>
   </url>
-  
-  
-  
-  
   
   
   
