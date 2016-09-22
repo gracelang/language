@@ -3,7 +3,7 @@ title: "Module: animation"
 keywords: mydoc
 sidebar: grace-doc-sidebar
 toc: false
-permalink: /Module:animation/
+permalink: /Module-animation/
 folder: grace-docs
 ---
 

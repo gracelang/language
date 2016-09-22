@@ -3,7 +3,7 @@ title: "Module: objectdraw"
 keywords: mydoc
 sidebar: grace-doc-sidebar
 toc: false
-permalink: /Module:objectdraw/
+permalink: /Module-objectdraw/
 folder: grace-docs
 ---
 
