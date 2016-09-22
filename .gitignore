@@ -134,3 +134,8 @@ sympy-plots-for-*.tex/
 # WinEdt
 *.bak
 *.sav
+
+
+#Website Generated Files
+website/_site/
+website/.idea/
