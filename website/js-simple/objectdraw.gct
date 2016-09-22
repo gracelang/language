@@ -1,0 +1,1965 @@
+classes:
+ color
+confidential:
+ eventLogKind()response
+ selectBoxOptionsFrom()labeled
+constructors-of:color:
+ r()g()b
+fresh-methods:
+ applicationTitle()size
+ audioUrl
+ buttonLabeled
+ componentFromElement
+ componentOfElementType
+ containerEmpty
+ containerFromElement
+ containerOfElementType
+ containerSize
+ drawable2DAt()size()on
+ drawableAt()on
+ drawableImageAt()size()url()on
+ drawingCanvasSize
+ eventLogKind()response
+ eventSource
+ fieldOfType()labeled
+ filledArcAt()size()from()to()on
+ filledOvalAt()size()on
+ filledRectAt()size()on
+ framedArcAt()size()from()to()on
+ framedOvalAt()size()on
+ framedRectAt()size()on
+ graphicApplicationSize
+ inputFromElement
+ inputOfElementType
+ inputOfType
+ keyEventSource()event
+ labeledWidgetFromElement
+ labeledWidgetOfElementType
+ labeledWidgetOfElementType()labeled
+ lineFrom()length()direction()on
+ lineFrom()to()on
+ mouseEventSource()event
+ numberFieldLabeled
+ numberFieldUnlabeled
+ passwordFieldLabeled
+ passwordFieldUnlabeled
+ resizable2DAt()size()on
+ selectBoxOptionsFrom
+ selectBoxOptionsFrom()labeled
+ textAt()with()on
+ textBoxWith
+ textFieldLabeled
+ textFieldUnlabeled
+fresh:applicationTitle()size:
+ !=
+ ::
+ append
+ arrangeHorizontal
+ arrangeVertical
+ asDebugString
+ asString
+ at
+ at()put
+ basicAsString
+ children
+ do
+ element
+ eventSource
+ events
+ flex
+ flexible:=
+ fold()startingWith
+ height
+ isEmpty
+ isFlexible
+ isHorizontal
+ isMe
+ isOpened
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouse()do
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ prepend
+ size
+ startApplication
+ stopApplication
+ theHeight
+ theTitle
+ theWidth
+ theWindow
+ width
+ windowTitle
+ windowTitle:=
+ ≠
+fresh:audioUrl:
+ asString
+ element
+ isEnded
+ isLooping
+ looping:=
+ pause
+ play
+ source
+ source:=
+fresh:buttonLabeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ labelElement
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:componentFromElement:
+ asString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+fresh:componentOfElementType:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:containerEmpty:
+ !=
+ ::
+ append
+ arrangeHorizontal
+ arrangeVertical
+ asDebugString
+ asString
+ at
+ at()put
+ basicAsString
+ children
+ do
+ element
+ eventSource
+ flex
+ flexible:=
+ fold()startingWith
+ height
+ isEmpty
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ prepend
+ size
+ width
+ ≠
+fresh:containerFromElement:
+ !=
+ ::
+ append
+ arrangeHorizontal
+ arrangeVertical
+ asDebugString
+ asString
+ at
+ at()put
+ basicAsString
+ children
+ do
+ element
+ eventSource
+ flex
+ flexible:=
+ fold()startingWith
+ height
+ isEmpty
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ prepend
+ size
+ width
+ ≠
+fresh:containerOfElementType:
+ !=
+ ::
+ append
+ arrangeHorizontal
+ arrangeVertical
+ asDebugString
+ asString
+ at
+ at()put
+ basicAsString
+ children
+ do
+ element
+ eventSource
+ flex
+ flexible:=
+ fold()startingWith
+ height
+ isEmpty
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ prepend
+ size
+ width
+ ≠
+fresh:containerSize:
+ !=
+ ::
+ append
+ arrangeHorizontal
+ arrangeVertical
+ asDebugString
+ asString
+ at
+ at()put
+ basicAsString
+ children
+ do
+ element
+ eventSource
+ flex
+ flexible:=
+ fold()startingWith
+ height
+ isEmpty
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ prepend
+ size
+ width
+ ≠
+fresh:drawable2DAt()size()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ theColor
+ theFrameColor
+ theHeight
+ theWidth
+ visible:=
+ width
+ x
+ y
+ ≠
+fresh:drawableAt()on:
+ ==
+ addToCanvas
+ asString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ theColor
+ theFrameColor
+ visible:=
+ x
+ y
+fresh:drawableImageAt()size()url()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ height:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ size:=
+ theColor
+ theFrameColor
+ theHeight
+ theImage
+ theWidth
+ visible:=
+ width
+ width:=
+ x
+ y
+ ≠
+fresh:drawingCanvasSize:
+ !=
+ ::
+ add
+ asDebugString
+ asString
+ basicAsString
+ clear
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ notifyRedraw
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ printObjects
+ redraw
+ remove
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ startDrawing
+ theContext
+ theGraphics
+ width
+ ≠
+fresh:eventLogKind()response:
+ kind
+ response
+fresh:eventSource:
+ asString
+ source
+fresh:fieldOfType()labeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:filledArcAt()size()from()to()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ height:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ size:=
+ theColor
+ theFrameColor
+ theHeight
+ theWidth
+ visible:=
+ width
+ width:=
+ x
+ y
+ ≠
+fresh:filledOvalAt()size()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ height:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ size:=
+ theColor
+ theFrameColor
+ theHeight
+ theWidth
+ visible:=
+ width
+ width:=
+ x
+ y
+ ≠
+fresh:filledRectAt()size()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ height:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ size:=
+ theColor
+ theFrameColor
+ theHeight
+ theWidth
+ visible:=
+ width
+ width:=
+ x
+ y
+ ≠
+fresh:framedArcAt()size()from()to()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ height:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ size:=
+ theColor
+ theFrameColor
+ theHeight
+ theWidth
+ visible:=
+ width
+ width:=
+ x
+ y
+ ≠
+fresh:framedOvalAt()size()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ height:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ size:=
+ theColor
+ theFrameColor
+ theHeight
+ theWidth
+ visible:=
+ width
+ width:=
+ x
+ y
+ ≠
+fresh:framedRectAt()size()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ height:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ size:=
+ theColor
+ theFrameColor
+ theHeight
+ theWidth
+ visible:=
+ width
+ width:=
+ x
+ y
+ ≠
+fresh:graphicApplicationSize:
+ !=
+ ::
+ after
+ append
+ arrangeHorizontal
+ arrangeVertical
+ asDebugString
+ asString
+ at
+ at()put
+ basicAsString
+ before
+ canvas
+ children
+ do
+ element
+ eventSource
+ events
+ flex
+ flexible:=
+ fold()startingWith
+ height
+ isEmpty
+ isFlexible
+ isHorizontal
+ isMe
+ isOpened
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouse()do
+ onMouseClick
+ onMouseClickDo
+ onMouseDrag
+ onMouseDragDo
+ onMouseEnter
+ onMouseEnterDo
+ onMouseExit
+ onMouseExitDo
+ onMouseMove
+ onMouseMoveDo
+ onMousePress
+ onMousePressDo
+ onMouseRelease
+ onMouseReleaseDo
+ prepend
+ size
+ startApplication
+ startGraphics
+ stopApplication
+ theHeight
+ theTitle
+ theWidth
+ theWindow
+ width
+ windowTitle
+ windowTitle:=
+ ≠
+fresh:inputFromElement:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:inputOfElementType:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:inputOfType:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:keyEventSource()event:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ code
+ isMe
+ source
+ ≠
+fresh:labeledWidgetFromElement:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ labelElement
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:labeledWidgetOfElementType:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ labelElement
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:labeledWidgetOfElementType()labeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ labelElement
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:lineFrom()length()direction()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ dist2
+ distToSegment
+ distToSegmentSquared
+ draw
+ end
+ end:=
+ frameColor
+ frameColor:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ setEndPoints
+ start
+ start:=
+ theColor
+ theEnd
+ theFrameColor
+ visible:=
+ x
+ y
+ ≠
+fresh:lineFrom()to()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ dist2
+ distToSegment
+ distToSegmentSquared
+ draw
+ end
+ end:=
+ frameColor
+ frameColor:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ setEndPoints
+ start
+ start:=
+ theColor
+ theEnd
+ theFrameColor
+ visible:=
+ x
+ y
+ ≠
+fresh:mouseEventSource()event:
+ !=
+ ::
+ asDebugString
+ asString
+ at
+ basicAsString
+ isMe
+ source
+ ≠
+fresh:numberFieldLabeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ mouseEventSource()event
+ number
+ number:=
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:numberFieldUnlabeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ mouseEventSource()event
+ number
+ number:=
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:passwordFieldLabeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ text
+ text:=
+ width
+ ≠
+fresh:passwordFieldUnlabeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ text
+ text:=
+ width
+ ≠
+fresh:resizable2DAt()size()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ draw
+ frameColor
+ frameColor:=
+ height
+ height:=
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ size
+ size:=
+ theColor
+ theFrameColor
+ theHeight
+ theWidth
+ visible:=
+ width
+ width:=
+ x
+ y
+ ≠
+fresh:selectBoxOptionsFrom:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ labelElement
+ labeler
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ selected
+ selected:=
+ size
+ width
+ ≠
+fresh:selectBoxOptionsFrom()labeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ labelElement
+ labeler
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ selected
+ selected:=
+ size
+ width
+ ≠
+fresh:textAt()with()on:
+ !=
+ ::
+ ==
+ addToCanvas
+ asDebugString
+ asString
+ basicAsString
+ canvas
+ color
+ color:=
+ contains
+ contents
+ contents:=
+ draw
+ fontSize
+ fontSize:=
+ frameColor
+ frameColor:=
+ fsize
+ isMe
+ isVisible
+ location
+ moveBy
+ moveTo
+ notifyRedraw
+ overlaps
+ removeFromCanvas
+ sendBackward
+ sendForward
+ sendToBack
+ sendToFront
+ theColor
+ theContents
+ theFrameColor
+ visible:=
+ wid
+ width
+ x
+ y
+ ≠
+fresh:textBoxWith:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ contents
+ contents:=
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ width
+ ≠
+fresh:textFieldLabeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ text
+ text:=
+ width
+ ≠
+fresh:textFieldUnlabeled:
+ !=
+ ::
+ asDebugString
+ asString
+ basicAsString
+ element
+ eventSource
+ flexible:=
+ height
+ isFlexible
+ isMe
+ keyEventSource()event
+ label
+ label:=
+ mouseEventSource()event
+ on()do
+ on()withKeyDo
+ on()withPointDo
+ onBlurDo
+ onChangeDo
+ onFocusDo
+ onKeyPressDo
+ onKeyReleaseDo
+ onKeyTypeDo
+ onMouseClickDo
+ onMouseDragDo
+ onMouseEnterDo
+ onMouseExitDo
+ onMouseMoveDo
+ onMousePressDo
+ onMouseReleaseDo
+ size
+ text
+ text:=
+ width
+ ≠
+methods-of:color.r()g()b:
+ ==
+ asString
+ blue
+ green
+ red
+methodtypes-of:Application:
+ & 3
+ & Container
+ 3 startApplication -> Done
+ 3 stopApplication -> Done
+ 3 windowTitle -> String
+ 3 windowTitle:=(value : String) -> Done
+methodtypes-of:Audio:
+ 16 isEnded -> Boolean
+ 16 isLooping -> Boolean
+ 16 looping:=(value : Boolean) -> Done
+ 16 pause -> Done
+ 16 play -> Done
+ 16 source -> String
+ 16 source:=(value : String) -> Done
+methodtypes-of:Button:
+methodtypes-of:Choice:
+ & 14
+ & Input
+ 14 selected -> String
+ 14 selected:=(value : String) -> Done
+methodtypes-of:Color:
+ 14 blue -> Number
+ 14 green -> Number
+ 14 red -> Number
+methodtypes-of:Component:
+ 1 element -> Done
+ 1 flexible:=(value : Boolean) -> Done
+ 1 height -> Number
+ 1 isFlexible -> Boolean
+ 1 onKeyPressDo(f : KeyResponse) -> Done
+ 1 onKeyReleaseDo(f : KeyResponse) -> Done
+ 1 onKeyTypeDo(f : KeyResponse) -> Done
+ 1 onMouseClickDo(f : MouseResponse) -> Done
+ 1 onMouseDragDo(f : MouseResponse) -> Done
+ 1 onMouseEnterDo(f : MouseResponse) -> Done
+ 1 onMouseExitDo(f : MouseResponse) -> Done
+ 1 onMouseMoveDo(f : MouseResponse) -> Done
+ 1 onMousePressDo(f : MouseResponse) -> Done
+ 1 onMouseReleaseDo(f : MouseResponse) -> Done
+ 1 size -> self.Point
+ 1 width -> Number
+methodtypes-of:ComponentFactory<T>:
+ 16 fromElement(element : Unknown) -> T
+ 16 ofElementType(tagName : String) -> T
+methodtypes-of:Container:
+ & 2
+ & Component
+ 2 append(component : Component) -> Done
+ 2 arrangeHorizontal -> Done
+ 2 arrangeVertical -> Done
+ 2 at(index : Number) -> Component
+ 2 at(index : Number)put(component : Component) -> Done
+ 2 do(f : Procedure<Component>) -> Done
+ 2 prepend(component : Component) -> Done
+ 2 size -> Number
+methodtypes-of:DrawingCanvas:
+ & 4
+ & Component
+ 4 add(d : Graphic) -> Done
+ 4 clear -> Done
+ 4 height -> Number
+ 4 notifyRedraw -> Done
+ 4 remove(d : Graphic) -> Done
+ 4 sendBackward(d : Graphic) -> Done
+ 4 sendForward(d : Graphic) -> Done
+ 4 sendToBack(d : Graphic) -> Done
+ 4 sendToFront(d : Graphic) -> Done
+ 4 startDrawing -> Done
+ 4 width -> Number
+methodtypes-of:Event:
+ 14 source -> Component
+methodtypes-of:Foreign:
+methodtypes-of:Function2<T, U, R>:
+methodtypes-of:Function<T, R>:
+methodtypes-of:Graphic:
+ 3 addToCanvas(canvas : DrawingCanvas) -> Done
+ 3 color -> Color
+ 3 color:=(c : Color) -> Done
+ 3 contains(location : self.Point) -> Boolean
+ 3 isVisible -> Boolean
+ 3 location -> self.Point
+ 3 moveBy(dx : Number, dy : Number) -> Done
+ 3 moveTo(location : self.Point) -> Done
+ 3 overlaps(graphic : Graphic2D) -> Boolean
+ 3 removeFromCanvas -> Done
+ 3 sendBackward -> Done
+ 3 sendForward -> Done
+ 3 sendToBack -> Done
+ 3 sendToFront -> Done
+ 3 visible:=(value : Boolean) -> Done
+ 3 x -> Number
+ 3 y -> Number
+methodtypes-of:Graphic2D:
+ & 6
+ & Graphic
+ 6 height -> Number
+ 6 height:=(height : Number) -> Done
+ 6 size -> self.Point
+ 6 size:=(dimensions : self.Point) -> Done
+ 6 width -> Number
+ 6 width:=(width : Number) -> Done
+methodtypes-of:GraphicApplication:
+ & 5
+ & Application
+ 5 canvas -> DrawingCanvas
+ 5 onMouseClick(mouse : self.Point) -> Done
+ 5 onMouseDrag(mouse : self.Point) -> Done
+ 5 onMouseEnter(mouse : self.Point) -> Done
+ 5 onMouseExit(mouse : self.Point) -> Done
+ 5 onMouseMove(mouse : self.Point) -> Done
+ 5 onMousePress(mouse : self.Point) -> Done
+ 5 onMouseRelease(mouse : self.Point) -> Done
+ 5 startGraphics -> Done
+methodtypes-of:Input:
+ & 11
+ & Labeled
+ 11 onBlurDo(f : Response) -> Done
+ 11 onChangeDo(f : Response) -> Done
+ 11 onFocusDo(f : Response) -> Done
+methodtypes-of:KeyEvent:
+ & 16
+ & Event
+ 16 code -> Number
+methodtypes-of:KeyResponse:
+methodtypes-of:Labeled:
+ & 10
+ & Component
+ 10 label -> String
+ 10 label:=(value : String) -> Done
+methodtypes-of:Line:
+ & 7
+ & Graphic
+ 7 end -> self.Point
+ 7 end:=(end' : self.Point) -> Done
+ 7 setEndPoints(start' : self.Point, end' : self.Point) -> Done
+ 7 start -> self.Point
+ 7 start:=(start' : self.Point) -> Done
+methodtypes-of:MouseEvent:
+ & 15
+ & Event
+ 15 at -> self.Point
+methodtypes-of:MouseResponse:
+methodtypes-of:NumberField:
+ & 13
+ & Input
+ 13 number -> Number
+ 13 number:=(value : Number) -> Done
+methodtypes-of:Procedure<T>:
+methodtypes-of:Response:
+methodtypes-of:Text:
+ & 8
+ & Graphic
+ 8 contents -> String
+ 8 contents:=(s : String) -> Done
+ 8 fontSize -> Number
+ 8 fontSize:=(size : Number) -> Done
+ 8 width -> Number
+methodtypes-of:TextBox:
+ & 9
+ & Component
+ 9 contents -> String
+ 9 contents:=(value : String) -> Done
+methodtypes-of:TextField:
+ & 12
+ & Input
+ 12 text -> String
+ 12 text:=(value : String) -> Done
+modules:
+ dom
+ math
+path:
+ objectdraw
+public:
+ AndPattern
+ Application
+ Audio
+ BaseType
+ BasicPattern
+ Binding
+ BindingPattern
+ Block0
+ Block1
+ Block2
+ Block3
+ BoundsError
+ Button
+ Choice
+ Cmd
+ Collection
+ Color
+ ColorOutOfRange
+ Component
+ ComponentFactory
+ ConcurrentModification
+ Container
+ Dictionary
+ DrawingCanvas
+ Enumerable
+ Event
+ ExceptionKind
+ Expandable
+ Extractable
+ FailedMatch
+ Foreign
+ Fun
+ Fun2
+ Fun3
+ Function
+ Function2
+ Graphic
+ Graphic2D
+ GraphicApplication
+ Input
+ Iterable
+ Iterator
+ IteratorExhausted
+ KeyEvent
+ KeyResponse
+ Labeled
+ Line
+ List
+ MatchAndDestructuringPattern
+ MatchResult
+ MouseEvent
+ MouseResponse
+ NoSuchObject
+ NumberField
+ OrPattern
+ Pattern
+ Point
+ Proc
+ Proc2
+ Proc3
+ Procedure
+ RequestError
+ Response
+ Sequence
+ Set
+ Singleton
+ SubobjectResponsibility
+ SuccessfulMatch
+ Text
+ TextBox
+ TextField
+ TypeIntersection
+ TypeSubtraction
+ TypeUnion
+ TypeVariant
+ UninitializedVariable
+ VariablePattern
+ WildcardPattern
+ abstract
+ alwaysEqual
+ applicationTitle()size
+ audioUrl
+ binding
+ black
+ blue
+ buttonLabeled
+ collection
+ collections
+ color
+ componentFromElement
+ componentOfElementType
+ containerEmpty
+ containerFromElement
+ containerOfElementType
+ containerSize
+ cyan
+ dictionary
+ do()while
+ drawable2DAt()size()on
+ drawableAt()on
+ drawableImageAt()size()url()on
+ drawingCanvasSize
+ emptyDictionary
+ emptyList
+ emptySequence
+ emptySet
+ enumerable
+ eventSource
+ fieldOfType()labeled
+ filledArcAt()size()from()to()on
+ filledOvalAt()size()on
+ filledRectAt()size()on
+ for()and()do
+ framedArcAt()size()from()to()on
+ framedOvalAt()size()on
+ framedRectAt()size()on
+ graphicApplicationSize
+ gray
+ green
+ indexable
+ inputFromElement
+ inputOfElementType
+ inputOfType
+ keyEventSource()event
+ labeledWidgetFromElement
+ labeledWidgetOfElementType
+ labeledWidgetOfElementType()labeled
+ lineFrom()length()direction()on
+ lineFrom()to()on
+ list
+ magenta
+ max
+ methods
+ min
+ mouseEventSource()event
+ neutral
+ numberFieldLabeled
+ numberFieldUnlabeled
+ passwordFieldLabeled
+ passwordFieldUnlabeled
+ pi
+ point2Dx()y
+ randomColor
+ randomIntFrom()to
+ randomNumberFrom()to
+ range
+ red
+ repeat()times
+ required
+ resizable2DAt()size()on
+ selectBoxOptionsFrom
+ sequence
+ set
+ textAt()with()on
+ textBoxWith
+ textFieldLabeled
+ textFieldUnlabeled
+ valueOf
+ white
+ yellow
+types:
+ Application
+ Audio
+ Button
+ Choice
+ Color
+ Component
+ ComponentFactory
+ Container
+ DrawingCanvas
+ Event
+ Foreign
+ Function
+ Function2
+ Graphic
+ Graphic2D
+ GraphicApplication
+ Input
+ KeyEvent
+ KeyResponse
+ Labeled
+ Line
+ MouseEvent
+ MouseResponse
+ NumberField
+ Procedure
+ Response
+ Text
+ TextBox
+ TextField

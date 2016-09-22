@@ -1,0 +1,23 @@
+classes:
+confidential:
+fresh-methods:
+modules:
+path:
+ unicode
+public:
+ bidirectional
+ category
+ combining
+ create
+ inCategory
+ isControl
+ isLetter
+ isNumber
+ isSeparator
+ isSymbolMathematical
+ lookup
+ mirrored
+ name
+ pattern
+ pattern()not
+types:

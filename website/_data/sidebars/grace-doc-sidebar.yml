@@ -1,0 +1,355 @@
+entries:
+- title: Sidebar
+  product: Documentation
+  version: 1.0
+  folders:
+
+  - title: "animation"
+    output: web, pdf
+    folderitems:
+
+    - title: ""
+      url: /404/
+      output: web
+      subfolders:
+
+      - title: "Classes"
+        output: web, pdf
+        subfolderitems:
+
+      - title: "Types"
+        output: web, pdf
+        subfolderitems:
+
+        - title: "Type: BoolBlock"
+          url: /BoolBlock/
+          output: web
+
+        - title: "Type: NumberBlock"
+          url: /NumberBlock/
+          output: web
+
+        - title: "Type: Procedure"
+          url: /Procedure/
+          output: web
+
+        - title: "Type: Animator"
+          url: /Animator/
+          output: web
+
+  - title: "objectdraw"
+    output: web, pdf
+    folderitems:
+
+    - title: ""
+      url: /404/
+      output: web 
+      subfolders:
+
+      - title: "Classes"
+        output: web, pdf
+        subfolderitems:
+
+        - title: "Class: r()g()b"
+          url: /r()g()b/
+          output: web 
+
+        - title: "Class: eventSource"
+          url: /eventSource/
+          output: web 
+
+        - title: "Class: mouseEventSource()event"
+          url: /mouseEventSource()event/
+          output: web 
+
+        - title: "Class: keyEventSource()event"
+          url: /keyEventSource()event/
+          output: web 
+
+        - title: "Class: componentFromElement"
+          url: /componentFromElement/
+          output: web 
+
+        - title: "Class: componentOfElementType"
+          url: /componentOfElementType/
+          output: web 
+
+        - title: "Class: containerOfElementType"
+          url: /containerOfElementType/
+          output: web 
+
+        - title: "Class: containerFromElement"
+          url: /containerFromElement/
+          output: web 
+
+        - title: "Class: emptyContainer"
+          url: /emptyContainer/
+          output: web 
+
+        - title: "Class: containerSize"
+          url: /containerSize/
+          output: web 
+
+        - title: "Class: inputFromElement"
+          url: /inputFromElement/
+          output: web 
+
+        - title: "Class: inputOfElementType"
+          url: /inputOfElementType/
+          output: web 
+
+        - title: "Class: inputOfType"
+          url: /inputOfType/
+          output: web 
+
+        - title: "Class: labeledWidgetFromElement"
+          url: /labeledWidgetFromElement/
+          output: web 
+
+        - title: "Class: labeledWidgetOfElementType"
+          url: /labeledWidgetOfElementType/
+          output: web 
+
+        - title: "Class: labeledWidgetOfElementType()labeled"
+          url: /labeledWidgetOfElementType()labeled/
+          output: web 
+
+        - title: "Class: fieldOfType()labeled"
+          url: /fieldOfType()labeled/
+          output: web 
+
+        - title: "Class: eventLogKind()response"
+          url: /eventLogKind()response/
+          output: web 
+
+        - title: "Class: applicationTitle()size"
+          url: /applicationTitle()size/
+          output: web 
+
+        - title: "Class: drawingCanvasSize"
+          url: /drawingCanvasSize/
+          output: web 
+
+        - title: "Class: graphicApplicationSize"
+          url: /graphicApplicationSize/
+          output: web 
+
+        - title: "Class: drawableAt()on"
+          url: /drawableAt()on/
+          output: web 
+
+        - title: "Class: drawable2DAt()size()on"
+          url: /drawable2DAt()size()on/
+          output: web 
+
+        - title: "Class: resizable2DAt()size()on"
+          url: /resizable2DAt()size()on/
+          output: web 
+
+        - title: "Class: framedRectAt()size()on"
+          url: /framedRectAt()size()on/
+          output: web 
+
+        - title: "Class: filledRectAt()size()on"
+          url: /filledRectAt()size()on/
+          output: web 
+
+        - title: "Class: framedOvalAt()size()on"
+          url: /framedOvalAt()size()on/
+          output: web 
+
+        - title: "Class: filledOvalAt()size()on"
+          url: /filledOvalAt()size()on/
+          output: web 
+
+        - title: "Class: framedArcAt()size()from()to()on"
+          url: /framedArcAt()size()from()to()on/
+          output: web 
+
+        - title: "Class: filledArcAt()size()from()to()on"
+          url: /filledArcAt()size()from()to()on/
+          output: web 
+
+        - title: "Class: drawableImageAt()size()url()on"
+          url: /drawableImageAt()size()url()on/
+          output: web 
+
+        - title: "Class: lineFrom()to()on"
+          url: /lineFrom()to()on/
+          output: web 
+
+        - title: "Class: lineFrom()length()direction()on"
+          url: /lineFrom()length()direction()on/
+          output: web 
+
+        - title: "Class: textAt()with()on"
+          url: /textAt()with()on/
+          output: web 
+
+        - title: "Class: textBoxWith"
+          url: /textBoxWith/
+          output: web 
+
+        - title: "Class: buttonLabeled"
+          url: /buttonLabeled/
+          output: web 
+
+        - title: "Class: textFieldLabeled"
+          url: /textFieldLabeled/
+          output: web 
+
+        - title: "Class: textFieldUnlabeled"
+          url: /textFieldUnlabeled/
+          output: web 
+
+        - title: "Class: passwordFieldLabeled"
+          url: /passwordFieldLabeled/
+          output: web 
+
+        - title: "Class: passwordFieldUnlabeled"
+          url: /passwordFieldUnlabeled/
+          output: web 
+
+        - title: "Class: numberFieldLabeled"
+          url: /numberFieldLabeled/
+          output: web 
+
+        - title: "Class: numberFieldUnlabeled"
+          url: /numberFieldUnlabeled/
+          output: web 
+
+        - title: "Class: menuWithOptions()labeled"
+          url: /menuWithOptions()labeled/
+          output: web 
+
+        - title: "Class: menuWithOptions"
+          url: /menuWithOptions/
+          output: web 
+
+        - title: "Class: audioUrl"
+          url: /audioUrl/
+          output: web 
+
+      - title: "Types"
+        output: web, pdf
+        subfolderitems:
+
+        - title: "Type: Foreign"
+          url: /Foreign/
+          output: web 
+
+        - title: "Type: Function"
+          url: /Function/
+          output: web 
+
+        - title: "Type: Function2"
+          url: /Function2/
+          output: web 
+
+        - title: "Type: Procedure"
+          url: /Procedure/
+          output: web 
+
+        - title: "Type: Component"
+          url: /Component/
+          output: web 
+
+        - title: "Type: Container"
+          url: /Container/
+          output: web 
+
+        - title: "Type: Application"
+          url: /Application/
+          output: web 
+
+        - title: "Type: Graphic"
+          url: /Graphic/
+          output: web 
+
+        - title: "Type: DrawingCanvas"
+          url: /DrawingCanvas/
+          output: web 
+
+        - title: "Type: GraphicApplication"
+          url: /GraphicApplication/
+          output: web 
+
+        - title: "Type: Graphic2D"
+          url: /Graphic2D/
+          output: web 
+
+        - title: "Type: Line"
+          url: /Line/
+          output: web 
+
+        - title: "Type: Text"
+          url: /Text/
+          output: web 
+
+        - title: "Type: TextBox"
+          url: /TextBox/
+          output: web 
+
+        - title: "Type: Labeled"
+          url: /Labeled/
+          output: web 
+
+        - title: "Type: Button"
+          url: /Button/
+          output: web 
+
+        - title: "Type: Input"
+          url: /Input/
+          output: web 
+
+        - title: "Type: TextField"
+          url: /TextField/
+          output: web 
+
+        - title: "Type: NumberField"
+          url: /NumberField/
+          output: web 
+
+        - title: "Type: Choice"
+          url: /Choice/
+          output: web 
+
+        - title: "Type: Color"
+          url: /Color/
+          output: web 
+
+        - title: "Type: ColorFactory"
+          url: /ColorFactory/
+          output: web 
+
+        - title: "Type: Event"
+          url: /Event/
+          output: web 
+
+        - title: "Type: MouseEvent"
+          url: /MouseEvent/
+          output: web 
+
+        - title: "Type: KeyEvent"
+          url: /KeyEvent/
+          output: web 
+
+        - title: "Type: Response"
+          url: /Response/
+          output: web 
+
+        - title: "Type: MouseResponse"
+          url: /MouseResponse/
+          output: web 
+
+        - title: "Type: KeyResponse"
+          url: /KeyResponse/
+          output: web 
+
+        - title: "Type: ComponentFactory"
+          url: /ComponentFactory/
+          output: web 
+
+        - title: "Type: Audio"
+          url: /Audio/
+          output: web 

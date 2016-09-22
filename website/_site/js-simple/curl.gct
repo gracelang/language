@@ -1,0 +1,45 @@
+classes:
+confidential:
+fresh-methods:
+ easy
+fresh:easy:
+ !=
+ ::
+ ==
+ asDebugString
+ asString
+ basicAsString
+ effectiveUrl
+ escape
+ followLocation:=
+ includeResponseHeader:=
+ onHeader
+ onReceive
+ perform
+ responseCode
+ self
+ unescape
+ url:=
+ ≠
+methodtypes-of:CurlEasy:
+ 1 effectiveUrl -> String
+ 1 escape(s : String | Octets) -> String
+ 1 followLocation:=(b : Boolean) -> Done
+ 1 includeResponseHeader:=(b : Boolean) -> Done
+ 1 onHeader(blk : prelude.Block1) -> Done
+ 1 onReceive(blk : prelude.Block1) -> Done
+ 1 perform -> Done
+ 1 responseCode -> Number
+ 1 unescape(s : String | Octets) -> Octets
+ 1 url:=(url : String) -> Done
+methodtypes-of:Octets:
+modules:
+path:
+ curl
+public:
+ CurlEasy
+ Octets
+ easy
+types:
+ CurlEasy
+ Octets

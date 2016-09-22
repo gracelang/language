@@ -1,0 +1,62 @@
+entries:
+- title: Tutorial
+  product: Tutorial
+  version: 0.01
+  folders:
+  - title: Introduction
+    output: web
+    folderitems:
+    - title: What is Grace?
+      url: /introduction/grace/
+      output: web
+    - title: How to use this Tutorial
+      url: /introduction/tutorial/
+      output: web
+    - title: How to run Grace
+      url: /introduction/run/
+      output: web
+  - title: Variables and Objects
+    output: web
+    folderitems:
+    - title: Definitions and Variables
+      url: /variables/variables/
+      output: web
+    - title: Conditionals
+      url: /variables/conditionals/
+      output: web
+    - title: Blocks
+      url: /variables/block/
+      output: web
+    - title: Match
+      url: /variables/match/
+      output: web
+    - title: Methods
+      url: /variables/methods/
+      output: web
+    - title: Objects
+      url: /variables/objects/
+      output: web
+    - title: Numbers and Strings
+      url: /variables/numstring/
+      output: web
+    - title: Lists
+      url: /variables/lists/
+      output: web
+  - title: Control Structures
+    output: web
+    folderitems:
+    - title: Repeat
+      url: /variables/repeat/
+      output: web
+    - title: While Loops
+      url: /variables/while/
+      output: web
+    - title: Do
+      url: /variables/do/
+      output: web
+    - title: Map
+      url: /variables/map/
+      output: web
+    - title: Fold
+      url: /variables/fold/
+      output: web

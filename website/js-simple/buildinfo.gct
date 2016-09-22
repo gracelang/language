@@ -1,0 +1,14 @@
+classes:
+confidential:
+fresh-methods:
+modules:
+path:
+ buildinfo
+public:
+ gitgeneration
+ gitrevision
+ includepath
+ modulepath
+ objectpath
+ prefix
+types:

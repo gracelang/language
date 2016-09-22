@@ -1,0 +1,93 @@
+classes:
+confidential:
+ gatherInheritedNames
+ gatherUsedNames
+fresh-methods:
+ conflictForMethodName()from
+ newScopeIn()kind
+fresh:conflictForMethodName()from:
+ methodName
+ sources
+fresh:newScopeIn()kind:
+ ==
+ addName
+ addName()as
+ addNode()as
+ asDebugString
+ asString
+ asStringWithParents
+ at()putScope
+ checkShadowing()as
+ contains
+ elementLines
+ elementScopes
+ elementScopesAsString
+ elementTokens
+ elements
+ enclosingObjectScope
+ getScope
+ hasDefinitionInNest
+ hasParent
+ hash
+ inSameContextAs
+ inheritedNames
+ isEmpty
+ isInSameObjectAs
+ isMethodScope
+ isObjectScope
+ isUniversal
+ keysAndKindsDo
+ keysAsList
+ kind
+ kindInNest
+ node
+ parent
+ resolveOuterMethod
+ scopeReferencedBy
+ serialNumber
+ thatDefines
+ thatDefines()ifNone
+ variety
+ withSurroundingScopesDo
+methodtypes-of:DeclKind:
+modules:
+ ast
+ errormessages
+ identifierKinds
+ io
+ mirrors
+ stringMap
+ sys
+ unixFilePath
+ util
+ xmodule
+path:
+ identifierresolution
+public:
+ DeclKind
+ articleFor
+ buildSymbolTableFor()ancestors
+ checkForAmbiguityOf()definedIn()as
+ checkForConflicts
+ checkForReservedName
+ checkTraitBody
+ collectParentNames
+ conflictForMethodName()from
+ isSameIgnoringCase
+ newScopeIn()kind
+ newScopeKind
+ processGCT
+ readableStringFrom
+ reportAssignmentTo()declaredInScope
+ reportUndeclaredIdentifier
+ resolve
+ resolveIdentifiers
+ rewriteIdentifier()ancestors
+ rewriteMatches
+ rewritematchblock
+ rewritematchblockterm
+ setupContext
+ transformBind()ancestors
+ transformInherits()ancestors
+types:
+ DeclKind

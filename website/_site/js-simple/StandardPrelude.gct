@@ -1,0 +1,472 @@
+classes:
+ AndPattern
+ BaseType
+ BasicPattern
+ BindingPattern
+ FailedMatch
+ MatchAndDestructuringPattern
+ OrPattern
+ Singleton
+ SuccessfulMatch
+ TypeIntersection
+ TypeSubtraction
+ TypeUnion
+ TypeVariant
+ VariablePattern
+ WildcardPattern
+confidential:
+constructors-of:AndPattern:
+ new
+constructors-of:BaseType:
+ new
+constructors-of:BasicPattern:
+ new
+constructors-of:BindingPattern:
+ new
+constructors-of:FailedMatch:
+ new
+constructors-of:MatchAndDestructuringPattern:
+ new
+constructors-of:OrPattern:
+ new
+constructors-of:Singleton:
+ named
+ new
+constructors-of:SuccessfulMatch:
+ new
+constructors-of:TypeIntersection:
+ new
+constructors-of:TypeSubtraction:
+ new
+constructors-of:TypeUnion:
+ new
+constructors-of:TypeVariant:
+ new
+constructors-of:VariablePattern:
+ new
+constructors-of:WildcardPattern:
+ new
+fresh-methods:
+ alwaysEqual
+ methods
+ point2Dx()y
+fresh:alwaysEqual:
+ ==
+fresh:methods:
+ AndPattern
+ BaseType
+ BasicPattern
+ Binding
+ BindingPattern
+ Block0
+ Block1
+ Block2
+ Block3
+ BoundsError
+ Cmd
+ Collection
+ ConcurrentModification
+ Dictionary
+ Enumerable
+ ExceptionKind
+ Expandable
+ Extractable
+ FailedMatch
+ Fun
+ Fun2
+ Fun3
+ Iterable
+ Iterator
+ IteratorExhausted
+ List
+ MatchAndDestructuringPattern
+ MatchResult
+ NoSuchObject
+ OrPattern
+ Pattern
+ Point
+ Proc
+ Proc2
+ Proc3
+ RequestError
+ Sequence
+ Set
+ Singleton
+ SubobjectResponsibility
+ SuccessfulMatch
+ TypeIntersection
+ TypeSubtraction
+ TypeUnion
+ TypeVariant
+ UninitializedVariable
+ VariablePattern
+ WildcardPattern
+ abstract
+ alwaysEqual
+ binding
+ collection
+ collections
+ dictionary
+ do()while
+ emptyDictionary
+ emptyList
+ emptySequence
+ emptySet
+ enumerable
+ for()and()do
+ indexable
+ list
+ max
+ methods
+ min
+ point2Dx()y
+ range
+ repeat()times
+ required
+ sequence
+ set
+ valueOf
+fresh:point2Dx()y:
+ *
+ +
+ -
+ /
+ ==
+ asDebugString
+ asString
+ distanceTo
+ dot
+ length
+ prefix-
+ x
+ y
+ ⋅
+methods-of:AndPattern.new:
+ !=
+ &
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ |
+ ≠
+methods-of:BaseType.new:
+ &
+ +
+ -
+ asString
+ |
+methods-of:BasicPattern.new:
+ &
+ |
+methods-of:BindingPattern.new:
+ !=
+ &
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ |
+ ≠
+methods-of:FailedMatch.new:
+ &&
+ asString
+ bindings
+ not
+ prefix!
+ result
+ ||
+methods-of:MatchAndDestructuringPattern.new:
+ !=
+ &
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ items
+ match
+ pattern
+ |
+ ≠
+methods-of:OrPattern.new:
+ !=
+ &
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ |
+ ≠
+methods-of:Singleton.named:
+ !=
+ &
+ ::
+ ==
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ |
+ ≠
+methods-of:Singleton.new:
+ !=
+ &
+ ::
+ ==
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ |
+ ≠
+methods-of:SuccessfulMatch.new:
+ &&
+ asString
+ bindings
+ not
+ prefix!
+ result
+ ||
+methods-of:TypeIntersection.new:
+ !=
+ &
+ +
+ -
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ methodNames
+ |
+ ≠
+methods-of:TypeSubtraction.new:
+ !=
+ &
+ +
+ -
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ methodNames
+ |
+ ≠
+methods-of:TypeUnion.new:
+ !=
+ &
+ +
+ -
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ methodNames
+ |
+ ≠
+methods-of:TypeVariant.new:
+ !=
+ &
+ +
+ -
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ methodNames
+ |
+ ≠
+methods-of:VariablePattern.new:
+ !=
+ &
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ |
+ ≠
+methods-of:WildcardPattern.new:
+ !=
+ &
+ ::
+ asDebugString
+ asString
+ basicAsString
+ isMe
+ match
+ |
+ ≠
+methodtypes-of:Binding<K, T>:
+methodtypes-of:Block0<R>:
+methodtypes-of:Block1<T, R>:
+methodtypes-of:Block2<S, T, R>:
+methodtypes-of:Block3<S, T, U, R>:
+ 3 apply(a : S, b : T, c : U) -> R
+methodtypes-of:Cmd:
+methodtypes-of:Collection<T>:
+methodtypes-of:Dictionary<K, T>:
+methodtypes-of:Enumerable<T>:
+methodtypes-of:ExceptionKind:
+ & 3
+ & Pattern
+ 3 parent -> ExceptionKind
+ 3 raise(message : String) -> Done
+ 3 raise(message : String)with(argument : Object) -> Done
+ 3 refine -> ExceptionKind
+methodtypes-of:Expandable<T>:
+methodtypes-of:Extractable:
+ 1 extract -> Done
+methodtypes-of:Fun2<T, U, R>:
+methodtypes-of:Fun3<T, U, W, R>:
+methodtypes-of:Fun<T, R>:
+methodtypes-of:Iterable<T>:
+methodtypes-of:Iterator<T>:
+methodtypes-of:List<T>:
+methodtypes-of:MatchResult:
+ & 2
+ & Boolean
+ 2 bindings -> List<Unknown>
+ 2 result -> Unknown
+methodtypes-of:Pattern:
+ 2 &(other : Pattern) -> Pattern
+ 2 match(value : Object) -> MatchResult
+ 2 |(other : Pattern) -> Pattern
+methodtypes-of:Point:
+ 3 *(factor : Number) -> Point
+ 3 +(other : Point) -> Point
+ 3 -(other : Point) -> Point
+ 3 /(factor : Number) -> Point
+ 3 distanceTo(other : Point) -> Number
+ 3 dot(other : Point) -> Number
+ 3 length -> Number
+ 3 prefix- -> Point
+ 3 x -> Number
+ 3 y -> Number
+ 3 ⋅(other : Point) -> Number
+methodtypes-of:Proc2<T, U>:
+methodtypes-of:Proc3<T, U, W>:
+methodtypes-of:Proc<T>:
+methodtypes-of:Sequence<T>:
+methodtypes-of:Set<T>:
+modules:
+ collectionsPrelude
+path:
+ StandardPrelude
+public:
+ AndPattern
+ BaseType
+ BasicPattern
+ Binding
+ BindingPattern
+ Block0
+ Block1
+ Block2
+ Block3
+ BoundsError
+ Cmd
+ Collection
+ ConcurrentModification
+ Dictionary
+ Enumerable
+ ExceptionKind
+ Expandable
+ Extractable
+ FailedMatch
+ Fun
+ Fun2
+ Fun3
+ Iterable
+ Iterator
+ IteratorExhausted
+ List
+ MatchAndDestructuringPattern
+ MatchResult
+ NoSuchObject
+ OrPattern
+ Pattern
+ Point
+ Proc
+ Proc2
+ Proc3
+ RequestError
+ Sequence
+ Set
+ Singleton
+ SubobjectResponsibility
+ SuccessfulMatch
+ TypeIntersection
+ TypeSubtraction
+ TypeUnion
+ TypeVariant
+ UninitializedVariable
+ VariablePattern
+ WildcardPattern
+ abstract
+ alwaysEqual
+ binding
+ collection
+ collections
+ dictionary
+ do()while
+ emptyDictionary
+ emptyList
+ emptySequence
+ emptySet
+ enumerable
+ for()and()do
+ indexable
+ list
+ max
+ methods
+ min
+ point2Dx()y
+ range
+ repeat()times
+ required
+ sequence
+ set
+ valueOf
+types:
+ Binding
+ Block0
+ Block1
+ Block2
+ Block3
+ Cmd
+ Collection
+ Dictionary
+ Enumerable
+ ExceptionKind
+ Expandable
+ Extractable
+ Fun
+ Fun2
+ Fun3
+ Iterable
+ Iterator
+ List
+ MatchResult
+ Pattern
+ Point
+ Proc
+ Proc2
+ Proc3
+ Sequence
+ Set

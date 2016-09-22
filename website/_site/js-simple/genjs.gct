@@ -1,0 +1,63 @@
+classes:
+confidential:
+fresh-methods:
+modules:
+ ast
+ errormessages
+ identifierKinds
+ io
+ mirrors
+ stringMap
+ sys
+ unixFilePath
+ util
+ xmodule
+path:
+ genjs
+public:
+ basename
+ beginblock
+ compile
+ compileInherits()in
+ compileNativeCode
+ compilePrint
+ compileSuper
+ compileTrait()in
+ compilearray
+ compilebind
+ compileblock
+ compilecall
+ compiledefdec
+ compiledialect
+ compilefreshmethod
+ compileidentifier
+ compileif
+ compileimport
+ compilematchcase
+ compilemember
+ compilemethod
+ compilemethodtypes
+ compilenode
+ compileobjdefdec
+ compileobject
+ compileobjouter
+ compileobjtype
+ compileobjvardec
+ compileop
+ compilereturn
+ compiletrycatch
+ compiletypedec
+ compiletypeliteral
+ compilevardec
+ decreaseindent
+ escapeident
+ escapestring
+ forceLineNumber()comment
+ formatModname
+ increaseindent
+ noteLineNumber()comment
+ out
+ outUnnumbered
+ runJsCode
+ varf
+types:

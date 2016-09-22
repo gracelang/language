@@ -1,0 +1,33 @@
+classes:
+confidential:
+fresh-methods:
+ environ
+fresh:environ:
+ !=
+ ::
+ ==
+ asDebugString
+ asString
+ at
+ at()put
+ basicAsString
+ contains
+ self
+ ≠
+methodtypes-of:Environment:
+ 1 at(key : String) -> String
+ 1 at(key : String)put(value : String) -> Boolean
+ 1 contains(key : String) -> Boolean
+modules:
+path:
+ sys
+public:
+ Environment
+ argv
+ elapsed
+ elapsedTime
+ environ
+ execPath
+ exit
+types:
+ Environment

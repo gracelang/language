@@ -1,0 +1,47 @@
+classes:
+confidential:
+ addFreshMethod()to()for
+ addFreshMethodsOf()to
+ addTransitiveImports
+ checkimport
+ compileModule()inFile()forDialect()atRange
+ generateGctForModule
+ parseGCT()sourceDir
+ writeGCT
+fresh-methods:
+methodtypes-of:LinePos:
+ 1 line -> Number
+ 1 linePos -> Number
+methodtypes-of:RangeSuggestions:
+ 1 line -> Number
+ 1 posEnd -> Number
+ 1 posStart -> Number
+ 1 suggestions -> Done
+modules:
+ ast
+ errormessages
+ identifierKinds
+ io
+ mirrors
+ stringMap
+ sys
+ unixFilePath
+ util
+path:
+ xmodule
+public:
+ LinePos
+ RangeSuggestions
+ buildGctFor
+ builtInModules
+ checkDialect
+ checkExternalModule
+ doAstCheck
+ doParseCheck
+ dynamicCModules
+ gctAsString
+ parseGCT
+ writeGctForModule
+types:
+ LinePos
+ RangeSuggestions

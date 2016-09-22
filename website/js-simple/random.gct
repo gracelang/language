@@ -1,0 +1,11 @@
+classes:
+confidential:
+fresh-methods:
+modules:
+path:
+ random
+public:
+ between()and
+ between0And1
+ integerIn()to
+types:

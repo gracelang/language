@@ -1,0 +1,59 @@
+classes:
+confidential:
+ createDirectoryIfNecessary
+fresh-methods:
+modules:
+ io
+ stringMap
+ sys
+ unixFilePath
+path:
+ util
+public:
+ buildtype
+ cLines
+ commandLineExtensions
+ debug
+ defaultVerbosity
+ dirFlag
+ errno
+ execDir
+ extensions
+ file()on()orPath()otherwise
+ file()onPath()otherwise
+ filename
+ generalError
+ gracelibPath
+ hex
+ infile
+ linenum
+ linepos
+ lines
+ log()verbose
+ log_verbose
+ modname
+ noexec
+ outDir
+ outDir:=
+ outfile
+ outprint
+ parseargs
+ printhelp
+ processExtension
+ recurse
+ requiredModules
+ runmode
+ semantic_error
+ setPosition
+ setline
+ sourceDir
+ startupFailure
+ str()lastIndexOf
+ syntaxError
+ target
+ type_error
+ verbosity
+ verbosity:=
+ vtag
+ warning
+types:

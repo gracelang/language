@@ -1,0 +1,27 @@
+# This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
+
+entries:
+- title: Sidebar
+  levels: one
+  folders:
+
+  - title: Topics
+    output: web
+    folderitems:
+    - title: Home
+      url: /
+      output: web
+      type: homepage
+    - title: Tutorial
+      url: /introduction/grace/
+      output: web
+    - title: Language Specifications
+      url: /lang-spec/
+      output: web
+    - title: Library Documentation
+      url: /doc-landing/
+      output: web
+    - title: Help
+      url: /help/
+      output: web
+

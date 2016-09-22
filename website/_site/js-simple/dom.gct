@@ -1,0 +1,20 @@
+classes:
+confidential:
+fresh-methods:
+modules:
+path:
+ dom
+public:
+ document
+ doesObject()haveProperty
+ draw
+ filledOval
+ filledRect
+ for()waiting()do
+ framedOval
+ framedRect
+ image
+ noObject
+ while()waiting()do
+ window
+types:

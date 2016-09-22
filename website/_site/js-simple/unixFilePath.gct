@@ -1,0 +1,34 @@
+classes:
+confidential:
+fresh-methods:
+ null
+fresh:null:
+ ==
+ asDebugString
+ asString
+ base
+ copy
+ dir
+ directory
+ directory:=
+ exists
+ extension
+ newer
+ setBase
+ setDirectory
+ setExtension
+ shortName
+modules:
+ io
+path:
+ unixFilePath
+public:
+ file()onPath()otherwise
+ fromString
+ null
+ split
+ withBase
+ withDirectory
+ withDirectory()base()extension
+ withExtension
+types:

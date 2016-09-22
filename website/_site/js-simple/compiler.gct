@@ -1,0 +1,25 @@
+classes:
+confidential:
+fresh-methods:
+modules:
+ ast
+ buildinfo
+ errormessages
+ genc
+ genjs
+ identifierKinds
+ identifierresolution
+ io
+ lexer
+ mirrors
+ parser
+ stringMap
+ sys
+ unicode
+ unixFilePath
+ util
+ xmodule
+path:
+ compiler
+public:
+types:

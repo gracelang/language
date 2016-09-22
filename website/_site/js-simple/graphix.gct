@@ -1,0 +1,79 @@
+classes:
+confidential:
+fresh-methods:
+ create
+ shape
+fresh:create:
+ addArc
+ addButton
+ addCircle
+ addCustomShape
+ addEllipse
+ addInputBox
+ addLine
+ addPolyStar
+ addRectangle
+ addRoundRect
+ addText
+ after()do
+ asString
+ clear
+ clearTicker
+ clearTimedEvent
+ drawall
+ every()do
+ inputs
+ mouseLocation
+ onMouseDownDo
+ onMouseExit:=
+ onMouseExitDo
+ onMouseMoveDo
+ onMouseUpDo
+ onStageMouseDown:=
+ onStageMouseMove:=
+ onStageMouseUp:=
+ play
+ shapes
+ stage
+ tickEvent
+ timedEvent
+ timeoutIsSet
+fresh:shape:
+ at
+ clear
+ color
+ colored
+ contains
+ draw
+ drawAt
+ fill
+ filled
+ jsShapeObject
+ location
+ mouseLocation
+ moveBy
+ myStage
+ onClick:=
+ onClickDo
+ onMouseDown:=
+ onMouseDownDo
+ onMouseOver:=
+ onMouseOverDo
+ onMouseUp:=
+ onMouseUpDo
+ onPressMove:=
+ onPressMoveDo
+ shapeDraw
+ tween
+ visible'
+ visible:=
+modules:
+ createJsGraphicsWrapper
+path:
+ graphix
+public:
+ convertStrToNum
+ create
+ roundTo
+ shape
+types:

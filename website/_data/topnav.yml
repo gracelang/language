@@ -1,0 +1,28 @@
+## Topnav single links
+## if you want to list an external url, use external_url instead of url. the theme will apply a different link base.
+topnav:
+- title: Topnav
+  items:
+    - title: Tutorial
+      url:  /introduction/grace/
+
+#Topnav dropdowns
+topnav_dropdowns:
+- title: Topnav dropdowns
+  folders:
+    - title: Topics
+      folderitems:
+        - title: Language Specifications
+          url: /lang-spec/
+        - title: Library Documentation
+          url: /doc-landing/
+    - title: Dialects
+      folderitems:
+        - title: Logo
+          url: /dialects/logo/
+        - title: Minitest
+          url: /dialects/minitest/
+        - title: Static Type
+          url: /dialects/staticTypes/
+        - title: Standard
+          url: /dialects/standard/

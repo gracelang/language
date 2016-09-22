@@ -1,0 +1,28 @@
+classes:
+confidential:
+fresh-methods:
+ kindConstant
+fresh:kindConstant:
+ ==
+ asString
+ forGct
+ forUsers
+ fromParent
+ isAssignable
+ isImplicit
+ isParameter
+methodtypes-of:T:
+ 1 ==(o : T) -> Boolean
+ 1 forUsers -> Boolean
+ 1 fromParent -> Boolean
+ 1 isAssignable -> Boolean
+ 1 isImplicit -> Boolean
+ 1 isParameter -> Boolean
+modules:
+path:
+ identifierKinds
+public:
+ T
+ kindConstant
+types:
+ T

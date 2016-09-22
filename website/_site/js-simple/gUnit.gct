@@ -1,0 +1,182 @@
+classes:
+ testSuite
+confidential:
+constructors-of:testSuite:
+ withAll
+fresh-methods:
+ assertion
+ testCaseNamed
+ testRecordFor()message
+ testResult
+fresh:assertion:
+ AssertionFailure
+ assert
+ assert()description
+ assert()hasType
+ assert()shouldBe
+ assert()shouldEqual()within
+ assert()shouldRaise
+ assert()shouldntBe
+ assert()shouldntRaise
+ assertType()describes
+ countOneAssertion
+ deny
+ deny()description
+ deny()hasType
+ deny()shouldBe
+ failBecause
+ methodsIn()missingFrom
+ protocolOf()notCoveredBy
+fresh:testCaseNamed:
+ !=
+ ::
+ AssertionFailure
+ asDebugString
+ asString
+ assert
+ assert()description
+ assert()hasType
+ assert()shouldBe
+ assert()shouldEqual()within
+ assert()shouldRaise
+ assert()shouldntBe
+ assert()shouldntRaise
+ assertType()describes
+ basicAsString
+ countOneAssertion
+ currentResult
+ debug
+ debugAndPrintResults
+ deny
+ deny()description
+ deny()hasType
+ deny()shouldBe
+ failBecause
+ isMe
+ methodsIn()missingFrom
+ name
+ printBackTrace()limitedTo
+ protocolOf()notCoveredBy
+ run
+ runAndPrintResults
+ runTest
+ setup
+ size
+ teardown
+ ≠
+fresh:testRecordFor()message:
+ <
+ ==
+ >
+ asString
+ compare
+ hash
+ message
+ name
+ ≤
+ ≥
+fresh:testResult:
+ countOneAssertion
+ currentCountOfAssertions
+ detailedSummary
+ errorSet
+ erroredTestNames
+ errors
+ failSet
+ failedTestNames
+ failures
+ numberOfErrors
+ numberOfFailures
+ numberRun
+ runCount
+ summary
+ testErrored()withMessage
+ testFailed()withMessage
+ testFinished
+ testStarted
+methods-of:testSuite.withAll:
+ ++
+ add
+ addAll
+ debug
+ debugAndPrintResults
+ do
+ doNotRerunErrors
+ doRerunErrors
+ errorsToBeRerun
+ iterator
+ name
+ rerunErrors
+ run
+ runAndPrintResults
+ size
+ testNames
+ tests
+methodtypes-of:Assertion:
+ 1 assert(b : Block)shouldRaise(desireed : prelude.ExceptionKind) -> Done
+ 1 assert(b : Block)shouldntRaise(undesired : prelude.ExceptionKind) -> Done
+ 1 assert(bb : Boolean) -> Done
+ 1 assert(bb : Boolean)description(str : String) -> Done
+ 1 assert(n1 : Number)shouldEqual(n2 : Number)within(epsilon : Number) -> Done
+ 1 assert(s : Object)hasType(t : Type) -> Done
+ 1 assert(s1 : Object)shouldBe(s2 : Object) -> Done
+ 1 assert(s1 : Object)shouldntBe(s2 : Object) -> Done
+ 1 deny(bb : Boolean) -> Done
+ 1 deny(bb : Boolean)description(str : String) -> Done
+ 1 failBecause(Message : String) -> Done
+methodtypes-of:TestCase:
+ & 2
+ & Assertion
+ 2 debug(_ : TestResult) -> Done
+ 2 name -> String
+ 2 run(_ : TestResult) -> Done
+ 2 size -> Number
+methodtypes-of:TestRecord:
+ 2 message -> String
+ 2 name -> String
+methodtypes-of:TestResult:
+ 2 detailedSummary -> String
+ 2 doNotRerunErrors -> Done
+ 2 doRerunErrors -> Done
+ 2 erroredTestNames -> List<String>
+ 2 errors -> List<TestRecord>
+ 2 failedTestNames -> List<String>
+ 2 failures -> List<TestRecord>
+ 2 numberOfErrors -> Number
+ 2 numberOfFailures -> Number
+ 2 numberRun -> Number
+ 2 summary -> String
+ 2 testErrored(name : String) -> Done
+ 2 testFailed(name : String) -> Done
+ 2 testFinished(name : String) -> Done
+ 2 testStarted(name : String) -> Done
+methodtypes-of:TestSuite:
+ & 3
+ & TestCase
+ 3 add(t : TestCase) -> Done
+ 3 rerunErrors(r : TestResult) -> Done
+modules:
+ math
+ mirrors
+path:
+ gUnit
+public:
+ Assertion
+ TestCase
+ TestRecord
+ TestResult
+ TestSuite
+ assertion
+ className
+ numberOfErrorsToRerun
+ numberOfErrorsToRerun:=
+ testCaseNamed
+ testRecordFor()message
+ testResult
+ testSuite
+types:
+ Assertion
+ TestCase
+ TestRecord
+ TestResult
+ TestSuite

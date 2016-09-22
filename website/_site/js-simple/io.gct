@@ -1,0 +1,163 @@
+classes:
+confidential:
+fresh-methods:
+ error
+ input
+ open
+ output
+fresh:error:
+ !=
+ ::
+ ==
+ asDebugString
+ asString
+ basicAsString
+ close
+ eof
+ getline
+ hasNext
+ isatty
+ iterator
+ next
+ pathname
+ read
+ readBinary
+ seek
+ seekBackward
+ seekForward
+ self
+ write
+ writeBinary
+ ≠
+fresh:input:
+ !=
+ ::
+ ==
+ asDebugString
+ asString
+ basicAsString
+ close
+ eof
+ getline
+ hasNext
+ isatty
+ iterator
+ next
+ pathname
+ read
+ readBinary
+ seek
+ seekBackward
+ seekForward
+ self
+ write
+ writeBinary
+ ≠
+fresh:open:
+ !=
+ ::
+ ==
+ asDebugString
+ asString
+ basicAsString
+ close
+ eof
+ getline
+ hasNext
+ isatty
+ iterator
+ next
+ pathname
+ read
+ readBinary
+ seek
+ seekBackward
+ seekForward
+ self
+ write
+ writeBinary
+ ≠
+fresh:output:
+ !=
+ ::
+ ==
+ asDebugString
+ asString
+ basicAsString
+ close
+ eof
+ getline
+ hasNext
+ isatty
+ iterator
+ next
+ pathname
+ read
+ readBinary
+ seek
+ seekBackward
+ seekForward
+ self
+ write
+ writeBinary
+ ≠
+methodtypes-of:FileStream:
+ & 2
+ & Object
+ 2 close -> Object
+ 2 eof -> Boolean
+ 2 getline -> Object
+ 2 hasNext -> Object
+ 2 isatty -> Boolean
+ 2 iterator -> Object
+ 2 next -> Object
+ 2 pathname -> String
+ 2 read -> Object
+ 2 readBinary -> Object
+ 2 seek -> Object
+ 2 seekBackward(n : Number) -> Object
+ 2 seekForward(n : Number) -> Object
+ 2 write -> Object
+ 2 writeBinary -> Object
+methodtypes-of:IO:
+ & 3
+ & Object
+ 3 changeDirectory(dirPath : String) -> Done
+ 3 env -> Dictionary<String, String>
+ 3 error -> FileStream
+ 3 exists(path : String) -> Boolean
+ 3 input -> FileStream
+ 3 listdir(dirPath : String) -> Sequence<String>
+ 3 newer(path1 : String, path2 : String) -> Boolean
+ 3 open(path : String, mode : String) -> FileStream
+ 3 output -> FileStream
+ 3 realpath(path : String) -> String
+ 3 system(command : String) -> Boolean
+methodtypes-of:Process:
+ & 4
+ & Object
+ 4 status -> Number
+ 4 success -> Boolean
+ 4 terminated -> Boolean
+ 4 wait -> Number
+modules:
+path:
+ io
+public:
+ FileStream
+ IO
+ Process
+ error
+ exists
+ input
+ listdir
+ newer
+ open
+ output
+ realpath
+ spawn
+ system
+types:
+ FileStream
+ IO
+ Process

@@ -1,0 +1,15 @@
+classes:
+confidential:
+fresh-methods:
+methodtypes-of:Timer:
+modules:
+path:
+ timer
+public:
+ Timer
+ after()do
+ every()do
+ stop
+ stopAll
+types:
+ Timer

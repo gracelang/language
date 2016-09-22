@@ -1,0 +1,62 @@
+classes:
+ suggestion
+confidential:
+ min3
+constructors-of:suggestion:
+ new
+fresh-methods:
+methods-of:suggestion.new:
+ addLine
+ append()onLine
+ deleteChar()onLine
+ deleteLine
+ deleteRange()onLine
+ deleteToken
+ deleteToken()leading()trailing
+ deleteTokenRange
+ deleteTokenRange()leading()trailing
+ findLine
+ getLine
+ getTokenEnd()includeTrailingSpace
+ getTokenStart()includeLeadingSpace
+ insert()afterToken
+ insert()afterToken()andTrailingSpace
+ insert()atPosition()onLine
+ insert()beforeToken
+ insertNewLine()after
+ lineNumbers
+ lines
+ print
+ replaceChar()with()onLine
+ replaceRange()with()onLine
+ replaceToken()leading()trailing()with
+ replaceToken()with
+ replaceTokenRange()leading()trailing()with
+ replaceTokenRange()with
+ replaceUntil()with()onLine
+modules:
+ io
+ sys
+ util
+path:
+ errormessages
+public:
+ error
+ error()atLine
+ error()atLine()withSuggestions
+ error()atPosition
+ error()atPosition()withSuggestions
+ error()atRange
+ error()atRange()withSuggestions
+ name()matches()within
+ suggestion
+ syntaxError()atLine
+ syntaxError()atLine()withSuggestion
+ syntaxError()atLine()withSuggestions
+ syntaxError()atPosition
+ syntaxError()atPosition()withSuggestion
+ syntaxError()atPosition()withSuggestions
+ syntaxError()atRange
+ syntaxError()atRange()withSuggestion
+ syntaxError()atRange()withSuggestions
+types:

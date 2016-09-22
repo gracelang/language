@@ -1,0 +1,112 @@
+classes:
+ aMethodType
+ aParam
+ objectType
+confidential:
+ addVar()ofType
+ check()against
+ check()matches()inMethod
+ collectTypes
+ continue'
+ find()atScope
+ isMember
+ isPublic
+ outerAt
+ processBody
+constructors-of:aMethodType:
+ signature()returnType
+constructors-of:aParam:
+ withName()ofType
+constructors-of:objectType:
+ fromMethods
+ fromMethods()withName
+dialect:
+ dialect
+fresh-methods:
+ mixPartNamed()parameters
+fresh:mixPartNamed()parameters:
+ name
+ parameters
+methods-of:aMethodType.signature()returnType:
+ asString
+ fst
+ isSpecialisationOf
+ name
+ returnType
+ show
+ signature
+methods-of:aParam.withName()ofType:
+ asString
+ name
+ typeAnnotation
+methods-of:objectType.fromMethods:
+ &
+ asString
+ currentlyTesting
+ getMethod
+ isSubtypeOf
+ isUnknown
+ methods
+ |
+methods-of:objectType.fromMethods()withName:
+ !=
+ &
+ ::
+ ==
+ asDebugString
+ asString
+ basicAsString
+ currentlyTesting
+ getMethod
+ isMe
+ isSubtypeOf
+ isUnknown
+ methods
+ |
+ ≠
+methodtypes-of:MethodType:
+ 1 isSpecialisationOf(other : MethodType) -> Boolean
+ 1 name -> String
+ 1 returnType -> ObjectType
+ 1 signature -> List<MixPart>
+methodtypes-of:MixPart:
+ 1 name -> String
+ 1 parameters -> List<Param>
+methodtypes-of:ObjectType:
+ 1 &(other : ObjectType) -> ObjectType
+ 1 getMethod(name : String) -> MethodType | noSuchMethod
+ 1 isSubtypeOf(other : ObjectType) -> Boolean
+ 1 isUnknown -> Boolean
+ 1 methods -> List<MethodType>
+ 1 |(other : ObjectType) -> ObjectType
+methodtypes-of:Param:
+ 1 name -> String
+ 1 typeAnnotation -> ObjectType
+modules:
+ ast
+ dialect
+ errormessages
+ identifierKinds
+ io
+ stringMap
+ sys
+ unixFilePath
+ util
+path:
+ staticTypes
+public:
+ MethodType
+ MixPart
+ ObjectType
+ Param
+ TypeError
+ checker
+ for()doWithBreak
+ for()doWithContinue
+ mixPartNamed()parameters
+ thisDialect
+types:
+ MethodType
+ MixPart
+ ObjectType
+ Param
