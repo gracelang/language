@@ -13,7 +13,7 @@ author:
 bibliography:
 - 'spec.bib'
 ---
-**[Download the PDF]({{site.baseurl}}/Grace-pdfs/standard.pdf)**
+**[Download the PDF]({{site.baseurl}}/gracePdfs/standard.pdf)**
 
 Introduction
 ============

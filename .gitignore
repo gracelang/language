@@ -139,3 +139,4 @@ sympy-plots-for-*.tex/
 #Website Generated Files
 website/_site/
 website/.idea/
+.idea/
