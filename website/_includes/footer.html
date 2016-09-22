@@ -1,0 +1,9 @@
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+               {{site.company_name}} {{ site.time | date: "%Y"  }} <br />
+{% if page.last_updated %}<p>Page last updated:</span> {{page.last_updated}}<br>{% endif %} Site last generated: {{ site.time | date: "%b %-d, %Y"  }}
+<p> <img src="{{ "/images/GraceLogo.png" |  prepend: site.baseurl }}" alt="Gracelang"/></p>
+                </div>
+            </div>
+</footer>
