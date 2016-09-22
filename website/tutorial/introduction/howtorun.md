@@ -7,11 +7,11 @@ permalink: /introduction/run/
 folder: tutorial
 ---
 Grace has a [web-based editor](http://web.cecs.pdx.edu/~grace/ide/index.html) 
-that works in all modern browsers.  
+that works in all modern browsers, but works best in Chrome and Firefox.  
 
-If you're familiar with UNIX, Grace can also be run from the command-line,
-but we'll tell you how to do that in a future iteration of this page.
+If you're familiar with Unix, Grace can also be run from the command-line,
+but we'll leave the details for a future iteration of this page.
 
 Finally, you can run Grace programs on this website!  You won't be able to save
-them, but feel free to edit any and all of the code examples within these pages.
+them, but feel free to edit any of the code examples within these pages.
 <object id="example-1" data="{{site.editor}}" width="100%" height="550px"> </object>
