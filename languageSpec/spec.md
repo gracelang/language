@@ -99,8 +99,8 @@ ASCII | Unicode			| Codepoint
 <=    | $\leq$			| U+2264
 !=    | $\neq$			| U+2260
 ->    | $\rightarrow$	| U+2192
-]]    | $\rrbracket$	| U+27E6
-[[    | $\llbracket$	| U+27E7
+]]    | $\rrbracket$	| U+27E7
+[[    | $\llbracket$	| U+27E6
 
 
 ## Layout
@@ -273,11 +273,11 @@ escape characters such as `"\n\t"`, and also escapes for Unicode;
 these are listed in the table below.
 
 Individual characters
-are represented by Strings of length 1. Strings are immutable, so an implementation may intern them. Grace’s standard
+are represented by strings of length 1. Strings are immutable, so an implementation may intern them. Grace’s standard
 library supports efficient incremental string construction.
 
 |Escape |  Meaning |  Unicode |
-|:--|:--|:--|
+|:------|:------   |:------|
 |    `\\`    | backslash      | U+005C |
 |    `\n`     | line-feed      | U+000A |
 |    `\t`     | tab            | U+0009 |
@@ -314,7 +314,7 @@ brace expression.
 
 ### Uninterpreted Strings
 
-String literals can also be written between single guillemet quotation marks, ‹thus›.  Between the ‹ and the ›, characters from the input become characters of the string value without interpretations, and without any escapes (not even for ›).
+String literals can also be written between single guillemet quotation marks, ‹thus›.  Between the ‹ and the ›, characters from the input become characters of the string value without interpretation, and without any escapes (not even for ›).
 
 **Example**
 
@@ -399,7 +399,7 @@ might be implemented as a method with a block parameter
 Here is another example:
 
     var sum := 0
-    def summingBlock: Block1[[Number, Number]] =
+    def summingBlock: Block1⟦Number, Number⟧ =
         { i: Number ->  sum := sum + i }
     summingBlock.apply(4)       // sum now 4
     summingBlock.apply(32)      // sum now 36
@@ -572,23 +572,25 @@ just before the method body is executed.
 
 ### Type Parameters
 
-Methods may be declared with one or more type parameters, which are listed between **`[[`** and **`]]`** used as brackets.
-If present, type parameters must appear after the identifier of the first part of
-a multipart name.
+Methods may be declared with one or more type parameters.
+If present, type parameters are listed between $\llbracket$ 
+and $\rrbracket$ after the identifier that forms the first 
+(or only) part of a multipart name.
 
-If an operator method has a type parameter list, it must be separated from the sequence of operator symbols that
-names the method by a space.
+Type parameters may be constrained with `where` clauses;
+the details have yet to be specified.
 
-The presence or absence of type parameters does not change the canonical name of the method.
+The presence or absence of type parameters does not change the 
+canonical name of the method.
 
 **Examples**
 
 
-    method sumSq[[T]](a : T, b : T) -> T where T <: Numeric {
+    method sumSq⟦T⟧(a:T, b:T) -> T where T <: Numeric {
         (a * a) + (b * b)
     }
 
-    method prefix- [[T]] -> Number
+    method prefix- ⟦T⟧ -> Number
          { 0 - self }
 
 
@@ -610,14 +612,14 @@ before its body or initialiser. Grace defines the following core
 annotations:
 
 | Annotation | Semantics |
-|:--|:--|
-| `confidential` | method may be requested only on self or outer — [see Encapsulation](#encapsulation) |
-| `manifest` | method must return a manifest object - [Manifest Expressions](#manifest-expressions) |
-| `overrides` | method must override another method - [Overriding Methods] |
+|:-----      |:--------------------------------------------|
+| `confidential` | method may be requested only on self or outer — see [Encapsulation](#encapsulation) |
+| `manifest` | method must return a manifest object - see [Manifest Expressions](#manifest-expressions) |
+| `overrides` | method must override another method - see [Overriding Methods] |
 | `public` | method may be requested from anywhere |
-| |  field can be read and written from any object - [see Encapsulation](#encapsulation) |
-| `readable`  | field may be read from anywhere - [see Encapsulation](#encapsulation) |
-| `writeable` | variable may be assigned from anywhere - [see Encapsulation](#encapsulation) |
+| |  field can be read and written from anywhere - see [Encapsulation](#encapsulation) |
+| `readable`  | field may be read from anywhere - see [Encapsulation](#encapsulation) |
+| `writeable` | variable field may be written from anywhere - see [Encapsulation](#encapsulation) |
 
 Additional annotations may be defined by dialect or libraries.
 
@@ -627,7 +629,7 @@ Additional annotations may be defined by dialect or libraries.
     var x is readable, writeable := 3
     def y: Number is public
     method foo is confidential  { }
-    method id[[T]] is required  { }
+    method id⟦T⟧ is required  { }
 
 
 ## Encapsulation
@@ -826,24 +828,22 @@ In particular, a `trait` defines a method that returns a trait object.
 
 ## Type Parameters
 
-Like methods, classes and traits may be declared to have type
-parameters.  Requests on the class or trait may optionally be provided
+Like methods, classes and traits may be declared to with type
+parameters, and requests on the class or trait may optionally be provided
 with type arguments.
 
-Type parameters may be constrained with `where` clauses.
-The details have yet to be specified.
 
 **Example**
 
 
-    class vectorOfSize(size)[[T]] {
+    class vectorOfSize(size)⟦T⟧ {
         var contents := Array.size(size)
         method at(index : Number) -> T {return contents.at() }
         method at(index : Number) put(elem : T) { }
     }
 
-    class sortedVectorOfSize(size)[[T]]
-        where T <: Comparable[[T]] {
+    class sortedVectorOfSize(size)⟦T⟧
+        where T <: Comparable⟦T⟧ {
           ...
     }
 
@@ -1311,7 +1311,7 @@ arguments are omitted, they are assumed to be type `Unknown`.
 **Examples**
 
 
-    sumSq[[Number]](10.i64, 20.i64)
+    sumSq⟦Number⟧(10.i64, 20.i64)
 
     sumSq(10.i64, 20.i64)
 
@@ -1334,7 +1334,7 @@ In particular,
 
 Pattern matching is based on `Pattern` objects that respond to the
 `match(subject)` request by returning a `MatchResult`, which is either
-`false` if the match fails, or a `SuccessfulMatch[[R]]` object which
+`false` if the match fails, or a `SuccessfulMatch⟦R⟧` object which
 behaves like `true` but also supports a `result` request.  All type
 objects are Patterns; in addition, libraries supply non-type Patterns,
 and programmers are free to implement their own Patterns.
@@ -1544,7 +1544,7 @@ Unknown is not actually a type, although it is treated as a type
 by the type checker.  It is similar to the type label "Dynamic" in C#.
 Unknown can be written explicitly as a type annotation; moreover,
 if a declaration is not annotated, then the type of the declared name is
-_implicitly_ `Unknown`.  In addition, omitted type arguments are replaced by
+_implicitly_ `Unknown`.  Omitted type arguments are also equivalent to
 `Unknown`.
 
 Type-checking against `Unknown` will always succeed: any object matches
@@ -1651,7 +1651,7 @@ Type declarations may not be overridden.
 	}
 	// I care only about names and colours
 	
-	type MyParametricType[[A,B]] =
+	type MyParametricType⟦A,B⟧ =
 		interface {
 			at (_:A) put (_:B) -> Boolean
 			cleanup(_:B)
@@ -1683,7 +1683,7 @@ canonical name) in B such that
     -   results types must be covariant: `S <: R`
 
 The relationship used in `where` clauses to constrain
-type parameters of classes and methods has yet to be specified.
+type parameters of traits, classes and methods has yet to be specified.
 
 ## Composite types
 
@@ -1748,13 +1748,13 @@ U <: S; U <: T; <==> U <: (S & T)
 **Examples**
 
 
-    type List[[T]] = Sequence[[T]] & interface {
-        add(_:T) -> List[[T]]
-        remove(_:T) -> List[[T]]
+    type List⟦T⟧ = Sequence⟦T⟧ & interface {
+        add(_:T) -> List⟦T⟧
+        remove(_:T) -> List⟦T⟧
     }
 
-    class happy[[T]](param: T) -> Done
-       where T <: (Comparable[[T]] & Printable & Happyable) {
+    class happy⟦T⟧(param: T) -> Done
+       where T <: (Comparable⟦T⟧ & Printable & Happyable) {
                ...
     }
 
@@ -1800,14 +1800,14 @@ When implementing the type check, types specified as `Unknown` will always
 conform.  So, if a variable is annotated with type
 ```
     interface {
-        add(Number) -> Collection[[Number]]
+        add(Number) -> Collection⟦Number⟧
         removeLast -> Number
     }
 ```
 an object with type
 ```
     interface {
-        add(Unknown) -> Collection[[Unknown]]
+        add(Unknown) -> Collection⟦Unknown⟧
         removeLast -> Unknown
         size -> Number
     }
