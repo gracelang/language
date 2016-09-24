@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.7.5
+    Draft Specification Version 0.7.5
 ...
 
 
@@ -29,7 +29,7 @@ change. In particular, this version does *not* address:
     contracts
 -   concurrency
 
--   libraries and dialects, including implementations of Number, and 
+-   libraries and dialects, including implementations of Number, and
 
 -   testing.
 
@@ -311,18 +311,18 @@ brace expression.
 
 
     "Adding {a} to {b} gives {a+b}"
-    
+
 ### Uninterpreted Strings
 
 String literals can also be written between single guillemet quotation marks, ‹thus›.  Between the ‹ and the ›, characters from the input become characters of the string value without interpretations, and without any escapes (not even for ›).
 
 **Example**
 
-    lexer.lex ‹// This is input for a test of the lexer.  
+    lexer.lex ‹// This is input for a test of the lexer.
     // The input ends with a newline.
     def s = "This is a String"
     def n = 17
-    ›  
+    ›
 
 ## Lineups
 
@@ -858,7 +858,7 @@ constructors, classes and traits can all contain one or more `use` statements.
 Both `inherit` and `use` introduce the attributes of a reused object —
 called the _parent_ — into the current object (the object under
 construction).  There are two differences between `inherit` and `use`
-clauses: 
+clauses:
 
   1. the object reused by a `use` clause must be a trait object; and
   2. `inherit` clauses include the methods from `graceObject`, while `use`
@@ -1025,7 +1025,7 @@ a random variable.
 All objects implement a number of _default methods_ by inheriting from
 the `graceObject` trait.
 Programmers can of course
-override some of these implementations, or write alternative implementations 
+override some of these implementations, or write alternative implementations
 of these methods _ab initio_.
 The [type Object](#type-object) defines a type containing all the public
 default methods:
@@ -1164,7 +1164,7 @@ Implicit requests are interpreted as a `self` request, or as an
 When resolving an implicit request, the usual rules of lexical scoping apply,
 so a definition of _m_ in
 the current scope will take precedence over any definitions in enclosing scopes.
-However, if _m_ is defined in the current scope by inheritance or trait use, 
+However, if _m_ is defined in the current scope by inheritance or trait use,
 rather than directly, and *also* defined directly in an enclosing scope, then
 an implicit request of _m_ is ambiguous and is an error.
 
@@ -1181,22 +1181,22 @@ method containing them.
 **Example of Implicit Request Resolution**
 
     method foo { print "outer" }
-    
+
     class app {
       method barf { foo }
     }
-    
+
     class bar {
       inherit app
       method foo { print "bar" }
     }
-    
+
     class baz {
       inherit bar
       method barf { foo }   // ambiguous - could be self.foo or outer.foo
     }
-    
-    
+
+
     app.barf  // prints "outer"
     bar.barf  // prints "outer"
 
@@ -1519,7 +1519,7 @@ The type `Object` includes methods to which most
 objects respond --- the [Default Methods] declared in
 `graceObject`. Some objects, notably `done`, do not conform to `Object`.
 
-    
+
     type Object = {
     	!= (other: Object) -> Boolean          // the inverse of ==
     	asString -> String                     // a string for use by the client
@@ -1527,7 +1527,7 @@ objects respond --- the [Default Methods] declared in
     	:: (other:Object) -> Binding           // a binding with self as the key
     }
 
-Notice that `isMe`, although present in [`graceObject`](#default-methods), is not present in 
+Notice that `isMe`, although present in [`graceObject`](#default-methods), is not present in
 type `Object`, because it is *confidential*.
 Also notice that neither `graceObject` nor type `Object` include `==`.
 
@@ -1560,7 +1560,7 @@ type `Unknown`, and type `Unknown` conforms to all other types.
 
     method id(x) { x }    //argument and return types both implicitly unknown
     method id(x: Unknown) -> Unknown { x }  // same thing, explicitly
-    
+
 ### Type Type
 
 All types have type Type, which is defined as
@@ -1577,10 +1577,10 @@ All types have type Type, which is defined as
 	    hash -> Number
 	    asString -> String
 	    asDebugString -> String
-	    interfaces -> Sequence⟦Interface⟧	    
+	    interfaces -> Sequence⟦Interface⟧	
 	}
 
-This type captures the idea that a type is a disjunction of interfaces.  The interface literal syntax 
+This type captures the idea that a type is a disjunction of interfaces.  The interface literal syntax
 defines a type containing a single interface, so the `interfaces` method of an interface returns a sequence of length 1 containing itself.
 
     type Interface = Type & interface {
@@ -1590,7 +1590,7 @@ defines a type containing a single interface, so the `interfaces` method of an i
             // keys are the declared names of the types; values objects representing those types
 	    - (other:Interface) -> Interface
 	 }
-	 
+	
 	 type Signature = interface {
 	     name -> String
             // the canonical name of the method
@@ -1599,10 +1599,10 @@ defines a type containing a single interface, so the `interfaces` method of an i
 	     result -> Type
             // the type of the result
 	 }
-	 
+	
 These types say that each interface comprises a mapping from (canonical) method names to method signatures,
-and a mapping from type names to type objects.  
-Each Signature comprises the (canonical) name of the method, the types of its arguments, and the type of its result.    
+and a mapping from type names to type objects.
+Each Signature comprises the (canonical) name of the method, the types of its arguments, and the type of its result.
 
 
 ## Interfaces and Type Literals
@@ -1613,7 +1613,7 @@ contain definitions of other types; this enables interfaces to describe types ne
 inside objects.
 
 The various `Cat` object and class descriptions (see
-[Objects, Classes, and Traits](#objects-classes-and-traits)) would create objects that 
+[Objects, Classes, and Traits](#objects-classes-and-traits)) would create objects that
 conform to this interface:
 
     interface {
@@ -1793,13 +1793,13 @@ When parameters, fields, and method results are annoatated with types,
 the programmer can be confident that objects bound to those parameters and
 fields,
 and returned from those methods, do indeed have the specified types, insofar
-as Grace has the required type information.  The checks necessary to implement 
-this guarantee may be performed statically or dynamically. 
+as Grace has the required type information.  The checks necessary to implement
+this guarantee may be performed statically or dynamically.
 
-When implementing the type check, types specified as `Unknown` will always 
+When implementing the type check, types specified as `Unknown` will always
 conform.  So, if a variable is annotated with type
 ```
-    interface { 
+    interface {
         add(Number) -> Collection[[Number]]
         removeLast -> Number
     }
@@ -1813,9 +1813,9 @@ an object with type
     }
 ```
 will pass the type test.  Of course, the presence of `Unknown` in the type
-of the object means that a subsequent type error may still occur. 
-For example, the code of the `add(_)` method 
-might actually depend on being given a `String` argument, 
+of the object means that a subsequent type error may still occur.
+For example, the code of the `add(_)` method
+might actually depend on being given a `String` argument,
 or the collection returned from `add(_)` might contain `Boolean`s.
 
 The same type check can be requested explicitly by using the operators `<:`,
