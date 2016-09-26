@@ -93,10 +93,9 @@ Try modifying this example to give the house a door and a window.
 
 In the Grace implementation of Logo, the turtle is an object that has the following attributes:
 
-`penWidth` is the width of the pen, and thus of the line that it will draw.
+ * `penWidth` is the width of the pen, and thus of the line that it will draw.
 
-`penColor` is the color of the pen, and thus of th eline that it will draw.
-Supported colors are: `red` `green` `blue` and `black`.  
+ * `penColor` is the color of the pen, and thus of the line that it will draw.  Supported colors are: `red` `green` `blue` and `black`.  
 These attributes behave like variables to which you can assign new values.  
 
 **For example:** you can change the attributes of the turtle by *assigning* to `penWidth` or `penColor`, like this:
@@ -104,8 +103,10 @@ These attributes behave like variables to which you can assign new values.
     penWidth := 4
     penColor := red
     
-You can also change the speed at which the turtle walks by assigning to the variable `speed`
+ * `speed` is the speed at which the turtle walks. You can change the speed by assigning to the variable `speed`.
 
+**For example:** 
+ 
     speed := 1
     forward 20
     speed := 9
