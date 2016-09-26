@@ -15,7 +15,7 @@ We don't use mechanical turtles, but we can simulate them
 on the screen of a modern computer.  Grace Logo lets you
 draw pictures on the screen by controlling a "virtual turtle" with Grace commands.
 
-For more background, see [this wikipedia page][WikiTurtle1]. .
+For more background, see [this wikipedia page][WikiTurtle1].
 
 [WikiTurtle1]: https://en.wikipedia.org/wiki/Logo_(programming_language)
 
@@ -24,7 +24,8 @@ For more background, see [this wikipedia page][WikiTurtle1]. .
 
 The turtle can be moved forward using `forward(distance)`. This moves our turtle the given distance in its current direction.
 
-To change the direction of the turtle we can use the following methods: `turnRight(degrees)` and `turnLeft(degrees)` to turn the turtle
+To change the direction of the turtle use the following commands: `turnRight(degrees)` and `turnLeft(degrees)`.
+These commands turn the turtle
 left and right the given number of degrees. 
 
 **For example:**  
@@ -112,3 +113,13 @@ You can change the speed at which the turtle walks by assigning to the variable 
 Attempts to set the speed to less than 1 are ignored.
   
 
+### Bigger Pictures
+
+By default, logo draws on a small embedded "canvas".  If you want a larger canvas, you can create one in a pop-up window using
+
+    createCanvas(500 @ 300)
+
+The argument to `createCanvas` gives the width (here, `500` pixels) and the height (`300` pixels).  
+(You don't need to know this yet, but `(500 @ 300)` is an expression of type `Point` that defines a 2-dimensional vector.) 
+
+If you use `createCanvas`, be sure that your web browser is set to [allow pop-up windows](http://www.cengage.com/lms_docs/system_check/popupsfailed/popupsfailed_chrome.htm).
