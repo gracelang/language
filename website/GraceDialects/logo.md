@@ -90,17 +90,17 @@ In contrast, *vars* can change over time.  We “assign” a value to a variable
 
 In the Grace implementation of Logo, the turtle is an object that has the following attributes:
 
-`lineWidth` is the width of the line to be drawn, such as `3`
+`penWidth` is the width of the line to be drawn, such as `3`
 
-`lineColor` is the color of the line to be drawn, such as `red`
+`penColor` is the color of the line to be drawn, such as `red`
 
 Supported colors are: `red` `green` `blue` `black`.  
 These attributes behave like variables to which you can assign new values.  
 
-**For example:** you can change the attributes of the turtle by *assigning* to `lineWidth` or `lineColor`, like this:
+**For example:** you can change the attributes of the turtle by *assigning* to `penWidth` or `penColor`, like this:
 
-    lineWidth := 4
-    lineColor := red
+    penWidth := 4
+    penColor := red
     
 You can change the speed at which the turtle walks by assigning to the variable `speed`
 
