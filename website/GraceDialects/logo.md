@@ -39,30 +39,20 @@ left and right the given number of degrees.
 Notice that each command is followed by a number.  This number is called the “argument” to the command.  If the
 number is a complicated expression (like `π/4`), it must be enclosed in parenthesis, so that Grace knows where it starts and ends.  If it's a simple constant like `50` or `80`, the parenthesis are not necessary (but they won't hurt).
 
-***
-<div style="text-align: center;" markdown="1">
-### Examples
-</div>
-***
 
 #### Example 1
-An example to get us started! The code below draws a square. Modify it to draw a rectangle with
-sides whose length = 75.
+Here is an example to get us started! The code below draws a square. Modify it to instead draw a rectangle of width 150 and height 75.
 
 <object id="example-1" data="{{site.editor}}?square" width="100%" height="550px"> </object>
 
+
+
 #### Example 2
 
-This example will iterate across the integers from 50 to 80. Each time the turtle will move forward by i,  
-and then turn right by i-7. In this type of iteration (loop), "i" is the current number between 50 and 80.
+This example draws a five-pointed star.  The star looks as though it's staggering, though.  Can you modify the program so that the star is standing upright on two of its points? 
 
-<object id="example-2" data="{{site.editor}}?logoFor" width="100%" height="550px"> </object>
+<object id="example-2" data="{{site.editor}}?5-star" width="100%" height="550px"> </object>
 
-### Example 3
-
-This is a more complex example that draws a house. Modify it to make it more interesting. 
-
-<object id="example-3" data="{{site.editor}}?LogoExample" width="100%" height="550px"> </object>
 
 ### Controlling the Pen
 
@@ -70,7 +60,7 @@ You can lift the virtual pen up using the command `penUp`, and put it back down 
 
 ## Numbers
 
-When you use Grace Logo, you will also need to use Numbers.  Grace Numbers behave pretty much as you would expect — `50` is a number, `-20` is a number, and `20/4.5` is a number.  
+When you use Grace Logo, you will also need to use Numbers.  Grace Numbers behave pretty much as you would expect: `50` is a number, `-20` is a number, and `20/4.5` is a number. Grace also knows about `π`.
 
 ## Naming Values
 
@@ -87,15 +77,26 @@ In contrast, *vars* can change over time.  We “assign” a value to a variable
     numberOfRepetitions := 9
 
 
+### Example 3
+
+This example draws a stylized house. It's a bit more complex because we start (on line 6) by telling the turtle to `moveToBottomLeft`, which isn't seomthing that it already knows how to do.  Scroll down and you will see that on lines 29–37 we *teach* the turtle how to `moveToBottomLeft` by giving it a _method_ with that name.
+The method defines `moveToBottomLeft` in terms of simpler thangs that the Turtle *does* know how to do.
+
+Similarly, this example (on lines 22–27) teaches the turtle a method for drawing a `square(_)`.   This is used on line 9.
+
+Try modifying this example to give the house a door and a window. 
+
+<object id="example-3" data="{{site.editor}}?house" width="100%" height="550px"> </object>
+
+
 ### Turtle Attributes
 
 In the Grace implementation of Logo, the turtle is an object that has the following attributes:
 
-`penWidth` is the width of the line to be drawn, such as `3`
+`penWidth` is the width of the pen, and thus of the line that it will draw.
 
-`penColor` is the color of the line to be drawn, such as `red`
-
-Supported colors are: `red` `green` `blue` `black`.  
+`penColor` is the color of the pen, and thus of th eline that it will draw.
+Supported colors are: `red` `green` `blue` and `black`.  
 These attributes behave like variables to which you can assign new values.  
 
 **For example:** you can change the attributes of the turtle by *assigning* to `penWidth` or `penColor`, like this:
@@ -103,7 +104,7 @@ These attributes behave like variables to which you can assign new values.
     penWidth := 4
     penColor := red
     
-You can change the speed at which the turtle walks by assigning to the variable `speed`
+You can also change the speed at which the turtle walks by assigning to the variable `speed`
 
     speed := 1
     forward 20
@@ -120,6 +121,6 @@ By default, logo draws on a small embedded "canvas".  If you want a larger canva
     createCanvas(500 @ 300)
 
 The argument to `createCanvas` gives the width (here, `500` pixels) and the height (`300` pixels).  
-(You don't need to know this yet, but `(500 @ 300)` is an expression of type `Point` that defines a 2-dimensional vector.) 
+(You don't need to know this yet, but `(500 @ 300)` is another kind of value: a value of type `Point` that defines a 2-dimensional vector.) 
 
 If you use `createCanvas`, be sure that your web browser is set to [allow pop-up windows](http://www.cengage.com/lms_docs/system_check/popupsfailed/popupsfailed_chrome.htm).
