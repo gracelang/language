@@ -13,7 +13,7 @@ Imagine a turtle-like robot that holds a pen and can walk around the floor, on w
 
 We don't use mechanical turtles, but we can simulate them 
 on the screen of a modern computer.  Grace Logo lets you
-draw images can on the screen by controlling a "virtual turtle" with Grace commands.
+draw pictures on the screen by controlling a "virtual turtle" with Grace commands.
 
 For more background, see [this wikipedia page][WikiTurtle1]. .
 
