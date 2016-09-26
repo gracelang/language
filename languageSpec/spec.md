@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.7.5
+    Draft Specification Version 0.7.6
 ...
 
 
@@ -1168,9 +1168,10 @@ However, if _m_ is defined in the current scope by inheritance or trait use,
 rather than directly, and *also* defined directly in an enclosing scope, then
 an implicit request of _m_ is ambiguous and is an error.
 
-Implicit requests are always resolved lexically, that is, within the scope in which they are written, and
-not within the scope of object (class, or trait) that may inherit the
-method containing them.
+Implicit requests are always resolved lexically, that is, in the scope in which
+the implicit request is written, and
+not within the scope of any object (class, or trait) that may inherit the
+method containing the implicit request.
 
 **Examples of Implicit Requests**
 
