@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cp ../standardPrelude/standard.md ./graceDialects/standardSource.md
+
+sed -i -e '1,14d' graceDialects/standardSource.md
+rm graceDialects/standard.md
+
+cat graceDialects/standardHeader.txt >> graceDialects/standard.md
+cat graceDialects/standardSource.md >> graceDialects/standard.md
+
+
+exit 0

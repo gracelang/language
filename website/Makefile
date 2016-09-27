@@ -13,6 +13,7 @@ serve:
 
 build:
 	./checkJekyll
+	./loadResources
 	$(info Building the website... Running command:)
 	bundle exec jekyll build relative
 	@echo ${LAST_EXIT}
