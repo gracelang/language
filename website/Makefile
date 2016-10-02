@@ -12,9 +12,12 @@ serve:
 	bundle exec jekyll serve
 
 build:
-	./checkJekyll
+	$(info Generating source files...)
+	$(MAKE) -C ../languageSpec all
+	$(MAKE) -C ../standardPrelude all
 	./loadResources
-	$(info Building the website... Running command:)
+	./checkJekyll
+	@echo Building the website... Running command:
 	bundle exec jekyll build relative
 	@echo ${LAST_EXIT}
 	@echo The website has been built and is stored in the \"_site\" folder. It can now be
