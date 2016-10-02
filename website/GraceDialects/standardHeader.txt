@@ -1,8 +1,0 @@
----
-title: The Standard Dialect
-keywords: Logo
-sidebar: dialects_sidebar
-permalink: /dialects/standard/
-toc: false
-folder: Dialects
----

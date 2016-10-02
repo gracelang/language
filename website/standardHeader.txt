@@ -1,0 +1,16 @@
+---
+title: <<TITLE-OF-PAGE>>
+keywords: <<KEYWORDS-OF-PAGE>>
+sidebar: <<SIDEBAR-OF-PAGE>>
+permalink: <<PERMALINK-OF-PAGE>>
+toc: false
+folder:  <<FOLDER-OF-PAGE>>
+author:
+- 'Andrew P. Black'
+- 'Kim B. Bruce'
+- 'James Noble'
+bibliography:
+- 'spec.bib'
+---
+
+<<<PDF-LINK>>>
