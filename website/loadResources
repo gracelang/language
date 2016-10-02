@@ -3,7 +3,7 @@
 ## FILES THAT THIS SCRIPT PROCESSES ##
 ## - standard.md
 ## - spec_with_grammar.md
-##
+## - *.pdf supporting files
 
 ## Copy the scripts into the proper directories
 cp ../standardPrelude/standard.md ./graceDialects/standardSource.md
