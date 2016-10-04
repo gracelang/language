@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Standard Dialect\
-    Draft Specification Version 0.7.4
+    Draft Specification Version 0.7.5
 ...
 
 
@@ -438,7 +438,7 @@ type String =  {
     // like indexOf(pattern), except that it returns the first index ≥ offset, or 0 if  pattern is not found.
 
     indexOf⟦W⟧ (pattern:String) startingAt(offset) ifAbsent (action:Block0⟦W⟧) -> Number | W
-    // like the above, except that it answers the result of applying action if there is no such index.
+    // like the above, except that it returns the result of applying action if there is no such index.
 
     indices -> Sequence⟦T⟧
     keys -> Sequence⟦T⟧
@@ -671,7 +671,7 @@ type Iterable⟦T⟧ = type {
     
     first -> T
     // The first element of self; raises BoundsError if there is none.  
-    // If self is unordered, then first answers an arbitrary element. 
+    // If self is unordered, then first returns an arbitrary element. 
     
     do(action: Block1⟦T,Unknown⟧) -> Done
     //  Applies action to each element of self.
@@ -1216,58 +1216,82 @@ type Array⟦T⟧ =  {
 }
 ```
 
-Built-In Libraries
+Available Modules (Libraries)
 ==================
 
-Math
-----
+Input and Output
+----------------
 
-The *math* module is deprecated.  All of the facilities formerly provided by *math*
-are available either in the module *random*, or as built-in-identifiers ($\pi$), 
-or as methods on numbers (`tan`, `log10`, etc.)
+The *io* module can be imported using `import "io" as transput`, for any identifier `transput` of your choice. The object `transput` will then respond to the following methods.
 
-The *math* module object can be imported using `import "math" as m`, for
-any identifier of your choice, e.g. `m`. The object `m` responds to the
-following methods.
-
-``` 
-    sin(θ: Number) -> Number
-    // trigonometric sine ($\theta$ in radians)
-
-    cos(θ: Number) -> Number
-    // cosine (θ in radians)
-
-    tan(θ: Number) -> Number
-    // tangent (θ in radians)
-
-    asin(r: Number) -> Number
-    // arcsine (result in radians)
-
-    acos(r: Number) -> Number
-    // arccosine (result in radians)
-
-    atan(r: Number) -> Number
-    //arctangent (result in radians)
-
-    pi -> Number
-    π -> Number
-    // 3.14159265...
-
-    abs(r: Number) -> Number
-    // absolute value
-
-    lg(n: Number) -> Number
-    // logarithm base 2 of n
-
-    ln (n: Number) -> Number
-    // natural logarithm of n
-
-    exp(n: Number) -> Number
-    // e to the power n
-
-    log10 (n: Number) -> Number
-    // logarithm base 10 of n
 ```
+input -> FileStream        // returns stdin
+output -> FileStream       // returns stdout
+error -> FileStream        // returns stderr
+ask (question:String) -> String
+    // asks `question` interactively, and returns the user's answer
+    
+open (path:String, mode:String) -> FileStream
+    // opens `path` in `mode`. `mode` may be "r", "w", "rw", etc.
+    
+system (command:String) -> Boolean
+    // executes system command, returns true iff exit status is 0
+    
+exists (path:String) -> Boolean
+    // returns true iff path exists in the file system
+    
+newer (path1:String, path2:String) -> Boolean
+    // returns true iff the file at path1 is newer than the file at path2
+    
+realpath (path:String) -> String     // returns absolute path 
+    
+listdir (dirPath:String) -> Sequence⟦String⟧
+    // returns the names of the files in the directory at `dirPath`
+    
+changeDirectory (dirPath:String)
+    // changes the current directory to `dirPath`
+    
+env -> Dictionary⟦String,String⟧
+    // returns a Dictionary mapping names of environment variables to
+    // their values
+    
+spawn (executable:String, args:Iterable⟦String⟧) -> Process
+    // creates a new Process `executable` using `args` as its arguments
+
+type FileStream = Object & interface {
+    read -> Object
+    getline -> Object
+    write (s:String) -> Object
+    close -> Object
+    seek -> Object
+    seekForward (n:Number) -> Object
+    seekBackward (n:Number) -> Object
+    iterator -> Object
+    hasNext -> Object
+    next -> Object
+    readBinary -> Object
+    writeBinary -> Object
+    pathname -> String
+    eof -> Boolean
+    isatty -> Boolean
+}
+
+type Process = Object & interface {
+    wait -> Number
+        // wait for me to terminate, and answer my exit status.
+        // +ve indicates that I terminated normally.  Other
+        // Unix status codes are negated.
+    success -> Boolean
+        // waits for me to terminate, and returns true if I
+        // exited normally (status = 0)
+    terminated -> Boolean
+        // returns true if I've terminated.
+    status -> Number
+        // waits for me to terminate, if necessary.  Returns the
+        // cached status.
+}
+```
+
 
 Random
 ------
@@ -1304,11 +1328,11 @@ type Option⟦T⟧ = type {
     
 some⟦T⟧(contents:T) -> Option⟦T⟧
 // creates an object s such that s.value is contents, s.do(action) 
-// applies action to contents, isSome answers true and isNone answers false
+// applies action to contents, isSome returns true and isNone returns false
     
 none⟦T⟧ -> Option⟦T⟧ 
 // creates an object s such that s.value raises a ProgrammingError, 
-// s.do(action) does nothing, isSome answers false and isNone answers true
+// s.do(action) does nothing, isSome returns false and isNone returns true
 ```
 
 
