@@ -1,7 +1,7 @@
 #This makefile provides standard build and serve functionality
 #through jekyll for this project
 LINEBREAK = "*****************************************************************"
-WEB_SERVER = grace@cs.pdx.edu
+WEB_SERVER = grace@linux.cs.pdx.edu
 WEB_DIRECTORY = public_html/doc/
 
 all: build deploy
