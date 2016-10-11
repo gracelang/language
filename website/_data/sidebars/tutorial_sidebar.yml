@@ -45,6 +45,9 @@ entries:
   - title: Control Structures
     output: web
     folderitems:
+    - title: Conditionals
+      url: /variables/conditionals/
+      output: web
     - title: Repeat
       url: /variables/repeat/
       output: web
