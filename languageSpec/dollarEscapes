@@ -1,0 +1,6 @@
+s/\$\\geq\$/≥/g
+s/\$\\leq\$/≤/g
+s/\$\\neq\$/≠/g
+s/\$\\rightarrow\$/→/g
+s/\$\\rrbracket\$/⟧/g
+s/\$\\llbracket\$/⟦/g

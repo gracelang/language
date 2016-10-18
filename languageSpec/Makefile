@@ -1,4 +1,4 @@
-all: pdf html
+all: pdf html spec.kramdown
 
 PANDOCOPTS = --table-of-contents --number-sections --from=markdown+tex_math_dollars+superscript
 LATEXOPTS = --listings --template=grace.latex
@@ -18,3 +18,6 @@ html: spec_with_grammar.html spec.html
 
 %.tex: %.md Makefile grace.sty grace.latex
 	pandoc --standalone $(PANDOCOPTS) -o $@ --to=latex $(LATEXOPTS) $<
+
+spec.kramdown: spec_with_grammar.md dollarEscapes
+	sed -f dollarEscapes > $@ $<
