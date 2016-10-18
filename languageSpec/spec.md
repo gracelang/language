@@ -92,26 +92,29 @@ ASCII subset of Unicode.
 
 The following ASCII sequences are treated as equivalent to the corresponding Unicode characters everywhere except in strings.
 
-
-ASCII | Unicode			| Codepoint
-:---: | :-----:			| :-------:
->=    | $\geq$			| U+2265
-<=    | $\leq$			| U+2264
-!=    | $\neq$			| U+2260
-->    | $\rightarrow$	| U+2192
-]]    | $\rrbracket$	| U+27E7
-[[    | $\llbracket$	| U+27E6
+| ASCII | Unicode         | Codepoint
+| :---: | :-----:         | :-------:
+| >=    | $\geq$		      | U+2265
+| <=    | $\leq$          | U+2264
+| !=    | $\neq$          | U+2260
+| ->    | $\rightarrow$	   | U+2192
+| ]]    | $\rrbracket$	   | U+27E7
+| [[    | $\llbracket$	   | U+27E6
 
 
 ## Layout
 
-Grace uses braces for grouping.  Code layout must be consistent with
-grouping: indentation must increase by at least two spaces after a
-brace.
+Grace uses braces to indicate the boundaries of code blocks.
+Code layout must be consistent with
+these boundaries: indentation must increase after a left brace.
+
 Statements are terminated by line breaks when the
 following line has the same or lesser indentation than the indentation
-of the line containing the start of the current statement.  Statements
-may optionally be terminated by semicolons.
+of the line containing the start of the current statement.  
+Statements may optionally be terminated by semicolons.
+   
+All changes in identation must be by *two* or more spaces; a change of a single
+space is always treated as an error.
 
 **Example code with punctuation**
 
@@ -131,7 +134,8 @@ may optionally be terminated by semicolons.
        print(stream.read)
     }
 
-This defines `x` to be the result of the single request `mumble ("3") fratz (7)`.
+This example defines `x` to be the result of the single request `mumble ("3") fratz (7)`.
+Because the second and third lines are indented more than the first, they continue that line.
 
 ## Comments
 
@@ -269,7 +273,7 @@ parameterless blocks that return `Boolean`.  This gives them
 
 String literals in Grace are written between double quotes, and must
 be confined to a single line. Strings literals support a range of
-escape characters such as `"\n\t"`, and also escapes for Unicode;
+escape characters;
 these are listed in the table below.
 
 Individual characters
