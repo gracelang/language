@@ -1027,31 +1027,30 @@ a random variable.
 ### Default Methods
 
 All objects implement a number of _default methods_ by inheriting from
-the `graceObject` trait.
-Programmers can of course
-override some of these implementations, or write alternative implementations
-of these methods _ab initio_.
-The [type Object](#type-object) defines a type containing all the public
-default methods:
+`graceObject`.
+Programmers can 
+override these implementations with alternative implementations.
+Type [Object](#type-object) contains all the public
+default methods.
 
-+------------------------------------+------------------------------------------------------+
+
 |  Method                            |    Purpose                                           |
-+====================================+======================================================+
-| `isMe (other: Object) -> Boolean`  |    a _confidential_ method that returns true if                   |
-|                                    |    other is the same object as self                  |
-+------------------------------------+------------------------------------------------------+
-| $\neq$ `(other: Object) -> Boolean`|    the inverse of ==                                 |
-+------------------------------------+------------------------------------------------------+
-| `asString -> String`               |    a string describing self                          |
-+------------------------------------+------------------------------------------------------+
-| `asDebugString -> String`          |    a string describing the internals of self         |
-+------------------------------------+------------------------------------------------------+
-| `:: (other:Object) -> Binding`     |  a Binding object with self as key and other as value|
-+------------------------------------+------------------------------------------------------+
+| :-----------------------------------------------  | :------------------------------------------- |
+| `isMe (other:Object) → Boolean`  |    true if other is the same object as self; _confidential_  |
+| $\neq$ `(other:Object) → Boolean`|    the inverse of ==                                 |
+|                                   |                                                     |
+| `asString → String`               |    a string describing self                          |
+|                                    |                                                     |
+| `asDebugString → String`          |    a string describing the internals of self         |
+|                                    |
+| `:: (other:Object) → Binding`     |  a Binding object with `self` as key and `other` as value|
+
 
 Notice that `graceObject` implements $\neq$ but not `==`.
 This is to help ensure that, when an object chooses to implement `==`,
 $\neq$ is also available, and is the inverse of `==`.
+If desired, the _confidential_ method `isMe` can be used in the implementation of a 
+public `==` method.
 
 # Method Requests
 
