@@ -16,4 +16,4 @@ repeat 5 times {
 }
 ```
 
-<object id="example-1" data="{{site.baseurl}}/embedded-web-editor/?repeat" width="100%" height="550px"> </object>
+<object id="example-1" data="{{site.editor}}?repeat" width="100%" height="550px"> </object>

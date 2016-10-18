@@ -36,4 +36,4 @@ Variables can store all kinds of data, including Numbers, Strings (Grace's repre
 
 Take a look at the example program below.
 
-<object id="example-1" data="{{site.baseurl}}/embedded-web-editor/?var_def" width="100%" height="550px"> </object>
+<object id="example-1" data="{{site.editor}}?var_def" width="100%" height="550px"> </object>

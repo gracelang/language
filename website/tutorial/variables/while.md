@@ -23,4 +23,4 @@ block of code after the `do`. Then it loops back to the top, checking the...
 
 Below is an example of a while loop that prints out numbers less than 30, counting  
 by threes. Feel free to explore it and change it to see the result.
-<object id="example-1" data="{{site.baseurl}}/embedded-web-editor/?while" width="100%" height="550px"> </object>
+<object id="example-1" data="{{site.editor}}?while" width="100%" height="550px"> </object>

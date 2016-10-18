@@ -48,6 +48,9 @@ entries:
     - title: Conditionals
       url: /variables/conditionals/
       output: web
+    - title: For loops
+      url: /control/for/
+      output: web
     - title: Repeat
       url: /variables/repeat/
       output: web
