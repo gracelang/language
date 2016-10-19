@@ -2,6 +2,7 @@
 #through jekyll for this project
 LINEBREAK = "*****************************************************************"
 WEB_SERVER = grace@linux.cs.pdx.edu
+TEST_SERVER = black@linux.cs.pdx.edu
 WEB_DIRECTORY = public_html/doc/
 
 all: build deploy
@@ -25,6 +26,12 @@ build:
 	@echo ${LAST_EXIT}
 
 deploy:
+	@echo Deploying website to grace@linux.cs.pdx.edu
 	@[ -n "$(WEB_SERVER)" ] || { echo "Please set the WEB_SERVER variable to something like user@hostname" && false; }
 	rsync -a -l -z --delete _site/ $(WEB_SERVER):$(WEB_DIRECTORY)
+
+deploy-test-site:
+	@echo Deploying website to black@linux.cs.pdx.edu
+	@[ -n "$(TEST_SERVER)" ] || { echo "Please set the TEST_SERVER variable to something like user@hostname" && false; }
+	rsync -a -l -z --delete _site/ $(TEST_SERVER):$(WEB_DIRECTORY)
 
