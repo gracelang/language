@@ -2,20 +2,33 @@
 #through jekyll for this project
 LINEBREAK = "*****************************************************************"
 WEB_SERVER = grace@linux.cs.pdx.edu
-TEST_SERVER = black@linux.cs.pdx.edu
+BASE_URL = /~grace/doc
+WEB_SERVER_URL = http://cs.pdx.edu
 WEB_DIRECTORY = public_html/doc/
 
 all: build deploy
 
-serve:
-	./checkJekyll
-	@echo "Running command:"
-	bundle exec jekyll serve
+_config.yml: config.yml.in Makefile
+	sed -e "s|<<BASE_URL>>|$(BASE_URL)|; s|<<WEB_SERVER_URL>>|$(WEB_SERVER_URL)|" $< > $@
 
-build:
+serve: build
+	@echo "Running command:"
+	bundle exec jekyll serve --skip-initial-build
+
+../languageSpec/spec_with_grammar.pdf:
+	$(MAKE) -C ../languageSpec $@
+
+../languageSpec/spec_with_grammar.kramdown:
+	$(MAKE) -C ../languageSpec $@
+
+../standardPrelude/standard.pdf:
+	$(MAKE) -C ../standardPrelude $@
+
+../standardPrelude/standard.kramdown:
+	$(MAKE) -C ../standardPrelude $@
+
+build: _config.yml ../standardPrelude/standard.pdf ../standardPrelude/standard.kramdown ../languageSpec/spec_with_grammar.pdf ../languageSpec/spec_with_grammar.kramdown
 	$(info Generating source files...)
-	$(MAKE) -C ../languageSpec all
-	$(MAKE) -C ../standardPrelude all
 	./loadResources
 	./checkJekyll
 	@echo Building the website... Running command:

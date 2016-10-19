@@ -145,3 +145,4 @@ website/.idea/
 .idea/
 website/GraceDialects/standard.md
 website/graceLangSpec/spec_with_grammar.md
+website/_config.yml
