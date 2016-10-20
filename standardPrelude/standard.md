@@ -8,18 +8,18 @@ bibliography:
 - 'spec.bib'
 
 title: |
-    The Grace Standard Prelude\
-    Draft Specification Version 0.7.3
+    The Grace Standard Dialect\
+    Draft Specification Version 0.7.4
 ...
 
 
 Introduction
 ============
 
-This is a specification of the Grace Standard Prelude.
+This is a specification of the standard dialect of Grace, called `standardGrace`.
 Grace programs run in this dialect unless they nominate a different
 dialect via the  'dialect' statement. 
-The Standard Prelude  provides a range of methods and types and libraries for
+The Standard dialect  provides a range of methods and types and libraries for
 general purpose programming..
 This specification is notably incomplete, and everything is subject to
 change. 
@@ -401,6 +401,9 @@ type String =  {
     asUpper -> String
     // returns a string like self, except that all letters are in upper case
 
+    do(action:Block1⟦String, Done⟧) -> Done
+    // applies action to each character of self.
+
     capitalized -> String
     // returns a string like self, except that the initial letters of all words are in upper case
 
@@ -438,13 +441,18 @@ type String =  {
     // like the above, except that it answers the result of applying action if there is no such index.
 
     indices -> Sequence⟦T⟧
-    // an object representing the range of indices of self (1..self.size)
+    keys -> Sequence⟦T⟧
+    // an object representing the range of indices of self (1..self.size). 
 
     isEmpty -> Boolean
     // true if self is the empty string
 
     iterator -> Iterator⟦String⟧
     // an iterator over the characters of self
+
+    keysAndValuesDo(action:Block2⟦Number, String, Done⟧) -> Done
+    // applies action to two arguments for each character in self: the key (index) of the character,
+    // and the character itself.
 
     lastIndexOf (sub:String) -> Number
     // returns the rightmost index at which sub appears in self, or 0 if it is not there.
