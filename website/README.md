@@ -56,6 +56,14 @@ where graceFile is the name of the grace file that corresponds to this tutorial 
 
 Finally, create a corresponding Grace program for the embedded web editor and save it into the embedded-web-editor git repository under `examples/`.
 
+## Navigation
+
+The folder structure of the source files is irrelevant.  Each source file will be converted by Jekyll into an file in `_site` at a position dictated by the permalink in its header.
+Navigation is contolled by files in the `_data` directory:
+ 
+ * `_data/topnav.yml` controls what appears in the blue bar at the top of every page in the site
+ * `_data/sidebars/*.yml` contols what appears in the sidebar of the corresponding named pages, so (I presume) that `sidbars/tutorial_sidebar.yml` determines the sidebar for tutorials.
+
 ## To change the site's base URL
 
 Edit `_config.yml`'s _url_ and _baseurl_ values (located near the top) to contain the site's desired location.  Notice that (counterintuitively) _url_ already includes _baseurl_ as a suffix; in other words, _baseulr_ is the part of _url_ after the protocol and host name.
