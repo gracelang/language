@@ -15,19 +15,19 @@ serve: build
 	@echo "Running command:"
 	bundle exec jekyll serve --skip-initial-build
 
-../languageSpec/spec_with_grammar.pdf:
-	$(MAKE) -C ../languageSpec $@
+../languageSpec/spec.pdf:
+	$(MAKE) -C ../languageSpec $(@F)
 
-../languageSpec/spec_with_grammar.kramdown:
-	$(MAKE) -C ../languageSpec $@
+../languageSpec/spec.kramdown:
+	$(MAKE) -C ../languageSpec $(@F)
 
 ../standardPrelude/standard.pdf:
-	$(MAKE) -C ../standardPrelude $@
+	$(MAKE) -C ../standardPrelude $(@F)
 
 ../standardPrelude/standard.kramdown:
-	$(MAKE) -C ../standardPrelude $@
+	$(MAKE) -C ../standardPrelude $(@F)
 
-build: _config.yml ../standardPrelude/standard.pdf ../standardPrelude/standard.kramdown ../languageSpec/spec_with_grammar.pdf ../languageSpec/spec_with_grammar.kramdown
+build: _config.yml ../standardPrelude/standard.pdf ../standardPrelude/standard.kramdown ../languageSpec/spec.pdf ../languageSpec/spec.kramdown
 	$(info Generating source files...)
 	./loadResources
 	./checkJekyll

@@ -15,7 +15,7 @@ topnav_dropdowns:
         - title: Language Specifications
           url: /lang-spec/
         - title: Library Documentation
-          url: /doc-landing/
+          url: /dialects/standard/
     - title: Dialects
       folderitems:
         - title: Logo

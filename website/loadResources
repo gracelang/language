@@ -25,7 +25,7 @@ cat ./standardHeader.txt graceLangSpec/grammarSpecSource.md > graceLangSpec/spec
 
 #Add the necessary info to standard.md
 sed -i -e "s/<<TITLE-OF-PAGE>>/The Standard Dialect/g" graceDialects/standard.md
-sed -i -e "s/<<KEYWORDS-OF-PAGE>>/Standard, Dialect/g" graceDialects/standard.md
+sed -i -e "s/<<KEYWORDS-OF-PAGE>>/Standard, Dialect, standardGrace/g" graceDialects/standard.md
 sed -i -e "s/<<SIDEBAR-OF-PAGE>>/dialects_sidebar/g" graceDialects/standard.md
 sed -i -e "s/<<PERMALINK-OF-PAGE>>/\/dialects\/standard\//g" graceDialects/standard.md
 sed -i -e "s/ <<FOLDER-OF-PAGE>>/Dialects/g" graceDialects/standard.md
@@ -42,9 +42,7 @@ sed -i -e "s/<<<PDF-LINK>>>/**[Download the PDF]({{site.baseurl}}\/gracePdfs\/sp
 #Load the PDFs into the pdf folder
 /bin/rm -r gracePdfs
 mkdir  gracePdfs
-ls -ld gracePdfs
-ln ../languageSpec/spec_with_grammer.pdf ../standardPrelude/standard.pdf gracePdfs
-ls -ld gracePdfs
+ln ../languageSpec/spec_with_grammar.pdf ../standardPrelude/standard.pdf gracePdfs
 
 ## Clean up our temporary files
 rm graceDialects/standardSource.md
