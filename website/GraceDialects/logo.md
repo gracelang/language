@@ -1,8 +1,8 @@
 ---
 title: The Logo Dialect
 keywords: Logo
-sidebar: dialects_sidebar 
-permalink: /dialects/logo/ 
+sidebar: dialects_sidebar
+permalink: /dialects/logo/
 toc: false
 folder: Dialects
 ---
@@ -11,7 +11,7 @@ Welcome to a beginners guide to using Logo in Grace. In case you have not heard 
 
 Imagine a turtle-like robot that holds a pen and can walk around the floor, on which is spread a large sheet of paper.  As the turtle moves, it draws a line — unless it lifts the pen off of the paper, in which case it moves without drawing.
 
-We don't use mechanical turtles, but we can simulate them 
+We don't use mechanical turtles, but we can simulate them
 on the screen of a modern computer.  Grace Logo lets you
 draw pictures on the screen by controlling a "virtual turtle" with Grace commands.
 
@@ -26,9 +26,9 @@ The turtle can be moved forward using `forward(distance)`. This moves our turtle
 
 To change the direction of the turtle use the following commands: `turnRight(degrees)` and `turnLeft(degrees)`.
 These commands turn the turtle
-left and right the given number of degrees. 
+left and right the given number of degrees.
 
-**For example:**  
+**For example:**
 
     forward(50)
     turnRight(π/4)
@@ -49,14 +49,14 @@ Here is an example to get us started! The code below draws a square. Modify it t
 
 #### Example 2
 
-This example draws a five-pointed star.  The star looks as though it's staggering, though.  Can you modify the program so that the star is standing upright on two of its points? 
+This example draws a five-pointed star.  The star looks as though it's staggering, though.  Can you modify the program so that the star is standing upright on two of its points?
 
 <object id="example-2" data="{{site.editor}}?5-star" width="100%" height="550px"> </object>
 
 
 ### Controlling the Pen
 
-You can lift the virtual pen up using the command `penUp`, and put it back down using the command `penDown`.  
+You can lift the virtual pen up using the command `penUp`, and put it back down using the command `penDown`.
 
 ## Numbers
 
@@ -84,7 +84,7 @@ The method defines `moveToBottomLeft` in terms of simpler thangs that the Turtle
 
 Similarly, this example (on lines 22–27) teaches the turtle a method for drawing a `square(_)`.   This is used on line 9.
 
-Try modifying this example to give the house a door and a window. 
+Try modifying this example to give the house a door and a window.
 
 <object id="example-3" data="{{site.editor}}?house" width="100%" height="550px"> </object>
 
@@ -95,25 +95,25 @@ In the Grace implementation of Logo, the turtle is an object that has the follow
 
  * `penWidth` is the width of the pen, and thus of the line that it will draw.
 
- * `penColor` is the color of the pen, and thus of the line that it will draw.  Supported colors are: `red` `green` `blue` and `black`.  
-These attributes behave like variables to which you can assign new values.  
+ * `penColor` is the color of the pen, and thus of the line that it will draw.  Supported colors are: `red` `green` `blue` and `black`.
+These attributes behave like variables to which you can assign new values.
 
 **For example:** you can change the attributes of the turtle by *assigning* to `penWidth` or `penColor`, like this:
 
     penWidth := 4
     penColor := red
-    
+
  * `speed` is the speed at which the turtle walks. You can change the speed by assigning to the variable `speed`.
 
-**For example:** 
- 
+**For example:**
+
     speed := 1
     forward 20
     speed := 9
     forward 20
 
 Attempts to set the speed to less than 1 are ignored.
-  
+
 
 ### Bigger Pictures
 
@@ -121,7 +121,7 @@ By default, logo draws on a small embedded "canvas".  If you want a larger canva
 
     createCanvas(500 @ 300)
 
-The argument to `createCanvas` gives the width (here, `500` pixels) and the height (`300` pixels).  
-(You don't need to know this yet, but `(500 @ 300)` is another kind of value: a value of type `Point` that defines a 2-dimensional vector.) 
+The argument to `createCanvas` gives the width (here, `500` pixels) and the height (`300` pixels).
+(You don't need to know this yet, but `(500 @ 300)` is another kind of value: a value of type `Point` that defines a 2-dimensional vector.)
 
 If you use `createCanvas`, be sure that your web browser is set to [allow pop-up windows](http://www.cengage.com/lms_docs/system_check/popupsfailed/popupsfailed_chrome.htm).

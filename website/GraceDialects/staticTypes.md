@@ -1,12 +1,10 @@
 ---
-title: The Static Types Dialect
-keywords: Logo
+title: The staticTypes Dialect
+keywords: type types static 
 sidebar: dialects_sidebar
 permalink: /dialects/staticTypes/ 
 toc: false
 folder: Dialects
 ---
 
-
-
-This is a page for the Static Type dialect... 
+The dialect "staticType" is experimental, and not currently documented.

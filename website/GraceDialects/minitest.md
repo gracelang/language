@@ -24,14 +24,14 @@ The best way to explain how to use *minitest* is by example:
 
     dialect "minitest"
     import "setVector" as sV
-    
+
     testSuite {
         def setO = sV.setVector.new
         def set23 = sV.setVector.new
         set23.add 2
         set23.add 3
-        
-        test "emptyness" by { 
+
+        test "emptyness" by {
             assert (setO.size == 0) description ("setO is not empty!")
             deny (setO.contains 2) description ("setO contains 2!")
         }
@@ -43,7 +43,7 @@ The best way to explain how to use *minitest* is by example:
         test "remove" by {
             set23.remove 2
             deny (set23.contains 3) description "{set23} contains 3 after it was removed"
-        }    
+        }
         test "duplication" by {
             set23.add 2
             assert (set23.size == 2) description "duplication of 2 not detected by set"
@@ -84,7 +84,7 @@ suite. To do this, use the method :
             }
             assert (result) shouldBe [1::"one", 2::"two", 3::"three"]
         }
-        
+
         test "for(_)and(_) where second is shorter" by {
             def result = list [ ]
             def as = list [1, 2, 3, 4, 5]
@@ -128,39 +128,39 @@ testable situation, and then one or more *assertions*. Here are the
 things that you can assert.
 
 
-        assert (bb: Boolean) description (message) 
+        assert (bb: Boolean) description (message)
         // asserts that bb is true.   If bb is not true, the test will fail with message
-        
+
         deny (bb: Boolean) description (message)
         // asserts that bb is false.   If bb is not false, the test will fail with message
-        
-        assert (bb: Boolean) 
+
+        assert (bb: Boolean)
         deny (bb: Boolean)
         // short forms, with the default message "assertion failure"
-        
+
         assert (s1:Object) shouldBe (s2:Object)
-        // like assert (s1 == s2), but with a more appropriate default message.  Uses the == method of s1. 
-        
+        // like assert (s1 == s2), but with a more appropriate default message.  Uses the == method of s1.
+
         assert (s1:Object) shouldntBe (s2:Object)
-        // like assert (s1 != s2), but with a more appropriate default message. Uses the != method of s1.  
-        
-        assert (block0) shouldRaise (desiredException)    
+        // like assert (s1 != s2), but with a more appropriate default message. Uses the != method of s1.
+
+        assert (block0) shouldRaise (desiredException)
         // asserts that the desiredException is raised during the execution of block0
-        
-        assert(n1:Number) shouldEqual (n2:Number) within (epsilon:Number) 
-        // asserts that n1 and n2 don't differ by more than epsilon.  
+
+        assert(n1:Number) shouldEqual (n2:Number) within (epsilon:Number)
+        // asserts that n1 and n2 don't differ by more than epsilon.
         // Use instead of assert(_)shouldBe(_) for floating point numbers.
         assert (block0) shouldntRaise (undesiredException)
         // asserts that the undesiredException is not raised during the execution of block0.
-        // The assertion holds if block0 raises some other exception, or if it completes 
+        // The assertion holds if block0 raises some other exception, or if it completes
         // execution without raising any exception.
-        
+
         failBecause (message)
         // always fails; equivalent to assert (false) description (message)
-        
+
         assert(value:Object) hasType (Desired:Type)
         // asserts that value has all of the methods of type Desired.
-        
+
         deny(value:Object) hasType (Undesired:Type)
         // asserts that value is missing one of the methods in the type Undesired
 

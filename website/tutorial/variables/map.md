@@ -6,8 +6,8 @@ sidebar: tutorial_sidebar
 permalink: /variables/map/
 folder: tutorial
 ---
-Map is a method that lists have that returns a new list that is created by applying some  
-function to each element in the original list. The format of calling the map method is as follows:  
+Map is a method that lists have that returns a new list that is created by applying some
+function to each element in the original list. The format of calling the map method is as follows:
 
 ```
 list.map { element ->

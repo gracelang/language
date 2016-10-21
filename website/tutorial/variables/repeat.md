@@ -6,8 +6,8 @@ sidebar: tutorial_sidebar
 permalink: /variables/repeat/
 folder: tutorial
 ---
-Out of all of the loops in Grace, repeat statements are the most  
-straight-forward. Repeats allow you to repeat a block of code a given  
+Of all of the loops in Grace, repeat statements are the most
+straight-forward. Repeats allow you to repeat a block of code a pre-determined
 number of times. For example:
 
 ```

@@ -6,8 +6,8 @@ sidebar: tutorial_sidebar
 permalink: /introduction/run/
 folder: tutorial
 ---
-Grace has a [web-based editor](http://web.cecs.pdx.edu/~grace/ide/index.html) 
-that works in all modern browsers, but works best in Chrome and Firefox.  
+Grace has a [web-based editor](http://web.cecs.pdx.edu/~grace/ide/index.html)
+that works in all modern browsers, but works best in Chrome and Firefox.
 
 If you're familiar with Unix, Grace can also be run from the command-line,
 but we'll leave the details for a future iteration of this page.
