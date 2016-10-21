@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Programming Language\
-    Draft Specification Version 0.7.6
+    Draft Specification Version 0.7.7
 ...
 
 
@@ -110,10 +110,10 @@ these boundaries: indentation must increase after a left brace.
 
 Statements are terminated by line breaks when the
 following line has the same or lesser indentation than the indentation
-of the line containing the start of the current statement.  
+of the line containing the start of the current statement.
 Statements may optionally be terminated by semicolons.
-   
-All changes in identation must be by *two* or more spaces; a change of a single
+
+All changes in indentation must be by *two* or more spaces; a change of a single
 space is always treated as an error.
 
 **Example code with punctuation**
@@ -318,7 +318,9 @@ brace expression.
 
 ### Uninterpreted Strings
 
-String literals can also be written between single guillemet quotation marks, ‹thus›.  Between the ‹ and the ›, characters from the input become characters of the string value without interpretation, and without any escapes (not even for ›).
+String literals can also be written between single guillemet quotation marks,
+‹thus›.  Between the ‹ and the ›, characters from the input become characters of
+the string value without interpretation, and without any escapes (not even for ›).
 
 **Example**
 
@@ -362,7 +364,7 @@ and to pass collections of options to methods.
 Grace blocks are lambda expressions, with or without
 parameters. If a parameter list is present, the parameters are separated
 by commas and the list is separated from the body of the block by the `->` symbol.
-Within the body of the block, the parameters cannot be assiged.
+Within the body of the block, the parameters cannot be assigned.
 
     { do.something }
     { i -> i + 1 }
@@ -566,8 +568,8 @@ arity". (Grace does _not_ allow overloading by type).
 
 ### Method parameters
 
-Depending on their syntatic form, method declarations may include one
-or more paramter lists. Inside method bodies, method paramters are
+Depending on their syntactic form, method declarations may include one
+or more parameter lists. Inside method bodies, method parameters are
 treated as **'def'**s: they may not be reassigned.
 Method parameters may optionally be annotated with types:
 the corresponding arguments will be
@@ -577,14 +579,14 @@ just before the method body is executed.
 ### Type Parameters
 
 Methods may be declared with one or more type parameters.
-If present, type parameters are listed between $\llbracket$ 
-and $\rrbracket$ after the identifier that forms the first 
+If present, type parameters are listed between $\llbracket$
+and $\rrbracket$ after the identifier that forms the first
 (or only) part of a multipart name.
 
 Type parameters may be constrained with `where` clauses;
 the details have yet to be specified.
 
-The presence or absence of type parameters does not change the 
+The presence or absence of type parameters does not change the
 canonical name of the method.
 
 **Examples**
@@ -707,19 +709,19 @@ to an object itself, and not to clients or inheritors. Grace does not
 have private fields or methods; all can be accessed from subobjects.
 However, identifiers from outer scopes can be used to obtain an effect similar to privacy.
 
-**Examples**
+**Example simulating private fields**
 
 
-    method newShipStartingAt(s:Point)endingAt(e:Point) {
+    method newShipStartingAt (s:Point) endingAt (e:Point) {
         // returns a battleship object extending from s to e.  This object cannot
         // be asked its size, or its location, or how much floatation remains.
         assert ( (s.x == e.x) || (s.y == e.y) )
         def size = s.distanceTo(e)
         var floatation := size
         object {
-            method isHitAt(shot:Vector2D) {
-                if (shot.onLineFrom(s)to(e)) then {
-                    floatation := floatation -1
+            method isHitAt(shot:Point) {
+                if (shot.onLineFrom (s) to (e)) then {
+                    floatation := floatation - 1
                     if (floatation == 0) then { self.sink }
                     true
                 } else { false }
@@ -728,8 +730,10 @@ However, identifiers from outer scopes can be used to obtain an effect similar t
         }
     }
 
-The object returned by newShipStartingAt()endingAt() can update the variable floatation in the surrounding scope, even though it is not
+The object returned by `newShipStartingAt(_)endingAt(_)` can update the variable
+`floatation` in the surrounding scope, even though it is not
 accessible to anything inheriting from that object.
+Notice also how the coordinates of the ship `s` and `e` are also inaccessible.
 
 # Objects, Classes, and Traits
 
@@ -1028,7 +1032,7 @@ a random variable.
 
 All objects implement a number of _default methods_ by inheriting from
 `graceObject`.
-Programmers can 
+Programmers can
 override these implementations with alternative implementations.
 Type [Object](#type-object) contains all the public
 default methods.
@@ -1049,7 +1053,7 @@ default methods.
 Notice that `graceObject` implements $\neq$ but not `==`.
 This is to help ensure that, when an object chooses to implement `==`,
 $\neq$ is also available, and is the inverse of `==`.
-If desired, the _confidential_ method `isMe` can be used in the implementation of a 
+If desired, the _confidential_ method `isMe` can be used in the implementation of a
 public `==` method.
 
 # Method Requests
@@ -1116,7 +1120,7 @@ method name, wherein the parameters have been replaced by expressions that
 evaluate to the method's arguments.
 Note that a request without arguments does not contain any parentheses.
 
-The _reciever_ is an expression; when evaluated it designates the
+The _receiver_ is an expression; when evaluated it designates the
 _target_ of the request.
 The name of a method, which determines
 the position of the argument lists within that name, is chosen when
@@ -1289,7 +1293,7 @@ Grace programs are formally defined by the language’s [Grammar]. The
 grammar gives the following precedence levels; lower numbers bind more
 tightly.
 
-1.  Numerals and constructors for strings, objects, iterables,
+1.  Numerals and constructors for strings, objects, collections,
 blocks, and types; parenthesized expressions.
 2.  Requests of named methods.
 Multi-part requests accumulate name-parts and arguments as far to
@@ -1599,7 +1603,7 @@ defines a type containing a single interface, so the `interfaces` method of an i
 	     name -> String
             // the canonical name of the method
 	     arguments -> Sequence⟦Type⟧
-            // the type of the agruments, in order
+            // the types of the parameters, in order
 	     result -> Type
             // the type of the result
 	 }
@@ -1793,7 +1797,7 @@ This allows types to be declared and imported from other modules.
 
 ## Type Assertions
 
-When parameters, fields, and method results are annoatated with types,
+When parameters, fields, and method results are annotated with types,
 the programmer can be confident that objects bound to those parameters and
 fields,
 and returned from those methods, do indeed have the specified types, insofar
@@ -1974,13 +1978,13 @@ Surrounding the module scope is the
 the module providing the dialect.
 That is, the public names at the top level of the dialect
 are treated as being in a scope surrounding that of any
-module written in that dialect.
+module written in that dialect.  (Confidential names are not visible.)
 
 Lexical lookup stops at the dialect scope: it does not extend
 to the scope surrounding the dialect (which would contain any
 other dialects used to implement the current dialect).
 
-This allows dialects to import modules, and to be defined via other
+These rules allow dialects to import modules, and to be defined via other
 (module-defining) dialects, without those other definitions polluting
 the language defined by the dialect.
 
@@ -2007,7 +2011,7 @@ Grace does not support finalization.
 
 The core Grace specification does not describe a concurrent language.
 Various concurrency models may be provided as dialects.
-The details remain to be sepecified.
+The details remain to be specified.
 
 # Acknowledgements
 
