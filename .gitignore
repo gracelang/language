@@ -24,6 +24,7 @@
 # *.eps
 # *.pdf
 spec_with_grammar.md
+*.kramdown
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
@@ -138,6 +139,8 @@ sympy-plots-for-*.tex/
 *.bak
 *.sav
 
+#Xcode
+*.xcworkspace
 
 #Website Generated Files
 website/_site/
