@@ -15,6 +15,9 @@ entries:
     - title: How to run Grace
       url: /introduction/run/
       output: web
+    - title: Hello, World in Grace
+      url: /introduction/hello/
+      output: web
   - title: Variables and Objects
     output: web
     folderitems:
@@ -26,6 +29,9 @@ entries:
       output: web
     - title: Blocks
       url: /variables/block/
+      output: web
+    - title: Counting
+      url: /variables/counting/
       output: web
     - title: Match
       url: /variables/match/
