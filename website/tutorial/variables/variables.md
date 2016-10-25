@@ -18,7 +18,7 @@ born.  To make a definition, simply do the following:
     def city = "Portland"
 
 
-A **variable** is like a definition, but it can be changed (hence the name variable).
+A **variable** is like a definition, but it can be changed (hence the name “variable”).
 Since the value of a variable can be changed, it doesn't make sense to use `=`
 when declaring one (even though many other programming languages
 do this; future programmers beware).  Instead, variables are assigned a

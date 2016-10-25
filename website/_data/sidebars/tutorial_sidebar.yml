@@ -18,7 +18,7 @@ entries:
     - title: Hello, World in Grace
       url: /introduction/hello/
       output: web
-  - title: Variables and Objects
+  - title: Basic Concepts
     output: web
     folderitems:
     - title: Definitions and Variables
@@ -33,14 +33,14 @@ entries:
     - title: Counting
       url: /variables/counting/
       output: web
-    - title: Match
-      url: /variables/match/
-      output: web
     - title: Methods
       url: /variables/methods/
       output: web
     - title: Objects
       url: /variables/objects/
+      output: web
+    - title: Scope and Initialization
+      url: /variables/scope/
       output: web
     - title: Numbers and Strings
       url: /variables/numstring/
@@ -48,12 +48,9 @@ entries:
     - title: Lists
       url: /variables/lists/
       output: web
-  - title: Control Structures
+  - title: Additional Control Structures
     output: web
     folderitems:
-    - title: Conditionals
-      url: /variables/conditionals/
-      output: web
     - title: For loops
       url: /control/for/
       output: web
@@ -63,6 +60,12 @@ entries:
     - title: While Loops
       url: /variables/while/
       output: web
+    - title: Match
+      url: /variables/match/
+      output: web
+  - title: Collections of Objects
+    output: web
+    folderitems:
     - title: Do
       url: /variables/do/
       output: web
