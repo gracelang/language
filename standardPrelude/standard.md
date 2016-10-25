@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Standard Dialect\
-    Draft Specification Version 0.7.5
+    Draft Specification Version 0.7.6
 ...
 
 
@@ -649,12 +649,12 @@ The major kinds of collection are `sequence`, `list`, `set` and
 `dictionary`. Although these objects differ in their details, they share
 many common methods, which are defined in a hierarchy of types, each
 extending the one above it in the hierarchy. The simplest is the type
-`Iterable⟦T⟧`, which captures the idea of a (potentially unordered)
+`Collection⟦T⟧`, which captures the idea of a (potentially unordered)
 collection of *elements*, each of type `T`, over which a client can
 iterate:
 
 ```
-type Iterable⟦T⟧ = type {
+type Collection⟦T⟧ = type {
     iterator -> Iterator⟦T⟧       
     // Returns an iterator over my elements.  It is an error to modify self while iterating over it.
     // Note: all other methods can be defined using iterator. Iterating over a dictionary
@@ -697,34 +697,37 @@ type Iterable⟦T⟧ = type {
 }
 ```
 
-The type `Collection` adds some conversion methods to
-`Iterable`:
+Collection Constructors
+------
 
-```
-type Collection⟦T⟧ = Iterable⟦T⟧ & type {
-    asList -> List⟦T⟧
-	  // returns a (mutable) list containing my elements.
-    
-    asSequence -> Sequence⟦T⟧
-    // returns a sequence containing my elements.
+The Grace language uses brackets as a syntax for constructing `Collection`
+objects. `[2, 3, 4]` is a collection containing the three numbers `2`, `3`
+and `4`. `[ ]` constructs the empty collection.
 
-    asSet -> Set⟦T⟧
-    // returns a (mutable) Set containing my elements, with duplicates eliminated.
-    // The == operation on my elements is used to identify duplicates.
-}
-```
+Because collection objects are not indexable, they can’t be
+used like arrays or lists. They are primarily intended for initializing
+more capable collections, as in `list [2, 3, 4]`, which creates a list,
+or `set ["red", "green", "yellow"]`, which creates a set. Notice that a
+space must separate the name of the method from the collection literal.
+
+
+Enumerables
+-----
 
 Additional methods are available in the type
 `Enumerable`; an `Enumerable` is like a
 `Sequence`, but where the elements must be *enumerated*
 one by one, in order, using a computational process, rather than being
 stored explicitly. For this reason, operations that require access to
-all of the elements at one time are not supported, except for conversion
-to other collections that store their elements. The key difference
-between an `Iterable` and an `Enumerable`
+all of the elements at one time, like sorting, are not supported directly.
+Instead, Enumerables can be converted 
+to other collections that store their elements. 
+
+The key difference
+between a `Collection` and an `Enumerable`
 is that `Enumerable`s have a natural order, so lists are
 `Enumerable`, whereas sets are just
-`Iterable`.
+`Collection`s.
 
 ```
 type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
@@ -753,18 +756,6 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
 }
 ```
 
-Lineups
-------
-
-The Grace language uses brackets as a syntax for constructing `lineup`
-objects. `[2, 3, 4]` is a lineup containing the three numbers $2$, $3$
-and $4$. `[ ]` constructs the empty lineup.
-
-Lineup objects have type `Iterable`. They are not indexable, so can’t be
-used like arrays or lists. They are primarily intended for initializing
-more capable collections, as in `list [2, 3, 4]`, which creates a list,
-or `set ["red", "green", "yellow"]`, which creates a set. Notice that a
-space must separate the name of the method from the lineup.
 
 Sequence
 --------
@@ -817,6 +808,7 @@ type Sequence⟦T⟧ = Enumerable⟦T⟧ & type {
     // returns true if I contain an element v such that v == sought
 }
 ```
+
 Ranges
 ------
 
