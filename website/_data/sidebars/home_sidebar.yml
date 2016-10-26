@@ -15,11 +15,11 @@ entries:
     - title: Tutorial
       url: /introduction/grace/
       output: web
-    - title: Language Specifications
+    - title: Language Specification
       url: /lang-spec/
       output: web
-    - title: Library Documentation
-      url: /doc-landing/
+    - title: Standard Library Documentation
+      url: /dialects/standard/
       output: web
     - title: Help
       url: /help/
