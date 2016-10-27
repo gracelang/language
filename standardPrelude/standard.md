@@ -94,7 +94,7 @@ the *repeat–times* loop is to execute the block `n.ceiling` times.
 
 The *for–do* and *for–and–do* loops are governed by collections. They
 execute a block of code repeatedly, depending on the elements of the
-collection, and are described in the [Section on Iterables and **for** loops](#Iterables-and-for-loops).
+collection, and are described in the [Section on Iteration and **for** loops](#iteration-and-for-loops).
 
 Unbounded Loops
 ---------------
@@ -463,12 +463,12 @@ type String =  {
     lastIndexOf⟦W⟧ (pattern:String)
        startingAt (offset)
        ifAbsent (action:Block0⟦W⟧) ->  Number | W
-    // like the above, except that it returns the rightmost index ≤  offset.
+    // like the above, except that it returns the rightmost index ≤ offset.
 
-    map⟦U⟧ (function:Block⟦String,U⟧) -> Iterable⟦U⟧
-    // returns an Iterable object containing the results of successive applications of function to the
+    map⟦U⟧ (function:Block⟦String,U⟧) -> Collection⟦U⟧
+    // returns a Collection containing the results of successive applications of function to the
     // individual characters of self. Note that the result is not a String, even if type U happens to be String.
-    // If a String is desired, use fold()startingWith "" with a function that concatenates.
+    // If a String is desired, use fold (_) startingWith "" with a function that concatenates.
 
     match (other:Object) -> SuccessfulMatch | FailedMatch
     // returns SuccessfulMatch match if self matches other, otherwise FailedMatch
@@ -476,13 +476,13 @@ type String =  {
     ord -> Number
     // a numeric representation of the first character of self, or NaN if self is empty.
 
-    replace (pattern: String) with (new: String) -> String
+    replace (pattern:String) with (new: String) -> String
     // a string like self, but with all occurrences of pattern replaced by new
 
     size -> Number
     // returns the size of self, i.e., the number of characters it contains.
 
-    startsWith (possiblePrefix: String) -> Boolean
+    startsWith (possiblePrefix:String) -> Boolean
     // true when possiblePrefix is a prefix of self
 
     startsWithDigit -> Boolean
@@ -497,19 +497,19 @@ type String =  {
     startsWithSpace -> Boolean
     // true if the first character of self is a (Unicode) space.
 
-    substringFrom (start: Number) size (max:Number) -> String
+    substringFrom (start:Number) size (max:Number) -> String
     // returns the substring of self starting at index start and of length max characters,
-    // or extending to the end of self if that is less than max.    If start = self.size + 1 or
+    // or extending to the end of self if that is less than max.  If start = self.size + 1 or
     // stop < start, the empty string is returned.   If start is outside the range
     // 1..self.size+1, BoundsError is raised.
 
-    substringFrom (start: Number) to (stop: Number) -> String
+    substringFrom (start:Number) to (stop:Number) -> String
     // returns the substring of self starting at index start and extending
     // either to the end of self, or to stop.    If start = self.size + 1, or
     // stop < start, the empty string is returned.   If start is outside the range
     // 1..self.size+1, BoundsError is raised.
 
-    substringFrom (start: Number) -> String
+    substringFrom (start:Number) -> String
     // returns the substring of self starting at index start and extending
     // to the end of self.    If start = self.size + 1, the empty string is returned.
     // If start is outside the range 1..self.size+1, BoundsError is raised.
@@ -543,7 +543,8 @@ type Boolean =  {
 }
 ```
 
-In conditions in `if` statements, and in the operators `&&` and `||`, a Block returning a boolean may be used instead of a Boolean.  
+The condition in an `if` statement, and the argument to the operators `&&` and `||`,
+can be either a Boolean or a Block returning a Boolean.
 This means that `&&` and `||` can be used as “shortcircuit”, also known as
 “non-commutative”, operators: they will evaluate their argument only
 if necessary.
@@ -556,7 +557,7 @@ type BlockOrBoolean = BlockBoolean | Boolean
 Blocks
 ------
 
-Blocks are anonymous functions, that take zero or more arguments and
+Blocks are anonymous functions that take zero or more arguments and
 return once result.  There is a family of `Block` types that describe
 block objects.
 
@@ -590,6 +591,9 @@ type Point =  {
     y -> Number
     // the y-coordinate of self
 
+    == (other:Object) -> Boolean
+    // true if other is a Point with the same x and y coordinates as self.
+
     + (other:Point) -> Point
     // the Point that is the vector sum of self and other, i.e. (self.x+other.x) @ (self.y+other.y)
 
@@ -600,16 +604,23 @@ type Point =  {
     // the point that is the negation of self
     
     * (factor:Number) -> Point
-    // this point scaled by factor,  i.e. (self.x*factor) @ (self.y*factor)
+    // this point scaled by factor, i.e., (self.x*factor) @ (self.y*factor)
     
-    / (divisor:Number) -> Point
-    // this point scaled by 1/factor, i.e. (self.x/divisor) @ (self.y/divisor)
+    / (factor:Number) -> Point
+    // this point scaled by 1/factor, i.e., (self.x/factor) @ (self.y/factor)
 
     length -> Number
     // distance from self to the origin
 
     distanceTo(other:Point) -> Number
     // distance from self to other
+
+    dot (other:Point) -> Number
+    ⋅ (other:Point) -> Number
+    // dot product of self and other
+
+    norm -> Point
+    // the unit vector (vector of length 1) in same direction as self
 }
 ```
 
@@ -679,7 +690,7 @@ type Collection⟦T⟧ = type {
     do(action:Block1⟦T, Unknown⟧) separatedBy(sep:Block0⟦Unknown⟧) -> Done
     // applies action to each element of self, and applies sep (to no arguments) in between.
 
-    map⟦R⟧(unaryFunction:Block1⟦T, R⟧) -> Iterable⟦T⟧
+    map⟦R⟧(unaryFunction:Block1⟦T, R⟧) -> Collection⟦T⟧
     // returns a new collection whose elements are obtained by applying unaryFunction to
     // each element of self.  If self is ordered, then the result is ordered.
     
@@ -688,11 +699,11 @@ type Collection⟦T⟧ = type {
     // the left fold.  For example, fold {a, b -> a + b} startingWith 0
     // will compute the sum, and fold {a, b -> a * b} startingWith 1 the product.
     
-    filter(condition:Block1⟦T, Boolean⟧) -> Iterable⟦T⟧
+    filter(condition:Block1⟦T, Boolean⟧) -> Collection⟦T⟧
     // returns a new collection containing only those elements of self for which
     // condition holds.  The result is ordered if self is ordered.
     
-    ++(other: Iterable⟦T⟧) -> Iterable⟦T⟧
+    ++(other: Collection⟦T⟧) -> Collection⟦T⟧
     // returns a new object whose elements include those of self and those of other.
 }
 ```
@@ -859,7 +870,7 @@ type List⟦T⟧ = Sequence⟦T⟧ & type {
     addFirst(new:T) -> List⟦T⟧
     // adds new as the first element(s) of self.  Changes the index of all of the existing elements.
     
-    addAllFirst(news: Iterable⟦T⟧) -> List⟦T⟧
+    addAllFirst(news: Collection⟦T⟧) -> List⟦T⟧
     // adds news as the first elements of self.  Changes the index of all of the existing elements.
 
     removeFirst -> T
@@ -878,17 +889,20 @@ type List⟦T⟧ = Sequence⟦T⟧ & type {
     remove(element:T) ifAbsent(action:Block0⟦Unknown⟧) -> List⟦T⟧
     // removes element from self; executes action if it is not contained in self.  Returns self
 
-    removeAll(elements:Iterable⟦T⟧) -> List⟦T⟧
+    removeAll(elements:Collection⟦T⟧) -> List⟦T⟧
     // removes elements from self.  Raises a NoSuchObject exception if any one of 
     // them is not contained in self.  Returns self
     
-    removeAll(elements:Iterable⟦T⟧) ifAbsent(action:Block0⟦Unknown⟧) -> List⟦T⟧
+    removeAll(elements:Collection⟦T⟧) ifAbsent(action:Block0⟦Unknown⟧) -> List⟦T⟧
     // removes elements from self;  executes action if any of them is not contained in self.  Returns self
+
+    clear -> List⟦T⟧
+    // removes all the elements of self, leaving self empty.  Returns self
     
     ++ (other:List⟦T⟧) -> List⟦T⟧
     // returns a new list formed by concatenating self and other
     
-    addAll(extension:Iterable⟦T⟧) -> List⟦T⟧
+    addAll(extension:Collection⟦T⟧) -> List⟦T⟧
     // extends self by appending the contents of extension; returns self.
     
     contains(sought:T) -> Boolean
@@ -931,7 +945,7 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
     add(element:T) -> Set⟦T⟧
     // adds element to self.  Returns self.    
     
-    addAll(elements:Iterable⟦T⟧) -> Set⟦T⟧
+    addAll(elements:Collection⟦T⟧) -> Set⟦T⟧
     // adds elements to self.  Returns self. 
     
     remove(element: T) -> Set⟦T⟧
@@ -940,13 +954,16 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
     remove(elements: T) ifAbsent(block: Block0⟦Done⟧) -> Set⟦T⟧
     // removes element from self.  Executes action if element is not present.   Returns self.
     
-    removeAll(elems:Iterable⟦T⟧)
+    removeAll(elems:Collection⟦T⟧)
     // removes elems from self.  Raises NoSuchObject if any of the elems is
     // not present.   Returns self.
 
-    removeAll(elems:Iterable⟦T⟧) ifAbsent(action:Block1⟦T, Done⟧) -> Set⟦T⟧
+    removeAll(elems:Collection⟦T⟧) ifAbsent(action:Block1⟦T, Done⟧) -> Set⟦T⟧
     // removes elems from self.  Executes action.apply(e) for each e in elems that is
     // not present.   Returns self.
+
+    clear -> Set⟦T⟧
+    // removes all the elements of self, leaving self empty.  Returns self
     
     contains(elem:T) -> Boolean
     // true if self contains elem
@@ -972,7 +989,7 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
     isSubset(s2: Set⟦T⟧) -> Boolean
     // true if I am a subset of s2
 
-    isSuperset(s2: Iterable⟦T⟧) -> Boolean
+    isSuperset(s2: Collection⟦T⟧) -> Boolean
     // true if I contain all the elements of s2
     
     into(existing:Collection⟦T⟧) -> Collection⟦T⟧
@@ -986,7 +1003,7 @@ Dictionary
 The type `Dictionary⟦K, T⟧` describes objects that are mappings from
 *keys* of type `K` to *values* of type `T`. Like sets and sequences,
 dictionary objects can be constructed using the class `dictionary`, but
-the argument to `dictionary` must be of type `Iterable⟦Binding⟧`. This
+the argument to `dictionary` must be of type `Collection⟦Binding⟧`. This
 means that each element of the argument must have methods `key` and
 `value`. Bindings can be conveniently created using the infix `::`
 operator, as in `dictionary⟦K, T⟧ [k::v, m::w, n::x, ...]`.
@@ -1012,13 +1029,13 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     containsValue(v:T) -> Boolean
     // returns true if one of my values == v
 
-    removeAllKeys(keys: Iterable⟦K⟧) -> Self
+    removeAllKeys(keys: Collection⟦K⟧) -> Self
     // removes all of the keys from self, along with the corresponding values.  Returns self.
 
     removeKey(key: K) -> Self
     // removes key from self, along with the corresponding value.  Returns self.
 
-    removeAllValues(removals: Iterable⟦T⟧) -> Self
+    removeAllValues(removals: Collection⟦T⟧) -> Self
     // removes from self all of the values in removals, along with the corresponding keys.  
     // Returns self.
 
@@ -1026,13 +1043,16 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     // removes from self the value removal, along with the corresponding key.
     // Returns self.
 
-    keys -> Iterable⟦K⟧
+    clear -> Dictionary⟦T⟧
+    // removes all the elements of self, leaving self empty.  Returns self
+
+    keys -> Collection⟦K⟧
     // returns my keys as a lazy sequence in arbitrary order
 
-    values -> Iterable⟦T⟧
+    values -> Collection⟦T⟧
     // returns my values as a lazy sequence in arbitrary order
     
-    bindings -> Iterable⟦ Binding⟦K, T⟧ ⟧
+    bindings -> Collection⟦ Binding⟦K, T⟧ ⟧
     // returns my bindings as a lazy sequence
 
     keysAndValuesDo(action:Block2⟦K, T, Object⟧ ) -> Done
@@ -1061,15 +1081,15 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
 }
 ```
 
-Iterables and ***for*** loops
+Iteration and ***for*** loops
 -----------------------------
 
-Collections that implement the type `Iteratable⟦T⟧`
-(defined in Section [type:Iterable]) implement the internal and external
-iterator patterns, which provide for iteration through a collection of
+Collections implement the type [`Collection⟦T⟧`](#common-abstractions)
+and thus implement the internal and external iterator patterns.
+These patterns which provide for iteration through a collection of
 elements of type `T`, one element at a time. The method
-`do()` and its variant `do()separatedBy()`
-implement internal iterators, and `iterator` returns an
+`do(_)` and its variant `do(_)separatedBy(_)`
+implement internal iterators, while the method `iterator` returns an
 external iterator object, with the following interface:
 
 ``` 
@@ -1095,9 +1115,9 @@ modify a collection object while iterating through it*. If you implement
 your own iterator, it is good practice to detect this error and raise
 `ConcurrentModification`.
 
-*for–do* loops on `Iterable` objects are provided by
-standard Grace. The method `for()do()` takes two
-arguments, an `Iterable` `collection` and
+*for–do* loops on `Collection` objects are provided by
+standard Grace. The method `for(_)do(_)` takes two
+arguments, a `collection` and
 a one-parameter block `body`. It repeatedly applies
 `body` to the elements of `collection`.
 For example:
@@ -1116,8 +1136,8 @@ until all of the elements of `fruits` have been supplied
 to the block, or the block terminates the surrounding method by
 executing a `return`.
 
-`for()do()` is precisely equivalent to requesting the
-`do` method of the `Iterable`, which is
+`for(_)do(_)` is precisely equivalent to requesting the
+`do` method of the `Collection`, which is
 usually both faster and clearer:
 
 ```
@@ -1125,7 +1145,7 @@ usually both faster and clearer:
         print(each)
     }
 ```
-A variant `for()and()do()` allows one to iterate through
+A variant `for(_)and(_)do(_)` allows one to iterate through
 two collections in parallel, terminating when the smaller is exhausted:
 
         def result = list [ ]
@@ -1139,11 +1159,11 @@ After executing this code, `result == [1::"one", 2::"two", 3::"three"]`.
 
 The need for external iterators becomes apparent when it is necessary to
 iterate through two collections, but not precisely in parallel. For
-example, this method merges two sorted `Iterable`s into a
+example, this method merges two sorted `Collection`s into a
 sorted list:
 
 ```
-method merge [[T]](cs: List[[T]]) and (ds: List[[T]]) -> List[[T]] { 
+method merge [[T]](cs: Collection[[T]]) and (ds: Collection[[T]]) -> List[[T]] { 
     def cIter = cs.iterator
     def dIter = ds.iterator
     def result = emptyList
@@ -1247,7 +1267,7 @@ env -> Dictionary⟦String,String⟧
     // returns a Dictionary mapping names of environment variables to
     // their values
     
-spawn (executable:String, args:Iterable⟦String⟧) -> Process
+spawn (executable:String, args:Collection⟦String⟧) -> Process
     // creates a new Process `executable` using `args` as its arguments
 
 type FileStream = Object & interface {
