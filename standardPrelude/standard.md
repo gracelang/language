@@ -536,10 +536,10 @@ type Boolean =  {
     // the negation of self
 
     && (other: BlockOrBoolean) -> Boolean
-    // return true when self and other are both true
+    // returns true when self and other are both true
 
     || (other: BlockOrBoolean) -> Boolean
-    // return true when either self or other (or both) are true
+    // returns true when either self or other (or both) are true
 }
 ```
 
@@ -757,13 +757,13 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
     into(existing:Collection⟦T⟧) -> Collection⟦T⟧
     // adds my elements to existing, and returns existing.
 
-    sorted -> List⟦T⟧
-    // returns a new List containing all of my elements, but sorted by their < and == operations.
+    sorted -> Enumerable⟦T⟧
+    // returns a new Enumerable containing all of my elements, but sorted by their < and == operations.
 
-    sortedBy(sortBlock:Block2⟦T, T, Number⟧) -> Sequence⟦T⟧
+    sortedBy(sortBlock:Block2⟦T, T, Number⟧) -> Enumerable⟦T⟧
     // returns a new List containing all of my elements, but sorted according to the ordering 
-    // established by sortBlock, which should return -1 if its first argument is less than its second
-    //  argument, 0 if they are equal, and +1 otherwise.
+    // established by sortBlock, which should return -1 if its first argument is less than its
+    // second argument, 0 if they are equal, and +1 otherwise.
 }
 ```
 
@@ -849,8 +849,8 @@ List
 
 The type `List⟦T⟧` describes objects that are mutable
 lists of elements that have type `T`. Like sets and
-sequences, list objects can be constructed using the
-`list` request, as in
+sequences, list objects can be constructed by requesting the
+`list` method, as in
 `list⟦T⟧ [ ]`, `list⟦T⟧ [a, b, c]`, or
 `list (existingCollection)`.
 
@@ -877,24 +877,24 @@ type List⟦T⟧ = Sequence⟦T⟧ & type {
     // removes and returns first element of self.  Changes the index of the remaining elements.
 
     removeLast -> T
-    // remove and return last element of self.
+    // removes and returns last element of self.
 
     removeAt(n:Number) -> T
     // removes and returns n^th element of self
 
     remove(element:T) -> List⟦T⟧
-    // removes element from self.  Raises NoSuchObject if not.self.contains(element). 
+    // removes element from self.  Raises NoSuchObject if self.contains(element).not 
     // Returns self
 
     remove(element:T) ifAbsent(action:Block0⟦Unknown⟧) -> List⟦T⟧
     // removes element from self; executes action if it is not contained in self.  Returns self
 
     removeAll(elements:Collection⟦T⟧) -> List⟦T⟧
-    // removes elements from self.  Raises a NoSuchObject exception if any one of 
-    // them is not contained in self.  Returns self
+    // removes elements from self. Raises NoSuchObject exception if any  of 
+    // them is not contained in self. Returns self
     
     removeAll(elements:Collection⟦T⟧) ifAbsent(action:Block0⟦Unknown⟧) -> List⟦T⟧
-    // removes elements from self;  executes action if any of them is not contained in self.  Returns self
+    // removes elements from self; executes action if any of them is not contained in self. Returns self
 
     clear -> List⟦T⟧
     // removes all the elements of self, leaving self empty.  Returns self
@@ -909,11 +909,11 @@ type List⟦T⟧ = Sequence⟦T⟧ & type {
     // returns true when sought is an element of self.
 
     == (other: Object) -> Boolean
-    // returns true when other is a Sequence of the same size as self, containing the same elements 
-    // in the same order.
+    // returns true when other is a Sequence of the same size as self, containing elements that 
+    // are == to those in self, in the same order.
 
     sort -> List⟦T⟧
-    // sorts self, using the < and == operations on my elements.  Returns self.
+    // sorts self in place, using the < and == operations on elements.  Returns self.
     // Compare with sorted, which constructs a new list.
         
     sortBy(sortBlock:Block2⟦T, T, Number⟧) -> List⟦T⟧
@@ -1210,17 +1210,17 @@ for more user-friendly objects. Most programmers should use
 ``` 
 type Array⟦T⟧ =  {
     size -> Number
-    // return the number of elements in self
+    // returns the number of elements in self
 
     at(index: Number) -> T
-    // both of the above return the element of array at index
+    // returns the element of self at index
 
     at(index: Number) put (newValue: T) -> Done
-    // update element of list at given index to newValue
+    // updates the element of self at index to newValue
 
-    sortInitial(n:Number) by(sortBlock:block2⟦T, T, Number⟧) -> Boolean
-    // sorts elements 0..n.  The ordering is determined by sortBlock, which should return -1 
-    // if its first argument is less than its second argument, 0 if they are equal, and +1 otherwise.
+    sortInitial(n:Number) by(sortBlock:block2⟦T, T, Number⟧) -> Self
+    // sorts elements 0..n.  The ordering is determined by sortBlock, which should return -1 if
+    // its first argument is less than its second argument, 0 if they are equal, and +1 otherwise.
 
     iterator -> Iterator⟦T⟧
     // returns an iterator through my elements.  It is an error to modify the array while
