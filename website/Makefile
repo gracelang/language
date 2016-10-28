@@ -6,7 +6,8 @@ BASE_URL = /~grace/doc
 WEB_SERVER_URL = http://cs.pdx.edu
 WEB_DIRECTORY = public_html/doc/
 
-all: build deploy
+.PHONEY = build deploy serve
+all: deploy
 
 _config.yml: config.yml.in Makefile
 	sed -e "s|<<BASE_URL>>|$(BASE_URL)|; s|<<WEB_SERVER_URL>>|$(WEB_SERVER_URL)|" $< > $@
@@ -38,13 +39,8 @@ build: _config.yml ../standardPrelude/standard.pdf ../standardPrelude/standard.k
 	@echo added to a server. If you wish to run it on localhost:4000, use "make serve"
 	@echo ${LAST_EXIT}
 
-deploy:
+deploy: build
 	@echo Deploying website to grace@linux.cs.pdx.edu
 	@[ -n "$(WEB_SERVER)" ] || { echo "Please set the WEB_SERVER variable to something like user@hostname" && false; }
 	rsync -a -l -z --delete _site/ $(WEB_SERVER):$(WEB_DIRECTORY)
-
-deploy-test-site:
-	@echo Deploying website to black@linux.cs.pdx.edu
-	@[ -n "$(TEST_SERVER)" ] || { echo "Please set the TEST_SERVER variable to something like user@hostname" && false; }
-	rsync -a -l -z --delete _site/ $(TEST_SERVER):$(WEB_DIRECTORY)
 
