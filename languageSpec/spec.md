@@ -1683,8 +1683,8 @@ If A and B are interfaces, then B `<:` A iff for
 every method m in A, there is a corresponding method `m` (with the same
 canonical name) in B such that
 
--   If the method `m` in A has signature “`m(P1,...,Pk)n(Pk+1,...,Pn)... -> R`, and
-    `m` in B has signature “`m(Q1,...,Qk)n(Qk+1,...,Qn)... -> S`”, then
+-   If the method `m` in A has signature `m(P1,...,Pk)n(Pk+1,...,Pn)... -> R`, and
+    `m` in B has signature `m(Q1,...,Qk)n(Qk+1,...,Qn)... -> S`, then
 
     -   parameter types must be contravariant: `Pi <: Qi`
 
