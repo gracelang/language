@@ -972,7 +972,8 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
     // true if predicate holds for any of the elements of self
     
     find(predicate: Block1⟦T,Boolean⟧) ifNone(notFoundBlock: Block0⟦T⟧) -> T
-    // returns an element of self for which predicate holds, or the result of applying notFoundBlock is there is none.
+    // returns an element of self for which predicate holds, or the result of 
+    // applying notFoundBlock if there is no such element.
     
     copy -> Set⟦T⟧
     // returns a copy of self
@@ -981,7 +982,8 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
     // set intersection; returns a new set that is the intersection of self and other
     
     -- (other:Set⟦T⟧) -> Set⟦T⟧
-    // set difference (relative complement); the result contains all of my elements that are not also in other.
+    // set difference (relative complement); the result contains all of my elements that are 
+    // not also in other.
     
     ++ (other:Set⟦T⟧) -> Set⟦T⟧
     // set union; the result contains elements that were in self or in other (or in both).
@@ -1100,8 +1102,8 @@ type Iterator⟦T⟧ = type {
     // elements of the underlying collection, one at a time.
     
     hasNext -> Boolean
-    // returns  true if there is at least one more element, i.e., if next will not raise the Exhausted
-    // exception. Once an iterator is exhausted (i.e., once hasNext returns false), it will remain exhausted. 
+    // returns  true if there is at least one more element, i.e., if next will not raise `Exhausted`.
+    // Once an iterator is exhausted (i.e., once hasNext returns false), it will remain exhausted. 
 }
 ```
 
