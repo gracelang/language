@@ -9,7 +9,7 @@ bibliography:
 
 title: |
     The Grace Standard Dialect\
-    Draft Specification Version 0.7.6
+    Draft Specification Version 0.7.7
 ...
 
 
@@ -272,6 +272,9 @@ type Number = {
     inBase (base:Number) -> String
     // a string representing self as a base number (e.g., 5.inBase 2 = "101")
 
+    isInteger -> Boolean
+    // true if number is an integer, i.e., a whole number with no fractional part
+
     truncated -> Number
     // number obtained by throwing away self's fractional part
 
@@ -292,7 +295,13 @@ type Number = {
     // -1 when self < 0, and +1 when self > 0
 
     isNan -> Boolean
-    // true if this Number is a NaN
+    // true if this Number is not a number, i.e., if it is NaN
+
+    isEven -> Boolean
+    // true if this number is even
+
+    isOdd -> Boolean
+    // true if this number is odd
     
     sin -> Number
     // trigonometric sine (self in radians)
