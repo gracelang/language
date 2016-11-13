@@ -1,6 +1,6 @@
 ---
 title: The Minitest Dialect
-keywords: Logo
+keywords: TDD, test-driven-development, test, dialect
 sidebar: dialects_sidebar
 permalink: /dialects/minitest/
 author:
