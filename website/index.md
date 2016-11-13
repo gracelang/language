@@ -14,7 +14,7 @@ Grace and its accompanying documentation.
 Using Grace could not be easier. If you're just beginning programming, checkout [**our tutorial**]({{site.baseurl}}/introduction/grace/).
 Otherwise, if you have more experience, you can get started with the [web-based editor](http://web.cecs.pdx.edu/~grace/ide/). 
 
-## What Grace Is 
+## What Is Grace? 
 
 Grace is a language designed specifically to make it easier for new programmers to learn to program.  It's small,
 concise, and amazingly powerful. If you are a beginner, you needn't concern yourself with any of the material below, 
