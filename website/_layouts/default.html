@@ -54,30 +54,24 @@
 
 </head>
 <body>
-{% include topnav.html %}
-<!-- Page Content -->
-<div class="container">
-    <div class="col-lg-12">&nbsp;</div>
-    <!-- Content Row -->
-    <div class="row">
-        <!-- Sidebar Column -->
-        <div class="col-md-3">
+    {% include topnav.html %}
+    <!-- Page Content -->
+    <div class="container">
+        <div class="col-lg-12">&nbsp;</div>
+        <!-- Content Row -->
+        <div class="row">
+            <!-- Sidebar Column -->
+            <div class="col-md-3">
 
-          {% include sidebar.html %}
-    <!-- Content Column -->
-    <div class="col-md-9">
-        {{content}}
+              {% include sidebar.html %}
+            <!-- Content Column -->
+            <div class="col-md-9">
+                {{content}}
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
     </div>
-    <!-- /.row -->
-</div>
-<!-- /.container -->
-    </div>
-    <script>
-    jQuery(function ($) {
-        $('.post-content').annotator()
-                .annotator('setupPlugins', {tokenUrl: 'http://example.com/api/token'})
-    });
-    </script>
 </body>
 {% if site.google_analytics %}
 {% include google_analytics.html %}
