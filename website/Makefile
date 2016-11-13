@@ -6,7 +6,7 @@ BASE_URL = /~grace/doc
 WEB_SERVER_URL = http://cs.pdx.edu
 WEB_DIRECTORY = public_html/doc/
 
-.PHONEY = build deploy serve
+.PHONEY = build deploy serve pdfs kramdowns
 all: deploy
 
 _config.yml: config.yml.in Makefile
@@ -16,19 +16,15 @@ serve: build
 	@echo "Running command:"
 	bundle exec jekyll serve --skip-initial-build
 
-../languageSpec/spec.pdf:
-	$(MAKE) -C ../languageSpec $(@F)
+pdfs:
+	$(MAKE) -C ../languageSpec spec_with_grammar.pdf
+	$(MAKE) -C ../standardPrelude standard.pdf
 
-../languageSpec/spec.kramdown:
-	$(MAKE) -C ../languageSpec $(@F)
+kramdowns:
+	$(MAKE) -C ../languageSpec spec.kramdown
+	$(MAKE) -C ../standardPrelude standard.kramdown
 
-../standardPrelude/standard.pdf:
-	$(MAKE) -C ../standardPrelude $(@F)
-
-../standardPrelude/standard.kramdown:
-	$(MAKE) -C ../standardPrelude $(@F)
-
-build: _config.yml ../standardPrelude/standard.pdf ../standardPrelude/standard.kramdown ../languageSpec/spec.pdf ../languageSpec/spec.kramdown
+build: _config.yml pdfs kramdowns
 	$(info Generating source files...)
 	./loadResources
 	./checkJekyll

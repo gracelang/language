@@ -6,48 +6,53 @@
 ## - *.pdf supporting files
 
 ## Copy the scripts into the proper directories
-cp ../standardPrelude/standard.kramdown graceDialects/standardSource.md
-cp ../languageSpec/spec.kramdown graceLangSpec/grammarSpecSource.md
+mkdir -p GraceLangSpec
+cp ../languageSpec/spec.kramdown GraceLangSpec/grammarSpecSource.md
+SPEC_VER=`head -14 GraceLangSpec/grammarSpecSource.md | awk '/Version/ {print $NF}'`
+cp ../standardPrelude/standard.kramdown GraceDialects/standardSource.md
+STDD_VER=`head -14 GraceDialects/standardSource.md | awk '/Version/ {print $NF}'`
 
 ## Delete the old header (first 14 lines)
-sed -i -e '1,14d' graceDialects/standardSource.md
-sed -i -e '1,14d' graceLangSpec/grammarSpecSource.md
+sed -i .bak '1,14d' GraceDialects/standardSource.md
+sed -i .bak '1,14d' GraceLangSpec/grammarSpecSource.md
 
 ## Remove already generated files if they exist
-rm -f graceDialects/standard.md
-rm -f graceLangSpec/spec_with_grammar.md
+rm -f GraceDialects/standard.md
+rm -f GraceLangSpec/spec_with_grammar.md
 
 ## Create standard.md
-cat ./standardHeader.txt graceDialects/standardSource.md > graceDialects/standard.md
+cat ./standardHeader.txt GraceDialects/standardSource.md > GraceDialects/standard.md
 
 ## Create spec_with_grammar.md
-cat ./standardHeader.txt graceLangSpec/grammarSpecSource.md > graceLangSpec/spec_with_grammar.md
-
-#Add the necessary info to standard.md
-sed -i -e "s/<<TITLE-OF-PAGE>>/The Standard Dialect/g" graceDialects/standard.md
-sed -i -e "s/<<KEYWORDS-OF-PAGE>>/Standard, Dialect, standardGrace/g" graceDialects/standard.md
-sed -i -e "s/<<SIDEBAR-OF-PAGE>>/dialects_sidebar/g" graceDialects/standard.md
-sed -i -e "s/<<PERMALINK-OF-PAGE>>/\/dialects\/standard\//g" graceDialects/standard.md
-sed -i -e "s/ <<FOLDER-OF-PAGE>>/Dialects/g" graceDialects/standard.md
-sed -i -e "s/<<<PDF-LINK>>>/**[Download the PDF]({{site.baseurl}}\/gracePdfs\/standard.pdf)**/g" graceDialects/standard.md
-
-#Add the necessary info to spec_with_grammar.md
-sed -i -e "s/<<TITLE-OF-PAGE>>/Language Specification/g" graceLangSpec/spec_with_grammar.md
-sed -i -e "s/<<KEYWORDS-OF-PAGE>>/language/g" graceLangSpec/spec_with_grammar.md
-sed -i -e "s/<<SIDEBAR-OF-PAGE>>/home_sidebar/g" graceLangSpec/spec_with_grammar.md
-sed -i -e "s/<<PERMALINK-OF-PAGE>>/\/lang-spec\//g" graceLangSpec/spec_with_grammar.md
-sed -i -e "s/ <<FOLDER-OF-PAGE>>/Lang-Spec/g" graceLangSpec/spec_with_grammar.md
-sed -i -e "s/<<<PDF-LINK>>>/**[Download the PDF]({{site.baseurl}}\/gracePdfs\/spec_with_grammar.pdf)**/g" graceLangSpec/spec_with_grammar.md
+cat ./standardHeader.txt GraceLangSpec/grammarSpecSource.md > GraceLangSpec/spec_with_grammar.md
 
 #Load the PDFs into the pdf folder
 /bin/rm -r gracePdfs
 mkdir  gracePdfs
 ln ../languageSpec/spec_with_grammar.pdf ../standardPrelude/standard.pdf gracePdfs
 
+#Add the necessary info to standard.md
+sed -i .bak "s/<<TITLE-OF-PAGE>>/The Standard Dialect/g;\
+    s/<<KEYWORDS-OF-PAGE>>/Standard, Dialect, standardGrace/g;\
+    s/<<SIDEBAR-OF-PAGE>>/dialects_sidebar/g;\
+    s/<<PERMALINK-OF-PAGE>>/\/dialects\/standard\//g;\
+    s/ <<FOLDER-OF-PAGE>>/Dialects/g;\
+    s/<<<PDF-LINK>>>/**[Download the PDF]({{site.baseurl}}\/gracePdfs\/standard.pdf)**/g;\
+    s/<<VERSION-NUMBER>>/$STDD_VER/g" GraceDialects/standard.md
+
+#Add the necessary info to spec_with_grammar.md
+sed -i .bak "s/<<TITLE-OF-PAGE>>/Language Specification/g;\
+    s/<<KEYWORDS-OF-PAGE>>/language/g;\
+    s/<<SIDEBAR-OF-PAGE>>/home_sidebar/g;\
+    s/<<PERMALINK-OF-PAGE>>/\/lang-spec\//g;\
+    s/ <<FOLDER-OF-PAGE>>/Lang-Spec/g;\
+    s/<<<PDF-LINK>>>/**[Download the PDF]({{site.baseurl}}\/gracePdfs\/spec_with_grammar.pdf)**/g;\
+    s/<<VERSION-NUMBER>>/$SPEC_VER/g" GraceLangSpec/spec_with_grammar.md
+
 ## Clean up our temporary files
-rm graceDialects/standardSource.md
-rm graceLangSpec/grammarSpecSource.md
-rm graceDialects/standard.md-e
-rm graceLangSpec/spec_with_grammar.md-e
-rm graceDialects/standardSource.md-e
-rm graceLangSpec/grammarSpecSource.md-e
+rm GraceDialects/standardSource.md
+rm GraceLangSpec/grammarSpecSource.md
+rm GraceDialects/standard.md.bak
+rm GraceLangSpec/spec_with_grammar.md.bak
+rm GraceDialects/standardSource.md.bak
+rm GraceLangSpec/grammarSpecSource.md.bak

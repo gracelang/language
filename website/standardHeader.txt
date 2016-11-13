@@ -1,5 +1,6 @@
 ---
 title: <<TITLE-OF-PAGE>>
+version: <<VERSION-NUMBER>>
 keywords: <<KEYWORDS-OF-PAGE>>
 sidebar: <<SIDEBAR-OF-PAGE>>
 permalink: <<PERMALINK-OF-PAGE>>
@@ -12,5 +13,6 @@ author:
 bibliography:
 - 'spec.bib'
 ---
+Version <<VERSION-NUMBER>>
 
 <<<PDF-LINK>>>
