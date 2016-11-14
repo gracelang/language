@@ -18,10 +18,23 @@ while { condition } do {
 }
 ```
 
-First it checks the condition. If it is false, it does nothing. If it is true, it
+First Grace checks the condition. If the condition is `false`, Grace does _nothing_.
+If the condition is true, Grace
 executes the block of code after the `do`. Then it loops back to the top, checking
-the condition again. If it is false, it does nothing and exits the loop. If it is true, it executes the
-block of code after the `do`. Then it loops back to the top, checking the...
+the condition again. 
+If the condition is false, it does nothing and exits the loop. If the condition
+is true, it executes the
+block of code after the `do`. Then it loops back to the top, checking the ...
+
+Notice that the condition is in braces, not parenthesis.  Why is this?  Because
+it is essential to the behaviour of the while loop that the condition is re-evaluated
+every iteration.  If it were in parenthesis, it would be evaluated once before the
+start of the loop, which means that the loop would either not execute at all (if
+the condition were `false`), or would execute forever (if it were `true`).
+Using braces means that the while loop gets a block of code, 
+rather than a simple Boolean value, and can _re-evaluate_ that block on each iteration.
+Don't worry if you didn't quite follow that explanation: just remember to use
+blocks for your conditions.  
 
 Below is an example of a while loop that prints out numbers less than 30, counting
 by threes. Feel free to explore it and change it to see the result.
@@ -38,4 +51,7 @@ do {
 ```
 
 The block of code and the condition play the same roles as in the `while(_)do(_)` loop,
-but here the block is executed first, and the condition checked afterwards.
+but here the block is executed _first_, and the condition checked _after_ the
+block has been executed.
+
+Want to know more?  Read [The Dangers of While Loops]({{site.baseurl}}/variables/while-dangers)
