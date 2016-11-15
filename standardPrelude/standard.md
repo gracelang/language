@@ -272,6 +272,15 @@ type Number = {
     inBase (base:Number) -> String
     // a string representing self as a base number (e.g., 5.inBase 2 = "101")
 
+    asString -> String
+    // returns a string representing self rounded to six decimal places
+
+    asDebugString -> String
+    // returns a string representing self with all available precision
+
+    asStringDecimals(d) -> String
+    // returns a string representing self with exactly d decimal digits
+
     isInteger -> Boolean
     // true if number is an integer, i.e., a whole number with no fractional part
 
