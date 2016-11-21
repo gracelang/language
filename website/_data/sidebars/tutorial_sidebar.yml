@@ -39,6 +39,9 @@ entries:
     - title: Objects
       url: /variables/objects/
       output: web
+    - title: Classes
+      url: /variables/classes/
+      output: web
     - title: Scope and Initialization
       url: /variables/scope/
       output: web
