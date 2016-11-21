@@ -7,7 +7,7 @@ permalink: /variables/classes/
 folder: tutorial
 ---
 An object constructor makes a new object each time it is executed. 
-So, if we want to make 10 objects all the same, all we need do is put the
+So, if we want to make 4 objects all the same, all we need do is put the
 object constructor in a loop:
 
 ```
@@ -24,7 +24,7 @@ repeat 4 times {
 }
 ```
 This adds 4 identical but distinct cat objects, all named `"culver"`, to the list `cats`.
-What do we mean whne we say “distinct”?  We mean that each has its own fields;
+What do we mean when we say “distinct”?  We mean that each has its own fields;
 when one of them eats a mouse, its 
 `miceEaten`variable will change, but those of the other 3 will not.
 
@@ -32,9 +32,10 @@ It's more common to want to give each cat its own name.  To do this, we can use 
 method with a parameter:
 
 ```
-method catNamed (name:String) {
+method catNamed (myName:String) {
     object {
         var miceEaten := 0
+        method name { myName} 
         method eatMouse {
             miceEaten := miceEaten + 1
         }
@@ -48,11 +49,11 @@ method catNamed (name:String) {
 }
 ```
 All we have done here is wrapped the whole object constructor in a method.
-We no longer need to declare a field `name`, becuase we gave the method a
-parameter `name` instead; this parameter will get its value from the argument 
+We no longer need to declare a field `myName`, becuase we have given the method a
+parameter `myName` instead; this parameter will get its value from the argument 
 provided when the method is requested.
 
-<object id="example-1" data="{{site.editor}}?objects" width="100%" height="550px"> </object>
+<object id="example-1" data="{{site.editor}}?object+method" width="100%" height="550px"> </object>
 
 Let‘s use this method to make 4 cats:
 ```

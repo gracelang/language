@@ -33,18 +33,21 @@ def culver = object {  // make a new object
 This cat has a `name`, which cannot be changed (since it is a `def`), and `miceEaten`, a variable to
 keep track of how many mice she has eaten. Furthermore, she has a method
 `eatMouse` that increments `miceEaten` by one each time it is executed.
-To request execution of a method inside of an object, we use the syntax `_object.method_`.
+To request execution of a method inside of an object, we use the syntax 
+`«receiver».«methodName»`, where «receiver»is an expression that evaluates
+to an object, and «methodName» is the name of a method declared on that object.
 For instance, `culver.eatMouse`
 requests that the object `culver` execute the `eatMouse` method inside it.
 Requesting the method `miceConsumption` will return the current value of `miceEaten`,
-and the method greeting will return a suitable string.
+and the method `greeting` will return a suitable string.
 
 What does “encapsulate” mean?  Essentially, it means to “draw a box around”.
 These boxes help to limit the amount of stuff we have to keep in our heads at 
 one time, and also limit the effect of any changes that we make to the code 
-in the box.
+in the box.  The box groups the data in the `def`s and `var`s with the `method`s 
+that manipulate it.  By default, the methods alone are visible from outside the box.
 
-Encapsulation means that there is no way to access the variable `miceEaten` 
+Because of this encapsulation, that there is no way to access the variable `miceEaten` 
 other than through the two methods `eatMouse` and `miceConsumption`.
 And there is no way to access the cat's `name` at all — although it is used
 to vary the response from `greeting`.
@@ -75,7 +78,7 @@ def culver = object {  // make a new object
     
 }
 ```
-Notice that we have changed the name of the field to `myName', and declared
+Notice that we have changed the name of the field to `myName`, and declared
 a method that will return its value.
 The method `name` is visible from outside the object, while `myName` is visible
 only inside the object.
@@ -102,8 +105,8 @@ the second is called a writer method, and changes the value of the `var`.
 
 If you want to make several objects, for example, several cats, then you can
 wrap your object constructor in a `method` declaration.  The object can then 
-use the parameters of the method to set ist fields.  This is quite a common
-pattern: read about it in the page on [classes](/variables/classes).
+use the parameters of the method to set its fields.  This is quite a common
+pattern: read about it in the page on [classes]({{site.baseurl}}/variables/classes/).
     
     
 
