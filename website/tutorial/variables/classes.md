@@ -6,6 +6,8 @@ sidebar: tutorial_sidebar
 permalink: /variables/classes/
 folder: tutorial
 ---
+## Creating multiple similar objects
+
 An object constructor makes a new object each time it is executed. 
 So, if we want to make 4 objects all the same, all we need do is put the
 object constructor in a loop:
