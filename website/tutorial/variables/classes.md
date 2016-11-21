@@ -53,19 +53,34 @@ We no longer need to declare a field `myName`, becuase we have given the method 
 parameter `myName` instead; this parameter will get its value from the argument 
 provided when the method is requested.
 
-<object id="example-1" data="{{site.editor}}?object+method" width="100%" height="550px"> </object>
-
 Let‘s use this method to make 4 cats:
-```
-def cats = list [ ]
-for [ "Macavity", "Growltiger", "Jennyanydots", "Old Deuteronomy"] do { each ->
-    cats.add ( catNamed (each) )
-}
-```    
+
+<object id="example-1" data="{{site.editor}}?object+method" width="100%" height="550px"> </object>
+  
 ## Classes
 
-Now we can finally tell you what a class is in Grace: it's a shorthand for
-a method that has nothing but an object constructor in it's body.  Thus, a 
+Now we can finally tell you what a class is in Grace: it is a shorthand for
+a method that has nothing but an object constructor in its body.  Thus, a 
 class will always return a new object whenever it is executed.
+
+We can re-write the above example using the class syntax:
+
+```
+class catNamed (myName:String) {
+    var miceEaten := 0
+    method name { myName} 
+    method eatMouse {
+        miceEaten := miceEaten + 1
+    }
+    method miceConsumption {
+        miceEaten
+    }
+    method greeting {
+        "{name} says meow"
+    }
+}
+```
+We can then use this class to make multiple cats:
+<object id="example-1" data="{{site.editor}}?class+method" width="100%" height="550px"> </object>
 
 
