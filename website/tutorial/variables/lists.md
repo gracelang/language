@@ -6,20 +6,73 @@ sidebar: tutorial_sidebar
 permalink: /variables/lists/
 folder: tutorial
 ---
-**Lists** are a type of Object that can hold multiple values, each of which is an **element** of
-the list. A list is declared like this:
+**Lists** are a kind of Object that can hold multiple values; these values
+are called the a **elements** of
+the list. A list is created like this:
 
 ```
 def animals = list ["dog", "cat", "whale", "bird", "mouse"]
+def sizes = list [52, 78, 45, 23]
 ```
 
-It doesn't matter how many elements you put between the `[ ]`, a list can hold arbitrarily
-many things. Also note that you can put no items in a list, creating an empty list.
-After a list is created, you can modify the contents. To get a specific element from a list, you
-can use `list.at(index)`, where replacing `index` with 1 would get the first element,
-2 would get the second, and so on. To add an element to the list, use `list.add(element)`.
-To remove an element from a list, use `list.remove(element)`.
+The first declaration creates a list with five string elements, and binds
+it to the name `animals`; the second declaration creates a list containing
+four numbers, and bind it to the name `sizes`.
+It doesn't matter how many elements you put between the `[ ]`; a list can contain
+arbitrarily many things. Moreover, the ”things“ can be any kind of object.
+We have used numbers 
+and strings, but the elements can be anything — even other lists.
+Also note that you can put _no_ elements in a list, creating an empty list.
 
+```
+def empty = list [ ]
+```
+
+## Basic Operations On lists
+
+To get a specific element from a list, you
+can use the method `at(_)`, like this: `animals.at(1)`, which returns `"dog"`
+or `animals.at(4)`, which returns `"bird"`.
+
+After a list is created, you can _modify_ its contents.
+To add an element to the list, use `animals.addLast "squirrel"` or
+`animals.addFirst "badger"`, depending on whether you want to make the
+new element the last or the first one in the list. 
+To remove an element from a list, use `animals.removeLast`, `animals.removeFirst`.
+You can also say `aminals.remove "whale"`.
+
+Notice that adding or removing the `first` element of the list will change the
+position of all of the elements in the list.  So, after `animals.addFirst "badger"`
+`animals.at 1` will be "badger", and not "dog"; instead, `animals.at 2` will be "dog".
+
+Try out some of these methods my modifying this example code.
 <object id="example-1" data="{{site.editor}}?lists" width="100%" height="550px"> </object>
 
+You can request many other methods on list.  
+Here are a few of the more common ones:
+
+```
+++ (other) -> List
+// returns a new list formed by concatenating this list and other; other can
+// be any Collection, such as a string or another list.  
+
+== (other) -> Boolean
+// returns true if self and other contain the same elements, in the same order.
+
+contains(soughtFor) -> Boolean
+// returns true if this list contains the element soughtFor.
+
+sort -> List
+// Modifies this list by sorting it in-place.  Sorting uses the < and == methods
+// on the elements of this list.
+
+sorted -> List
+// returns a new list that contains the same elements as this list, but in sorted 
+// order, as determined by the < and == methods on the elements of this list.
+
+Here are some examples; edit them and try some variations.  Make sure that you
+understand why you are seeing the results that you see.
+<object id="example-1" data="{{site.editor}}?lists2" width="100%" height="550px"> </object>
+
 Here is a complete list of all methods on [Lists](http://gracelang.org/documents/grace-prelude-0.7.0.html#list)
+
