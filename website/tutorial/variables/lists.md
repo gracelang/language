@@ -48,10 +48,16 @@ position of all of the elements in the list.  So, after `animals.addFirst "badge
 Try out some of these methods my modifying this example code.
 <object id="example-1" data="{{site.editor}}?lists" width="100%" height="550px"> </object>
 
-You can request many other methods on list.  
+## Additional List Operations
+
+You can request many other methods on list.
 Here are a few of the more common ones:
 
 ```
+
+size -> Number
+// returns the number of elements in this list.
+
 ++ (other) -> List
 // returns a new list formed by concatenating this list and other; other can
 // be any Collection, such as a string or another list.  
@@ -69,10 +75,24 @@ sort -> List
 sorted -> List
 // returns a new list that contains the same elements as this list, but in sorted 
 // order, as determined by the < and == methods on the elements of this list.
+```
 
 Here are some examples; edit them and try some variations.  Make sure that you
-understand why you are seeing the results that you see.
+understand _why_ you are seeing the results that you see.
 <object id="example-1" data="{{site.editor}}?lists2" width="100%" height="550px"> </object>
 
-Here is a complete list of all methods on [Lists](http://gracelang.org/documents/grace-prelude-0.7.0.html#list)
+## List Reference
 
+Here is the documentation for all methods on [Lists]({{site.baseurl}}/dialects/standard/#list)
+
+## Lists as Collections
+
+Lists are a particular kind of collection.  Other collections include 
+sets, ranges and strings.  Like all collections, if you need to do some operation 
+to every element of the collection, you can use a [for loop]({{site.baseurl}}/control/for)
+or the [`do` method]({{site.baseurl}}/variables/do).
+
+In addition to `do`, there are several other useful methods on collections.
+This tutorial discusses [`fold(_)startingWith(_)`]({{site.baseurl}}/variables/fold)
+and [`map(_)`]({{site.baseurl}}/variables/map).  The full list is in the
+[specification of the standard dialect]({{site.baseurl}}/dialects/standard/#common-abstractions).
