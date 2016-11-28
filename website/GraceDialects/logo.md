@@ -95,13 +95,18 @@ In the Grace implementation of Logo, the turtle is an object that has the follow
 
  * `penWidth` is the width of the pen, and thus of the line that it will draw.
 
- * `penColor` is the color of the pen, and thus of the line that it will draw.  Supported colors are: `red` `green` `blue` and `black`.
+ * `penColor` is the color of the pen, and thus of the line that it will draw.  Supported colors are: `red` `green` `blue`, `black`,
+`yellow`, `white`, `magenta`, `cyan` and `sienna`.   If you want other colors, you can make them using **r g b** coordinates.  You can 
+find the **r g b** coordinates for colors on the web, e.g., [here](http://cloford.com/resources/colours/500col.htm).
+
 These attributes behave like variables to which you can assign new values.
 
 **For example:** you can change the attributes of the turtle by *assigning* to `penWidth` or `penColor`, like this:
 
     penWidth := 4
     penColor := red
+    def darkOrange = r 255 g 140 b 0
+    penColor := darkOrange
 
  * `speed` is the speed at which the turtle walks. You can change the speed by assigning to the variable `speed`.
 
@@ -114,6 +119,9 @@ These attributes behave like variables to which you can assign new values.
 
 Attempts to set the speed to less than 1 are ignored.
 
+You can ask for the turtle's current position using `position` and its heading using `angle`.
+The position is a `Point` object, like 56@12.  The turtle always starst out in the center of the canvas.
+The angle is measured in degrees, with North being zero.
 
 ### Bigger Pictures
 
