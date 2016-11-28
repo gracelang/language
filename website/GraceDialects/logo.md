@@ -79,8 +79,8 @@ In contrast, *vars* can change over time.  We “assign” a value to a variable
 
 ### Example 3
 
-This example draws a stylized house. It's a bit more complex because we start (on line 6) by telling the turtle to `moveToBottomLeft`, which isn't seomthing that it already knows how to do.  Scroll down and you will see that on lines 29–37 we *teach* the turtle how to `moveToBottomLeft` by giving it a _method_ with that name.
-The method defines `moveToBottomLeft` in terms of simpler thangs that the Turtle *does* know how to do.
+This example draws a stylized house. It's a bit more complex because we start (on line 6) by telling the turtle to `moveToBottomLeft`, which isn't something that it already knows how to do.  Scroll down and you will see that on lines 29–37 we *teach* the turtle how to `moveToBottomLeft` by giving it a _method_ with that name.
+The method defines `moveToBottomLeft` in terms of simpler things that the Turtle *does* know how to do.
 
 Similarly, this example (on lines 22–27) teaches the turtle a method for drawing a `square(_)`.   This is used on line 9.
 
@@ -95,8 +95,8 @@ In the Grace implementation of Logo, the turtle is an object that has the follow
 
  * `penWidth` is the width of the pen, and thus of the line that it will draw.
 
- * `penColor` is the color of the pen, and thus of the line that it will draw.  Supported colors are: `red` `green` `blue`, `black`,
-`yellow`, `white`, `magenta`, `cyan` and `sienna`.   If you want other colors, you can make them using **r g b** coordinates.  You can 
+ * `penColor` is the color of the pen, and thus of the line that it will draw.  The pre-defined colors are `red` `green` `blue`, `black`,
+`yellow`, `white`, `magenta`, `cyan` and `sienna`.   If you want other colors, you can define them using **r g b** coordinates; you can 
 find the **r g b** coordinates for colors on the web, e.g., [here](http://cloford.com/resources/colours/500col.htm).
 
 These attributes behave like variables to which you can assign new values.
@@ -105,6 +105,7 @@ These attributes behave like variables to which you can assign new values.
 
     penWidth := 4
     penColor := red
+    forward 10
     def darkOrange = r 255 g 140 b 0
     penColor := darkOrange
 
@@ -120,7 +121,7 @@ These attributes behave like variables to which you can assign new values.
 Attempts to set the speed to less than 1 are ignored.
 
 You can ask for the turtle's current position using `position` and its heading using `angle`.
-The position is a `Point` object, like 56@12.  The turtle always starst out in the center of the canvas.
+The position is a `Point` object, like 56@12.  The turtle always starts out in the center of the canvas.
 The angle is measured in degrees, with North being zero.
 
 ### Bigger Pictures
