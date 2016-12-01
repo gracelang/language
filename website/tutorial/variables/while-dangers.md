@@ -17,12 +17,12 @@ the end of the universe, if need be.  This is usually not what you want!
 
 There are a few ways you can avoid this problem.
 
-    1. Don't use while unless you need to!  If possible, use a for-loop.
+ 1. Don't use while unless you need to!  If possible, use a for-loop.
 
-    2. Review the loop body to make sure that you are changing something that will
+ 2. Review the loop body to make sure that you are changing something that will
 eventually change the `condition` from `true` to `false`
 
-    3. If you aren't sure, print out the condition at the end of the loop body.
+ 3. If you aren't sure, print out the condition at the end of the loop body.
 In the Grace web IDE, if you think that you might have written an infinite loop
 you can stop it by refreshing the IDE page in your web browser.  
 
