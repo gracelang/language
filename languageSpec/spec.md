@@ -900,7 +900,7 @@ first creates a new object with no attributes, and binds it to `self`.
 
 Second, the attributes of the superobject (created by the `inherit`
 clause, possibly modified by `alias` and `exclude`) are installed in the new
-object.
+object.  Fields (`def`s and `vars`s) thus installed are uninitialised.
 
 Third, the methods of all traits
 (created by `use`
@@ -923,9 +923,9 @@ overridden by a local declaration.
 
 Fifth, types are evaluated and bound to their declarations.
 Types cannot depend on runtime values; if they depend on the type of a
-constant (because the constant is treated as a [Singleton type](#singleton- types),
+constant (because the constant is treated as a [Singleton type](#singleton-types)),
 then that constant, if overridden in a subclass, can be
-overridden only by a new object with the same type.
+overridden only by another object with the same type.
 
 Finally, field initializers and executable statements are executed,
 starting with the most superior inherited superobject, and finishing with the
