@@ -225,6 +225,9 @@ fractions. (Thus, *minigrace* `Number`s are
 what some other languages call floating point numbers, floats or
 double-precision). `Number`s are represented with a
 precision of approximately 51 bits.
+Number constants include `π` and `infinity`, the latter being 
+larger than any finite number, as well as conventional numerals like
+`27`.
 
 ``` 
 type Number = {
