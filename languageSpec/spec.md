@@ -33,6 +33,13 @@ change. In particular, this version does *not* address:
 
 -   testing.
 
+Many of the expressions and commands in Grace are actually defined in the
+Grace standard prelude (and hence may not be supported in all dialects).
+Because some of these constructs are used in the examples in this document,
+we urge you to have a copy of the documentation for the standard prelude
+at hand when reading this document.  It should be available in the same
+directory where this document was found.
+
 # User Model
 
 ------------------------------------------------------------------------
