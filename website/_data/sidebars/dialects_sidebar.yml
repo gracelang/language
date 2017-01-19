@@ -7,17 +7,21 @@ entries:
   - title: Dialects
     output: web
     folderitems:
-    - title: Logo
+    - title: logo
       url: /dialects/logo/
       output: web
       type: web
-    - title: Minitest
+    - title: minitest
       url: /dialects/minitest/
       output: web
-    - title: Static Type
+    - title: statictype
       url: /dialects/staticTypes/
       output: web
-    - title: Standard
+    - title: standardGrace
       url: /dialects/standard/
       output: web
+    - title: Writing a dialect
+      url: /dialects/writeDialect/
+      output: web
+      type: web
 

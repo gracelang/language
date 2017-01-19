@@ -18,7 +18,7 @@ entries:
     - title: Language Specification
       url: /lang-spec/
       output: web
-    - title: Standard Library Documentation
+    - title: Dialect _standardGrace_
       url: /dialects/standard/
       output: web
     - title: Help

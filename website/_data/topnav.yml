@@ -12,17 +12,19 @@ topnav_dropdowns:
   folders:
     - title: Topics
       folderitems:
-        - title: Language Specifications
+        - title: Language Specification
           url: /lang-spec/
-        - title: Library Documentation
+        - title: standardGrace (the standard library)
           url: /dialects/standard/
     - title: Dialects
       folderitems:
-        - title: Logo
+        - title: logo
           url: /dialects/logo/
-        - title: Minitest
+        - title: minitest
           url: /dialects/minitest/
-        - title: Static Type
+        - title: statictype
           url: /dialects/staticTypes/
-        - title: Standard
+        - title: standardGrace
           url: /dialects/standard/
+        - title: Writing a dialect
+          url: /dialects/writeDialect/

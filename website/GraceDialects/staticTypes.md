@@ -7,4 +7,4 @@ toc: false
 folder: Dialects
 ---
 
-The dialect "staticType" is experimental, and not currently documented.
+The dialect "staticTypes" is experimental, and not currently documented.
