@@ -926,13 +926,9 @@ new object: local declarations
 override declarations from both superobject and
 traits, except that
 it is an _object composition error_ for an alias to be
-overridden by a local declaration.
-
-Fifth, types are evaluated and bound to their declarations.
-Types cannot depend on runtime values; if they depend on the type of a
-constant (because the constant is treated as a [Singleton type](#singleton-types)),
-then that constant, if overridden in a subclass, can be
-overridden only by another object with the same type.
+overridden by a local declaration. 
+The term "local declarations" comprises declarations of
+methods, types and fields (both `def`s and `vars`s).
 
 Finally, field initializers and executable statements are executed,
 starting with the most superior inherited superobject, and finishing with the
