@@ -7,7 +7,7 @@ author:
 bibliography:
 - 'spec.bib'
 
-title: |
+title:
     The Grace Programming Language\
     Draft Specification Version 0.7.7
 ...
@@ -1496,8 +1496,13 @@ exception is silently dropped.
 
 # Types
 
-Grace uses structural typing @Modula3 @malayeri08 @whiteoak08. Types
-primarily describe the requests that objects can answer. Fields do not
+Grace uses structural typing, as do
+[Modula-3](https://www.cs.purdue.edu/homes/hosking/m3/reference/)
+and [WhiteOak](http://doi.acm.org/10.1145/1449764.1449771).
+[Malayeri and Aldrich](http://www.cs.cmu.edu/~donna/public/ecoop08.pdf)
+discuss the differences between nominal and structural typing.
+
+Types primarily describe the requests that objects can answer. Fields do not
 directly influence types, except that a field that is public, readable
 or writable is treated as the appropriate method or methods.
 
