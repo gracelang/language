@@ -560,7 +560,7 @@ In the third example, the canonical name of the method is `max(_,_)`.
  of operator symbols
 
 ```
-    method + (other : Point) -> Point {
+    method + (other:Point) -> Point {
         (x + other.x) @ (y + other.y)
     }
 
@@ -777,8 +777,8 @@ Like everything in Grace, object constructors are lexically scoped.
 A name can be bound to an object constructor, like this:
 
     def unnamedCat =  object {
-         def colour : Colour = Colour.tabby
-         def name : String = "Unnamed"
+         def colour:Colour = Colour.tabby
+         def name:String = "Unnamed"
          var miceEaten := 0
          method eatMouse { miceEaten := miceEaten + 1 }
     }
@@ -853,8 +853,8 @@ with type arguments.
 
     class vectorOfSize(size)⟦T⟧ {
         var contents := Array.size(size)
-        method at(index : Number) -> T {return contents.at() }
-        method at(index : Number) put(elem : T) { }
+        method at(index: Number) -> T { return contents.at(index) }
+        method at(index: Number) put(elem: T) { ... }
     }
 
     class sortedVectorOfSize(size)⟦T⟧
@@ -1393,15 +1393,16 @@ mistaken for a declaration of a parameter to the block.
 
 ## Self-Matching Objects
 
-The objects created by [String Literals](#strings) and [Numerals](#numbers)
-are patterns that match strings and numbers that are equal to the literal.
+The objects created by [String Literals](#strings) [Numerals](#numbers) and
+[the Boolean constants](#booleans)
+are patterns that match strings, numbers and Booleans that are equal to the literal.
 
 **Examples**
 
 Matching blocks and self-matching objects can be conveniently used
 in the `match(_)case(_)...` family of methods.
 
-    method fib(n : Number) -> Number {
+    method fib(n:Number) -> Number {
         match (n)
 	        case { 0 -> 0 }
 	        case { 1 -> 1 }
@@ -1432,78 +1433,91 @@ If
 
 # Exceptions
 
-Grace supports exceptions, which can be raised and caught.
+Grace supports exceptions (more precisely, exception packets), which can be raised and caught.
 At the site where an exceptional situation is detected, an exception is
 raised by requesting the `raise` method on an `ExceptionKind` object,
-with a string argument explaining the problem.
+with a string argument explaining the problem, and an optional data object.
 
-
-Raising an exception does two things: it creates an `exception` object
+Raising an exception does two things: it creates an `ExceptionPacket` object
 of the specified kind, and terminates the execution of the expression
-containing the `raise` request; it is not possible to restart or
-resume that execution, although reflection (and thus debuggers) should have
-access to the stack at the point the exception is
-thrown. Execution continues when the exception is *caught.*
+containing the `raise` request. It is not possible to restart or
+resume that execution. Execution continues when the exception is *caught.*
 
 **Examples**
-
 
         BoundsError.raise "index {ix} not in range 1..{n}"
         UserException.raise "impossible happened"
 
 ## Kinds of Exception
 
-Grace defines a hierarchy of kinds of exception. All exceptions have the same type, that is, they understand the same set of requests. However, there are various kinds of exception, corresponding to various kinds of exceptional situation.
-
-The exception hierarchy classifies these kinds of exception using `ExceptionKind`
-objects, which have the following type:
+Grace defines a hierarchy of _kinds_ of exception; each kind of exception
+corresponds to a different kind of exceptional situation.
+All exceptions have the same _type_, that is, they understand the same set of 
+requests.  A hierarchy of exception kinds is used to classify exceptions.
 
     type ExceptionKind = Pattern & {
         parent -> ExceptionKind
-        // answers the exceptionKind that is the parent of this exception in the
-        // hierarchy. The parent of exception is defined to be exception. The parent
-        // of any other exceptionKind is the exception that was refined to create it.
+        // answers the ExceptionKind that is the parent of this exception in the
+        // hierarchy. The parent of Exception is defined to be Exception. The parent
+        // of any other ExceptionKind is the object that was refined to create it.
         
         refine (name:String) -> ExceptionKind
-        // answers a new exceptionKind, which is a refinement of self.
+        // answers a new ExceptionKind object, which is a refinement of self.
+
+        name -> String
+        // answers the name given when this ExceptionKind object was created.
         
         raise (message:String)
         // creates an exception of this kind, terminating the current execution,
         // and transferring control to an appropriate handler.
         
         raise (message:String) with (data:Object)
-        // similar to raise(), except that the object data is associated with the
+        // similar to raise(_), except that the object data is associated with the
         // new exception.
+
+        == (other:Object) → Boolean
+        // answers true if other is an ExceptionKind such that parent == other.parent
+        // and name = other.name, otherwise false.
     }
 
-Because `ExceptionKinds` are also `Patterns`, they support the pattern protocol (`match`, `&`, and `|`). Perhaps more pertinently, this means that they can be used as the argument of the catch blocks in a `try()catch()...` construct.
+The root of the hierarchy of `ExceptionKind`s is `Exception`; all other `ExceptionKinds` 
+are (direct or indirect) refinements of `Exception`. 
+The `name` of `Exception` is `"Exception"`, and
+the parent of `Exception` is `Exception` itself.
 
-At the top of the hierarchy is the `exception` object; all exceptions are refinements of `exception`.  There are three immediate refinements of `exception`:
+Because `ExceptionKinds` are also `Patterns`, they support the pattern protocol 
+(`match`, `&`, and `|`); an `ExceptionKind` object `e` will `match` any exception 
+raised from `e'`, and any exception raised from a `refine`ment of `e'`, where `e' == e`, 
+This means that `ExceptionKinds` can be used as the 
+patterns of the catch blocks in a `try(_)catch(_)…finally(_)` construct.
+
+Grace defines three direct refinements of `Exception`:
 
  * `EnvironmentException`: those exceptions arising from interactions between the program and the environment, including network exceptions, file system exceptions, and inappropriate user input.
  * `ProgrammingError`: exceptions arising from programming errors.
-Examples are `IndexOutOfBounds`, `NoSuchMethod`, and `NoSuchObject`.
+       Examples are `IndexOutOfBounds`, `NoSuchMethod`, and `NoSuchObject`.
  * `ResourceException`: exceptions arising from an implementation insufficiency, such as running out of memory or disk space.
 
 Notice that there is no category for "expected" exceptions.  This is deliberate; expected events should not be represented by exceptions, but by other values and control structures.
 For example, if you you have a key that may or may not be in a dictionary, you should not request the `at` method and catch the `NoSuchObject` exception.  Instead, you should request the `at(_)ifAbsent(_)` method.
 
-Each exception is matched by the `ExceptionKind` that was raised to create it, and all of the ancestors of that kind of exception. Because `Exception` is the top of the exception hierarchy, it matches all exceptions.
+## Exception Packets
 
-Exceptions have the following type.
+Exception packet objects are generated when an exception is raised.
 
-    type Exception = type {
-        exception -> ExceptionKind    // the exceptionKind of this exception.
-        message -> String     // the message that was provided when this exception was raised.
+    type ExceptionPacket = type {
+        exception -> ExceptionKind   // the exceptionKind that raised this exception.
+        message -> String            // the message provided when this exception was raised.
         
-        data -> Object      // the data object that was associated with this exception
-        // when it was raised, if there was one. Otherwise, the string "no data".
+        data -> Object               // the data object associated with this exception
+                                     // when it was raised, if there was one. Otherwise, 
+                                     // the string "no data".
         
-        lineNumber -> Number        // the source code line number
-        // of the raise request that created this exception.
+        lineNumber -> Number         // the source-code line of the raise request
+                                     //  that created this exception.
         
-        moduleName -> String        // the name of the module
-        // containing the raise request that created this exception.
+        moduleName -> String         // the name of the module containing the raise
+                                     // request that created this exception.
         
         backtrace -> List<String>
         // a description of the call stack at the time that this exception was raised.
@@ -1511,15 +1525,15 @@ Exceptions have the following type.
         // context that raised the exception.
     }
 
-Exceptions are distinguished by the name passed to the refine method when they were
-created. Exception packets also contain a "data" field, which may be populated
-with any object using the `raise(_)with(_)` method on exceptions:
+The `data` field of an `ExceptionPacket` may be populated
+with any object using the `raise(_)with(_)` method on an `ExceptionKind` object. For
+example:
 
 ```
 MyException.raise "A message" with (anObject)
 ```
 
-There is no behaviour or requirement attached to this object. It is simply stored to be used by the exception handler if desired.
+The `data` object is stored so that it can be used (if desired) when the exception is caught.
 
 
 ## Catching Exceptions
@@ -1538,9 +1552,9 @@ during the evaluation of the `try` block `expression`, the `catch` blocks
 `block 1`, `block 2`, …, `block n`, are attempted, in order,
 until one of them matches the exception. If none of them matches, then
 the process of matching the exception continues in the
-dynamically-surrounding `try(_) catch(_) ... catch(_) finally(_)`. The
+dynamically-surrounding `try(_)catch(_)…finally(_)`. The
 `finalBlock` is always executed before control leaves the
-`try(_) catch(_) ... catch(_) finally(_)` construct, whether or not an
+`try(_)catch(_)…finally(_)` construct, whether or not an
 exception is raised, and whether or not one of the catch blocks returns.
 
 Finally clauses can return early, either by executing a `return`, or by
@@ -1553,12 +1567,12 @@ exception is silently dropped.
     try {
         def f = io.open("data.store", "r")
     } catch {
-        e: NoSuchFile -> print "No Such File"
+        e: NoSuchFile -> print "{e.message}\nFile does not exist."
     } catch {
         e: PermissionError -> print "Permission denied"
     } catch {
         _: Exception -> print "Unidentified Error"
-        system.exit
+        system.exit(1)
     } finally {
         f.close
     }
@@ -1567,7 +1581,7 @@ A single handler may be defined for more than one kind of exception using the `|
 
     try {
         try_block
-    } case { e : MyError | AnotherError ->
+    } case { e:MyError | AnotherError ->
         handler
     }
 
@@ -1601,8 +1615,8 @@ this means that types can be checked statically.
 A number of types are declared in the standard prelude and included in
 most dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`](#type-object),
 [`Number`](#numbers), [`String`](#strings), `Block0`, `Block1`,
-`Block2`, `Fun`, `Iterator`, `Pattern`, `Exception`,
-`ExceptionKind`, and [`Type`](#type).
+`Block2`, `Fun`, `Iterator`, `Pattern`, [`ExceptionPacket`](#exception-packets),
+[`ExceptionKind`](#kinds-of-exception), and [`Type`](#type-type).
 
 ### Type None
 
@@ -1710,7 +1724,7 @@ and the types of the parameters and results of those methods. Interfaces can als
 contain definitions of other types; this enables interfaces to describe types nested
 inside objects.
 
-The various `Cat` object and class descriptions (see
+The various cat objects and class descriptions (see
 [Objects, Classes, and Traits](#objects-classes-and-traits)) would create objects that
 conform to this interface:
 
@@ -1718,7 +1732,7 @@ conform to this interface:
         colour -> Colour
         name -> String
         miceEaten -> Number
-        miceEaten:= (n : Number) -> Done
+        miceEaten:= (n:Number) -> Done
     }
 
 Note that the public methods of `Object` are implicitly included in the type
