@@ -13,8 +13,7 @@ title: |
 ...
 
 
-Introduction
-============
+# Introduction
 
 This is a specification of the standard dialect of Grace, called `standardGrace`.
 Grace programs run in this dialect unless they nominate a different
@@ -24,11 +23,9 @@ general purpose programming..
 This specification is notably incomplete, and everything is subject to
 change. 
 
-Control Structures
-==================
+# Control Structures
 
-Conditional
------------
+## Conditional
 
 Grace includes a conventional `if`…`then`
 …`else` conditional, as illustrated here:
@@ -77,8 +74,7 @@ Grace also includes a multi-way
 `match`…`case` statement, which is
 described in the language specification.
 
-Bounded Loops
--------------
+## Bounded Loops
 
 The simplest loop is a *repeat–times loop*, which repeats a block of
 code a pre-determined number of times:
@@ -96,8 +92,7 @@ The *for–do* and *for–and–do* loops are governed by collections. They
 execute a block of code repeatedly, depending on the elements of the
 collection, and are described in the [Section on Iteration and **for** loops](#iteration-and-for-loops).
 
-Unbounded Loops
----------------
+## Unbounded Loops
 
 Unbounded loops execute a block of code repeatedly, so long as some
 condition is satisfied. They terminate when the condition ceases to
@@ -138,8 +133,7 @@ determined in advance. This is what we mean by “unbounded loop”. The
 number of times may even be infinite—a common coding error for
 beginners.
 
-Match Case
-----------
+## Match Case
 
 Matching blocks and self-matching objects can be conveniently used
 in the `match(_)case(_)...` family of methods to support multiway branching.
@@ -161,8 +155,7 @@ If `match(_)case(_)...` does not find a match, it raises a
 non-exhaustive match exception.  
 
 
-ValueOf
--------
+## ValueOf
 
 Grace's `valueOf` allows a statement list where an expression is
 required.
@@ -175,15 +168,13 @@ def constant = valueOf {
 }
 ```
 
-Built-in Types
-==============
+# Built-in Types
 
 Grace supports built-in objects with types `Object`,
 `Number`, `Boolean`, and
 `String.`
 
-Object
-------
+## Object
 
 All Grace objects (except `done`) understand the methods in type
 `Object`. These methods will often be omitted when other types are
@@ -216,8 +207,7 @@ type Object = {
 ```
 
 
-Number
-------
+## Number
 
 `Number` describes all numeric values in
 *minigrace*, including integers and numbers with decimal
@@ -347,8 +337,7 @@ type Number = {
 }
 ```
 
-String
-------
+## String
 
 String constructors are written surrounded by double quote characters.
 There are three commonly-used escape characters:
@@ -544,8 +533,7 @@ type String =  {
 }
 ```
 
-Boolean
--------
+## Boolean
 
 The Boolean literals are `true` and `false`.
 
@@ -575,8 +563,7 @@ type BlockBoolean = { apply -> Boolean }
 type BlockOrBoolean = BlockBoolean | Boolean 
 ```
 
-Blocks
-------
+## Blocks
 
 Blocks are anonymous functions that take zero or more arguments and
 return once result.  There is a family of `Block` types that describe
@@ -595,8 +582,7 @@ type Block2⟦S,T,R⟧ = type {
 ```
 
 
-Point
------
+## Point
 
 Points can be thought of as locations in the cartesian plane, or as
 2-dimensional vectors from the origin to a specified location. Points
@@ -645,8 +631,7 @@ type Point =  {
 }
 ```
 
-Binding
--------
+## Binding
 
 A binding is an immutable pair comprising a `key` and a
 `value`. Bindings are created with the infix
@@ -660,8 +645,7 @@ requesting `binding.key(k) value(v)`.
         // returns the value
     }
 
-Collection objects
-==================
+# Collection objects
 
 The objects described in this section are made available to all standard
 Grace programs. (This means that they are defined as part of the
@@ -674,8 +658,7 @@ and their brackets can be omitted; this is equivalent to using
 `Unknown` as the argument, which says that the programmer
 either does not know, or does not care to state, the type.
 
-Common Abstractions 
--------------------
+## Common Abstractions 
 
 The major kinds of collection are `sequence`, `list`, `set` and
 `dictionary`. Although these objects differ in their details, they share
@@ -729,8 +712,7 @@ type Collection⟦T⟧ = type {
 }
 ```
 
-Collection Constructors
-------
+## Collection Constructors
 
 The Grace language uses brackets as a syntax for constructing `Collection`
 objects. `[2, 3, 4]` is a collection containing the three numbers `2`, `3`
@@ -743,8 +725,7 @@ or `set ["red", "green", "yellow"]`, which creates a set. Notice that a
 space must separate the name of the method from the collection literal.
 
 
-Enumerables
------
+## Enumerables
 
 Additional methods are available in the type
 `Enumerable`; an `Enumerable` is like a
@@ -789,8 +770,7 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
 ```
 
 
-Sequence
---------
+## Sequence
 
 The type `Sequence⟦T⟧` describes sequences of values of type `T`.
 Sequence objects are immutable; they can be constructed either
@@ -841,8 +821,7 @@ type Sequence⟦T⟧ = Enumerable⟦T⟧ & type {
 }
 ```
 
-Ranges
-------
+## Ranges
 
 Ranges are sequences of consecutive integers. They behave exactly like
 other sequences, but are stored compactly. Ranges are created by two
@@ -865,8 +844,7 @@ used to create ranges. Thus, `3..9` is the same as
 `range.from 3 to 9`, and `(3..9).reversed`
 is the same as `range.from 9 downTo 3`.
 
-List
-----
+## List
 
 The type `List⟦T⟧` describes objects that are mutable
 lists of elements that have type `T`. Like sets and
@@ -1020,8 +998,7 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
 }
 ```
 
-Dictionary
-----------
+## Dictionary
 
 The type `Dictionary⟦K, T⟧` describes objects that are mappings from
 *keys* of type `K` to *values* of type `T`. Like sets and sequences,
@@ -1104,8 +1081,7 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
 }
 ```
 
-Iteration and ***for*** loops
------------------------------
+## Iteration and ***for*** loops
 
 Collections implement the type [`Collection⟦T⟧`](#common-abstractions)
 and thus implement the internal and external iterator patterns.
@@ -1218,8 +1194,7 @@ method merge [[T]](cs: Collection[[T]]) and (ds: Collection[[T]]) -> List[[T]] {
 }
 ```
 
-Primitive Array
----------------
+## Primitive Array
 
 Primitive arrays can be constructed using
 `primitiveArray.new(size)` where `size` is
@@ -1251,11 +1226,9 @@ type Array⟦T⟧ =  {
 }
 ```
 
-Available Modules (Libraries)
-==================
+# Available Modules (Libraries)
 
-Input and Output
-----------------
+## Input and Output
 
 The *io* module can be imported using `import "io" as transput`, for any identifier `transput` of your choice. The object `transput` will then respond to the following methods.
 
@@ -1328,8 +1301,7 @@ type Process = Object & interface {
 ```
 
 
-Random
-------
+## Random
 
 The *random* module object can be imported using
 `import "random" as rand`, for any identifier of your choice, e.g. `rand`. The
@@ -1346,8 +1318,7 @@ object `rand` responds to the following methods.
     // A pseudo-random integer in the interval [m..n]
 ```
 
-Option
-------
+## Option
 
 The *option* module object can be imported using
 `import "option" as option`, for any identifier of your choice, e.g. `option`.
@@ -1371,8 +1342,8 @@ none⟦T⟧ -> Option⟦T⟧
 ```
 
 
-Sys
----
+## Sys
+
 
 The *sys* module object can be imported using `import "sys" as system`,
 for any identifier of your choice, e.g. `system`. The object `system` responds
