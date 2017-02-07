@@ -1432,8 +1432,7 @@ If
 
 # Exceptions
 
-Grace supports exceptions, which can be raised and caught. Exceptions
-are categorized into a hierarchy of `ExceptionKind`s.
+Grace supports exceptions, which can be raised and caught.
 At the site where an exceptional situation is detected, an exception is
 raised by requesting the `raise` method on an `ExceptionKind` object,
 with a string argument explaining the problem.
@@ -1452,11 +1451,82 @@ thrown. Execution continues when the exception is *caught.*
         BoundsError.raise "index {ix} not in range 1..{n}"
         UserException.raise "impossible happened"
 
+## Kinds of Exception
+
+Grace defines a hierarchy of kinds of exception. All exceptions have the same type, that is, they understand the same set of requests. However, there are various kinds of exception, corresponding to various kinds of exceptional situation.
+
+The exception hierarchy classifies these kinds of exception using `ExceptionKind`
+objects, which have the following type:
+
+    type ExceptionKind = Pattern & {
+        parent -> ExceptionKind
+        // answers the exceptionKind that is the parent of this exception in the
+        // hierarchy. The parent of exception is defined to be exception. The parent
+        // of any other exceptionKind is the exception that was refined to create it.
+        
+        refine (name:String) -> ExceptionKind
+        // answers a new exceptionKind, which is a refinement of self.
+        
+        raise (message:String)
+        // creates an exception of this kind, terminating the current execution,
+        // and transferring control to an appropriate handler.
+        
+        raise (message:String) with (data:Object)
+        // similar to raise(), except that the object data is associated with the
+        // new exception.
+    }
+
+Because `ExceptionKinds` are also `Patterns`, they support the pattern protocol (`match`, `&`, and `|`). Perhaps more pertinently, this means that they can be used as the argument of the catch blocks in a `try()catch()...` construct.
+
+At the top of the hierarchy is the `exception` object; all exceptions are refinements of `exception`.  There are three immediate refinements of `exception`:
+
+ * `EnvironmentException`: those exceptions arising from interactions between the program and the environment, including network exceptions, file system exceptions, and inappropriate user input.
+ * `ProgrammingError`: exceptions arising from programming errors.
+Examples are `IndexOutOfBounds`, `NoSuchMethod`, and `NoSuchObject`.
+ * `ResourceException`: exceptions arising from an implementation insufficiency, such as running out of memory or disk space.
+
+Notice that there is no category for "expected" exceptions.  This is deliberate; expected events should not be represented by exceptions, but by other values and control structures.
+For example, if you you have a key that may or may not be in a dictionary, you should not request the `at` method and catch the `NoSuchObject` exception.  Instead, you should request the `at(_)ifAbsent(_)` method.
+
+Each exception is matched by the `ExceptionKind` that was raised to create it, and all of the ancestors of that kind of exception. Because `Exception` is the top of the exception hierarchy, it matches all exceptions.
+
+Exceptions have the following type.
+
+    type Exception = type {
+        exception -> ExceptionKind    // the exceptionKind of this exception.
+        message -> String     // the message that was provided when this exception was raised.
+        
+        data -> Object      // the data object that was associated with this exception
+        // when it was raised, if there was one. Otherwise, the string "no data".
+        
+        lineNumber -> Number        // the source code line number
+        // of the raise request that created this exception.
+        
+        moduleName -> String        // the name of the module
+        // containing the raise request that created this exception.
+        
+        backtrace -> List<String>
+        // a description of the call stack at the time that this exception was raised.
+        // backtrace.first is the initial execution environment; backtrace.last is the
+        // context that raised the exception.
+    }
+
+Exceptions are distinguished by the name passed to the refine method when they were
+created. Exception packets also contain a "data" field, which may be populated
+with any object using the `raise(_)with(_)` method on exceptions:
+
+```
+MyException.raise "A message" with (anObject)
+```
+
+There is no behaviour or requirement attached to this object. It is simply stored to be used by the exception handler if desired.
+
+
 ## Catching Exceptions
 
 An exception in `expression` can be caught by a dynamically-enclosing
 
-    try(expression)
+    try (expression)
         catch (block 1)
         ...
         catch (block n)
@@ -1477,7 +1547,7 @@ Finally clauses can return early, either by executing a `return`, or by
 raising an exception. In such a situation, any prior `return` or raised
 exception is silently dropped.
 
-**Example**
+**Examples**
 
 
     try {
@@ -1493,6 +1563,16 @@ exception is silently dropped.
         f.close
     }
 
+A single handler may be defined for more than one kind of exception using the `|` pattern combinator:
+
+    try {
+        try_block
+    } case { e : MyError | AnotherError ->
+        handler
+    }
+
+
+`handler` will be run when either `MyError` or `AnotherError` is raised inside the `try_block`.
 
 # Types
 
@@ -1582,29 +1662,31 @@ type `Unknown`, and type `Unknown` conforms to all other types.
 All types have type Type, which is defined as
 
     type Type = interface {
-	    match (o:Unknown) -> MatchResult
-	    & (other:Type) -> Type
-	    | (other:Type) -> Type
-	    + (other:Type) -> Type
-	    :> (other:Type) -> Boolean
-	    <: (other:Type) -> Boolean
-	    == (other:Type) -> Boolean
-	    != (other:Type) -> Boolean
-	    hash -> Number
-	    asString -> String
-	    asDebugString -> String
-	    interfaces -> Sequence⟦Interface⟧	
+        match (o:Unknown) -> MatchResult
+        & (other:Type) -> Type
+        | (other:Type) -> Type
+        + (other:Type) -> Type
+        :> (other:Type) -> Boolean
+        <: (other:Type) -> Boolean
+        == (other:Type) -> Boolean
+        != (other:Type) -> Boolean
+        hash -> Number
+        asString -> String
+        asDebugString -> String
+        interfaces -> Sequence⟦Interface⟧
 	}
 
 This type captures the idea that a type is a disjunction of interfaces.  The interface literal syntax
 defines a type containing a single interface, so the `interfaces` method of an interface returns a sequence of length 1 containing itself.
 
     type Interface = Type & interface {
-	    methods -> Dictionary⟦String, Signature⟧
-            // keys are the canonical names of the methods, and values their signatures
-        types -> Dictionary⟦String, Type⟧
-            // keys are the declared names of the types; values objects representing those types
-	    - (other:Interface) -> Interface
+	     methods -> Dictionary⟦String, Signature⟧
+            // keys are the canonical names of the methods, 
+            // and values their signatures
+	     types -> Dictionary⟦String, Type⟧
+            // keys are the declared names of the types; 
+            // values objects representing those types
+	     - (other:Interface) -> Interface
 	 }
 	
 	 type Signature = interface {
@@ -1682,16 +1764,17 @@ have conforming signatures). This can also be read as “B is a subtype of
 A”, or “A is a supertype of B”.
 
 We now define the conformance relation more rigorously. This section
-draws heavily on the wording of the Modula-3 report @Modula3.
+draws heavily on the wording of the [Modula-3 report]
+(https://www.cs.purdue.edu/homes/hosking/m3/reference/).
 
-If B `<:` A, then every object of type B is also an object
+If `B <: A`, then every object of type `B` is also an object
 of type A. The converse does not apply.
 
-If A and B are interfaces, then B `<:` A iff for
-every method m in A, there is a corresponding method `m` (with the same
-canonical name) in B such that
+If `A` and `B` are interfaces, then `B <: A` if and only if, for
+every method `m` in `A`, there is a corresponding method `m` (with the same
+canonical name) in `B` such that
 
--   If the method `m` in A has signature `m(P1,...,Pk)n(Pk+1,...,Pn)... -> R`, and
+-   If the method `m` in `A` has signature `m(P1, ... ,Pk)n(Pk+1, ... ,Pn)... -> R`, and
     `m` in B has signature `m(Q1,...,Qk)n(Qk+1,...,Qn)... -> S`, then
 
     -   parameter types must be contravariant: `Pi <: Qi`
@@ -1703,7 +1786,7 @@ type parameters of traits, classes and methods has yet to be specified.
 
 ## Composite types
 
-Grace offers a number of operators to build up composite types.
+Grace offers a number of operators to compose types.
 
 ### Variant Types
 
@@ -1754,12 +1837,9 @@ An object conforms to an Intersection type, written
 component types. The main uses of intersection types is for augmenting
 types with new operations, and as bounds on `where` clauses.
 
-
-```
-(S & T) <: S
-(S & T) <: T
-U <: S; U <: T; <==> U <: (S & T)
-```
+    (S & T) <: S
+    (S & T) <: T
+    U <: S; U <: T; <==> U <: (S & T)
 
 **Examples**
 
@@ -1780,15 +1860,11 @@ Structural union types (sum types), written `1 + 2 + ... + Tn`, are
 the dual of intersection types. A union type `T1 + T2` has the interface
 common to `T1` and `T2`. Thus, a type `U` conforms to `T1 + T2` if it
 has a method that conforms to each of the methods common to `T1` and
-`T2`. Union types are included for completeness: variant types subsume
-most uses.
+`T2`. Union types are included for completeness; variant types subsume 
+most uses of unions.
 
-
-```
-S <: (S + T)
-T <: (S + T)
-```
-
+    S <: (S + T)
+    T <: (S + T)
 
 ### Type Subtraction
 
@@ -1952,28 +2028,23 @@ of the full Grace language.
 **Examples**
 
 
-The `bcpl.grace` module declares an `unless(_)do(_)` control
+The `bcpl.grace` module might declare an `unless(_)do(_)` control
 structure that is like `if`, but backwards.
 
 bcpl.grace module:
 
-```
-method do (block: Block0) unless (test: Boolean)  {
-    if (test.not) then (block)
-}
-```
+    method do (block: Block0) unless (test: Boolean)  {
+        if (test.not) then (block)
+    }
 
 A module written in this dialect can use that control structure as if
 it were built in:
 
 example.grace module:
 
-```
-dialect "bcpl"
-...
-do { average := sum / count } unless (count == 0)
-
-```
+    dialect "bcpl"
+    ...
+    do { average := sum / count } unless (count == 0)
 
 
 ## Module and Dialect Scopes
