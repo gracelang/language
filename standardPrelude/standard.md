@@ -1328,23 +1328,24 @@ The object `option` responds to the following methods.
 type Option⟦T⟧ = type {
     value -> T
     do(action:Block1⟦T, Done⟧) -> Done
+    isEmpty -> Boolean
     isSome -> Boolean
     isNone -> Boolean
-    ifSome (sAction:Block1⟦T, U⟧) ifNone (nAction:Block0⟦U⟧) -> U
-    ifNone (nAction:Block0⟦U⟧) ifSome (sAction:Block1⟦T, U⟧) -> U
+    ifSome⟦U⟧ (sAction:Block1⟦T, U⟧) ifNone (nAction:Block0⟦U⟧) -> U
+    ifNone⟦U⟧ (nAction:Block0⟦U⟧) ifSome (sAction:Block1⟦T, U⟧) -> U
     ifSome (sAction:Block1⟦T, Done⟧) -> Done
     ifNone (nAction:Block0⟦Done⟧) -> Done
 }
     
 some⟦T⟧(contents:T) -> Option⟦T⟧
 // creates an object s such that s.value is contents, s.do(action) 
-// applies action to contents, isSome returns true and isNone returns false.
-// ifSome(sAction) ifNone (nAction) applies sAction to contents and returns its result.
+// applies action to contents, isSome returns true and isNone and isEmpty return false.
+// ifSome(sAction) ifNone (_) applies sAction to contents and returns its result.
     
 none⟦T⟧ -> Option⟦T⟧ 
 // creates an object s such that s.value raises a ProgrammingError, 
-// s.do(action) does nothing, isSome returns false and isNone returns true.
-// ifSome(sAction) ifNone (nAction) executes nAction returns its result.
+// s.do(_) does nothing, isSome returns false and isNone and isEmpty return true.
+// ifSome(_) ifNone (nAction) executes nAction and returns its result.
 ```
 
 
