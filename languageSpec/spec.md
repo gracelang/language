@@ -1519,7 +1519,7 @@ Exception packet objects are generated when an exception is raised.
         moduleName -> String         // the name of the module containing the raise
                                      // request that created this exception.
         
-        backtrace -> List<String>
+        backtrace -> List⟦String⟧      
         // a description of the call stack at the time that this exception was raised.
         // backtrace.first is the initial execution environment; backtrace.last is the
         // context that raised the exception.
