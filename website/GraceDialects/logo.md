@@ -1,15 +1,17 @@
 ---
-title: The Logo Dialect
-keywords: Logo
+title: The logo Dialect
+keywords: Logo, drawing, turtle graphics
 sidebar: dialects_sidebar
 permalink: /dialects/logo/
 toc: false
 folder: Dialects
 ---
 
-Welcome to a beginners guide to using Logo in Grace. In case you have not heard of Logo before, it is a educational programming language that dates back to the 1960s, and best known for _Turtle Graphics_.
+## Introduction
 
-Imagine a turtle-like robot that holds a pen and can walk around the floor, on which is spread a large sheet of paper.  As the turtle moves, it draws a line — unless it lifts the pen off of the paper, in which case it moves without drawing.
+Welcome to a beginners guide to using _Logo_ in Grace. In case you have not heard of Logo before, it is a educational programming language that dates back to the 1960s, and best known for _Turtle Graphics_.
+
+Imagine a mechanical turtle-like robot that holds a pen and can walk around the floor, on which is spread a large sheet of paper.  As the turtle moves, it draws a line — unless it lifts the pen off of the paper, in which case it moves without drawing.
 
 We don't use mechanical turtles, but we can simulate them
 on the screen of a modern computer.  Grace Logo lets you
@@ -40,14 +42,14 @@ Notice that each command is followed by a number.  This number is called the “
 number is a complicated expression (like `π/4`), it must be enclosed in parenthesis, so that Grace knows where it starts and ends.  If it's a simple constant like `50` or `80`, the parenthesis are not necessary (but they won't hurt).
 
 
-#### Example 1
+### Example 1
 Here is an example to get us started! The code below draws a square. Modify it to instead draw a rectangle of width 150 and height 75.
 
 <object id="example-1" data="{{site.editor}}?square" width="100%" height="550px"> </object>
 
 
 
-#### Example 2
+### Example 2
 
 This example draws a five-pointed star.  The star looks as though it's staggering, though.  Can you modify the program so that the star is standing upright on two of its points?
 

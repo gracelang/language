@@ -5,26 +5,40 @@ topnav:
   items:
     - title: Tutorial
       url:  /introduction/grace/
+    - title: Specification
+      url:  /lang-spec/
 
 #Topnav dropdowns
 topnav_dropdowns:
 - title: Topnav dropdowns
   folders:
-    - title: Topics
+    - title: Modules
       folderitems:
-        - title: Language Specification
-          url: /lang-spec/
-        - title: standardGrace (the standard library)
-          url: /dialects/standard/
+        - title: io
+          url: /modules/io/
+          output: web
+          type: web
+        - title: option
+          url: /modules/option/
+          output: web
+          type: web
+        - title: random
+          url: /modules/random/
+          output: web
+          type: web
+        - title: sys
+          url: /modules/sys/
+          output: web
+          type: web
     - title: Dialects
       folderitems:
         - title: logo
           url: /dialects/logo/
         - title: minitest
           url: /dialects/minitest/
-        - title: statictype
+        - title: staticType
           url: /dialects/staticTypes/
-        - title: standardGrace
+        - title: standardGrace (the standard library)
           url: /dialects/standard/
         - title: Writing a dialect
           url: /dialects/writeDialect/

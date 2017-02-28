@@ -24,7 +24,7 @@ rm -f GraceLangSpec/spec_with_grammar.md
 cat ./standardHeader.txt GraceDialects/standardSource.md > GraceDialects/standard.md
 
 ## Create spec_with_grammar.md
-cat ./standardHeader.txt GraceLangSpec/grammarSpecSource.md > GraceLangSpec/spec_with_grammar.md
+cat ./specHeader.txt GraceLangSpec/grammarSpecSource.md > GraceLangSpec/spec_with_grammar.md
 
 #Load the PDFs into the pdf folder
 /bin/rm -r gracePdfs
@@ -42,8 +42,8 @@ sed -i .bak "s/<<TITLE-OF-PAGE>>/The Standard Dialect/g;\
 
 #Add the necessary info to spec_with_grammar.md
 sed -i .bak "s/<<TITLE-OF-PAGE>>/Grace Language Specification/g;\
-    s/<<KEYWORDS-OF-PAGE>>/language/g;\
-    s/<<SIDEBAR-OF-PAGE>>/home_sidebar/g;\
+    s/<<KEYWORDS-OF-PAGE>>/language, specification, grammar, syntax/g;\
+    s/<<SIDEBAR-OF-PAGE>>/spec_sidebar/g;\
     s/<<PERMALINK-OF-PAGE>>/\/lang-spec\//g;\
     s/ <<FOLDER-OF-PAGE>>/Lang-Spec/g;\
     s/<<<PDF-LINK>>>/**[Download the PDF]({{site.baseurl}}\/gracePdfs\/spec_with_grammar.pdf)**/g;\

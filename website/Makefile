@@ -24,7 +24,7 @@ kramdowns:
 	$(MAKE) -C ../languageSpec spec.kramdown
 	$(MAKE) -C ../standardPrelude standard.kramdown
 
-build: _config.yml pdfs kramdowns
+build: _config.yml pdfs kramdowns loadResources
 	$(info Generating source files...)
 	./loadResources
 	./checkJekyll

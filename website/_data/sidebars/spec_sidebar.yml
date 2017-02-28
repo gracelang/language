@@ -1,0 +1,187 @@
+# This is a hand-generated sidebar for the spec.  The text comes
+# from grepping the kramdown spec for lines starting with #
+entries:
+- title: Sidebar
+  levels: one
+  folders:
+  - title: Specification
+    levels: two
+    output: web
+    folderitems:
+    -   title: Introduction
+        url: /lang-spec#introduction
+        output: web
+    -   title: User Model
+        url: /lang-spec#user-model
+        output: web
+        type: web
+    -   title: Syntax
+        levels: one
+        url: /lang-spec#syntax
+        output: web
+        type: web
+        folderitems:
+        -   title: Syntax
+            url: #syntax
+            output: web
+            type: web
+        -   title: Character Equivalencies
+            url: #character-equivalencies
+            output: web
+            type: web
+        -   title:  Layout
+            url: #layout
+            output: web
+            type: web
+        -   title:  Comments
+            url: #comments
+            output: web
+            type: web
+        -   title:  Identifiers and Operators
+            url: #identifiers-and-operators
+            output: web
+            type: web
+        -   title:  Reserved Tokens
+            url: #reserved-token
+            output: web
+            type: web
+        -   title:  Newlines, Tabs and Control Characters
+            url: #newlines-tabs-and-control-characters
+            output: web
+            type: web
+    -   title: Built-in Objects
+        url: /lang-spec#built-in-objects
+        output: web
+        type: web
+    -   title: Declarations
+        url: /lang-spec#declarations
+        output: web
+        type: web
+    -   title: Objects, Classes, and Traits
+        url: /lang-spec#objects-classes-and-traits
+        output: web
+        type: web
+    -   title: Method Requests
+        url: /lang-spec#method-requests
+        output: web
+        type: web
+    -   title: Pattern Matching
+        url: /lang-spec#pattern-matching
+        output: web
+        type: web
+    -   title: Exceptions
+        url: /lang-spec#excpetions
+        output: web
+        type: web
+    -   title: Types
+        url: /lang-spec#types
+    -   title: Modules and Dialects
+        url: /lang-spec#modules-and-dialects
+        output: web
+        type: web
+    -   title: Pragmatics
+        url: /lang-spec#pragmatics
+        output: web
+        type: web
+    -   title: Acknowledgements
+        url: /lang-spec#acknowledgements
+        output: web
+        type: web
+    -   title: Grammar
+        url: /lang-spec#grammar
+        output: web
+        type: web
+
+## Introduction
+## User Model
+## Syntax
+### Character Equivalencies
+### Layout
+### Comments
+### Identifiers and Operators
+### Reserved Tokens
+### Newlines, Tabs and Control Characters
+## Built-in Objects
+### Done
+### Elipsis
+### Numbers
+### Booleans
+### Strings
+#### String Literals
+#### String Constructors
+#### Uninterpreted Strings
+### Lineups
+### Blocks
+## Declarations
+### Fields
+#### Constants
+#### Variables
+### Methods
+#### Method Names
+#### Method parameters
+#### Type Parameters
+#### Returning a Value from a Method
+### Annotations
+### Encapsulation
+#### Public
+#### Confidential
+#### Methods, Classes, Traits and Types
+#### Fields
+#### No Private Attributes
+## Objects, Classes, and Traits
+### Objects
+### Class Declarations
+### Trait Objects and Trait Declarations
+### Type Parameters
+### Reuse
+#### Object Combination and Initialisation
+#### Required Methods
+#### Overriding Methods
+#### Default Methods
+## Method Requests
+### Self
+### Outer
+### Named Requests
+#### Delimited Arguments
+#### Implicit Requests
+###Assignment Requests
+### Binary Operator Requests
+### Unary Prefix Operator Requests
+### Precedence of Method Requests
+### Requesting Methods with Type Parameters
+### Manifest Expressions
+## Pattern Matching
+### Matching Blocks
+### Self-Matching Objects
+## Exceptions
+### Kinds of Exception
+### Exception Packets
+### Catching Exceptions
+## Types
+### Predeclared Types
+#### Type None
+#### Type Object
+#### Type Self
+#### Type Unknown
+#### Type Type
+### Interfaces and Type Literals
+### Type Declarations
+### Type Conformance
+### Composite types
+#### Variant Types
+#### Intersection Types
+#### Union Types
+#### Type Subtraction
+#### Nested Types
+### Type Assertions
+## Modules and Dialects
+### Modules
+### Importing Modules
+### Executing a Module
+### Dialects
+### Module and Dialect Scopes
+## Pragmatics
+### Garbage Collection
+### Concurrency
+## Acknowledgements
+## Grammar

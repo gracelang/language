@@ -1,12 +1,6 @@
 {% if page.sidebar == "home_sidebar" %}
 {% assign sidebar = site.data.sidebars.home_sidebar.entries %}
 
-{% elsif page.sidebar == "product1_sidebar" %}
-{% assign sidebar = site.data.sidebars.product1_sidebar.entries %}
-
-{% elsif page.sidebar == "product2_sidebar" %}
-{% assign sidebar = site.data.sidebars.product2_sidebar.entries %}
-
 {% elsif page.sidebar == "tutorial_sidebar" %}
 {% assign sidebar = site.data.sidebars.tutorial_sidebar.entries %}
 
@@ -18,6 +12,12 @@
 
 {% elsif page.sidebar == "tags_sidebar" %}
 {% assign sidebar = site.data.sidebars.tags_sidebar.entries %}
+
+{% elsif page.sidebar == "modules_sidebar" %}
+{% assign sidebar = site.data.sidebars.modules_sidebar.entries %}
+
+{% elsif page.sidebar == "spec_sidebar" %}
+{% assign sidebar = site.data.sidebars.spec_sidebar.entries %}
 
 {% elsif page.sidebar == "dialects_sidebar" %}
 {% assign sidebar = site.data.sidebars.dialects_sidebar.entries %}
