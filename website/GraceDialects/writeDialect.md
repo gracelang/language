@@ -192,5 +192,13 @@ a `range` attribute that gives its location in the source; the exceptions are
 things that were implicit in the source, like `self` and `outer`.  The IDE will
 then highlight the offending range of the source program.
 
+You can also stop compilation and produce an error message by raising an 
+exception in the checker.
+If you do this by requesting the `raise(_)with(data)` method, and `data` is either
+an AST node or a range object, then the appropriate source code range will
+be highlighted when the error is displayed.
 
-
+Note that the IDE _throws away_ anything written on the standard output stream.
+This means that you won't see the output from a `print` statement.  
+If you need to produce debugging output, import the `"io"` module `as io`, and 
+use `io.error.write "Progress is being made!\n"`.
