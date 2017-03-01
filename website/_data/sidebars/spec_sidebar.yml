@@ -1,96 +1,88 @@
 # This is a hand-generated sidebar for the spec.  The text comes
 # from grepping the kramdown spec for lines starting with #
 entries:
-- title: Sidebar
-  levels: one
+- title: sidebar
   folders:
-  - title: Specification
-    levels: two
+
+  - title: Language Specification
+    url: /lang-spec/
     output: web
+    type: web
     folderitems:
-    -   title: Introduction
-        url: /lang-spec#introduction
-        output: web
-    -   title: User Model
-        url: /lang-spec#user-model
-        output: web
-        type: web
-    -   title: Syntax
-        levels: one
-        url: /lang-spec#syntax
-        output: web
-        type: web
-        folderitems:
-        -   title: Syntax
-            url: #syntax
-            output: web
-            type: web
-        -   title: Character Equivalencies
-            url: #character-equivalencies
-            output: web
-            type: web
-        -   title:  Layout
-            url: #layout
-            output: web
-            type: web
-        -   title:  Comments
-            url: #comments
-            output: web
-            type: web
-        -   title:  Identifiers and Operators
-            url: #identifiers-and-operators
-            output: web
-            type: web
-        -   title:  Reserved Tokens
-            url: #reserved-token
-            output: web
-            type: web
-        -   title:  Newlines, Tabs and Control Characters
-            url: #newlines-tabs-and-control-characters
-            output: web
-            type: web
-    -   title: Built-in Objects
-        url: /lang-spec#built-in-objects
-        output: web
-        type: web
-    -   title: Declarations
-        url: /lang-spec#declarations
-        output: web
-        type: web
-    -   title: Objects, Classes, and Traits
-        url: /lang-spec#objects-classes-and-traits
-        output: web
-        type: web
-    -   title: Method Requests
-        url: /lang-spec#method-requests
-        output: web
-        type: web
-    -   title: Pattern Matching
-        url: /lang-spec#pattern-matching
-        output: web
-        type: web
-    -   title: Exceptions
-        url: /lang-spec#excpetions
-        output: web
-        type: web
-    -   title: Types
-        url: /lang-spec#types
-    -   title: Modules and Dialects
-        url: /lang-spec#modules-and-dialects
-        output: web
-        type: web
-    -   title: Pragmatics
-        url: /lang-spec#pragmatics
-        output: web
-        type: web
-    -   title: Acknowledgements
-        url: /lang-spec#acknowledgements
-        output: web
-        type: web
-    -   title: Grammar
-        url: /lang-spec#grammar
-        output: web
-        type: web
+
+    - title: Introduction
+      url: /lang-spec/
+# The #introduction anchor is deliberatly missing.
+# giving this item a url that is teh same as the
+# permalink of the page is what keeps the sidebar open.
+# The trailing / is required!
+      output: web
+
+    - title: User Model
+      url: /lang-spec#user-model
+      output: web
+      type: web
+
+    - title: Syntax
+      url: /lang-spec#syntax
+      output: web
+      type: web
+
+    - title: Built-in Objects
+      url: /lang-spec#built-in-objects
+      output: web
+      type: web
+
+    - title: Declarations
+      url: /lang-spec#declarations
+      output: web
+      type: web
+
+    - title: Objects, Classes, and Traits
+      url: /lang-spec#objects-classes-and-traits
+      output: web
+      type: web
+
+    - title: Method Requests
+      url: /lang-spec#method-requests
+      output: web
+      type: web
+
+    - title: Pattern Matching
+      url: /lang-spec#pattern-matching
+      output: web
+      type: web
+
+    - title: Exceptions
+      url: /lang-spec#excpetions
+      output: web
+      type: web
+
+    - title: Types
+      url: /lang-spec#types
+      output: web
+      type: web
+
+    - title: Modules and Dialects
+      url: /lang-spec#modules-and-dialects
+      output: web
+      type: web
+
+    - title: Pragmatics
+      url: /lang-spec#pragmatics
+      output: web
+      type: web
+
+    - title: Acknowledgements
+      url: /lang-spec#acknowledgements
+      output: web
+      type: web
+
+    - title: Grammar
+      url: /lang-spec#grammar
+      output: web
+      type: web
+
 
 ## Introduction
 ## User Model
