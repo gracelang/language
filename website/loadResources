@@ -41,8 +41,9 @@ sed -i .bak "s/<<TITLE-OF-PAGE>>/The Standard Dialect/g;\
     s/<<VERSION-NUMBER>>/$STDD_VER/g" GraceDialects/standard.md
 
 #Add the necessary info to spec_with_grammar.md
+KEYWORDS=$(cat spec_keywords.txt | tr '\n' ' ')
 sed -i .bak "s/<<TITLE-OF-PAGE>>/Grace Language Specification/g;\
-    s/<<KEYWORDS-OF-PAGE>>/language, specification, grammar, syntax/g;\
+    s/<<KEYWORDS-OF-PAGE>>/language, specification, grammar, syntax, ${KEYWORDS}/g;\
     s/<<SIDEBAR-OF-PAGE>>/spec_sidebar/g;\
     s/<<PERMALINK-OF-PAGE>>/\/lang-spec\//g;\
     s/ <<FOLDER-OF-PAGE>>/Lang-Spec/g;\
