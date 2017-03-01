@@ -4,7 +4,7 @@ version: <<VERSION-NUMBER>>
 keywords: <<KEYWORDS-OF-PAGE>>
 sidebar: <<SIDEBAR-OF-PAGE>>
 permalink: <<PERMALINK-OF-PAGE>>
-toc: true
+toc: false
 folder:  <<FOLDER-OF-PAGE>>
 author:
 - 'Andrew P. Black'
