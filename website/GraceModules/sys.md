@@ -14,7 +14,7 @@ author:
 
 
 The *sys* module object can be imported using `import "sys" as system`,
-for any identifier of your choice, e.g. `system`. The object `system` responds
+for any identifier `system` of your choice. The object `system` responds
 to the following requests.
 
 ```
@@ -28,8 +28,8 @@ argv -> Sequence⟦String⟧
 // the command-line arguments to this program
     
 elapsedTime -> Number
-// the time in seconds, since an arbitrary epoch.  Take the difference of two elapsedTime
-// values to measure a duration.
+// the time in seconds, since an arbitrary epoch.  Subtract one elapsedTime
+// from another to measure the time between them.
     
 exit(exitCode:Number) -> Done
 // terminates the whole program, with exitCode.
