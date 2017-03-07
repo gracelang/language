@@ -7,6 +7,10 @@ entries:
   - title: Modules
     output: web
     folderitems:
+    - title: date
+      url: /modules/date/
+      output: web
+      type: web
     - title: io
       url: /modules/io/
       output: web

@@ -14,6 +14,10 @@ topnav_dropdowns:
   folders:
     - title: Modules
       folderitems:
+        - title: date
+          url: /modules/date/
+          output: web
+          type: web
         - title: io
           url: /modules/io/
           output: web
