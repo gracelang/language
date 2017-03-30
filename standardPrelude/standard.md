@@ -148,17 +148,20 @@ in the `match(_)case(_)...` family of methods to support multiway branching.
 ```
 
 The first two blocks use self-matching objects; the first is short for
-{ _:0 -> 0 }.  The last block has no pattern (or, if you prefer, has
+`{_ : 0 -> 0 }`, that is, a block with parameter `_` 
+and pattern `0`.  The last block has no pattern (or, if you prefer, has
 the pattern `Unknown`, which matches any object).  Such a block always matches.
 
-If `match(_)case(_)...` does not find a match, it raises a
+If `match(_)case(_)…` does not find a match, it raises a
 non-exhaustive match exception.  
 
 
 ## ValueOf
 
-Grace's `valueOf` allows a statement list where an expression is
-required.
+Grace's `valueOf` allows a block with 
+local declarations and a statement list where an 
+expression is required.  `valueOf` takes a block
+as argument, evaluates it, anf returns the result.
 
 ```
 def constant = valueOf {
@@ -411,7 +414,7 @@ type String =  {
     asUpper -> String
     // returns a string like self, except that all letters are in upper case
 
-    do(action:Block1⟦String, Done⟧) -> Done
+    do(action:Function1⟦String, Done⟧) -> Done
     // applies action to each character of self.
 
     capitalized -> String
@@ -427,10 +430,10 @@ type String =  {
     endsWith (possibleSuffix: String)
     // true if self ends with possibleSuffix
 
-    filter (predicate: Block1⟦String,Boolean⟧) -> String
+    filter (predicate: Function1⟦String,Boolean⟧) -> String
     // returns the String containing those characters of self for which predicate returns true
 
-    fold⟦U⟧ (binaryFunction: Block2⟦U,String,U⟧) startingWith(initial: U) -> U
+    fold⟦U⟧ (binaryFunction: Function2⟦U,String,U⟧) startingWith(initial: U) -> U
     // performs a left fold of binaryFunction over self, starting with initial.   
     // For example, fold {a, b -> a + b.ord} startingWith 0 will compute the sum
     // of the ords of the characters in self
@@ -441,13 +444,13 @@ type String =  {
     indexOf (pattern:String) -> Number
     // returns the leftmost index at which pattern appears in self, or 0 if it is not there.
 
-    indexOf (pattern:String) ifAbsent (absent:Block0⟦W⟧) -> Number | W
+    indexOf (pattern:String) ifAbsent (absent:Function0⟦W⟧) -> Number | W
     // returns the leftmost index at which pattern appears in self; applies absent if it is not there.
 
     indexOf (pattern:String) startingAt (offset) -> Number
     // like indexOf(pattern), except that it returns the first index ≥ offset, or 0 if  pattern is not found.
 
-    indexOf⟦W⟧ (pattern:String) startingAt(offset) ifAbsent (action:Block0⟦W⟧) -> Number | W
+    indexOf⟦W⟧ (pattern:String) startingAt(offset) ifAbsent (action:Function0⟦W⟧) -> Number | W
     // like the above, except that it returns the result of applying action if there is no such index.
 
     indices -> Sequence⟦T⟧
@@ -460,22 +463,22 @@ type String =  {
     iterator -> Iterator⟦String⟧
     // an iterator over the characters of self
 
-    keysAndValuesDo(action:Block2⟦Number, String, Done⟧) -> Done
+    keysAndValuesDo(action:Function2⟦Number, String, Done⟧) -> Done
     // applies action to two arguments for each character in self: the key (index) of the character,
     // and the character itself.
 
     lastIndexOf (sub:String) -> Number
     // returns the rightmost index at which sub appears in self, or 0 if it is not there.
 
-    lastIndexOf⟦W⟧ (sub:String) ifAbsent (absent:Block0⟦W⟧) -> Number | W
+    lastIndexOf⟦W⟧ (sub:String) ifAbsent (absent:Function0⟦W⟧) -> Number | W
     // returns the rightmost index at which sub appears in self; applies absent if it is not there.
 
     lastIndexOf⟦W⟧ (pattern:String)
        startingAt (offset)
-       ifAbsent (action:Block0⟦W⟧) ->  Number | W
+       ifAbsent (action:Function0⟦W⟧) ->  Number | W
     // like the above, except that it returns the rightmost index ≤ offset.
 
-    map⟦U⟧ (function:Block⟦String,U⟧) -> Collection⟦U⟧
+    map⟦U⟧ (function:Function1⟦String,U⟧) -> Collection⟦U⟧
     // returns a Collection containing the results of successive applications of function to the
     // individual characters of self. Note that the result is not a String, even if type U happens to be String.
     // If a String is desired, use fold (_) startingWith "" with a function that concatenates.
@@ -544,39 +547,39 @@ type Boolean =  {
     prefix ! -> Boolean
     // the negation of self
 
-    && (other: BlockOrBoolean) -> Boolean
+    && (other: PredicateOrBoolean) -> Boolean
     // returns true when self and other are both true
 
-    || (other: BlockOrBoolean) -> Boolean
+    || (other: PredicateOrBoolean) -> Boolean
     // returns true when either self or other (or both) are true
 }
 ```
 
 The condition in an `if` statement, and the argument to the operators `&&` and `||`,
-can be either a Boolean or a Block returning a Boolean.
-This means that `&&` and `||` can be used as “shortcircuit”, also known as
+can be either a Boolean or a zero-parameter block that returns a Boolean.
+This means that `&&` and `||` can be used as “short circuit” operators, also known as
 “non-commutative”, operators: they will evaluate their argument only
 if necessary.
 
 ``` 
-type BlockBoolean = { apply -> Boolean }
-type BlockOrBoolean = BlockBoolean | Boolean 
+type Predicate0 = { apply -> Boolean }
+type PredicateOrBoolean = Predicate0 | Boolean 
 ```
 
 ## Blocks
 
-Blocks are anonymous functions that take zero or more arguments and
-return once result.  There is a family of `Block` types that describe
-block objects.
+Blocks implement anonymous functions that take zero or more arguments and
+return one result.  A family of function types describe
+block objects:
 
 ```
-type Block0⟦R⟧ = type {
+type Function0⟦R⟧ = type {
     apply -> R
 }
-type Block1⟦T,R⟧ = type {
+type Function1⟦T,R⟧ = type {
     apply(a:T) -> R
 }
-type Block2⟦S,T,R⟧ = type {
+type Function2⟦S,T,R⟧ = type {
     apply(a:S, b:T) -> R
 }
 ```
@@ -681,29 +684,29 @@ type Collection⟦T⟧ = type {
     size -> Number
     // The number of elements in self; raises SizeUnknown if size is not known.
     
-    sizeIfUnknown(action: Block0⟦Number⟧) -> Number
+    sizeIfUnknown(action: Function0⟦Number⟧) -> Number
     // The number of elements in self; if size is not known, then action is evaluated and its value returned.
     
     first -> T
     // The first element of self; raises BoundsError if there is none.  
     // If self is unordered, then first returns an arbitrary element. 
     
-    do(action: Block1⟦T,Unknown⟧) -> Done
+    do(action: Function1⟦T,Unknown⟧) -> Done
     //  Applies action to each element of self.
     
-    do(action:Block1⟦T, Unknown⟧) separatedBy(sep:Block0⟦Unknown⟧) -> Done
+    do(action:Function1⟦T, Unknown⟧) separatedBy(sep:Function0⟦Unknown⟧) -> Done
     // applies action to each element of self, and applies sep (to no arguments) in between.
 
-    map⟦R⟧(unaryFunction:Block1⟦T, R⟧) -> Collection⟦T⟧
+    map⟦R⟧(unaryFunction:Function1⟦T, R⟧) -> Collection⟦T⟧
     // returns a new collection whose elements are obtained by applying unaryFunction to
     // each element of self.  If self is ordered, then the result is ordered.
     
-    fold⟦R⟧(binaryFunction:Block2⟦R, T, R⟧) startingWith(initial:R) -> R
+    fold⟦R⟧(binaryFunction:Function2⟦R, T, R⟧) startingWith(initial:R) -> R
     // folds binaryFunction over self, starting with initial.  If self is ordered, this is 
     // the left fold.  For example, fold {a, b -> a + b} startingWith 0
     // will compute the sum, and fold {a, b -> a * b} startingWith 1 the product.
     
-    filter(condition:Block1⟦T, Boolean⟧) -> Collection⟦T⟧
+    filter(condition:Function1⟦T, Boolean⟧) -> Collection⟦T⟧
     // returns a new collection containing only those elements of self for which
     // condition holds.  The result is ordered if self is ordered.
     
@@ -753,7 +756,7 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
     // returns a dictionary containing my indices as keys and my elements as values, so that
     // my self.at(i) is self.asDictionary.at(i).
 
-    keysAndValuesDo (action:Block2⟦Number, T, Object⟧) -> Done
+    keysAndValuesDo (action:Function2⟦Number, T, Object⟧) -> Done
     // applies action, in sequence, to each of my keys and the corresponding element. 
 
     into(existing:Collection⟦T⟧) -> Collection⟦T⟧
@@ -762,7 +765,7 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
     sorted -> Enumerable⟦T⟧
     // returns a new Enumerable containing all of my elements, but sorted by their < and == operations.
 
-    sortedBy(sortBlock:Block2⟦T, T, Number⟧) -> Enumerable⟦T⟧
+    sortedBy(sortBlock:Function2⟦T, T, Number⟧) -> Enumerable⟦T⟧
     // returns a new List containing all of my elements, but sorted according to the ordering 
     // established by sortBlock, which should return -1 if its first argument is less than its
     // second argument, 0 if they are equal, and +1 otherwise.
@@ -810,7 +813,7 @@ type Sequence⟦T⟧ = Enumerable⟦T⟧ & type {
     indexOf(sought:T)  -> Number
     // returns the index of my first element v such that v == sought.  Raises NoSuchObject if there is none.
     
-    indexOf⟦W⟧(sought:T) ifAbsent(action:Block0⟦W⟧)  -> Number | W
+    indexOf⟦W⟧(sought:T) ifAbsent(action:Function0⟦W⟧)  -> Number | W
     // returns the index of the first element v such that v == sought.  Performs action if there is no such element.
 
     reversed -> Sequence⟦T⟧
@@ -885,14 +888,14 @@ type List⟦T⟧ = Sequence⟦T⟧ & type {
     // removes element from self.  Raises NoSuchObject if self.contains(element).not 
     // Returns self
 
-    remove(element:T) ifAbsent(action:Block0⟦Unknown⟧) -> List⟦T⟧
+    remove(element:T) ifAbsent(action:Function0⟦Unknown⟧) -> List⟦T⟧
     // removes element from self; executes action if it is not contained in self.  Returns self
 
     removeAll(elements:Collection⟦T⟧) -> List⟦T⟧
     // removes elements from self. Raises NoSuchObject exception if any  of 
     // them is not contained in self. Returns self
     
-    removeAll(elements:Collection⟦T⟧) ifAbsent(action:Block0⟦Unknown⟧) -> List⟦T⟧
+    removeAll(elements:Collection⟦T⟧) ifAbsent(action:Function0⟦Unknown⟧) -> List⟦T⟧
     // removes elements from self; executes action if any of them is not contained in self. Returns self
 
     clear -> List⟦T⟧
@@ -915,7 +918,7 @@ type List⟦T⟧ = Sequence⟦T⟧ & type {
     // sorts self in place, using the < and == operations on elements.  Returns self.
     // Compare with sorted, which constructs a new list.
         
-    sortBy(sortBlock:Block2⟦T, T, Number⟧) -> List⟦T⟧
+    sortBy(sortBlock:Function2⟦T, T, Number⟧) -> List⟦T⟧
     // sorts self according to the ordering determined by sortBlock, which should return -1 if its first 
     // argument is less than its second argument, 0 if they are equal, and +1 otherwise.  Returns self.
     // Compare with sortedBy, which constructs a new list.
@@ -949,14 +952,14 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
     remove(element: T) -> Set⟦T⟧
     // removes element from self.  It is an error if element is not present.   Returns self.
     
-    remove(elements: T) ifAbsent(block: Block0⟦Done⟧) -> Set⟦T⟧
+    remove(elements: T) ifAbsent(block: Function0⟦Done⟧) -> Set⟦T⟧
     // removes element from self.  Executes action if element is not present.   Returns self.
     
     removeAll(elems:Collection⟦T⟧)
     // removes elems from self.  Raises NoSuchObject if any of the elems is
     // not present.   Returns self.
 
-    removeAll(elems:Collection⟦T⟧) ifAbsent(action:Block1⟦T, Done⟧) -> Set⟦T⟧
+    removeAll(elems:Collection⟦T⟧) ifAbsent(action:Function1⟦T, Done⟧) -> Set⟦T⟧
     // removes elems from self.  Executes action.apply(e) for each e in elems that is
     // not present.   Returns self.
 
@@ -966,10 +969,10 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
     contains(elem:T) -> Boolean
     // true if self contains elem
 
-    includes(predicate: Block1⟦T,Boolean⟧) -> Boolean
+    includes(predicate: Function1⟦T,Boolean⟧) -> Boolean
     // true if predicate holds for any of the elements of self
     
-    find(predicate: Block1⟦T,Boolean⟧) ifNone(notFoundBlock: Block0⟦T⟧) -> T
+    find(predicate: Function1⟦T,Boolean⟧) ifNone(notFoundBlock: Function0⟦T⟧) -> T
     // returns an element of self for which predicate holds, or the result of 
     // applying notFoundBlock if there is no such element.
     
@@ -1018,7 +1021,7 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     at(k:K) -> T
     // returns my value at key k; raises NoSuchObject if there is none.
     
-    at(k:K) ifAbsent(action:Block0⟦T⟧) -> T
+    at(k:K) ifAbsent(action:Function0⟦T⟧) -> T
     // returns my value at key k; returns the result of applying action if there is none.
 
     containsKey(k:K) -> Boolean 
@@ -1054,14 +1057,14 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     bindings -> Collection⟦ Binding⟦K, T⟧ ⟧
     // returns my bindings as a lazy sequence
 
-    keysAndValuesDo(action:Block2⟦K, T, Object⟧ ) -> Done
+    keysAndValuesDo(action:Function2⟦K, T, Object⟧ ) -> Done
     // applies action, in arbitrary order, to each of my keys and the corresponding value. 
 
-    keysDo(action:Block2⟦K, Object⟧) -> Done
+    keysDo(action:Function2⟦K, Object⟧) -> Done
     // applies action, in arbitrary order, to each of my keys.
 
-    valuesDo(action:Block2⟦T, Object⟧) -> Done
-    do(action:Block2⟦T, Object⟧) -> Done
+    valuesDo(action:Function2⟦T, Object⟧) -> Done
+    do(action:Function2⟦T, Object⟧) -> Done
     // applies action, in arbitrary order, to each of my values.
 
     copy -> Self
