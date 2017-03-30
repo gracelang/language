@@ -770,7 +770,7 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
 ```
 
 
-## Sequence
+## Sequences
 
 The type `Sequence⟦T⟧` describes sequences of values of type `T`.
 Sequence objects are immutable; they can be constructed either
@@ -844,7 +844,7 @@ used to create ranges. Thus, `3..9` is the same as
 `range.from 3 to 9`, and `(3..9).reversed`
 is the same as `range.from 9 downTo 3`.
 
-## List
+## Lists
 
 The type `List⟦T⟧` describes objects that are mutable
 lists of elements that have type `T`. Like sets and
@@ -929,10 +929,9 @@ type List⟦T⟧ = Sequence⟦T⟧ & type {
 }
 ```
 
-Sets
-----
+## Sets
 
-Sets are unordered collections of elements without duplicates. The
+A `Set` is an unordered collections of elements, without duplicates. The
 `==` method on the elements is used to detect and
 eliminate duplicates; it must be symmetric.
 
@@ -1000,7 +999,7 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
 
 ## Dictionary
 
-The type `Dictionary⟦K, T⟧` describes objects that are mappings from
+The type `Dictionary⟦K, T⟧` describes an object that is a mappings from
 *keys* of type `K` to *values* of type `T`. Like sets and sequences,
 dictionary objects can be constructed using the class `dictionary`, but
 the argument to `dictionary` must be of type `Collection⟦Binding⟧`. This
