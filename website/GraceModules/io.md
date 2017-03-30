@@ -47,25 +47,57 @@ env -> Dictionary⟦String,String⟧
     
 spawn (executable:String, args:Collection⟦String⟧) -> Process
     // creates a new Process `executable` using `args` as its arguments
+```
 
-type FileStream = Object & interface {
-    read -> Object
-    getline -> Object
-    write (s:String) -> Object
-    close -> Object
-    seek -> Object
-    seekForward (n:Number) -> Object
-    seekBackward (n:Number) -> Object
-    iterator -> Object
-    hasNext -> Object
-    next -> Object
-    readBinary -> Object
-    writeBinary -> Object
+The type `FileStream` describes the interface of an opened file:
+
+```
+type FileStream = Object & type {
+    read -> String
+        // returns the whole contents of the underlying file.
+    getline -> String
+        // returns the next line in the file, up to and including the next
+        // newline.  If the end of the input is reached before a newline is
+        // found, the result will not have a final newline.  If eof is true,
+        // returns the empty string.
+    write (s:String) -> Done
+        // writes s to the file at the current position of the read-write pointer.
+    close -> Done
+        // closes the file.
+    seek (n: Number) -> FileStream
+        // moves the read position to n
+    seekForward (n:Number) -> FileStream
+        // moves the read/write position forward by n
+    seekBackward (n:Number) -> FileStream
+        // moved the read/write position backward by n
+    iterator -> FileStream
+        // returns self
+    hasNext -> Boolean
+        // returns true is next will return a character,
+        // and false if it will raise an exception.
+    next -> String
+        // returns the next Unicode character from the file.
+        // Raises IteratorExhausted if there is none
+    readBinary(n:Number) -> Object
+        // Returns an array containing the next n bytes
+    writeBinary(bytes:Object) -> Number
+        // appends bytes to the file.  Returns the number
+        // of bytes written.
     pathname -> String
+        // the name of the file underlying this fileStream
     eof -> Boolean
+        // true if the read–write position is at the end of the file.
     isatty -> Boolean
+        // true if this fileStream is interactive
+    == (other) -> Boolean
+        // true if self and other are the same FileStream object.  Note that
+        // it is possible to have several distinct fileStreams on the same
+        // underlying file.
 }
+```
+The type `Process` defines the interface of a process.
 
+```
 type Process = Object & interface {
     wait -> Number
         // wait for me to terminate, and answer my exit status.
