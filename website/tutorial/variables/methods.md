@@ -23,7 +23,7 @@ method checkSpoonSize(spoonSize) {
     }
 }
 ```
-The reserved word `method`  says that we are staring a method decration.
+The reserved word `method`  says that we are staring a method declaration.
 Then comes the name of the method, and (optionally) a list of _parameters_.
 
 Now that we have declared a method, we can **request** it.
@@ -37,7 +37,7 @@ argument, that is, 15.
 
 There are a variety of formats for method names and parameter lists.
 You can have multiple parameters,
-as in the method `multiply(a, b)` below.  The name of the mathod can also have
+as in the method `multiply(a, b)` below.  The name of the method can also have
 multiple parts, each
 with its own list of parameters, as illustrated by `divide(a) by(b)` below.
 Lastly, you can also
@@ -52,6 +52,6 @@ the final part.  So <s>`method divide (a, b) by`</s> is not allowed.
 The variables names in parenthesis in the method header,
 like `spoonSize` in the method `checkSpoonSize`
 are called _parameters_.  When you make a request of such a method, you
-provide _values_ for those parameters by supplyting _arguments_, like `5` or `15`.
+provide _values_ for those parameters by supplying _arguments_, like `5` or `15`.
 So the parameter is a name, while the argument is a value, or an expression that
 can be evaluated to yield a value.

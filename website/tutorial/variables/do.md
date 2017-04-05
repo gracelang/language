@@ -10,21 +10,21 @@ folder: tutorial
 of the list and executes some action. Here is the format:  
 
 ```
-‹listExpression›.do { ‹parameter› ->
-  ‹action›
+«listExpression».do { «parameter» ->
+  «action»
 }
 ```
-Where the quoted components, ‹listExpression›, ‹parameter› and
-‹action›, are replaced by Grace program elements.  ‹listExpression› is any 
-expression that eveluates to a list, and ‹action› is any sequence of Grace
+Where the quoted components, `«listExpression»`, `«parameter»` and
+`«action»`, are replaced by Grace program elements.  `«listExpression»` is any 
+expression that evaluates to a list, and `«action»` is any sequence of Grace
 statements.
 
-‹parameter› is a fresh variable, the parameter of the block.
-You can give it whatever name you wish; the name `each` is ok if you can't
-think of a better one.
+`«parameter»` is a fresh variable name, the parameter of the block.
+You can use whatever name you wish; the name `each` is a good one if you can't
+think of soemthing more specific.
 The parameter is declared just by writing its name between the opening brace `{` 
-and the arrow `->`.  Normally, ‹action› will involve the use of ‹parameter›;
-if you don't use ‹parameter›, ask yourself why you are using `do`.
+and the arrow `->`.  Normally, `«action»` will involve the use of `«parameter»`;
+if you don't use `«parameter»`, ask yourself why you are using `do`.
 
 The **do** method acts in exactly the same way as a
 [for loop]({{site.baseurl}}/control/for);

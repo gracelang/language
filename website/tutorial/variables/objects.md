@@ -34,8 +34,8 @@ This cat has a `name`, which cannot be changed (since it is a `def`), and `miceE
 keep track of how many mice she has eaten. Furthermore, she has a method
 `eatMouse` that increments `miceEaten` by one each time it is executed.
 To request execution of a method inside of an object, we use the syntax 
-`«receiver».«methodName»`, where «receiver»is an expression that evaluates
-to an object, and «methodName» is the name of a method declared on that object.
+`«receiver».«methodName»`, where `«receiver»` is an expression that evaluates
+to an object, and `«methodName»` is the name of a method declared on that object.
 For instance, `culver.eatMouse`
 requests that the object `culver` execute the `eatMouse` method inside it.
 Requesting the method `miceConsumption` will return the current value of `miceEaten`,

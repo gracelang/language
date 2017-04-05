@@ -51,7 +51,7 @@ method catNamed (myName:String) {
 }
 ```
 All we have done here is wrapped the whole object constructor in a method.
-We no longer need to declare a field `myName`, becuase we have given the method a
+We no longer need to declare a field `myName`, because we have given the method a
 parameter `myName` instead; this parameter will get its value from the argument 
 provided when the method is requested.
 
