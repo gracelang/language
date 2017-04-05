@@ -7,15 +7,15 @@ permalink: /control/for/
 folder: tutorial
 ---
 Like most other languages, Grace has a `for ... do` statement that allows you to repeat
-a block of code a fixed number of times — quite like a `repeat ... times` statement.
+a block of code a fixed number of times — very much like a `repeat ... times` statement.
 It looks like this:
 ```
 for («collection») do { «variable» → 
     «statements»
 }
 ```
-where the quoted components `«collection»`, `«variable»`, and `«statements»` are replaced by 
-Grace program elements.
+where the quoted components `«collection»`, `«variable»`, and `«statements»` 
+must be replaced by Grace program elements.
 
 Compared to _repeat_, there are two important differences.
 
@@ -58,17 +58,17 @@ For indexes in a list, you might use `i` or `ix`, and so on.  I often use the na
 
 Of course, to make this example runnable, you have to replace `«statements»` by the 
 Grace statements that you want to execute repeatedly.  These statements make
-up what is called the “body” of the for loop, and they will normally mention the
-loop variable — if they don't you might not want to use a for loop!
+up what is called the _body_ of the for loop, and they will normally mention the
+loop variable — if they don't mention it, you might not want to use a for loop!
 
 Here is the complete example:
 
 <object id="example-1" data="{{site.editor}}?forRange" width="100%" height="550px"> </object>
 
 
-Another kind of _collection_ object that you have already met is a [`String`]({{site.baseurl}}/variables/numstring). 
-A string can be though of as a single piece of text, but it can _also_ be thought 
-of as a sequence of individual letters, digits and symbols.  A for loop that 
+Another kind of _collection_ object, which you have already met, is a [`String`]({{site.baseurl}}/variables/numstring). 
+You can think of a string as a single piece of text, but you can _also_ think  
+of it as a sequence of individual letters, digits and symbols.  A for loop that 
 uses a string as the first argument is said to _iterate over_ the string.
 
 Here is an example using a string:
