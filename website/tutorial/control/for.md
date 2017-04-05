@@ -10,11 +10,11 @@ Like most other languages, Grace has a `for ... do` statement that allows you to
 a block of code a fixed number of times — quite like a `repeat ... times` statement.
 It looks like this:
 ```
-for (‹collection›) do { ‹variable› → 
-    ‹statements›
+for («collection») do { «variable» → 
+    «statements»
 }
 ```
-where the quoted components `‹collection›`, `‹variable›`, and `‹statements›` are replaced by 
+where the quoted components `«collection»`, `«variable»`, and `«statements»` are replaced by 
 Grace program elements.
 
 Compared to _repeat_, there are two important differences.
@@ -25,26 +25,26 @@ which contains the five numbers `2`, `3`, `4`, `5` and `6`.
 The block of code that follows `do` will be executed as many times as there are elements in
 this collection. So, for this example, 
 ```
-for (2..6) do { ‹variable› → 
-    ‹statements›
+for (2..6) do { «variable» → 
+    «statements»
 }
 ```
 it will be executed five times.
 
  2. The second argument — the block of code after `do` — must declare a single variable
 to play the role of  *parameter* to the block.
-The ‹variable› comes
+The `«variable»` comes
 immediately after the opening brace, and is separated from the body of the block
 by an arrow `→` (or `->`), like this:
 ```
 for (2..6) do { num → 
-    ‹statements›
+    «statements»
 }
 ```
 Here the variable `num` is used as the parameter.  On each 
-execution of the block, the ‹variable› `num` takes on a new value: _the next element of the collection_.
+execution of the block, the `«variable»` `num` takes on a new value: _the next element of the collection_.
 The variable `num` is like a parameter in a method, because each time the block is executed,
-`num` takes on a potentially new value.
+`num` takes on a potentially different value.
 So, in the example above, on the first execution the `num` will have the value `2`, on the second 
 execution `num` will be `3`, and so on, until on the last execution, `num` will be 6.
 
@@ -56,7 +56,7 @@ to use a name that reminds the reader of what it is.  So if you are iterating ov
 For indexes in a list, you might use `i` or `ix`, and so on.  I often use the name
 `each` if no better name suggests itself.
 
-Of course, to make this example runnable, you have to replace `‹statements›` by the 
+Of course, to make this example runnable, you have to replace `«statements»` by the 
 Grace statements that you want to execute repeatedly.  These statements make
 up what is called the “body” of the for loop, and they will normally mention the
 loop variable — if they don't you might not want to use a for loop!

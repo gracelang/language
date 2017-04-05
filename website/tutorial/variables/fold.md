@@ -60,15 +60,15 @@ Let's re-write our three examples using fold:
 The general pattern for using fold is as follows:  
 
 ```
-‹collection›.fold { ‹a›, ‹b› → 
-    ‹function›
-} startingWith (‹initialValue›)
+«collection».fold { «a», «b» → 
+    «function»
+} startingWith («initialValue»)
 ```
-where `‹collection›` is an expression that evaluates to any collection, 
-`‹a›` and `‹b›` are any names you choose for the accumulator and the
-current element, and `‹function›` is some Grace code, normally using
-the variables that you chose for `‹a›` and `‹b›`.
-`‹initialValue›` is the initial value of the accumulator.
+where `«collection»` is an expression that evaluates to any collection, 
+`«a»` and `«b»` are any names you choose for the accumulator and the
+current element, and `«function»` is some Grace code, normally using
+the variables that you chose for `«a»` and `«b»`.
+`«initialValue»` is the initial value of the accumulator.
 
 Another way of thinking about folds, especially useful when the combining function can 
 be written as an operator like `*`, is that it replaces the commas in the list
