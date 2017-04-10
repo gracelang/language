@@ -1164,7 +1164,7 @@ example, this method merges two sorted `Collection`s into a
 sorted list:
 
 ```
-method merge [[T]](cs: Collection[[T]]) and (ds: Collection[[T]]) -> List[[T]] { 
+method merge ⟦T⟧(cs: Collection⟦T⟧) and (ds: Collection⟦T⟧) -> List⟦T⟧ { 
     def cIter = cs.iterator
     def dIter = ds.iterator
     def result = emptyList
@@ -1229,4 +1229,4 @@ type Array⟦T⟧ =  {
 ```
 
 [^1]: It is a limitation of *minigrace* that expressions containing
-    {braces} and “quotes” cannot be interpolated into strings.
+    {braces} cannot be interpolated into strings.
