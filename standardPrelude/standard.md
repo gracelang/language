@@ -1085,9 +1085,9 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
 
 ## Iteration and ***for*** loops
 
-Collections implement the type [`Collection⟦T⟧`](#common-abstractions)
+Collections implement the type [`Collection⟦T⟧`](#common-abstractions),
 and thus implement the internal and external iterator patterns.
-These patterns which provide for iteration through a collection of
+These patterns provide for iteration through a collection of
 elements of type `T`, one element at a time. The method
 `do(_)` and its variant `do(_)separatedBy(_)`
 implement internal iterators, while the method `iterator` returns an
