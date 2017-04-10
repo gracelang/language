@@ -45,7 +45,7 @@ case-sensitive by clicking the `Aa` button.
  * To turn on whole-word
 search, which can be useful if you are searching for a variable `n`, but don't
 want to find the `n`s in the phrase `kanga and roo`, click the `\\b` button.
- * The default search is a text search, which looks for he text you type in the
+ * The default search is a text search, which looks for the text you type in the
  search dialog. You can turn on
 "regular expression" search using the `.*` button. 
 The regular expression syntax is similar to that of other editors, and 
