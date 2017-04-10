@@ -15,6 +15,9 @@ entries:
     - title: How to run Grace
       url: /introduction/run/
       output: web
+    - title: Using the Grace Editor
+      url: /IDE/introduction/
+      output: web
     - title: Hello, World in Grace
       url: /introduction/hello/
       output: web
