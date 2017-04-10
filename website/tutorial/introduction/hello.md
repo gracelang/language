@@ -8,7 +8,7 @@ folder: tutorial
 ---
 Traditionally, programming tutorials start with a program that displays
 the text string "Hello, world!".  This is a semi-humerous way of having
-the computer say that its here.
+the computer say that it's here.
 
 In Grace, the “Hello, world” program looks like this.
 ```
