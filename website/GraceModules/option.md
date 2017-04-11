@@ -1,7 +1,7 @@
 ---
 title: The option Module
 keywords: Maybe, Option, variant, null, nil, singleton
-summary: "Option objects provide a way of dealing with values that may or may not be present.  The option module provides two constrcutors for option objects: full(_) and empty"
+summary: "Option objects provide a way of dealing with values that may or may not be present.  The option module provides two constrcutors for option objects: full(_) and empty."
 sidebar: modules_sidebar
 permalink: /modules/option/
 author:

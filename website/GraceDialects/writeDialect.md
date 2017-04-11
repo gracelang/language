@@ -1,6 +1,7 @@
 ---
 title: Writing a Dialect
 keywords: Dialect Checker
+summary: "This page explains how to write a Grace dialect."
 sidebar: dialects_sidebar
 permalink: /dialects/writeDialect/
 toc: false

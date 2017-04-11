@@ -1,6 +1,7 @@
 ---
 title: The Minitest Dialect
 keywords: TDD, test-driven-development, test, dialect
+summary: "The dialect “minitest” helps you write and run test cases with low overhead.  It supports the practice of test-driven development (TDD)."  
 sidebar: dialects_sidebar
 permalink: /dialects/minitest/
 author:
@@ -31,11 +32,11 @@ The best way to explain how to use *minitest* is by example:
         set23.add 2
         set23.add 3
 
-        test "emptyness" by {
+        test "emptiness" by {
             assert (setO.size == 0) description ("setO is not empty!")
             deny (setO.contains 2) description ("setO contains 2!")
         }
-        test "non-emptyness" by {
+        test "non-emptiness" by {
             assert (set23.size) shouldBe 2
             assert (set23.contains 2)
             assert (set23.contains 3)

@@ -1,6 +1,7 @@
 ---
 title: The logo Dialect
 keywords: Logo, drawing, turtle graphics
+summary: "Logo is a dialect used to intorduce simple graphics.  The Logo \"turtle\" can be moved around the screen, leaving a trail of ink behind it."
 sidebar: dialects_sidebar
 permalink: /dialects/logo/
 toc: false
@@ -65,7 +66,7 @@ to use a `repeat(_)times(_)`, as shown here.
 Notice that the block of code that we want to repeat is
 indicated in **two** ways:
 it is indented, and it is enclosed in `{` braces `}`.
-Grace requires us to do both.
+Grace requires us to do _both_.
 
 <object id="example-2" data="{{site.editor}}?5-star-simple" width="100%" height="550px"> </object>
 
