@@ -38,6 +38,8 @@ topnav_dropdowns:
       folderitems:
         - title: logo
           url: /dialects/logo/
+        - title: minispec
+          url: /dialects/minispec/
         - title: minitest
           url: /dialects/minitest/
         - title: staticType

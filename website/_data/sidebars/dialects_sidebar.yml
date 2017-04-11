@@ -11,6 +11,9 @@ entries:
       url: /dialects/logo/
       output: web
       type: web
+    - title: minispec
+      url: /dialects/minispec/
+      output: web
     - title: minitest
       url: /dialects/minitest/
       output: web
