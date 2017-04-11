@@ -7,6 +7,10 @@ entries:
   - title: Dialects
     output: web
     folderitems:
+    - title: beginningStudent
+      url: /dialects/beginningStudent/
+      output: web
+      type: web
     - title: logo
       url: /dialects/logo/
       output: web

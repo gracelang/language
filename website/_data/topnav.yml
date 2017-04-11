@@ -36,6 +36,8 @@ topnav_dropdowns:
           type: web
     - title: Dialects
       folderitems:
+        - title: beginningStudent
+          url: /dialects/beginningStudent/
         - title: logo
           url: /dialects/logo/
         - title: minispec
