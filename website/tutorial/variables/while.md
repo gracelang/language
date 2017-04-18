@@ -33,8 +33,8 @@ start of the loop, which means that the loop would either not execute at all (if
 the condition were `false`), or would execute forever (if it were `true`).
 Using braces means that the while loop gets a block of code, 
 rather than a simple Boolean value, and can _re-evaluate_ that block on each iteration.
-Don't worry if you didn't quite follow that explanation: just remember to use
-blocks for your conditions.  
+Don't worry if you didn't quite follow that explanation: just remember to enclose
+your conditions in `{` braces `}`.  
 
 Below is an example of a while loop that prints out numbers less than 30, counting
 by threes. Feel free to explore it and change it to see the result.

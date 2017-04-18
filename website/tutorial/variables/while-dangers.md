@@ -17,10 +17,10 @@ the end of the universe, if need be.  This is usually not what you want!
 
 There are a few ways you can avoid this problem.
 
- 1. Don't use while unless you need to!  If possible, use a for-loop.
+ 1. Don't use while unless you need to!  If possible, use a [repeat-loop]({{site.baseurl}}/variables/repeat/), or a [for-loop]({{site.baseurl}}/control/for/).
 
  2. Review the loop body to make sure that you are changing something that will
-eventually change the `condition` from `true` to `false`
+eventually cause the `condition` to change from `true` to `false`
 
  3. If you aren't sure, print out the condition at the end of the loop body.
 In the Grace web IDE, if you think that you might have written an infinite loop
@@ -28,15 +28,30 @@ you can stop it by refreshing the IDE page in your web browser.
 
 Let‘s look at this advice more closely.
 
-## Choosing between `for` and `while`
-For-loops are better if you know, or can
-easily calculate, the maximum number of time you might want to execute the loop body.
-You can exit a for-loop *early* using a `return` statement, which will return from 
+## Choosing between `repeat`, `for` and `while`
+Repeat-loops and for-loops are better if you know, or can
+easily calculate, the maximum number of times you might want to execute the loop body.
+You can exit a repeat loop or a for-loop *early* using a `return` statement, which will return from 
 the method containing it.
 
 The example from the [previous page]({{site.baseurl}}/variables/while), which 
 executes the loop body for `x` = 0, 3, 6, 9, ... , 27 is one that need not use 
 while at all.  We could have written it like this:
+```
+var x := 0
+
+repeat 10 times {
+    print "{x}"
+    x := x + 3   // count by threes
+}
+```
+This version *obviously* terminates after 10 iterations.  It still needs the 
+variable `x` to be declared ahead of the loop, and incremented in the loop body.
+
+Here is a version that uses `for(_)do(_)`, and thus uses a _parameter_ (`n`) instead of 
+a variable.  Now there is no need to declare `x` outside the loop; we can calculate
+it based on the value of `n`.
+
 ```
 for (0..9) do { n ->
     def x = n * 3  // count by threes
@@ -44,8 +59,10 @@ for (0..9) do { n ->
 }
 
 ```
-This is shorter, and because it uses `for(_)do(_)`, *obviously* terminates after 
-10 iterations.  Moreover, because the variables `n` and `x` are visible *only* in the
+Because this uses `for(_)do(_)`, it also *obviously* terminates—this time, 
+after using each of the 
+10 values in the range `0..9`.
+Moreover, because the variables `n` and `x` are visible *only* in the
 body of the loop, and can't be changed inadvertently, the loop can be understood 
 in isolation.  This is in contrast to the while loop, where `x` had to be a 
 variable, and had to be initialized outside of the loop.
@@ -214,8 +231,9 @@ longer to find a pseudo-random integer in the interval 1..100 that is not
 already in column.  If `limit` is greater than 100, it will never terminate!
 
 This particular problem can be better-solved using a for loop.
-Start with a `list (1..100)`, select an element at random, _remove_ it, 
-and then add that element to column.  Repeat this `limit` times — which 
+Start with a `list` containing the numbers 1 to 100.  Now 
+select an element from the list at random, _remove_ it, 
+and then add that element to column.  Repeat this process `limit` times — which 
 can be accomplished using `repeat(_)times(_)` or `for(_)do(_)`.
 If `limit` is greater than 100, this approach will lead to a `BoundsError`
 when the list from which you are choosing an element becomes empty.
