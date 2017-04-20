@@ -299,7 +299,7 @@ type Number = {
     // the signum function: 0 when self == 0, 
     // -1 when self < 0, and +1 when self > 0
 
-    isNan -> Boolean
+    isNaN -> Boolean
     // true if this Number is not a number, i.e., if it is NaN
 
     isEven -> Boolean
