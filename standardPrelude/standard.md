@@ -424,7 +424,7 @@ type String =  {
     // a three-way comparison: -1 if (self < other), 0 if (self == other), and +1 if (self > other).
     // This is useful when writing a comparison function for sortBy
 
-    contains (other:String) -> Number
+    contains (other:String) -> Boolean
     // returns true if other is a substring of self
 
     endsWith (possibleSuffix: String)
