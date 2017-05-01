@@ -1,7 +1,7 @@
 ---
 title: The logo Dialect
 keywords: Logo, drawing, turtle graphics
-summary: "Logo is a dialect used to intorduce simple graphics.  The Logo \"turtle\" can be moved around the screen, leaving a trail of ink behind it."
+summary: "Logo is a dialect used to intorduce simple graphics.  The Logo “turtle” can be moved around the screen, leaving a trail of ink behind it."
 sidebar: dialects_sidebar
 permalink: /dialects/logo/
 toc: false
