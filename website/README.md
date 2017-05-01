@@ -1,11 +1,14 @@
 # Grace Documentation Website
 
-This is the source for a website that documents the Grace language amnd its libraries, and for tutorial meterial on using Grace.  Examples on the website can be made "live", so that users can edit and run them.
+This is the source for a website that documents the Grace language and its libraries, and for tutorial material on using Grace.  Examples on the website can be made "live", so that users can edit and run them.
 
 The liveness depends on a simple IDE being installed elsewhere (to which this site will link).  The current location of that IDE is http://www.cs.pdx.edu/~grace/embedded-web-editor; it is sourced from another github repository (http://github.com/gracelang/embedded-web-editor).  The example code referred to
 by the tutorials must go in the `examples/` directory of that repository.)
 
 After making changes to this site, `make build` will regenerate it, and `make deploy` will push it to the ~grace/doc at PSU (assuming that you have permssion to login as user "grace").
+
+### Supporting Documentation: 
+For a comprehensive set of documentation for all topics not covered here, please see: http://idratherbewriting.com/documentation-theme-jekyll/index.html
 
 ## How to Add to and Change this Website
 
