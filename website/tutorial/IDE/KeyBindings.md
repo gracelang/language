@@ -1,14 +1,19 @@
 ---
 title: "Using the Grace Editor"
-keywords: find, find & replace, indent, outdent, undo, redo, comment
-summary: The Grace editor implements several useful keyboard shortcuts, and a powerful regular-expression search
+keywords: find, find & replace, indent, outdent, undo, redo, comment, editor, web-editor, IDE
+summary: The Grace Program Editor lets you create and run Grace programs in yor web browser.  It implements keyboard shortcuts, and regular-expression search.
 sidebar: tutorial_sidebar
 permalink: /IDE/introduction/
 folder: tutorial
 ---
-The text editor in the Grace IDE is not actually part of the Grace
-project; it's a separate open-source project called ACE, documented at
-<http://ace.c9.io/>.
+
+The Grace Program Editor works very much like any other editor: you place the cursor in the
+editing window and start typing!  Double-clicking selects a word, and triple-clicking selects the whole
+line.  Buttons at the top of the editor page let you **upload** a file into the editor, 
+create a **new file**, create a **new folder** to organize your files, **download**
+the current file onto your computer, ask for **help** (which takes you to this site), 
+**search** (and replace) in the current file, and **delete** the current file. 
+You can also rename the current file by typing over the current file name at the top of the editing pane.
 
 ## Key Bindings
 
@@ -73,3 +78,9 @@ has the following conventions.
 
     In the replacement text, \$1, \$2, etc., represent the first, second,
     etc., parenthesized regular expression in the search expression.
+
+## The ACE Project
+
+The text editor in the Grace IDE is not actually part of the Grace
+project; it is a separate open-source project called ACE, documented at
+<http://ace.c9.io/>.
