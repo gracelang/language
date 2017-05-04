@@ -33,6 +33,8 @@ that navigation bar give access to several different kinds of information.
    describes the methods available on the standard [_String_]({{site.baseurl}}/dialects/standard/#string), [_Number_]({{site.baseurl}}/dialects/standard/#number),
    and [_Collection_]({{site.baseurl}}/dialects/standard/#collection-objects) objects.
 
+The top navigation bar also provides a _keyword search_ function.  This searches the page summaries and keywords of each page on this site.  (It is _not_
+a full-text search, such as is provided by Google.)
 Within each section of the website, the _left sidebar_ provides additional navigation.  On this page, it gives quick access to materials that can also be found
 using the top navigation bar.  Within each section, it provides local navigation; for example within the Tutorial, it lists the tutorial topics.
 
