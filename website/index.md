@@ -1,5 +1,6 @@
 ---
-title: The Grace Language 
+title: The Grace Language
+keywords: Using this website, Teaching, Design, Functionality, Modules, Dialects, Tutorial
 tags: [getting_started]
 sidebar: home_sidebar
 toc: false 
