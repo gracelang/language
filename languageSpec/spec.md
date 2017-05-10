@@ -766,7 +766,7 @@ experience before confirming the design.
 
 Object constructors are expressions that evaluate to an object with the
 given attributes. Each time an object constructor is executed, a new object
-is created. In addition to declarations of fields and methods, object
+is created. In addition to declarations of fields, methods, and types, object
 constructors can also contain expressions (executable code at the top level),
 which are executed as a
 side-effect of evaluating the object constructor. All of the declared
@@ -861,13 +861,13 @@ with type arguments.
 **Example**
 
 
-    class vectorOfSize(size)⟦T⟧ {
+    class vectorOfSize⟦T⟧ (size) {
         var contents := Array.size(size)
         method at(index: Number) -> T { return contents.at(index) }
         method at(index: Number) put(elem: T) { ... }
     }
 
-    class sortedVectorOfSize(size)⟦T⟧
+    class sortedVectorOfSize⟦T⟧ (size)
         where T <: Comparable⟦T⟧ {
           ...
     }
@@ -1792,7 +1792,7 @@ draws heavily on the wording of the [Modula-3 report]
 (https://www.cs.purdue.edu/homes/hosking/m3/reference/).
 
 If `B <: A`, then every object of type `B` is also an object
-of type A. The converse does not apply.
+of type `A`. The converse does not apply.
 
 If `A` and `B` are interfaces, then `B <: A` if and only if, for
 every method `m` in `A`, there is a corresponding method `m` (with the same
@@ -1943,6 +1943,20 @@ The same type check can be requested explicitly by using the operators `<:`,
     assert (B <: interface { foo(_) } ) description "B has no foo(_) method"
     assert (B <: interface {foo(_:C) -> D} ) description "B doesn't have a method foo(_:C)->D"
     assert (B == (A | C)) description "B is neither an A or a C"
+
+**Run-time type checking of type assertions**
+
+A run-time check of an object's type is triggered by associating a value with an identifier
+declared with a type annotation.  
+
+If the annotation is a simple interface, the run-time type check ensures that each of the methods
+of the type corresponds to an associated method of the object with the same canonical name,
+and the types of these methods in the object conform to those of the corresponding method in the type.
+See [Type Conformance](#type-conformance).  Each type definition in the interface must have the
+same definition in the object.
+
+If the annotation is a variant type, then the run-time type check ensures that the set of methods
+of the object conforms to that of one of the variants.
 
 # Modules and Dialects
 
