@@ -73,7 +73,7 @@ but if you are familiar with other languages, it may give you a better idea of h
                 </div>
                 <div class="tab-pane fade" id="service-three">
                      <h4>Functionality</h4>
-                     <p> Grace is a full-object-based language, and also includes some features that are not object-based, such as pattern matching.
+                     <p> Grace is a full object-based language, and also includes some features that are not object-based, such as pattern matching.
                      This enables instructors to compare various programming styles without leaving the language.</p>
                      <p> Grace has an object-oriented type system, but its use is optional.  Variables and methods that are not annotated with types are
                      assumed to have type `Unknown`, and are not checked.  At the instructor's discretion, dialects can be used to require type annotations.</p>
