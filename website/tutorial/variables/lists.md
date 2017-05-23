@@ -8,17 +8,26 @@ folder: tutorial
 ---
 **Lists** are a kind of Object that can hold multiple values; these values
 are called the a **elements** of
-the list. A list is created like this:
+the list, and can be any other objects.
+
+In _standardGrace–, a list is created like this:
 
 ```
 def animals = list ["dog", "cat", "whale", "bird", "mouse"]
 def sizes = list [52, 78, 45, 23]
 ```
+and in dialect _beginningStudent_, which does not use square brackets, like this:
+
+```
+dialect "beginningStudent"
+def animals = list("dog", "cat", "whale", "bird", "mouse")
+def sizes = list(52, 78, 45, 23)
+```
 
 The first declaration creates a list with five string elements, and binds
 it to the name `animals`; the second declaration creates a list containing
 four numbers, and bind it to the name `sizes`.
-It doesn't matter how many elements you put between the `[ ]`; a list can contain
+It doesn't matter how many elements you put into the list; a list can contain
 arbitrarily many things. Moreover, the ”things“ can be any kind of object.
 We have used numbers 
 and strings, but the elements can be anything — even other lists.
@@ -27,6 +36,32 @@ Also note that you can put _no_ elements in a list, creating an empty list.
 ```
 def empty = list [ ]
 ```
+
+or, in _beginningStudent_
+
+```
+dialect "beginningStudent"
+def empty = emptyList
+```
+
+## Lists are Mutable
+
+Simple objects like Numbers, Strings, Points, and Booleans are _immutable_: 
+they don't change.  The number `3` is always `3`; it never becomes 4!  If the
+variable `x` is bound to `3`, when you write an expression like `x + 1`, you are
+not changing `3`: you are creating a new number `4`, leaving `3` unchanged.
+
+The same is true of Strings:  the expression `"Hello " ++ "World!"` does not
+change the string "Hello "` or the string `"World!"`; it creates a third string.
+
+In contrast, lists are mutable: they can be changed.  Try running this tiny program:
+
+<object id="example-1" data="{{site.editor}}?lists-mutable" width="100%" height="550px"> </object>
+
+There is just one list here; `a` and `b` both name this list.  The 
+method requests `addLast` and `addFirst` _mutate_, i.e., change, that list.
+It makes no difference whether we access this list through the variable `a` 
+or the variable `b`; there is just one list, so we see the same object both ways.
 
 ## Basic Operations On lists
 
