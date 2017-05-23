@@ -51,9 +51,6 @@ entries:
     - title: Numbers and Strings
       url: /variables/numstring/
       output: web
-    - title: Lists
-      url: /variables/lists/
-      output: web
   - title: Additional Control Structures
     output: web
     folderitems:
@@ -75,6 +72,18 @@ entries:
   - title: Collections of Objects
     output: web
     folderitems:
+    - title: Lists
+      url: /variables/lists/
+      output: web
+    - title: List Observers
+      url: /variables/list-observers/
+      output: web
+    - title: List Constructors
+      url: /variables/list-constructors/
+      output: web
+    - title: List Mutators
+      url: /variables/list-mutators/
+      output: web
     - title: Do
       url: /variables/do/
       output: web

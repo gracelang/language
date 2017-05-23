@@ -1,7 +1,7 @@
 ---
 title: Lists
-keywords: tutorial, list
-summary: An introduction to lists
+keywords: tutorial, list, mutable, collection
+summary: An Introduction to Lists and their operations
 sidebar: tutorial_sidebar
 permalink: /variables/lists/
 folder: tutorial
@@ -9,8 +9,10 @@ folder: tutorial
 **Lists** are a kind of Object that can hold multiple values; these values
 are called the a **elements** of
 the list, and can be any other objects.
+Lists let us access individual elements using the method `at(_)`, and 
+iterate over their contents using the method `do`, or using `for(_)do(_)`. 
 
-In _standardGrace–, a list is created like this:
+In _standardGrace_, a list is created like this:
 
 ```
 def animals = list ["dog", "cat", "whale", "bird", "mouse"]
@@ -26,9 +28,9 @@ def sizes = list(52, 78, 45, 23)
 
 The first declaration creates a list with five string elements, and binds
 it to the name `animals`; the second declaration creates a list containing
-four numbers, and bind it to the name `sizes`.
+four numbers, and binds it to the name `sizes`.
 It doesn't matter how many elements you put into the list; a list can contain
-arbitrarily many things. Moreover, the ”things“ can be any kind of object.
+arbitrarily many things. Moreover, the “things” can be any kind of object.
 We have used numbers 
 and strings, but the elements can be anything — even other lists.
 Also note that you can put _no_ elements in a list, creating an empty list.
@@ -46,101 +48,59 @@ def empty = emptyList
 
 ## Lists are Mutable
 
+One of the most confusing things about list to beginners is thatthey aer _mutable_.
+What does that mean?  Lets' explain.
+
 Simple objects like Numbers, Strings, Points, and Booleans are _immutable_: 
 they don't change.  The number `3` is always `3`; it never becomes 4!  If the
 variable `x` is bound to `3`, when you write an expression like `x + 1`, you are
 not changing `3`: you are creating a new number `4`, leaving `3` unchanged.
-
 The same is true of Strings:  the expression `"Hello " ++ "World!"` does not
-change the string "Hello "` or the string `"World!"`; it creates a third string.
+change the string `"Hello "` or the string `"World!"`; it creates a third string.
 
-In contrast, lists are mutable: they can be changed.  Try running this tiny program:
+In contrast, lists are mutable: they can be changed.  Try running this program;
+then we will discuss what it does. 
 
 <object id="example-1" data="{{site.editor}}?lists-mutable" width="100%" height="550px"> </object>
 
-There is just one list here; `a` and `b` both name this list.  The 
-method requests `addLast` and `addFirst` _mutate_, i.e., change, that list.
-It makes no difference whether we access this list through the variable `a` 
-or the variable `b`; there is just one list, so we see the same object both ways.
+There is just one list here; `a` and `b` both name this list.
+It's initially empty.
+The method requests `addLast` and `addFirst` _mutate_, i.e., change, this list.
+The request `a.addLast 17` adds the new element `17` at the end;
+the request `a.addFirst` adds `3` at the beginning.
+The `print` statements show how the value of the list changes; 
+the square brackets in the output are the way that lists depict themselves as 
+strings.
 
-## Basic Operations On lists
+Notice that it makes no difference whether we access this list through the variable `a` 
+or the variable `b`.
+There is just one list, so we see the same object both ways.
 
-To get a specific element from a list, you
-can use the method `at(_)`, like this: `animals.at(1)`, which returns `"dog"`
-or `animals.at(4)`, which returns `"bird"`.
-
-Lists are the first kind of *mutable* object that we have met in Grace.
-What does “mutable” mean?  Simply that, after a list is created, you can _modify_ it.  
-To add an element to the list, use `animals.addLast "squirrel"` or
-`animals.addFirst "badger"`, depending on whether you want to make the
-new element the last or the first one in the list. 
-To remove an element from a list, use `animals.removeLast`, `animals.removeFirst`.
-You can also say `animals.remove "whale"`.
-
-Notice that adding or removing the `first` element of the list will change the
-position of all of the elements in the list.  So, after `animals.addFirst "badger"`
-`animals.at 1` will be "badger", and not "dog"; instead, `animals.at 2` will be "dog".
-
-Try out some of these methods by modifying this example code.
-<object id="example-1" data="{{site.editor}}?lists" width="100%" height="550px"> </object>
-
-## Changing Individual Elements
-
-In addition to adding elements to a list and and removing elements from it,
-you can also _change_ the element stored at a specific index.  To do this, 
-use the method `at (index) put (newValue)`.  Here, `index` must be an integer
-between 1 and the size of the list, and `newValue` is the object that you want
-to store there.  Try modifying these examples.
+Now try using `removeFirst` to change the list `a` again.
 
 
-<object id="example-2" data="{{site.editor}}?lists-at-put" width="100%" height="550px"> </object>
+## Operations on Lists
 
-
-## Additional List Operations
-
-You can request many other methods on list.
-Here are a few of the more common ones:
-
-```
-
-size -> Number
-// returns the number of elements in this list.
-
-++ (other) -> List
-// returns a new list formed by concatenating this list and other; other can
-// be any Collection, such as a string or another list.  
-
-== (other) -> Boolean
-// returns true if self and other contain the same elements, in the same order.
-
-contains(soughtFor) -> Boolean
-// returns true if this list contains the element soughtFor.
-
-sort -> List
-// Modifies this list by sorting it in-place.  Sorting uses the < and == methods
-// on the elements of this list.
-
-sorted -> List
-// returns a new list that contains the same elements as this list, but in sorted 
-// order, as determined by the < and == methods on the elements of this list.
-```
-
-Here are some examples; edit them and try some variations.  Make sure that you
-understand _why_ you are seeing the results that you see.
-<object id="example-3" data="{{site.editor}}?lists2" width="100%" height="550px"> </object>
-
-## List Reference
-
-Here is the documentation for all methods on [Lists]({{site.baseurl}}/dialects/standard/#list)
+There are three broad categories of methods that operate on lists.
+ * [**Observers**]({{site.baseurl}}/variables/list-observers): methods that let us examine, or observe, the contents of the list.
+   Examples are methods such as `at(_)`, which returns a particular element of the list,
+   and asString, which returns a string representation of the list and its contents.
+ * [**Constructors**]({{site.baseurl}}/variables/list-constructors): methods that make new lists.  Examples are `copy` and `++(_)`
+ * [**Mutators**]({{site.baseurl}}/variables/list-mutators): methods that change the list.  Examples include `at(_)put(_)` and `addLast(_)`.
+ 
+There is a separate tutorial page for each of these categories: [**Observers**]({{site.baseurl}}/variables/list-observers),  [**Constructors**]({{site.baseurl}}/variables/list-constructors), and [**Mutators**]({{site.baseurl}}/variables/list-mutators).  And here is the [documentation for all methods on Lists]({{site.baseurl}}/dialects/standard/#list)
 
 ## Lists as Collections
 
-Lists are a particular kind of collection.  Other collections include 
-sets, ranges and strings.  Like all collections, if you need to do some operation 
+Lists are a particular kind of _collection_; a collection is just an object that
+can store and provide access to other objects.  Other collections include 
+sets, sequences, ranges and strings.
+
+Like all collections, if you need to do some operation 
 to every element of the collection, you can use a [for loop]({{site.baseurl}}/control/for)
 or the [`do` method]({{site.baseurl}}/variables/do).
 
 In addition to `do`, there are several other useful methods on collections.
-This tutorial discusses  [`fold(_)startingWith(_)`]({{site.baseurl}}/variables/fold)
+This tutorial discusses [ `fold(_)startingWith(_)`]({{site.baseurl}}/variables/fold)
 and [`map(_)`]({{site.baseurl}}/variables/map).  The full list is in the
 [specification of the standard dialect]({{site.baseurl}}/dialects/standard/#common-abstractions).
