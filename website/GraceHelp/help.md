@@ -1,12 +1,11 @@
 ---
-title: Help Page
-keywords: help
+title: Using this Website
+keywords: help, using this website, top navigation, side navigation
 sidebar: home_sidebar 
-permalink: /help/ 
+permalink: /help/
+toc: false
 folder: GraceHelp
 ---
-
-## Using this Website
 
 This website aims to collect the documentation about Grace and its libraries.  This is the _Help page_; you can reach it at any time 
 by clicking the house icon, or the words **Grace Documentation**, in the the blue navigation bar at the top of every page, and then
