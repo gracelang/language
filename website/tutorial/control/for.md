@@ -74,3 +74,6 @@ uses a string as the first argument is said to _iterate over_ the string.
 Here is an example using a string:
 
 <object id="example-1" data="{{site.editor}}?forString" width="100%" height="550px"> </object>
+
+If you are still confused about the rôles of the two arguments to `for(_)do(_)`, 
+look at some [for loop examples]({{site.baseurl}}/control/for-examples).

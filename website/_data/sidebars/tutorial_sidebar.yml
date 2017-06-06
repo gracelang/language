@@ -57,6 +57,9 @@ entries:
     - title: For loops
       url: /control/for/
       output: web
+    - title: For loop examples
+      url: /control/for-examples/
+      output: web
     - title: Repeat
       url: /variables/repeat/
       output: web
