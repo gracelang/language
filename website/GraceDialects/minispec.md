@@ -237,6 +237,6 @@ specifications will be re-run.
 ### Further Reading
 
 If you want more information about executable specifications, Google 
-"Behaviour-Driven Design" (BDD for short).
+"Behaviour-Driven Development" (BDD for short).
 
 
