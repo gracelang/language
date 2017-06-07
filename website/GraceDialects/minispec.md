@@ -99,6 +99,10 @@ things that you can expect.
         // expects s1 == s2;  complains with complaint otherwise. 
     }
 
+    method expect(b:Object) orSay (complaint:String) {
+        // expects b to be true;  complains with complaint otherwise. 
+    }
+
     method expect(s1:Object) notToBe (s2:Object) {
         // expects s1 ≠ s2;  complains with a default message otherwise. 
     }
