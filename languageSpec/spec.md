@@ -382,6 +382,8 @@ Grace blocks are lambda expressions, with or without
 parameters. If a parameter list is present, the parameters are separated
 by commas and the list is separated from the body of the block by the `->` symbol.
 Within the body of the block, the parameters cannot be assigned.
+Block parameters may optionally be annotated with types; omitted type
+annotations are treated as the type `Unknown`.
 
     { do.something }
     { i -> i + 1 }
@@ -398,8 +400,9 @@ Blocks construct objects containing a method named `apply`, or
 `apply(n)`, or `apply(n, m)`, …, where the number of parameters to `apply`
 is the same as the number of parameters of the block. Requesting the
 `apply(...)` method evaluates the block; it is an error to provide the wrong
-number of arguments. If block parameters are declared with type
-annotations, it is a `TypeError` if the arguments do not conform to those types.
+number of arguments.
+It is a `TypeError` if an argument to `apply(...)` does not match
+the types annotation of the corresponding parameter.
 
 **Examples**
 
@@ -449,8 +452,10 @@ Grace has two kinds of fields: [constants](#constants) and [variables](#variable
 
 Constants are defined with the **`def`** keyword; they bind
 an identifier to the value of an initialising expression, and may
-optionally be given a type.  This type is checked when
+optionally be annotated with a type.  This type is checked when
 the constant is initialised. Constants cannot be re-bound.
+
+An omitted type annotation is treated as the type `Unknown`.
 
 **Examples**
 
@@ -471,6 +476,7 @@ variable is an error, which may be caught either at run time or at
 compile time.
 Variables may be optionally given a type: this type is checked when
 the variable is initialised and assigned.
+An omitted type annotation is treated as the type `Unknown`.
 
 **Examples**
 
@@ -487,9 +493,12 @@ Methods define the action to be taken when the object containing the
 method receives a
 request with the given name. Because every method must be associated
 with an object, methods may not be declared directly inside other
-methods.  The type of the object returned from the method may
-optionally be given after the symbol `->`: this type is checked when
-the method returns. The body of the method is enclosed in braces.
+methods.  The body of the method is enclosed in braces.
+
+The type of the object returned from the method may
+optionally be given after the symbol `->`;
+an omitted type annotation is treated as the type `Unknown`.
+When the method returns, its result is checked against this type.  
 
     method pi  { 3.141592634 }
 
@@ -583,15 +592,16 @@ As a consequence of the above rules, methods `max(a, b, c)` and
 as distinct methods.  In other words, Grace allows "overloading by
 arity". (Grace does _not_ allow overloading by type).
 
-### Method parameters
+### Parameters
 
 Depending on their syntactic form, method declarations may include one
-or more parameter lists. Inside method bodies, method parameters are
-treated as **'def'**s: they may not be reassigned.
-Method parameters may optionally be annotated with types:
+or more lists of parameters. Inside method bodies, parameters are
+treated as [constants](#constants): they may not be reassigned.
+Parameters to a method may optionally be annotated with types:
 the corresponding arguments will be
 checked against those types, either before execution, or
-just before the method body is executed.
+when the method is requested.  
+An omitted type annotation is treated as the type `Unknown`.
 
 ### Type Parameters
 
