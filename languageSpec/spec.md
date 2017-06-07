@@ -766,7 +766,7 @@ experience before confirming the design.
 
 Object constructors are expressions that evaluate to an object with the
 given attributes. Each time an object constructor is executed, a new object
-is created. In addition to declarations of fields and methods, object
+is created. In addition to declarations of types, fields and methods, object
 constructors can also contain expressions (executable code at the top level),
 which are executed as a
 side-effect of evaluating the object constructor. All of the declared
@@ -776,7 +776,7 @@ attributes of the object are in scope throughout the object constructor.
 
 
     object {
-        def colour:Colour = Colour.tabby
+        def colour:Colour = colours.tabby
         def name:String = "Unnamed"
         var miceEaten := 0
         method eatMouse { miceEaten := miceEaten + 1 }
@@ -786,8 +786,8 @@ Like everything in Grace, object constructors are lexically scoped.
 
 A name can be bound to an object constructor, like this:
 
-    def unnamedCat =  object {
-         def colour:Colour = Colour.tabby
+    def unnamedCat = object {
+         def colour:Colour = colours.tabby
          def name:String = "Unnamed"
          var miceEaten := 0
          method eatMouse { miceEaten := miceEaten + 1 }
@@ -823,10 +823,10 @@ is equivalent to
 
 This class might be used as follows:
 
-    def fergus = catColoured (colour.tortoiseshell) named "Fergus"
+    def fergus = catColoured (colours.tortoiseshell) named "Fergus"
 
 This creates an object with fields `colour` (set to
-`colour.tortoiseshell`), `name` (set to `"Fergus"`), and `miceEaten`
+`colours.tortoiseshell`), `name` (set to `"Fergus"`), and `miceEaten`
 (initialised to `0`), prints “The cat Fergus has been created”, and
 binds the name `fergus` to this object.
 
@@ -892,8 +892,8 @@ clauses do not.
 An `inherit` or `use` clause contains a
 [Manifest Expression](#manifest-expressions)
 that creates a new object, such as a request on a class or trait.
-This means that the  request  cannot depend on a `self`, implicitly or
-explicitly.  This means that programs cannot inherit or use any trait or class that
+This means that the  request  cannot depend on `self`, implicitly or
+explicitly, and hence that programs cannot inherit or use any trait or class that
 can potentially be overridden.
 Note that the arguments to [Manifest Expression](#manifest-expressions)
 need not themselves be manifest.
@@ -953,7 +953,7 @@ During initialisation, `self` is bound to the new object being
 created, even while executing code and initialisers of parents.
 
 As a consequence of these rules, a new object can change the
-initialization of its parents, by overriding the method requested on self
+initialization of its parents, by overriding a method requested on self
 by the parents' initialisers.
 
 
@@ -1041,6 +1041,11 @@ accesses the overridden methods from the parent traits using the aliases `catMov
 and `dogMove`; as a result, `nyssa` will `move` either like a dog or a cat, depending on
 a random variable.
 
+### Overriding Types
+
+If a type declared in the current object has the same name as a type declared 
+in a parent, the two types must be _identical_.
+
 ### Default Methods
 
 All objects implement a number of _default methods_ by inheriting from
@@ -1051,15 +1056,12 @@ Type [Object](#type-object) contains all the public
 default methods.
 
 
-|  Method                            |    Purpose                                           |
+|  Method                            |    Return value                                           |
 | :-----------------------------------------------  | :------------------------------------------- |
-| `isMe (other:Object) → Boolean`  |    true if other is the same object as self; _confidential_  |
+| `isMe (other:Object) → Boolean`; _confidential_  |    true if other is the same object as self |
 | $\neq$ `(other:Object) → Boolean`|    the inverse of ==                                 |
-|                                   |                                                     |
 | `asString → String`               |    a string describing self                          |
-|                                    |                                                     |
 | `asDebugString → String`          |    a string describing the internals of self         |
-|                                    |
 | `:: (other:Object) → Binding`     |  a Binding object with `self` as key and `other` as value|
 
 
