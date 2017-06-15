@@ -22,14 +22,23 @@ ask (question:String) -> String
     // asks `question` interactively, and returns the user's answer
     
 open (path:String, mode:String) -> FileStream
-    // opens `path` in `mode`. `mode` may be "r", "w", "rw", etc.
+    // opens path in mode, which is one of the following:
+    // "r" - Open file for reading. An exception occurs if the file does not exist.
+    // "w" - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).
+    // "rw" - Open file for reading and writing. The file is created (if it does not exist)
+    //       or truncated (if it exists).
+    // "a" - Open file for appending. The file is created if it does not exist.
+    //       Appending means that the read–write position is at the end of the file.
     
 system (command:String) -> Boolean
     // executes system command, returns true iff exit status is 0
     
 exists (path:String) -> Boolean
     // returns true iff path exists in the file system
-    
+
+unlink (path:String) -> Done
+    // removes path from the file system; raises an exception if it wasn't there
+
 newer (path1:String, path2:String) -> Boolean
     // returns true iff the file at path1 is newer than the file at path2
     
@@ -55,6 +64,10 @@ The type `FileStream` describes the interface of an opened file:
 type FileStream = Object & type {
     read -> String
         // returns the whole contents of the underlying file.
+        // ignores the position of the read-write pointer, and does not change it.
+    size -> Number
+        // returns the total number of bytes in this stream.
+        // This is the size of the string returned by read, not the number of bytes remaining.
     getline -> String
         // returns the next line in the file, up to and including the next
         // newline.  If the end of the input is reached before a newline is
@@ -78,11 +91,6 @@ type FileStream = Object & type {
     next -> String
         // returns the next Unicode character from the file.
         // Raises IteratorExhausted if there is none
-    readBinary(n:Number) -> Object
-        // Returns an array containing the next n bytes
-    writeBinary(bytes:Object) -> Number
-        // appends bytes to the file.  Returns the number
-        // of bytes written.
     pathname -> String
         // the name of the file underlying this fileStream
     eof -> Boolean
@@ -93,6 +101,8 @@ type FileStream = Object & type {
         // true if self and other are the same FileStream object.  Note that
         // it is possible to have several distinct fileStreams on the same
         // underlying file.
+    clear -> FileStream
+        // makes the contents of this filestream empty. The read/write position becoems 0
 }
 ```
 The type `Process` defines the interface of a process.
