@@ -1233,7 +1233,7 @@ method containing the implicit request.
     app.barf  // prints "outer"
     bar.barf  // prints "outer"
 
-##Assignment Requests
+## Assignment Requests
 
 An assignment request is a variable followed by `:=`, or a request
 of a method whose name ends with `:=`. In both cases the `:=` is
