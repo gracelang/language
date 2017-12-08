@@ -523,11 +523,6 @@ A request "matches" a method if the canonical names are equal.
 	has no parameters; in this case the _canonical_ name of the method is
 	the identifier.
 
-1. A method can be named by a single identifier suffixed with `:=`; this
-	form of name is conventionally used for writer methods, both
-	user-written and automatically-generated, as exemplified by `value:=`
-	below.  Such methods _always_ take a single parameter after the `:=`
-
 1. A method can be named by one or more _parts_, where each _part_ is an identifier
 	followed by a parenthesized list of parameters.
 	In this case
@@ -536,7 +531,14 @@ A request "matches" a method if the canonical names are equal.
 	the number of underscores between the parentheses being the number of
 	parameters of the part.
 
-2. A method can be named by a sequence of operator symbols.
+1. A method can be named by a single identifier suffixed with `:=`; this
+	form of name is conventionally used for writer methods, both
+	user-written and automatically-generated, as exemplified by `value:=`
+	below.  Such methods _always_ take a single parameter after
+	the `:=` so their canonical name is something like `value:=(_)`.
+
+
+1. A method can be named by a sequence of operator symbols.
 	Such an "operator method" can have no parameters, in which case
 	the method is requested by a prefix operator expression.
 	It can also have one parameter, in which
