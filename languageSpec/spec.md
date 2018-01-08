@@ -520,30 +520,27 @@ and also a _canonical_ form of the name which is used in dispatching method requ
 A request "matches" a method if the canonical names are equal.
 
 1. A method can be named by a single identifier, in which case the method
-	has no parameters; in this case the _canonical_ name of the method is
+	has no parameters; in this case the _canonical name_ of the method is
 	the identifier.
+
+1. A method can be named by a single identifier suffixed with `:=`; such a method is called an assignment method, and is conventionally used for writer methods, both
+	user-written and automatically-generated.
+    Assignment methods _always_ take a single parameter after the `:=`, and have a _canonical name_ of  the identifier followed by `:=(_)`.
+    It is an error to declare a variable and an assignment method with the same identifier in the same scope.
 
 1. A method can be named by one or more _parts_, where each _part_ is an identifier
 	followed by a parenthesized list of parameters.
 	In this case
-	the  _canonical_ name of the method is a sequence of parts, where
+	the  _canonical name_ of the method is a sequence of parts, where
 	each part comprises the identifier for that part followed by `(_, ..., _)`,
 	the number of underscores between the parentheses being the number of
 	parameters of the part.
 
-1. A method can be named by a single identifier suffixed with `:=`; this
-	form of name is conventionally used for writer methods, both
-	user-written and automatically-generated, as exemplified by `value:=`
-	below.  Such methods _always_ take a single parameter after
-	the `:=` so their canonical name is something like `value:=(_)`.
-
-
-1. A method can be named by a sequence of operator symbols.
-	Such an "operator method" can have no parameters, in which case
-	the method is requested by a prefix operator expression.
-	It can also have one parameter, in which
+2. A method can be named by a sequence of operator symbols.
+	Such an "operator method" can be a _unary operator_, which has no parameters, and which is requested by a prefix operator expression.
+	It can also be a _binary method_, which has one parameter, in which
 	case it is requested by a binary operator expression.  The canonical name of a
-	unary method is **`prefix`** followed by the operator symbols; the canonical
+	unary method is **`prefix`** followed by the sequence of operator symbols; the canonical
 	name of a binary method is the sequence of operator symbols followed by `(_)`
 	
 
@@ -555,8 +552,8 @@ method ping { print "PING!" }
 method isEmpty { elements.size == 0 }
 ```
 
-**Examples**
- of assignment methods
+**Example**
+ of an assignment method
 
 ```
 method value:= (n: Number) -> Done {
@@ -564,6 +561,9 @@ method value:= (n: Number) -> Done {
     outer.value:= n
 }
 ```
+This declares a method with canonical name `value:=(_)`;
+such a method cannot be declared in the same scope as a
+variable `value`.
 	
 **Examples**
  of multi-part names
