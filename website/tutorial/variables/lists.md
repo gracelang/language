@@ -7,10 +7,10 @@ permalink: /variables/lists/
 folder: tutorial
 ---
 **Lists** are a kind of Object that can hold multiple values; these values
-are called the a **elements** of
+are called the **elements** of
 the list, and can be any other objects.
 Lists let us access individual elements using the method `at(_)`, and 
-iterate over their contents using the method `do`, or using `for(_)do(_)`. 
+iterate over their contents using the method `do(_)`, or using `for(_)do(_)`. 
 
 In _standardGrace_, a list is created like this:
 
@@ -48,7 +48,7 @@ def empty = emptyList
 
 ## Lists are Mutable
 
-One of the most confusing things about list to beginners is thatthey aer _mutable_.
+One of the most confusing things about list to beginners is that they are _mutable_.
 What does that mean?  Lets' explain.
 
 Simple objects like Numbers, Strings, Points, and Booleans are _immutable_: 
