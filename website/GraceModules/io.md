@@ -12,7 +12,7 @@ author:
 
 ## Input and Output
 
-The *io* module can be imported using `import "io" as transput`, for any identifier `transput` of your choice. The object `transput` will then respond to the following requests.
+The *io* module can be imported using `import "io" as inout`, for any identifier `inout` of your choice. The object `inout` will then respond to the following requests.
 
 ```
 input -> FileStream        // returns stdin
@@ -42,7 +42,7 @@ unlink (path:String) -> Done
 newer (path1:String, path2:String) -> Boolean
     // returns true iff the file at path1 is newer than the file at path2
     
-realpath (path:String) -> String     // returns absolute path 
+realpath (path:String) -> String     // returns the absolute path 
     
 listdir (dirPath:String) -> Sequence⟦String⟧
     // returns the names of the files in the directory at `dirPath`
@@ -58,7 +58,7 @@ spawn (executable:String, args:Collection⟦String⟧) -> Process
     // creates a new Process `executable` using `args` as its arguments
 ```
 
-The type `FileStream` describes the interface of an opened file:
+The type `FileStream` describes the interface of an opened file.  Notice that `FileStream` conforms to `Iterator`, so a FileStream can also be treated like an Iterator.
 
 ```
 type FileStream = Object & type {
@@ -66,17 +66,27 @@ type FileStream = Object & type {
         // returns the whole contents of the underlying file.
         // ignores the position of the read-write pointer, and does not change it.
     size -> Number
-        // returns the total number of bytes in this stream.
-        // This is the size of the string returned by read, not the number of bytes remaining.
-    getline -> String
+        // returns the total number of characters in this stream.
+        // This is the size of the string returned by read, not the number of characters remaining.
+    hasNext -> Boolean
+        // returns true if next will return a character,
+        // and false if it will raise an exception.
+    next -> String
+        // returns the next character from the file.
+        // Raises IteratorExhausted if there are are no more characters to be read.
+    nextLine -> String
         // returns the next line in the file, up to and including the next
         // newline.  If the end of the input is reached before a newline is
-        // found, the result will not have a final newline.  If eof is true,
-        // returns the empty string.
+        // found, the result will not have a final newline.
+        // Raises IteratorExhausted if there are no more lines to be read.
     write (s:String) -> Done
-        // writes s to the file at the current position of the read-write pointer.
+        // writes s to the file at the current position of the read-write
+        // pointer. Writes will not appear on the file until the FileStream is
+        // closed.  As a special case, writes to the output window in the
+        // Grace editor will also appear after a newline has been written.
     close -> Done
-        // closes the file.
+        // closes the stream.  Output is pushed to its destination, and further
+        // writes will raise an exception.
     seek (n: Number) -> FileStream
         // moves the read position to n
     seekForward (n:Number) -> FileStream
@@ -85,16 +95,8 @@ type FileStream = Object & type {
         // moved the read/write position backward by n
     iterator -> FileStream
         // returns self
-    hasNext -> Boolean
-        // returns true is next will return a character,
-        // and false if it will raise an exception.
-    next -> String
-        // returns the next Unicode character from the file.
-        // Raises IteratorExhausted if there is none
     pathname -> String
-        // the name of the file underlying this fileStream
-    eof -> Boolean
-        // true if the read–write position is at the end of the file.
+        // the name of the file underlying this FileStream
     isatty -> Boolean
         // true if this fileStream is interactive
     == (other) -> Boolean
@@ -102,7 +104,7 @@ type FileStream = Object & type {
         // it is possible to have several distinct fileStreams on the same
         // underlying file.
     clear -> FileStream
-        // makes the contents of this filestream empty. The read/write position becoems 0
+        // makes the contents of this FileStream empty. The read/write position becomes 0
 }
 ```
 The type `Process` defines the interface of a process.
