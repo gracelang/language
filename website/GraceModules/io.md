@@ -76,8 +76,8 @@ type FileStream = Object & type {
         // Raises IteratorExhausted if there are are no more characters to be read.
     nextLine -> String
         // returns the next line in the file, up to and including the next
-        // newline.  If the end of the input is reached before a newline is
-        // found, the result will not have a final newline.
+        // newline, or the end of the file.  The newline character itself 
+        // is not part of the result.
         // Raises IteratorExhausted if there are no more lines to be read.
     write (s:String) -> Done
         // writes s to the file at the current position of the read-write
