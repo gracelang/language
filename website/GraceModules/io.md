@@ -88,7 +88,8 @@ type FileStream = Object & type {
         // closes the stream.  Output is pushed to its destination, and further
         // writes will raise an exception.
     seek (n: Number) -> FileStream
-        // moves the read position to be just after the nth character, meaning that the next character to be read will be the (n+1)th.
+        // moves the read position to be just after the nth character, meaning
+        // that the next character to be read will be the (n+1)th.
     seekForward (n:Number) -> FileStream
         // moves the read/write position forward by n characters
     seekBackward (n:Number) -> FileStream
