@@ -15,11 +15,16 @@ author:
 The *io* module can be imported using `import "io" as inout`, for any identifier `inout` of your choice. The object `inout` will then respond to the following requests.
 
 ```
+IoException -> ExceptionKind   // the parent of all IO-specific exceptions
 input -> FileStream        // returns stdin
 output -> FileStream       // returns stdout
 error -> FileStream        // returns stderr
 ask (question:String) -> String
-    // asks `question` interactively, and returns the user's answer
+// asks `question` interactively, and returns the user's answer
+
+// In the Grace editor, the output and error streams write to the feedback window,
+// in black and in red, while reading from the input stream is equivalent to
+// ask "Input".  These streams remain open even after executing their close methods.
     
 open (path:String, mode:String) -> FileStream
     // opens path in mode, which is one of the following:
@@ -86,7 +91,9 @@ type FileStream = Object & type {
         // Grace editor will also appear after a newline has been written.
     close -> Done
         // closes the stream.  Output is pushed to its destination, and further
-        // writes will raise an exception.
+        // writes will raise an exception.  In the Grace editor, the input, 
+        // output and error streams remain open even after this method is used
+        // to close them.
     seek (n: Number) -> FileStream
         // moves the read position to be just after the nth character, meaning
         // that the next character to be read will be the (n+1)th.
