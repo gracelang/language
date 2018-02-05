@@ -9,25 +9,25 @@ bibliography:
 
 title: |
     The Grace Standard Dialect\
-    Draft Specification Version 0.7.7
+    Draft Specification Version 0.7.8
 ...
-
 
 # Introduction
 
-This is a specification of the standard dialect of Grace, called `standardGrace`.
+This is a specification of the standard dialect of Grace, called _standardGrace_.
 Grace programs run in this dialect unless they nominate a different
-dialect via the  'dialect' statement. 
-The Standard dialect  provides a range of methods and types and libraries for
-general purpose programming..
-This specification is notably incomplete, and everything is subject to
+dialect using a `dialect` statement. 
+The _standardGrace_ dialect  provides a range of methods, objects and types for
+general purpose programming.
+
+This specification is incomplete, and everything is subject to
 change. 
 
 # Control Structures
 
 ## Conditional
 
-Grace includes a conventional `if`…`then`
+Standard Grace includes a conventional `if`…`then`
 …`else` conditional, as illustrated here:
 
 ``` 
@@ -95,9 +95,9 @@ collection, and are described in the [Section on Iteration and **for** loops](#i
 ## Unbounded Loops
 
 Unbounded loops execute a block of code repeatedly, so long as some
-condition is satisfied. They terminate when the condition ceases to
-hold. They are useful when the number of executed needed can’t be
-specified in advance. There are two variants: *While–do loops* test the
+condition is satisfied. They terminate when the condition becomes false.
+They are useful when the number of executions needed can’t be
+specified in advance. There are two variants: *while–do loops* test the
 condition *before* executing the loop body, and *do–while* loops test
 the condition *after* executing the loop body.
 
@@ -335,7 +335,7 @@ type Number = {
     exp -> Number
     // e raised to the power of self
 
-    log10 (n: Number) -> Number
+    log10 -> Number
     // log base 10 of self
 }
 ```
@@ -539,7 +539,7 @@ type String =  {
 }
 ```
 
-## Boolean
+### Boolean
 
 The Boolean literals are `true` and `false`.
 
@@ -637,7 +637,7 @@ type Point =  {
 }
 ```
 
-## Binding
+### Binding
 
 A binding is an immutable pair comprising a `key` and a
 `value`. Bindings are created with the infix
