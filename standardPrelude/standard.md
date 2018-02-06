@@ -444,7 +444,7 @@ type String =  {
     indexOf (pattern:String) -> Number
     // returns the leftmost index at which pattern appears in self, or 0 if it is not there.
 
-    indexOf (pattern:String) ifAbsent (absent:Function0⟦W⟧) -> Number | W
+    indexOf⟦W⟧ (pattern:String) ifAbsent (absent:Function0⟦W⟧) -> Number | W
     // returns the leftmost index at which pattern appears in self; applies absent if it is not there.
 
     indexOf (pattern:String) startingAt (offset) -> Number
@@ -470,7 +470,7 @@ type String =  {
     lastIndexOf (sub:String) -> Number
     // returns the rightmost index at which sub appears in self, or 0 if it is not there.
 
-    lastIndexOf⟦W⟧ (sub:String) startingAt (offset) ->  Number 
+    lastIndexOf (sub:String) startingAt (offset) ->  Number 
     // like the above, except that it returns the rightmost index ≤ offset.
 
     lastIndexOf⟦W⟧ (sub:String) ifAbsent (absent:Function0⟦W⟧) -> Number | W
