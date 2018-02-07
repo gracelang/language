@@ -453,8 +453,8 @@ type String =  {
     indexOf⟦W⟧ (pattern:String) startingAt(offset) ifAbsent (action:Function0⟦W⟧) -> Number | W
     // like the above, except that it returns the result of applying action if there is no such index.
 
-    indices -> Sequence⟦T⟧
-    keys -> Sequence⟦T⟧
+    indices -> Sequence⟦Numbre⟧
+    keys -> Sequence⟦Number⟧
     // an object representing the range of indices of self (1..self.size). 
 
     isEmpty -> Boolean
