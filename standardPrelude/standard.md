@@ -539,7 +539,7 @@ type String =  {
 }
 ```
 
-### Boolean
+## Boolean
 
 The Boolean literals are `true` and `false`.
 
