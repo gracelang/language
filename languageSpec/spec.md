@@ -1440,10 +1440,11 @@ A parent expression p<sub>1</sub>.p<sub>2</sub> ... p<sub>_n_</sub> is manifest 
 1. p<sub>1</sub> is bound to a module in an import statement, or
 2. p<sub>1</sub> is `outer`, and `outer` refers to a module
 
-and
+and all of the p<sub>_i_</sub>, _i_ > 1, are 
 
-all of the p<sub>_i_</sub>, _i_ > 1, are defined in a `DefDeclaration` a 
-`MethodDeclaration` or a `ClassDeclaration`
+1. defined in a `DefDeclaration` a 
+`MethodDeclaration`, or a `ClassDeclaration`, and
+2. each of these definitions has a value (in the case of a `def`), or returns a value (inthe case of a `method` or `class`) that is an object constructor, or a [Manifest Expression](#manifest-expression).
 
 # Pattern Matching
 
