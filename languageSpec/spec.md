@@ -845,16 +845,19 @@ binds the name `fergus` to this object.
 ## Trait Objects and Trait Declarations
 
 Trait objects are objects with certain properties.  Specifically, a
-trait object is created by an object constructor that contains no
+trait object is created by an object constructor that directly contains no
 field declarations and no executable code, that `use`s only other traits,
-and that `inherit`s nothing.
-
+and that does not `inherit` anything.  
+Note that a trait can contain a class, which can contain field declarations, and can inherit.
 
 
 Aside from these restrictions, Grace's **trait** syntax and semantics is parallel to the class syntax.
 In particular, a `trait` defines a method that returns a trait object.
+Hence, the following two declarations create equivalent traits:
 
-    trait emptiness {
+**Examples**
+
+    trait emptiness1 {
         method isEmpty { size == 0 }
         method nonEmpty { size != 0 }
         method ifEmptyDo (eAction) nonEmptyDo (nAction) {
@@ -862,16 +865,28 @@ In particular, a `trait` defines a method that returns a trait object.
         }
     }
 
+    method emptiness2 {
+        object {
+            method isEmpty { size == 0 }
+            method nonEmpty { size != 0 }
+            method ifEmptyDo (eAction) nonEmptyDo (nAction) {
+                    if (isEmpty) then { eAction.apply } else { do(nAction) }
+            }
+        }
+    }
+
+The advantage of `emptiness1` is that it makes the programmer's intention clearer.
+Moreover, if a field or an inherit statement were inadvertently added to `emptiness1`, the implementation would immediately complain.  
+With the second form, the error would be found only when `emptiness 2` is `use`d
 
 ## Type Parameters
 
-Like methods, classes and traits may be declared to with type
+Like methods, classes and traits may be declared with type
 parameters, and requests on the class or trait may optionally be provided
 with type arguments.
 
 
 **Example**
-
 
     class vectorOfSize(size)⟦T⟧ {
         var contents := Array.size(size)
@@ -888,9 +903,9 @@ with type arguments.
 
 Grace supports reuse in two ways: through **`inherit`**
 statements and through **`use`** statements.
-Object constructors (and classes) can contain one `inherit` statement,
+Object constructors (including classes and modules) can contain one `inherit` statement,
 while traits cannot contain an `inherit` statement;  object
-constructors, classes and traits can all contain one or more `use` statements.
+constructors, classes, modules and traits can all contain one or more `use` statements.
 
 Both `inherit` and `use` introduce the attributes of a reused object —
 called the _parent_ — into the current object (the object under
