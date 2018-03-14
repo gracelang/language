@@ -6,3 +6,4 @@ s/\$\\rrbracket\$/⟧/g
 s/\$\\llbracket\$/⟦/g
 s/^#/##/
 s/` \$\\\$\\,\$/\$`/
+s|~\([[:alnum:]_][[:alnum:]_]*\)~|<sub>\1</sub>|g
