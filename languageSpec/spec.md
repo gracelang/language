@@ -913,7 +913,7 @@ construction).  There are two differences between `inherit` and `use`
 clauses:
 
   1. the object reused by a `use` clause must be a trait object; and
-  2. `inherit` clauses include the methods from `graceObject`, while `use`
+  2. `inherit` clauses include methods in the parent that originated in`graceObject`, while `use`
 clauses do not.
 
 An `inherit` or `use` clause contains a
@@ -933,13 +933,13 @@ creates a new `confidential` _alias_ `new(_)` for the attribute `old(_)`.
 It is a _object composition error_ to alias an attribute to its own name.
 Attributes of the parent that are not wanted can be excluded using
 an **`exclude`** clause: excluded attributes are replaced by a
-`confidential`, `required` method.
+`required` method.
 It is an _object composition error_ to alias or exclude attributes that are not present in the class or trait being inherited.
 
-When a reuse statement has both alias and exclude clauses, the set of attributes that is introduced by the reuse statement is determined as follows:
+When a reuse statement has both alias and exclude clauses, the set of attributes that is introduced by the reuse statement is determined as follows.
 
- * the set contains all the attributes of the _parent_, except for those that appear in an exclude clause;
- * the set contains all of the new method names introduced by the alias clauses.  These names are bound to the binding of the old method names in the _parent_.
+ * The set contains all the attributes of the _parent_, except for those that appear in an exclude clause (and, in the case of a `use` statement, the attributes inherited from `graceObject`).
+ * The set contains all of the new method names introduced by the alias clauses.  These names are bound to the binding of the old method names in the _parent_.
 
 The order of the alias and exclude clauses is irrelevant.
 
