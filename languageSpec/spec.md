@@ -221,7 +221,7 @@ of numbers, and may define types that extend `Number`; a
 full specification of numeric types is yet to be completed.
 
 Grace has three forms of numerals (that is, literals that
-denote `Number` objects).  
+denote `Number` objects).
 
 1.  Decimal numerals, written as strings of digits.
 
@@ -1011,7 +1011,7 @@ new object: local declarations
 override declarations from both superobject and
 traits, except that
 it is an _object composition error_ for an alias to be
-overridden by a local declaration. 
+overridden by a local declaration.
 The term "local declarations" comprises declarations of
 methods, types and fields (both `def`s and `vars`s).
 
@@ -1122,7 +1122,7 @@ a random variable.
 
 ### Overriding Types
 
-If a type declared in the current object has the same name as a type declared 
+If a type declared in the current object has the same name as a type declared
 in a parent, the two types must be _identical_.
 
 ### Default Methods
@@ -1567,7 +1567,7 @@ resume that execution. Execution continues when the exception is *caught.*
 
 Grace defines a hierarchy of _kinds_ of exception; each kind of exception
 corresponds to a different kind of exceptional situation.
-All exceptions have the same _type_, that is, they understand the same set of 
+All exceptions have the same _type_, that is, they understand the same set of
 requests.  A hierarchy of exception kinds is used to classify exceptions.
 
     type ExceptionKind = Pattern & {
@@ -1575,17 +1575,17 @@ requests.  A hierarchy of exception kinds is used to classify exceptions.
         // answers the ExceptionKind that is the parent of this exception in the
         // hierarchy. The parent of Exception is defined to be Exception. The parent
         // of any other ExceptionKind is the object that was refined to create it.
-        
+
         refine (name:String) -> ExceptionKind
         // answers a new ExceptionKind object, which is a refinement of self.
 
         name -> String
         // answers the name given when this ExceptionKind object was created.
-        
+
         raise (message:String)
         // creates an exception of this kind, terminating the current execution,
         // and transferring control to an appropriate handler.
-        
+
         raise (message:String) with (data:Object)
         // similar to raise(_), except that the object data is associated with the
         // new exception.
@@ -1595,15 +1595,15 @@ requests.  A hierarchy of exception kinds is used to classify exceptions.
         // and name = other.name, otherwise false.
     }
 
-The root of the hierarchy of `ExceptionKind`s is `Exception`; all other `ExceptionKinds` 
-are (direct or indirect) refinements of `Exception`. 
+The root of the hierarchy of `ExceptionKind`s is `Exception`; all other `ExceptionKinds`
+are (direct or indirect) refinements of `Exception`.
 The `name` of `Exception` is `"Exception"`, and
 the parent of `Exception` is `Exception` itself.
 
-Because `ExceptionKinds` are also `Patterns`, they support the pattern protocol 
-(`match`, `&`, and `|`); an `ExceptionKind` object `e` will `match` any exception 
-raised from `e'`, and any exception raised from a `refine`ment of `e'`, where `e' == e`, 
-This means that `ExceptionKinds` can be used as the 
+Because `ExceptionKinds` are also `Patterns`, they support the pattern protocol
+(`match`, `&`, and `|`); an `ExceptionKind` object `e` will `match` any exception
+raised from `e'`, and any exception raised from a `refine`ment of `e'`, where `e' == e`,
+This means that `ExceptionKinds` can be used as the
 patterns of the catch blocks in a `try(_)catch(_)…finally(_)` construct.
 
 Grace defines three direct refinements of `Exception`:
@@ -1623,18 +1623,18 @@ Exception packet objects are generated when an exception is raised.
     type ExceptionPacket = type {
         exception -> ExceptionKind   // the exceptionKind that raised this exception.
         message -> String            // the message provided when this exception was raised.
-        
+
         data -> Object               // the data object associated with this exception
-                                     // when it was raised, if there was one. Otherwise, 
+                                     // when it was raised, if there was one. Otherwise,
                                      // the string "no data".
-        
+
         lineNumber -> Number         // the source-code line of the raise request
                                      //  that created this exception.
-        
+
         moduleName -> String         // the name of the module containing the raise
                                      // request that created this exception.
-        
-        backtrace -> List⟦String⟧      
+
+        backtrace -> List⟦String⟧
         // a description of the call stack at the time that this exception was raised.
         // backtrace.first is the initial execution environment; backtrace.last is the
         // context that raised the exception.
@@ -1810,10 +1810,10 @@ defines a type containing a single interface, so the `interfaces` method of an i
 
     type Interface = Type & interface {
 	     methods -> Dictionary⟦String, Signature⟧
-            // keys are the canonical names of the methods, 
+            // keys are the canonical names of the methods,
             // and values their signatures
 	     types -> Dictionary⟦String, Type⟧
-            // keys are the declared names of the types; 
+            // keys are the declared names of the types;
             // values objects representing those types
 	     - (other:Interface) -> Interface
 	 }
@@ -1989,7 +1989,7 @@ Structural union types (sum types), written `1 + 2 + ... + Tn`, are
 the dual of intersection types. A union type `T1 + T2` has the interface
 common to `T1` and `T2`. Thus, a type `U` conforms to `T1 + T2` if it
 has a method that conforms to each of the methods common to `T1` and
-`T2`. Union types are included for completeness; variant types subsume 
+`T2`. Union types are included for completeness; variant types subsume
 most uses of unions.
 
     S <: (S + T)
@@ -2147,7 +2147,7 @@ declarations, classes, traits, control structures, and even the
 
 Modules that do not declare a 'dialect' are treated as being written in the
 dialect `standardGrace`.  If a module really wishes to use no dialect,
-it should specify `dialect "none"`. 
+it should specify `dialect "none"`.
 
 In addition to declarations, a dialect can also define a _checker_ that
 examines the parse tree or syntax tree of any module written in the dialect,
