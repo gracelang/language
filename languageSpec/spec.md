@@ -918,16 +918,11 @@ clauses:
   2. `inherit` clauses include methods in the parent that originated in `graceObject`,
 while `use` clauses do not.
 
-The `superExpr` in an `inherit` or `use` clause must be a 
+The `parent` in an `inherit parent` and `use parent` clause must be a
 [Manifest Expression](#manifest-expressions)
-that creates a new object; usually this will be a request on a class or trait.
-The `superExpr` cannot depend on `self`, implicitly or
-explicitly.
-The reason that the `superExpr` must be manifest is to ensure that
-it cannot be overriden, and thus that the names of the attributes obtained from the
-parent can be determined staticaly and locally.
-Note that the arguments to a [Manifest Expression](#manifest-expressions)
-need not themselves be manifest.
+that returns a [Fresh Object](#fresh-objects); usually this will be a request on a class or trait.
+The `parent` cannot depend on `self`, implicitly or
+explicitly, because `self` does not exist until after the reuse statement containing `parent` has been evaluated.
 
 If it is necessary for the current object to access an overridden attribute
 of a parent, the overridden
@@ -1425,26 +1420,41 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 ## Manifest Expressions
 
-The parents in `inherit <parent>` and `use <parent>`
-clauses must be _manifest_. This means that Grace must be able to
-determine the _shape_ of the object that is being inherited on a module-by-module
-basis. 
+The parents in `inherit parent` and `use parent`
+statements must be _manifest_. This means that Grace must be able to
+determine the _shape_ of the object that is being inherited on a module-by-module basis.
 
 If `parent` is an implicit request, it is first converted to an
-explicit request by applying the disabmiguation rules
+explicit request by applying the disambiguation rules
 for [Implicit Requests](#implicit-requests).
-It is then subjected to the following test.
+Once disambiguated, let the parent expression is p~1~.p~2~. ... .p~_n_~,
+where the p~_i_~ are canonical names.
+The expression p~1~.p~2~. ... .p~_n_~ is manifest if
 
-A parent expression p<sub>1</sub>.p<sub>2</sub> ... p<sub>_n_</sub> is manifest if
+1. p~1~ is bound to a module in an `import` statement, or
+2. p~1~ is a cascade of `outer`s that refers to a module
 
-1. p<sub>1</sub> is bound to a module in an import statement, or
-2. p<sub>1</sub> is `outer`, and `outer` refers to a module
+and, for all _i_ > 1, p~_i_~ is defined in a `DefDeclaration` a
+`MethodDeclaration`, or a `ClassDeclaration`, where the value bound to,
+or returned, by p~_i_~ is an object.
 
-and all of the p<sub>_i_</sub>, _i_ > 1, are 
 
-1. defined in a `DefDeclaration` a 
-`MethodDeclaration`, or a `ClassDeclaration`, and
-2. each of these definitions has a value (in the case of a `def`), or returns a value (inthe case of a `method` or `class`) that is an object constructor, or a [Manifest Expression](#manifest-expression).
+## Fresh Objects
+
+The parent expression in `inherit parent` and `use parent` statements must
+return a _fresh_ object, that is, a newly-created object to which there is no other
+reference.
+
+1. An object returned from a method that is defined using the class or trait
+syntax is always fresh.
+
+2. Any method that contains no `return` statements, and whose
+final statement is (or returns) an object constructor, returns a fresh object.
+
+3. Any method that contains no `return` statements, and whose
+final statement is (or returns) a [Manifest Expression](#manifest-expressions) that yields a fresh object, itself
+returns a fresh object.
+
 
 # Pattern Matching
 
