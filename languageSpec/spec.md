@@ -846,9 +846,11 @@ binds the name `fergus` to this object.
 
 Trait objects are objects with certain properties.  Specifically, a
 trait object is created by an object constructor that directly contains no
-field declarations and no executable code, that `use`s only other traits,
-and that does not `inherit` anything.  
-Note that a trait can contain a class, which can contain field declarations, and can inherit.
+field declarations, `inherit` statements, or executable code.
+A trait can `use` other traits.
+Methods in a trait can capture variables in the lexical scope of the trait,
+so that they can have what is effectively private state, as illustrated in the [Section on private attributes](#No-Private-Attributes).
+Note that a trait can contain types, traits, and classes; these classes _can_ contain field declarations, and can inherit.
 
 
 Aside from these restrictions, Grace's **trait** syntax and semantics is parallel to the class syntax.
@@ -877,7 +879,7 @@ Hence, the following two declarations create equivalent traits:
 
 The advantage of `emptiness1` is that it makes the programmer's intention clearer.
 Moreover, if a field or an inherit statement were inadvertently added to `emptiness1`, the implementation would immediately complain.  
-With the second form, the error would be found only when `emptiness 2` is `use`d
+With the second form, the error would be found only when `emptiness2` is `use`d.
 
 ## Type Parameters
 
@@ -952,7 +954,7 @@ trait t1 {
 }
 
 class c1 {
-    use t1 alias w = y exlude x
+    use t1 alias w = y exclude x
     method v { ... }
 }
 ```
@@ -965,7 +967,7 @@ trait t1 {
 }
 
 class c1 {
-    use t1 alias w = y exlude x
+    use t1 alias w = y exclude x
     method w { ... }
 }
 ```
