@@ -1213,7 +1213,7 @@ enclosing `self`.
       outer.outer.outer.outer
       outer.value
       outer.bar(1,2,6)
-      outer.outer.doThis(3) timesTo("foo")
+      outer.outer.doThis 3 timesTo "foo"
       outer + 1
       ! outer
 
@@ -1441,16 +1441,17 @@ If `parent` is an implicit request, it is first converted to an
 explicit request by applying the disambiguation rules
 for [Implicit Requests](#implicit-requests).
 Once disambiguated, let the parent expression be
-    r.p~1~.p~2~. ... .p~_n_~,
-where the p~_i_~ are canonical names.
-The expression r.p~1~.p~2~. ... .p~_n_~ is manifest if
+    _r.p_~1~_.p_~2~_._ ... _.p_~_n_~,
+where the _p_~_i_~ are canonical names.
+The expression _r.p_~1~_.p_~2~_._ ... _.p_~_n_~ is manifest if
+the receiver _r_ is 
 
-1. r is bound to a module in an `import` statement, or
-2. r is an `outer` sequence that refers to a module
+1. bound to a module in an `import` statement, or
+2. an `outer` sequence that refers to a module
 
-and, for all _i_, p~_i_~ is defined in a `DefDeclaration` a
+and, for all _i_, _p_~_i_~ is defined in a `DefDeclaration` a
 `MethodDeclaration`, or a `ClassDeclaration`, and the value bound to,
-or returned by, p~_i_~ is an object.
+or returned by, _p_~_i_~ is an object.
 
 Note that the arguments to a manifest expression need not themselves be manifest.
 
