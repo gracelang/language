@@ -557,8 +557,8 @@ method isEmpty { elements.size == 0 }
 
 ```
 method value:= (n: Number) -> Done {
-    print "value currently {value}, now assigned {n}"
-    outer.value:= n
+    print "value currently {v}, now assigned {n}"
+    v := n
 }
 ```
 This declares a method with canonical name `value:=(_)`;
@@ -681,7 +681,7 @@ object that defines them.
 ### Confidential
 
 Confidential attributes can be requested
-only on `self` or on some number of cascaded `outer`s, or in an implicit request (which must resolve to one of the former cases).
+only on `self`, or on an `outer`  sequence, or in an implicit request (which must resolve to one of the former cases).
 Consequently, if _m_ is
 defined in the object, class, or trait _d_, it
 is accessible to _d_, to objects that reuse (i.e., `inherit` or `use`) _d_,
@@ -1202,7 +1202,8 @@ The reserved word **`Self`** refers to the type of the current object.
 ## Outer
 
 The reserved word **`outer`** refers to the object lexically enclosing
-the current object.  The expression `outer.x` requests `x` on the object lexically
+the current object; `outer.outer` (an `outer` sequence of length 2) refers to the object enclosing `outer`, and so on.  
+Note that an `outer` sequence is not a request, and that `outer` is a reserved word, not the name of a message. The expression `outer.x` requests `x` on the object lexically
 enclosing `self`.
 
 **Examples**
@@ -1215,6 +1216,8 @@ enclosing `self`.
       outer.outer.doThis(3) timesTo("foo")
       outer + 1
       ! outer
+
+Because `outer` is lexical, two methods in the same object may have different `outer` objects.  For example, one method may be inherited, while the another is defined locally. 
 
 ## Named Requests
 
@@ -1267,10 +1270,10 @@ that is a numeral, string, lineup, or block.
 ### Implicit Requests
 
 If the receiver of a named method request using the name _m_ is `self` or
-`outer` it may be left implicit, _i.e._, the `self` or `outer` and the
-dot may both be omitted.
-Implicit requests are interpreted as a `self` request, or as an
-`outer` request, or as an `outer.outer. ...` request with the appropriate number of `outer`s.
+an `outer` sequence, the receiver may be left implicit, _i.e._, the `self` or `outer` sequence and the following
+dot may be omitted.
+An implicit request is interpreted as a `self` request, or as an
+`outer` sequence request on an outer sequence of the appropriate length.
 
 When resolving an implicit request, the usual rules of lexical scoping apply,
 so a definition of _m_ in
@@ -1432,23 +1435,45 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 The parents in `inherit parent` and `use parent`
 statements must be _manifest_. This means that Grace must be able to
-determine the _shape_ of the object that is being inherited on a module-by-module basis.
+determine the fields and methods defined in the object that is being inherited on a module-by-module basis.
 
 If `parent` is an implicit request, it is first converted to an
 explicit request by applying the disambiguation rules
 for [Implicit Requests](#implicit-requests).
-Once disambiguated, let the parent expression be p~1~.p~2~. ... .p~_n_~,
+Once disambiguated, let the parent expression be
+    r.p~1~.p~2~. ... .p~_n_~,
 where the p~_i_~ are canonical names.
-The expression p~1~.p~2~. ... .p~_n_~ is manifest if
+The expression r.p~1~.p~2~. ... .p~_n_~ is manifest if
 
-1. p~1~ is bound to a module in an `import` statement, or
-2. p~1~ is a cascade of `outer`s that refers to a module
+1. r is bound to a module in an `import` statement, or
+2. r is an `outer` sequence that refers to a module
 
-and, for all _i_ > 1, p~_i_~ is defined in a `DefDeclaration` a
-`MethodDeclaration`, or a `ClassDeclaration`, where the value bound to,
-or returned, by p~_i_~ is an object.
+and, for all _i_, p~_i_~ is defined in a `DefDeclaration` a
+`MethodDeclaration`, or a `ClassDeclaration`, and the value bound to,
+or returned by, p~_i_~ is an object.
 
 Note that the arguments to a manifest expression need not themselves be manifest.
+
+**Example** 
+
+    class a {
+        method x { 
+            object { 
+                method one {}
+                method two {}
+            } 
+        }
+        
+        class b {
+            inherit outer.outer.a.x
+                // this uniquely defines x, without the possibility of overriding
+            method three { ... }		
+
+        }
+    }
+
+Suppose that the above code appears in a module that is imported into the current module with nickname `m`, and that the current module defines a class `c` that inherits `m.a` and overrides `x`.
+If class `b` were to simply `inherit x`, then `c.b` would acquire the fields and methods of this overriding `x` — which are unknown to `m`.  By writing `outer.outer` to refer to the module enclosing `a`, the parent expression in `b`'s `inherit` statement is made to refer to `x` lexically, that is, the parent expression becomes manifest (rule 2 above).
 
 ## Fresh Objects
 
