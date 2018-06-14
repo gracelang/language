@@ -383,27 +383,25 @@ the string without interpretation, and without any escapes (not even for ›).
     def n = 17
     ›
 
-## Lineups
+## Sequence Constructors
 
-A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
+A Sequence Constructor is a comma separated list of expressions surrounded by `[` and `]`.
 
 **Examples**
 
-
-    [ ]        //empty lineup
+    [ ]        // empty sequence
     [ 1 ]
     [ red, green, blue ]
 
-When executed, a lineup returns an object that supports the `Iterator` interface,
-which includes the methods `size`, `map`, `do(_)`, and `iterator`.
-Lineups are most frequently used to build collections, to control loops,
-and to pass collections of options to methods.
+When executed, a sequence constructor returns an object of type `Sequence`.
+Sequences are immutable; they are most frequently used to initialize other  collections, to control loops, and to pass options to methods.
+
 
 **Examples**
 
 
     set [ 1, 2, 4, 5 ]           //make a set
-    sequence [ "a", "b", "c" ]   //make a sequence
+    [ "a", "b", "c" ]            //make a sequence
     ["a", "e", "i", "o", "u"].do { x -> testletter(x) }
     myWindow.addWidgets [
        title "Launch",
@@ -1286,7 +1284,7 @@ in a list does determine the method being requested.
 ### Delimited Arguments
 
 Parenthesis may be omitted where they would enclose a single argument
-that is a numeral, string, lineup, or block.
+that is a numeral, string, sequence constructor, or block.
 
 **Examples**
 
