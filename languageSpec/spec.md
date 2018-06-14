@@ -1300,18 +1300,18 @@ that is a numeral, string, sequence constructor, or block.
 
 ### Implicit Requests
 
-If the receiver of a named method request using the name _m_ is `self` or
-`outer` it may be left implicit, _i.e._, the `self` or `outer` and the
-dot may both be omitted.
+If the receiver of a method request is `self` or
+`outer`, the receiver may be left implicit, _i.e._, the `self` or `outer`, and the
+dot, may both be omitted.
 Implicit requests are interpreted as a `self` request, or as an
 `outer` request, or as an `outer.outer. ...` request with the appropriate number of `outer`s.
 
-When resolving an implicit request, the usual rules of lexical scoping apply,
-so a definition of _m_ in
+When interpreting an implicit request of a method named `m`, the usual rules of lexical scoping apply,
+so a definition of `m` in
 the current scope will take precedence over any definitions in enclosing scopes.
-However, if _m_ is defined in the current scope by inheritance or trait use,
+However, if `m` is defined in the current scope by inheritance or trait use,
 rather than directly, and *also* defined directly in an enclosing scope, then
-an implicit request of _m_ is ambiguous and is an error.
+an implicit request of `m` is ambiguous, and is an error.
 
 Implicit requests are always resolved lexically, that is, in the scope in which
 the implicit request is written, and
