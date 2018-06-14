@@ -108,20 +108,40 @@ The following ASCII sequences are treated as equivalent to the corresponding Uni
 | ]]    | $\rrbracket$	   | U+27E7
 | [[    | $\llbracket$	   | U+27E6
 
+## Comments
+
+Comments start with a pair of slashes `//` and are terminated by
+the end of the line. Comments are *not* treated as
+white-space. Each comment is conceptually attached to the smallest
+immediately preceding syntactic unit, except that comments following a
+blank line are attached to the largest immediately following syntactic
+unit.
+
+**Example**
+
+// comment, to end of line
 
 ## Layout
 
 Grace uses braces to indicate the boundaries of code blocks.
-Code layout must be consistent with
-these boundaries: indentation must increase after a left brace.
+Indentation (the number of leading spaces on a line) must be consistent with
+these boundaries: indentation must increase after a left brace, and return to the prior level with, or after, the matching right brace.
 
-Statements are terminated by line breaks when the
-following line has the same or lesser indentation than the indentation
-of the line containing the start of the current statement.
-Statements may optionally be terminated by semicolons.
+Statements are separated by one or more line breaks;
+it is also permissible, but uncommon, to separate statements by semicolons.
 
-All changes in indentation must be by *two* or more spaces; a change of a single
-space is always treated as an error.
+Here are the precise rules that govern layout.
+
+  1. Tab characters (U+0009) are not allowed in Grace code. 
+  1. A line containing just spaces, or spaces and a comment, is ignored as far as indentation is concerned.
+  1. All changes in indentation must be by *two* or more spaces; a change of a single space is treated as an error.
+  1. If the number of left brace characters on a line exceeds the number of right brace characters by 1, that line is said to open a code block; all lines up to the matching right brace comprise the body of the code block, must be indented more than the line containing the left brace.
+  1. If the right brace that closes the code block is the first non-space character on a line, then the indentation of the right brace must be the same as that of the line containing the matching left brace.  Otherwise, the line containing the right brace must be indented like all the other lines in the code block.
+  1. An increase in indentation that does *not* correspond to the start of a code block indicates a continuation line: the preceding line break is treated as a space and not as a statement separator, and the two physical lines are treated as a single logical line. Further physical lines at the same (or greater) indentation are treated as part of the same logical line. The continuation ends either when the indentation decreases, or when the continued line contains an unmatched left brace.
+  1. If a line ends with any kind of left bracket --- one of `(`, `[`, `$\llbracket$`, or `{` --- the following line break is treated as a space, and *not* as a statement separator.
+  1. If a line starts with any kind of right bracket --- one of `)`, `]`, `$\rrbracket$`, or `}` --- the preceding line break is treated as a space, and *not* as a statement separator.
+  1. Indentation may be reduced *only* when ending a code block, or ending a continued line.  The indentation must return to that of the line that began the code block, or the continued line, respectively.
+
 
 **Example code with punctuation**
 
@@ -144,19 +164,35 @@ space is always treated as an error.
 This example defines `x` to be the result of the single request `mumble ("3") fratz (7)`.
 Because the second and third lines are indented more than the first, they continue that line.
 
-## Comments
+**Example of `if(_)then(_)else(_)`**
 
-Comments start with a pair of slashes `//` and are terminated by
-the end of the line. Comments are *not* treated as
-white-space. Each comment is conceptually attached to the smallest
-immediately preceding syntactic unit, except that comments following a
-blank line are attached to the largest immediately following syntactic
-unit.
+    if (condition) then {
+        doSomething
+    } else {
+        doAnotherThing
+    }
+    
+The body of the block that comprises the `then` action is indented *more than* the line that contains the opening `{`; the closing `}` is at *the same* indentation as the the line that contains the opening `{`.  Because there is no line break after the first `}`, the `else(_)` does not start a separate statement.
 
-**Example**
+**Alternative Layout for `if(_)then(_)else(_)`**
 
+    if (condition) 
+        then { doSomething } 
+        else { doAnotherThing }
+    theFollowingStatement
 
-    // comment, to end of line
+Here the whole `if(_)then(_)else(_)` is on a single logical line; 
+the indentation indicates that the `then` and `else` lines are a continuation of the `if` line.
+This format is appropriate only when the code blocks are small.
+
+**Bad Layout for `if(_)then(_)else(_)`**
+
+    if (condition) 
+    then { doSomething } 
+    else { doAnotherThing }
+    
+This layout shows three separate statements --- an `if(_)`, a `then(_)`, and an `else(_)`. It is *not* a valid way of formatting a single `if(_)then(_)else(_)` statement.
+
 
 ## Identifiers and Operators
 
@@ -337,7 +373,7 @@ brace expression.
 
 String literals can also be written between single guillemet quotation marks,
 ‹thus›.  Between the ‹ and the ›, characters from the input become characters of
-the string value without interpretation, and without any escapes (not even for ›).
+the string without interpretation, and without any escapes (not even for ›).
 
 **Example**
 
