@@ -732,6 +732,15 @@ as well as a `var` field named `x`.
         var h is readable, writable    // Public access and assignment
     }
 
+### Imports
+
+The nickname introduced by an `import` statement is like a `def`; 
+it is confidential by default, but can be made public with an annotation.
+
+**Example**
+
+    import "list" as list is public
+
 ### No Private Attributes
 
 Some other languages support “private attributes”, which are available only
