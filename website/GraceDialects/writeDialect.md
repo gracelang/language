@@ -177,29 +177,42 @@ _identifierresolution_ module.
 
 The simplest way of writing a `parseChecker` or an `astCheker` method is by 
 building a visitor.  The module _ast_ declares `baseVisitor` and
-`pluggableVisitor`for you to inherit from.  The visitors implement a top-down
+`pluggableVisitor` for you to inherit.  The visitors implement a top-down
 traversal of the tree.  If a visitor on a node returns `true`, the traversal will
 continue with the sub-components of the node; if it returns `false`, the
 traversal will go no deeper.
 
 If the dialect's checker finds an illegal condition in the tree, it should stop 
-the compilation process by requesting
+the compilation process by raising an appropriate exception.
+A simple way to do this is by making a request
 ```
 errormessages.syntaxError "warning message" atRange (range)
 ```
-where `range` speciifes the line and column range in the source where the 
-error was found.  Each node in the parse tree and most nodes in the AST have 
-a `range` attribute that gives its location in the source; the exceptions are
-things that were implicit in the source, like `self` and `outer`.  The IDE will
-then highlight the offending range of the source program.
+where `range` is an object that conforms to the `Range` interface, i.e., has
+an attribute `range` that specifies the line and column range in the source where the 
+error was found.
 
-You can also stop compilation and produce an error message by raising an 
-exception in the checker.
-If you do this by requesting the `raise(_)with(data)` method, and `data` is either
+Each node in the parse tree, and most nodes in the AST, have 
+a `range` attribute that gives its location in the source.
+(The exceptions are the nodes in the AST that represent 
+things that were implicit in the source, like `self` and `outer`.)
+
+The `errormessages.syntaxError(_)range(_)` method will raise a `SyntaxError` 
+exception, which the IDE will catch and use to 
+highlight the offending range of the source program.
+
+You can also stop compilation and produce an error message by raising one of the
+following exceptions directly:
+
+ - `DialectError`, declared in *xmodule*
+ - `SyntaxError`, declared in *errormessages*
+
+If you do this by requesting the `raise(message)with(data)` method, and `data` is either
 an AST node or a range object, then the appropriate source code range will
 be highlighted when the error is displayed.
 
 Note that the IDE _throws away_ anything written on the standard output stream.
-This means that you won't see the output from a `print` statement.  
-If you need to produce debugging output, import the `"io"` module `as io`, and 
-use `io.error.write "Progress is being made!\n"`.
+This means that you won't see the output from a `print` statement.
+If you need to produce debugging output,
+import the `"io"` module `as io`,
+and use `io.error.write "Progress is being made!\n"`.
