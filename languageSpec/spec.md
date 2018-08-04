@@ -425,7 +425,7 @@ might be implemented as a method with a block parameter
 Here is another example:
 
     var sum := 0
-    def summingBlock: Block1⟦Number, Number⟧ =
+    def summingBlock: Function1⟦Number, Number⟧ =
         { i: Number ->  sum := sum + i }
     summingBlock.apply(4)       // sum now 4
     summingBlock.apply(32)      // sum now 36
@@ -734,7 +734,7 @@ as well as a `var` field named `x`.
 
 ### Imports
 
-The nickname introduced by an `import` statement is like a `def`; 
+The nickname for a [Module object](#modules) introduced by an `import` statement is like a name introduced by `def`; 
 it is confidential by default, but can be made public with an annotation.
 
 **Example**
@@ -1539,7 +1539,7 @@ we can write
 ## Matching Blocks
 
 Blocks with a single parameter are called _matching blocks_. Matching
-blocks also conform to  type Pattern, and can be evaluated by
+blocks also conform to type Pattern, and can be evaluated by
 requesting `match(_)` as well as `apply(_)`. When `apply(_)` would
 raise a type error because the block's argument would not conform to its
 parameter type, `match(_)` returns false; when `apply(_)` would return
@@ -1589,7 +1589,7 @@ If
         // match against the value of an expression - requires parenthesis
 
     { a -> print("did not match") }
-        // match against empty type annotation; matches anything, and binds to `a`
+        // match against the empty type annotation; matches anything, and binds to `a`
 
 
 # Exceptions
@@ -1767,16 +1767,19 @@ that denote _type objects_.  All type objects are also patterns, so
 they can be used in [pattern matching](#pattern-matching),
 typically to perform dynamic
 type tests.
+
+
 Because type declarations cannot be changed by overriding, the value of
 a type expression can always be determined before the program is executed;
 this means that types can be checked statically.
+Dialects can implement a variety of static typing regimes. 
 
 ## Predeclared Types
 
-A number of types are declared in the standard prelude and included in
+A number of types are declared in _standardGrace_ and included in
 most dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`](#type-object),
-[`Number`](#numbers), [`String`](#strings), `Block0`, `Block1`,
-`Block2`, `Fun`, `Iterator`, `Pattern`, [`ExceptionPacket`](#exception-packets),
+[`Number`](#numbers), [`String`](#strings), `Function`_n_, `Procedure`_n_, `Predicate`_n_, 
+`Iterator`, `Pattern`, [`ExceptionPacket`](#exception-packets),
 [`ExceptionKind`](#kinds-of-exception), and [`Type`](#type-type).
 
 ### Type None
@@ -1809,6 +1812,24 @@ object.
 Self is prohibited as the annotation on parameters, but
 can be used to annotate results.
 
+### Types Function, Procedure, and Predicate
+
+The type `Function0⟦T⟧` describes a block with zero parameters that returns a 
+result of type `T`.  
+`Function1⟦A1,T⟧` describes a block with one parameter of type `A1` and a 
+result of type `T`.
+`Function2⟦A1, A2,T⟧` describes a block with two parameters of types `A1` and `A2`,
+and and a result of type `T`.
+`Function3⟦A1, A2, A3, T⟧` describes a block with three parameters of types `A1`, `A2`,
+and `A3`, and and a result of type `T`.
+
+The type `Procedure`_n_ (where _n_ = 0, 1, 2, or 3) is like `Function`_n_, except that
+the result type is `Done`.
+The type `Predicate`_n_ (where _n_ = 0, 1, 2, or 3) is like `Function`_n_, except that
+the result type is `Boolean`.
+So, for example, `Predicate1⟦A1⟧` is the type of an object with an `apply` method that
+expects an argument of type `A1`, and returns a `Boolean`.
+
 ### Type Unknown
 
 Unknown is not actually a type, although it is treated as a type
@@ -1822,7 +1843,6 @@ Type-checking against `Unknown` will always succeed: any object matches
 type `Unknown`, and type `Unknown` conforms to all other types.
 
 **Examples**
-
 
     var x: Unknown := 5   //who knows what the type is?
     var x := 5            //same here, but Unknown is implicit
@@ -2054,16 +2074,18 @@ they may be defined inside object, class, method, and other type
 definitions, and typically accessed via [Manifest Requests](#manifest-requests).
 This allows types to be declared and imported from other modules.
 
-## Type Assertions
+## Type Annotations
 
 When parameters, fields, and method results are annotated with types,
 the programmer can be confident that objects bound to those parameters and
 fields,
-and returned from those methods, do indeed have the specified types, insofar
-as Grace has the required type information.  The checks necessary to implement
+and returned from those methods, do indeed have the specified types, _insofar
+as Grace has the required type information_.  The checks necessary to implement
 this guarantee may be performed statically or dynamically.
 
-When implementing the type check, types specified as `Unknown` will always
+### Static Type Checking
+
+When implementing the static type check, types specified as `Unknown` will always
 conform.  So, if a variable is annotated with type
 ```
     interface {
@@ -2085,14 +2107,34 @@ For example, the code of the `add(_)` method
 might actually depend on being given a `String` argument,
 or the collection returned from `add(_)` might contain `Boolean`s.
 
-The same type check can be requested explicitly by using the operators `<:`,
-`:>` and `==` between types.
+Static type checking is implemented by dialects; various static typing dialects
+may impose varied restrictions on Grace.
+
+### Dynamic Type Checking
+
+Currently, the dynamic interpretation of types is _shallow_, that is, 
+it considers only the methods present in an interface, 
+and not the types of the arguments or the results of those methods.
+This is because, in the absence of type annotations, Grace has no information 
+about the argument types or the return type of a method.
+This means that if programmers annotate a declaration
+
+    var x:Number
+
+they can be sure that any object assigned to `x` has a method `+(_)`, but are _not_
+assumed that this `+(_)` method will expect an argument that is also a `Number`, 
+nor that the result will be a `Number`, even though these details are part of 
+the `Number` interface.
+Similarly, when the operators `<:`, `:>` and `==` between types, are evaluated 
+dynamically, argument and result types are ignored, even though they are present.
+
+This treatment is types not entirely satisfactory, and is subject to review and change.
 
 **Examples**
 
     assert (B <: A) description "B does not conform to A"
     assert (B <: interface { foo(_) } ) description "B has no foo(_) method"
-    assert (B <: interface {foo(_:C) -> D} ) description "B doesn't have a method foo(_:C)->D"
+    assert (B <: interface {foo(_:C) -> D} ) description "B has no foo(_) method"
     assert (B == (A | C)) description "B is neither an A or a C"
 
 # Modules and Dialects
@@ -2102,13 +2144,13 @@ A module is typically used to define library functionality.
 
 ## Modules
 
-A module is typically defined in a implementation-dependent fashion,
+A module is defined in a implementation-dependent fashion,
 typically by creating a file containing Grace code. The text of the
 file is treated as the body of an object constructor, so it may
 contain both declarations and executable code. When a module is loaded,
 this object constructor is *executed*, resulting in a _module object_.
 
-## Importing Modules
+### Importing Modules
 
 Modules may begin with one or more `import` _moduleName_ `as` _nickname_
 statements.
@@ -2124,7 +2166,7 @@ declarations at the top level of imported modules are accessed
 by requesting a method on the module's nickname.
 Confidential declarations are not visible to the importing module.
 
-## Executing a Module
+### Executing a Module
 
 Grace programs are executed by asking the execution
 environment to run a particular module,
@@ -2181,18 +2223,20 @@ statement `dialect "name"`,
 where the `dialect` keyword is followed by a [string literal](#string-literal).
 
 The effect of the dialect statement is to import the dialect like any other
-module, but then arrange that the dialect's module object
-lexically encloses the object defined by the module. This means that
+module, but to nest the module that uses the dialect inside an enclosing
+[scope](#module-and-dialect-scopes) 
+that contains the public definitions of the dialect.
+This means that
 [Implicit Requests](#implicit-requests) in the module can resolve to the definitions in
 the dialect.
 
 Many features built in to other programming languages are obtained
-from dialects in Grace: this includes all preexisting type
+from dialects in Grace: this includes intrinsic type
 declarations, classes, traits, control structures, and even the
 `graceObject` trait that defines the default methods.
 
-Modules that do not declare a 'dialect' are treated as being written in the
-dialect `standardGrace`.  If a module really wishes to use no dialect,
+Modules that do not declare a `dialect` are treated as being written in the
+dialect _standardGrace_.  If a module really wishes to use no dialect,
 it should specify `dialect "none"`.
 
 In addition to declarations, a dialect can also define a _checker_ that
@@ -2209,7 +2253,7 @@ structure that is like `if`, but backwards.
 
 bcpl.grace module:
 
-    method do (block: Block0) unless (test: Boolean)  {
+    method do (block: Function0) unless (test: Boolean)  {
         if (test.not) then (block)
     }
 
@@ -2233,7 +2277,7 @@ Surrounding the module scope is the
 the module that defines the dialect.
 That is, the public names at the top level of the dialect
 are treated as being in a scope surrounding that of any
-module written in that dialect.  (Confidential names are not visible.)
+module written in that dialect.  Confidential names are not visible.
 
 Lexical lookup stops at the dialect scope: it does not extend
 to the scope surrounding the dialect (which would contain any
