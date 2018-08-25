@@ -135,12 +135,12 @@ Here are the precise rules that govern layout.
   1. Tab characters (U+0009) are not allowed in Grace code. 
   1. A line containing just spaces, or spaces and a comment, is ignored as far as indentation is concerned.
   1. All changes in indentation must be by *two* or more spaces; a change of a single space is treated as an error.
-  1. If the number of left brace characters on a line exceeds the number of right brace characters, that line is said to open a code block. All lines up to the matching right brace comprise the body of the code block, and must be indented more than the line containing the left brace.
+  1. If a line contains an unmatched left brace character, that line is said to open a code block. All lines up to the matching right brace comprise the body of the code block, and must be indented more than the line containing the left brace.
   1. If the right brace that closes the code block is the first non-space character on a line, then the indentation of the right brace must be the same as that of the line containing the matching left brace.  Otherwise, the line containing the right brace must be indented like all the other lines in the code block.
   1. An increase in indentation that does *not* correspond to the start of a code block indicates a continuation line: the preceding line break is treated as a space and not as a statement separator, and the two physical lines are treated as a single logical line. Further physical lines at the same (or greater) indentation are treated as part of the same logical line. The continuation ends either when the indentation decreases, or when the continuation line contains an unmatched brace.
   1. If a line ends with any kind of left bracket --- one of `(`, `[`, `$\llbracket$`, or `{` --- the following line break is treated as a space, and *not* as a statement separator.
   1. If a line starts with any kind of right bracket --- one of `)`, `]`, `$\rrbracket$`, or `}` --- the preceding line break is treated as a space, and *not* as a statement separator.
-  1. Indentation may be reduced *only* when ending a code block, or ending a continued line.  The indentation must return to that of the line that began the code block, or the continued line, respectively.
+  1. Indentation may be reduced *only* when ending a code block, or after the end of a continued line.  The indentation must return to that of the line that began the code block, or the continued line, respectively.
 
 
 **Example code with punctuation**
