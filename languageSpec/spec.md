@@ -1216,17 +1216,36 @@ default methods.
 |  Method                            |    Return value                                           |
 | :-----------------------------------------------  | :------------------------------------------- |
 | `isMe (other:Object) → Boolean`; _confidential_  |    true if other is the same object as self |
-| $\neq$ `(other:Object) → Boolean`|    the inverse of ==                                 |
+| `myIdentityHash → Number`; _confidential_  |   a hash code characteristic of this object  |
 | `asString → String`               |    a string describing self                          |
 | `asDebugString → String`          |    a string describing the internals of self         |
-| `:: (other:Object) → Binding`     |  a Binding object with `self` as key and `other` as value|
 
 
-Notice that `graceObject` implements $\neq$ but not `==`.
-This is to help ensure that, when an object chooses to implement `==`,
-$\neq$ is also available, and is the inverse of `==`.
-If desired, the _confidential_ method `isMe` can be used in the implementation of a
-public `==` method.
+Notice that `graceObject` implements neither `==` nor `≠`.
+In the _standardGrace_ dialect, the trait `equality` is available to help
+in their implementation.
+
+
+    trait equality {
+        method == (other) is required
+        method hash is required     // should obey invariant (a == b) => (a.hash == b.hash).
+        method ≠ (other)  { (self == other).not }
+        method :: (obj) { binding.key (self) value (obj) }
+    }
+    
+As the `is required` indicates, an object using this trait must provide an `==` method,
+and a corresponding `hash` method.
+One way to define these methods is by combining the equality and hash on the
+results of all the observer methods;
+another is to use `identityEquality`, which defines `==` as object identity and `hash` as 
+identity hash.
+
+
+    trait identityEquality {
+        use equality
+        method == (other) { self.isMe(other) }
+        method hash { self.myIdentityHash }
+    }
 
 # Method Requests
 
@@ -1819,21 +1838,27 @@ Type `None` is completely empty; it has no methods.
 
 ### Type Object
 
-The type `Object` includes methods to which most
-objects respond --- the [Default Methods] declared in
-`graceObject`. Some objects, notably `done`, do not conform to `Object`.
+In _standardGrace_, type `Object` includes just the public [Default Methods] declared in
+`graceObject`.
 
-
-    type Object = {
-    	!= (other: Object) -> Boolean          // the inverse of ==
+    type Object = interface {
     	asString -> String                     // a string for use by the client
     	asDebugString -> String                // a string for use by the implementor
-    	:: (other:Object) -> Binding           // a binding with self as the key
     }
 
-Notice that `isMe`, although present in [`graceObject`](#default-methods), is not present in
-type `Object`, because it is *confidential*.
-Also notice that neither `graceObject` nor type `Object` include `==`.
+Notice that `isMe`, and `myIdentityHash`. although present in [`graceObject`](#default-methods),
+are not present in type `Object`, because they are *confidential*.
+
+### Type EqualityObject
+
+In _standardGrace_, type `EqualityObject` adds the family of equality methods to `Object`:
+
+    type EqualityObject = Object & interface {
+        ::(o:Object) -> Binding
+        ==(other:Object) -> Boolean
+        ≠(other:Object) -> Boolean
+        hash -> Number
+    }
 
 ### Type Self
 
