@@ -1846,7 +1846,7 @@ In _standardGrace_, type `Object` includes just the public [Default Methods] dec
     	asDebugString -> String                // a string for use by the implementor
     }
 
-Notice that `isMe`, and `myIdentityHash`. although present in [`graceObject`](#default-methods),
+Notice that `isMe`, and `myIdentityHash`, although present in [`graceObject`](#default-methods),
 are not present in type `Object`, because they are *confidential*.
 
 ### Type EqualityObject
