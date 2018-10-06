@@ -492,7 +492,7 @@ type String =  {
     ord -> Number
     // a numeric representation of the first character of self, or NaN if self is empty.
 
-    replace (pattern:String) with (new: String) -> String
+    replace (pattern:String) with (new:String) -> String
     // a string like self, but with all occurrences of pattern replaced by new
 
     size -> Number
