@@ -108,20 +108,40 @@ The following ASCII sequences are treated as equivalent to the corresponding Uni
 | ]]    | $\rrbracket$	   | U+27E7
 | [[    | $\llbracket$	   | U+27E6
 
+## Comments
+
+Comments start with a pair of slashes `//` and are terminated by
+the end of the line. Comments are *not* treated as
+white-space. Each comment is conceptually attached to the smallest
+immediately preceding syntactic unit, except that comments following a
+blank line are attached to the largest immediately following syntactic
+unit.
+
+**Example**
+
+// comment, to end of line
 
 ## Layout
 
 Grace uses braces to indicate the boundaries of code blocks.
-Code layout must be consistent with
-these boundaries: indentation must increase after a left brace.
+Indentation (the number of leading spaces on a line) must be consistent with
+these boundaries: indentation must increase after a left brace, and return to the prior level with, or after, the matching right brace.
 
-Statements are terminated by line breaks when the
-following line has the same or lesser indentation than the indentation
-of the line containing the start of the current statement.
-Statements may optionally be terminated by semicolons.
+Statements are separated by one or more line breaks;
+it is also permissible, but uncommon, to separate statements by semicolons.
 
-All changes in indentation must be by *two* or more spaces; a change of a single
-space is always treated as an error.
+Here are the precise rules that govern layout.
+
+  1. Tab characters (U+0009) are not allowed in Grace code. 
+  1. A line containing just spaces, or spaces and a comment, is ignored as far as indentation is concerned.
+  1. All changes in indentation must be by *two* or more spaces; a change of a single space is treated as an error.
+  1. If a line contains an unmatched left brace character, that line is said to open a code block. All lines up to the matching right brace comprise the body of the code block, and must be indented more than the line containing the left brace.
+  1. If the right brace that closes the code block is the first non-space character on a line, then the indentation of the right brace must be the same as that of the line containing the matching left brace.  Otherwise, the line containing the right brace must be indented like all the other lines in the code block.
+  1. An increase in indentation that does *not* correspond to the start of a code block indicates a continuation line: the preceding line break is treated as a space and not as a statement separator, and the two physical lines are treated as a single logical line. Further physical lines at the same (or greater) indentation are treated as part of the same logical line. The continuation ends either when the indentation decreases, or when the continuation line contains an unmatched brace.
+  1. If a line ends with any kind of left bracket --- one of `(`, `[`, `$\llbracket$`, or `{` --- the following line break is treated as a space, and *not* as a statement separator.
+  1. If a line starts with any kind of right bracket --- one of `)`, `]`, `$\rrbracket$`, or `}` --- the preceding line break is treated as a space, and *not* as a statement separator.
+  1. Indentation may be reduced *only* when ending a code block, or after the end of a continued line.  The indentation must return to that of the line that began the code block, or the continued line, respectively.
+
 
 **Example code with punctuation**
 
@@ -144,19 +164,35 @@ space is always treated as an error.
 This example defines `x` to be the result of the single request `mumble ("3") fratz (7)`.
 Because the second and third lines are indented more than the first, they continue that line.
 
-## Comments
+**Example of `if(_)then(_)else(_)`**
 
-Comments start with a pair of slashes `//` and are terminated by
-the end of the line. Comments are *not* treated as
-white-space. Each comment is conceptually attached to the smallest
-immediately preceding syntactic unit, except that comments following a
-blank line are attached to the largest immediately following syntactic
-unit.
+    if (condition) then {
+        doSomething
+    } else {
+        doAnotherThing
+    }
+    
+The body of the block that comprises the `then` action is indented *more than* the line that contains the opening `{`; the closing `}` is at *the same* indentation as the the line that contains the opening `{`.  Because there is no line break after the first `}`, the `else(_)` does not start a separate statement.
 
-**Example**
+**Alternative Layout for `if(_)then(_)else(_)`**
 
+    if (condition) 
+        then { doSomething } 
+        else { doAnotherThing }
+    theFollowingStatement
 
-    // comment, to end of line
+Here the whole `if(_)then(_)else(_)` is on a single logical line; 
+the indentation indicates that the `then` and `else` lines are a continuation of the `if` line.
+This format is appropriate only when the code blocks are small.
+
+**Bad Layout for `if(_)then(_)else(_)`**
+
+    if (condition) 
+    then { doSomething } 
+    else { doAnotherThing }
+    
+This layout shows three separate statements --- an `if(_)`, a `then(_)`, and an `else(_)`. It is *not* a valid way of formatting a single `if(_)then(_)else(_)` statement.
+
 
 ## Identifiers and Operators
 
@@ -337,7 +373,7 @@ brace expression.
 
 String literals can also be written between single guillemet quotation marks,
 ‹thus›.  Between the ‹ and the ›, characters from the input become characters of
-the string value without interpretation, and without any escapes (not even for ›).
+the string without interpretation, and without any escapes (not even for ›).
 
 **Example**
 
@@ -347,27 +383,25 @@ the string value without interpretation, and without any escapes (not even for �
     def n = 17
     ›
 
-## Lineups
+## Sequence Constructors
 
-A Lineup is a comma separated list of expressions surrounded by `[` and `]`.
+A Sequence Constructor is a comma separated list of expressions surrounded by `[` and `]`.
 
 **Examples**
 
-
-    [ ]        //empty lineup
+    [ ]        // empty sequence
     [ 1 ]
     [ red, green, blue ]
 
-When executed, a lineup returns an object that supports the `Iterator` interface,
-which includes the methods `size`, `map`, `do(_)`, and `iterator`.
-Lineups are most frequently used to build collections, to control loops,
-and to pass collections of options to methods.
+When executed, a sequence constructor returns an object of type `Sequence`.
+Sequences are immutable; they are most frequently used to initialize other  collections, to control loops, and to pass options to methods.
+
 
 **Examples**
 
 
     set [ 1, 2, 4, 5 ]           //make a set
-    sequence [ "a", "b", "c" ]   //make a sequence
+    [ "a", "b", "c" ]            //make a sequence
     ["a", "e", "i", "o", "u"].do { x -> testletter(x) }
     myWindow.addWidgets [
        title "Launch",
@@ -941,7 +975,8 @@ attribute can be given an additional name by attaching
 an **`alias`** clause to the inherit or use statement: `alias new(_) = old(_)`
 creates a new `confidential` _alias_ `new(_)` for the attribute `old(_)`.
 Attributes of the parent that are not wanted can be excluded using
-an **`exclude`** clause.
+an **exclude** clause, which consists of the reserved word `exclude`
+followed by the canonical name of an attribute.
 It is an _object composition error_ to alias or exclude attributes
 that are not present in the object being inherited,
 or to alias an attribute to its own name.
@@ -961,34 +996,41 @@ object under construction, and thus do _not_ conflict with (and may therefore ov
 attributes obtained by reuse.
 They _do_ conflict with attributes declared in the object under construction.
 
+The method names in alias and exclude clauses have the same syntax as 
+method names in method declarations and interface literals;
+this means that they can contain both parameter names and type annotations. 
+Such names and annotations may be useful as documentation,
+but do not affect the meaning of the program.
+
 
 **Examples**
 
 ```
 trait t1 {
-    method x { ... }
-    method y { ... }
+    method x(size:Number) { ... }
+    method y(name:String) { ... }
 }
 
 class c1 {
-    use t1 alias w = y exclude x
+    use t1 alias w(_) = y(_) exclude x(_)
     method v { ... }
 }
 ```
-Objects generated by `c1` have attributes `v`, `w` and `y`, but not `x`
+Objects generated by `c1` have attributes `v`, `w(_)` and `y(_)`, but not `x(_)`
 
 ```
 trait t1 {
-    method x { ... }
-    method y { ... }
+    method x(size:Number) { ... }
+    method y(name:String) { ... }
 }
 
 class c1 {
-    use t1 alias w = y exclude x
-    method w { ... }
+    use t1 alias w(name) = y(name) exclude x(_)
+    method w(kind) { ... }
 }
 ```
-This is a trait composition error, because `c1` gets `w` from two places: an alias clause, and a method definition.
+This is a trait composition error, because `c1` gets a method with 
+canonical name `w(_)` from two places: an alias clause, and a method definition.
 
 ```
 trait t1 {
@@ -1003,6 +1045,32 @@ class c1 {
 }
 ```
 This is also a trait composition error, because `x` is defined twice: in `t1`, and in the alias clause. This can be corrected by excluding `x` from `t1`.
+
+```
+trait compare {
+    method lessThanOrEqual(a, b) { a.name ≤ b.name }
+}
+
+trait moreCompare {
+    use compare alias greaterThanOrEqual(x, y) = lessThanOrEqual(y, x)
+}
+```
+
+In this example, the trait `moreCompare` has two methods, 
+`greaterThanOrEqual(_,_)` and `lessThanOrEqual(_,_)`, _but these method are
+identical_, and therefore the names are misleading. 
+If the intension is to make `greaterThanOrEqual(_,_)` perform the inverse comparison,
+this should have been written as
+
+```
+trait moreCompare {
+    use compare 
+    method greaterThanOrEqual(x, y) is confidential {
+        lessThanOrEqual(y, x)
+    }
+}
+
+```
 
 ### Object Combination and Initialisation
 
@@ -1262,7 +1330,7 @@ in a list does determine the method being requested.
 ### Delimited Arguments
 
 Parenthesis may be omitted where they would enclose a single argument
-that is a numeral, string, lineup, or block.
+that is a numeral, string, sequence constructor, or block.
 
 **Examples**
 
@@ -1278,20 +1346,20 @@ that is a numeral, string, lineup, or block.
 
 ### Implicit Requests
 
-If the receiver of a named method request using the name _m_ is `self` or
-an `outer` sequence, the receiver may be left implicit, _i.e._, the `self` or `outer` sequence and the following
-dot may be omitted.
+If the receiver of a method request is `self` or
+an `outer` sequence, the receiver may be left implicit, _i.e._, the `self` or `outer` sequence, and the following
+dot, may both be omitted.
 An implicit request is interpreted as a `self` request, or as an
 `outer` sequence request on an outer sequence of the appropriate length.
 
-When resolving an implicit request, the usual rules of lexical scoping apply,
-so a definition of _m_ in
+When interpreting an implicit request of a method named `m`, the usual rules of lexical scoping apply,
+so a definition of `m` in
 the current scope will take precedence over any definitions in enclosing scopes.
-However, if _m_ is defined in the current scope by inheritance or trait use,
-rather than directly, and *also* defined directly in an enclosing scope, then
-an implicit request of _m_ is ambiguous and is an error.
+However, if `m` is defined in the current scope by inheritance or trait use,
+rather than directly, and *also* defined _directly_ in an enclosing scope, then
+an implicit request of `m` is ambiguous, and is an error.
 
-Implicit requests are always resolved lexically, that is, in the scope in which
+Implicit requests are always resolved lexically, that is, in the nested scope in which
 the implicit request is written, and
 not within the scope of any object (class, or trait) that may inherit the
 method containing the implicit request.
