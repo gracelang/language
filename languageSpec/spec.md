@@ -2215,11 +2215,11 @@ This means that if programmers annotate a declaration
     var x:Number
 
 they can be sure that any object assigned to `x` has a method `+(_)`, but are _not_
-assumed that this `+(_)` method will expect an argument that is also a `Number`, 
+assured that this `+(_)` method will expect an argument that is also a `Number`, 
 nor that the result will be a `Number`, even though these details are part of 
 the `Number` interface.
 Similarly, when the operators `<:`, `:>` and `==` between types, are evaluated 
-dynamically, argument and result types are ignored, even though they are present.
+dynamically, argument and result types are ignored, even if they are present.
 
 This treatment is types not entirely satisfactory, and is subject to review and change.
 
