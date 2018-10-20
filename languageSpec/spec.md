@@ -2414,8 +2414,19 @@ meetings for discussions about the design of Grace.
 
 # Grammar
 
-The following PEG defines the context-free syntax of Grace.
+The following extended BNF defines the context-free syntax of Grace.
 Productions are arranged in alphabetical order.
+
+  * A star `*` indicates zero or more repetitions of the previous item,
+  * a plus `+` indicates one or more repetitions, and
+  * a question mark `?` indicates that the previous item is optional.
+  * Parenthesis `(` and `)` group terminals and non-terminals.
+  * Terminals are enclosed in `"`quotes`"`, or in `<angle brackets>`:
+    - `<id>` is an identifier: a sequence of letters, numbers, single quotes ' and underscores, starting with a letter
+    - `<arrow>` and arrow, one of $\rightarrow$ or ->
+    - `<openTP>` and `<closeTP>` are the type-parameter brackets $\llbracket$ and $\rrbracket$
+    - `<newline>` is a line break, as described in the [Section on newlines](#newlines-tabs-and-control-characters)
+    - `<dquote>` is a double-quote character `"`
 
 ```
 GRAMMAR
