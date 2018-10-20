@@ -1230,14 +1230,15 @@ default methods.
 | `asDebugString → String`          |    a string describing the internals of self         |
 
 
-Notice that `graceObject` implements neither `==` nor `≠`.
+Notice that `graceObject` implements neither `==` nor `$\neq$`.
 In the _standardGrace_ dialect, the trait `equality` is available to help
 in their implementation.
 
 
     trait equality {
         method == (other) is required
-        method hash is required     // should obey invariant (a == b) => (a.hash == b.hash).
+        method hash is required
+                    // should obey invariant (a == b) => (a.hash == b.hash)
         method ≠ (other)  { (self == other).not }
         method :: (obj) { binding.key (self) value (obj) }
     }
