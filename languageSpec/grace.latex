@@ -144,7 +144,7 @@ $endif$
 $for(header-includes)$
 $header-includes$
 $endfor$
-
+\newcommand{\passthrough}[1]{#1}
 \begin{document}
 $if(title)$
 \maketitle
