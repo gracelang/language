@@ -263,8 +263,8 @@ denote `Number` objects).
 
 2.  Base-exponent numerals, always in decimal, which contain a decimal
     point, or an exponent, or both. Grace uses `e` as the
-    exponent indicator. Base-exponent numerals may have a minus in front of the _exponent_.  A decimal point, if present, must not be
-    the first or last character of the numeral
+    exponent indicator. Base-exponent numerals may have a minus in front of the _exponent_.
+    A decimal point, if present, must not be the first or last character of the numeral
 
 3.  Explicit radix numerals, written as a (decimal) number between 2 and
     35 representing the radix, a leading `x`, and a string of digits,
@@ -2414,8 +2414,27 @@ meetings for discussions about the design of Grace.
 
 # Grammar
 
-The following PEG defines the context-free syntax of Grace.
+The following extended BNF defines the context-free syntax of Grace.
 Productions are arranged in alphabetical order.
+
+  * A star `*` indicates zero or more repetitions of the previous item,
+  * a plus `+` indicates one or more repetitions, and
+  * a question mark `?` indicates that the previous item is optional.
+  * Parenthesis `(` and `)` group terminals and non-terminals.
+  * Terminal symbols are enclosed in `"`quotes`"`, or in `<angle brackets>`:
+    - `<id>` is an identifier: a sequence of letters, digits, single quotes `'` and underscores, starting with a letter, as described in the [Section on Identifiers](#identifiers-and-operators)
+    - `<arrow>` is one of `$\rightarrow$` or `->`
+    - `<openTP>` and `<closeTP>` are the type-parameter brackets $\llbracket$ and $\rrbracket$
+    - `<newline>` is a line break, as described in the [Section on newlines](#newlines-tabs-and-control-characters)
+    - `<dquote>` is a double-quote character `"`
+    - `<dot>` is a full stop (also known as a period)
+    - `<selfdot>` is the sequence `self``.`, with optional space bewtween the tokens
+    - `<outerdot>` is the sequence `outer``.`, with optional space bewtween the tokens
+    - `<operator>` is a sequence of [operator characters](#identifiers-and-operators)
+    - `<decimalNumeral>`, `<baseExponentNumeral>`, and `<basedRadixNumeral>` are described in the [Section on Numbers](#numbers)
+    - `<stringSegment>` is a sequence of characters that does not include unescaped `"`, newline, or `{`. It may contain the [string escapes](#string-literals).
+    - `<uninterpretedString>` is a sequence of _any_characters except `›`, the closing guillemet quotation mark; see the [Section on Uninterpreted Strings](#uninterpreted-strings)  
+    - `<typeRelation>` is one of `<:` or `:>`
 
 ```
 GRAMMAR
