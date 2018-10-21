@@ -9,7 +9,7 @@ bibliography:
 
 title:
     The Grace Programming Language\
-    Draft Specification Version 0.7.7
+    Draft Specification Version 0.7.8
 ...
 
 
@@ -1597,9 +1597,9 @@ returns a fresh object.
 # Pattern Matching
 
 Pattern matching is based on `Pattern` objects that respond to the
-`match(subject)` request by returning a `MatchResult`, which is either
-`false` if the match fails, or a `SuccessfulMatch⟦R⟧` object which
-behaves like `true` but also supports a `result` request.  All type
+`matches(subject)` request by returning a `Boolean`, which is either
+`false` if the match fails, or `true` if the match succeeeds.
+All type
 objects are Patterns; in addition, libraries supply non-type Patterns,
 and programmers are free to implement their own Patterns.
 
@@ -1624,25 +1624,22 @@ we can write
 
     def cp = x(10) y(20)
 
-    Point.match(cp)              // SuccessfulMatch, behaves like true
-    Point.match(cp).result       // cp
-    Point.match(42)              // false
+    Point.matches(cp)              // true
+    Point.matches(42)                // false
 
 ## Matching Blocks
 
 Blocks with a single parameter are called _matching blocks_. Matching
-blocks also conform to type Pattern, and can be evaluated by
-requesting `match(_)` as well as `apply(_)`. When `apply(_)` would
+blocks also conform to type Pattern, and respond to the request
+`matches(_)` as well as `apply(_)`. When `apply(_)` would
 raise a type error because the block's argument would not conform to its
-parameter type, `match(_)` returns false; when `apply(_)` would return
-a result `r`, `match(_)` returns a `SuccessfulMatch` object whose
-`result` is `r`.
+parameter type, `matches(_)` returns `false`.
 
 If the parameter declaration of a matching block takes the form `_:pattern`,
 then the `_:` can be omitted, provided that `pattern` is
 is parenthesized, or is a string literal or a numeral.
-This rule (the *delimited argument rule*) means that the pattern can't be
-mistaken for a declaration of a parameter to the block.
+This rule (the *delimited argument rule*) means that the pattern can always be
+distinguished from the declaration of a parameter to the block.
 
 ## Self-Matching Objects
 
@@ -1955,7 +1952,7 @@ type `Unknown`, and type `Unknown` conforms to all other types.
 All types have type Type, which is defined as
 
     type Type = interface {
-        match (o:Unknown) -> MatchResult
+        matches (o:Unknown) -> Boolean
         & (other:Type) -> Type
         | (other:Type) -> Type
         + (other:Type) -> Type
