@@ -93,7 +93,12 @@ Grace has been designed with the following users in mind.
 ------------------------------------------------------------------------
 
 Grace programs are written in Unicode. Reserved words are written in the
-ASCII subset of Unicode.
+ASCII subset of Unicode.  
+
+The context-free syntax of Grace is described by an EBNF grammar.
+Individual productions are included in this specification where appropriate.
+The [complete grammar](#grammar), with all productions in alphabetical order,
+appears at the end.
 
 ## Character Equivalencies
 
@@ -198,7 +203,9 @@ This layout shows three separate statements --- an `if(_)`, a `then(_)`, and an 
 
 Identifiers must begin with a letter, which is followed by a sequence of
 zero or more letters, digits, prime (`'`) or underscore (`_`)
-characters.  Conventionally, type and pattern identifiers start with capital
+characters.  In the grammar, `<id>` denotes an identifier.
+
+Conventionally, type and pattern identifiers start with capital
 letters, while other identifiers start with lower-case letters.
 
 A identifier comprising a single underscore `_` acts as a placeholder: it can
@@ -207,9 +214,11 @@ treated as a fresh identifier.
 
 Operators are sequences of [unicode mathematical operator symbols](
 https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode)
-and the following ASCII operator characters:
+and the following ASCII operator characters
 
 `! ? @ # % ^ & | ~ = + - * / \ > < : . ` $\$\,$
+
+that are not reserved.  In the grammar, <operator> represents an operator.
 
 ## Reserved Tokens
 
@@ -227,6 +236,7 @@ Unicode carriage return
 (CR) character, or by the Unicode line separator
 (U+2028) character; a line feed that immediately
 follows a carriage return is ignored.
+In the grammar, `<newline>` denotes a newline.
 
 Tabs and all other non-printing control characters are syntax errors,
 even in a string literal. Escape sequences are provided to denote
@@ -247,6 +257,11 @@ equality method.
 The token `...` is a valid expression, but evaluating it will lead to a runtime error.
 It is included in the language so that programmers can indicate that their code is
 incomplete.
+
+**Grammar**
+```
+RULE Ellipsis
+```
 
 ## Numbers
 
@@ -304,7 +319,7 @@ prefix `-` operator on a positive number.
 
 ## Booleans
 
-The predefined constants `true` and `false` denote values of Grace’s
+The predefined constants `true` and `false` denote values of Grace's
 `Boolean` type. Boolean operators are written using `&&` for and, `||`
 for or, and prefix `!` for not.
 
@@ -340,7 +355,8 @@ escape characters;
 these are listed in the table below.
 
 Individual characters
-are represented by strings of length 1. Strings are immutable, so an implementation may intern them. Grace’s standard
+are represented by strings of length 1. Strings are immutable, so an implementation may intern them. 
+Grace's standard
 library supports efficient incremental string construction.
 
 |Escape |  Meaning |  Unicode |
@@ -373,6 +389,9 @@ The value of a String Constructor is obtained by first evaluating any
 expressions inside braces, requesting `asString` of the resulting object,
 and inserting the resulting string into the string literal in place of the
 brace expression.
+In the grammar, a `<stringSegment>` represents a sequence of characters that does
+not include unescaped `"`, newline, or `{`;
+it may contain the [string escapes](#string-literals).
 
 **Example**
 
@@ -382,8 +401,9 @@ brace expression.
 ### Uninterpreted Strings
 
 String literals can also be written between single guillemet quotation marks,
-‹thus›.  Between the ‹ and the ›, characters from the input become characters of
-the string without interpretation, and without any escapes (not even for ›).
+‹thus›.  Between the `‹` and the `›`, characters from the input become characters of
+the string without interpretation, and without any escapes (not even for `›`).
+In the grammar, `<uninterpretedString>` is a sequence of _any_ characters except `›`.
 
 **Example**
 
@@ -392,6 +412,13 @@ the string without interpretation, and without any escapes (not even for ›).
     def s = "This is a String"
     def n = 17
     ›
+    
+**Grammar**
+ ```
+RULE String
+RULE StringConstructor
+RULE StringLiteral
+```
 
 ## Sequence Constructors
 
@@ -419,15 +446,11 @@ Sequences are immutable; they are most frequently used to initialize other  coll
        button "OK" action { missiles.launch },
        button "Cancel" action { missiles.abort }
     ]
-    
-**Grammar**
 
-- `<stringSegment>` is a sequence of characters that does not include unescaped `"`, newline, or `{`. It may contain the [string escapes](#string-literals).
-- `<uninterpretedString>` is a sequence of _any_ characters except `›`, the closing guillemet quotation mark.  
+
+**Grammar**
 ```
-RULE String
-RULE StringConstructor
-RULE StringLiteral
+RULE SequenceConstructor
 ```
 
 ## Blocks
@@ -458,12 +481,6 @@ number of arguments.
 It is a `TypeError` if an argument to `apply(...)` does not match
 the type annotation of the corresponding parameter.
 
-**Grammar**
-```
-RULE Block
-RULE BlockParameterList 
-```
-
 **Examples**
 
 
@@ -491,6 +508,12 @@ Here is another example:
     summingBlock.apply(32)      // sum now 36
 
 
+**Grammar**
+```
+RULE Block
+RULE BlockParameterList 
+```
+
 # Declarations
 
 Declarations may occur anywhere within a module, object, class,
@@ -505,12 +528,12 @@ to declare a parameter (but not a method or field) that has the same name as a
 lexically-enclosing field, method, or parameter.
 
 **Grammar**
-
 ```
 RULE Declaration
 RULE DefDeclaration
 RULE VarDeclaration
 RULE TypeDeclaration
+RULE TypeOption
 ```
 
 ## Fields
@@ -693,7 +716,7 @@ An omitted type annotation is treated as the type `Unknown`.
 Methods may be declared with one or more type parameters.
 If present, type parameters are listed between $\llbracket$
 and $\rrbracket$ after the identifier that forms the first
-(or only) part of a multipart name.
+(or only) part of the method's name.
 
 Type parameters may be constrained with `where` clauses;
 the details have yet to be specified.
@@ -722,6 +745,11 @@ the end of the method body without executing a `return`, the method
 terminates and returns the value of the last expression evaluated.
 An empty method body returns `done`.
 
+**Grammar**
+```
+RULE Return
+```
+
 ## Annotations
 
 Any declaration, and any object constructor, may have a
@@ -749,6 +777,12 @@ Additional annotations may be defined by dialect or libraries.
     method foo is confidential  { }
     method id⟦T⟧ is required  { }
 
+**Grammar**
+```
+RULE Annotations
+RULE AnnotationLabel
+RULE AnnotationArgList
+```
 
 ## Encapsulation
 
@@ -941,6 +975,11 @@ This creates an object with fields `colour` (set to
 (initialised to `0`), prints “The cat Fergus has been created”, and
 binds the name `fergus` to this object.
 
+**Grammar**
+```
+RULE ClassDeclaration
+```
+
 ## Trait Objects and Trait Declarations
 
 Trait objects are objects with certain properties.  Specifically, a
@@ -1128,6 +1167,15 @@ trait moreCompare {
 
 ```
 
+**Grammar**
+```
+RULE InheritStatement
+RULE UseStatement
+RULE ReuseModifier
+RULE ExcludeClause
+RULE AliasClause
+```
+
 ### Object Combination and Initialisation
 
 When executed, an object constructor (or trait or class declaration)
@@ -1174,19 +1222,22 @@ As a consequence of these rules, a new object can change the
 initialization of its parents, by overriding a method requested on self
 by the parents' initialisers.
 
+### Abstract Methods
+
+Methods may be declared to be *abstract* by annotating the method header with `abstract`,
+and omitting the menthod body.  Abstract methods do not override normal methods.
+Requesting an abstract method will generate an error.
 
 ### Required Methods
 
-Methods may be declared to be *required* by giving them the body `required`.
-(Required methods are similar to what some other languages call abstract methods.)
-This indicates that a real method
-body must be supplied before that method can be requested.
+Methods may be declared to be *required* by annotating them as `required`,
+and omitting the menthod body.
+This indicates that a normal method with a body must be supplied.
 Required methods do _not_ conflict with other methods.
 In particular, a required local
 method does not override a method from a parent; instead the parent is
 said to supply the requirement.  Similarly, a method required by a used trait
 can be supplied by another used trait without any conflict.
-
 Requesting a required method that has not been supplied will generate an error.
 
 ### Overriding Methods
@@ -1274,7 +1325,7 @@ All objects implement a number of _default methods_ by inheriting from
 `graceObject`.
 Programmers can
 override these implementations with alternative implementations.
-Type [Object](#type-object) contains all the public
+Type [Object](#type-object) contains just the public
 default methods.
 
 
@@ -1303,8 +1354,8 @@ As the `is required` indicates, an object using this trait must provide an `==` 
 and a corresponding `hash` method.
 One way to define these methods is by combining the equality and hash on the
 results of all the observer methods;
-another is to use `identityEquality`, which defines `==` as object identity and `hash` as 
-identity hash.
+another is to use the trait `identityEquality`,
+which defines `==` as object identity and `hash` as identity hash.
 
 
     trait identityEquality {
@@ -1371,9 +1422,10 @@ the current object; `outer.outer` (an `outer` sequence of length 2) refers to th
 Note that an `outer` sequence is not a request, and that `outer` is a reserved word, not the name of a message. The expression `outer.x` requests `x` on the object lexically
 enclosing `self`.
 
-**Grammar*
+**Grammar**
 
 ````
+RULE Self
 RULE Outer
 ```
 
@@ -1410,7 +1462,7 @@ to the right as possible.
 Unlike some other languages, Grace does _not_ allow the overloading of
 method names by type:  the type of the arguments supplied to the request does
 not influence the method being requested.  However, the _number_ of arguments
-in a list does determine the method being requested.
+in an argument list does determine the method being requested.
 
 **Examples**
 
@@ -1424,7 +1476,10 @@ in a list does determine the method being requested.
 ### Delimited Arguments
 
 Parenthesis may be omitted where they would enclose a single argument
-that is a numeral, string, sequence constructor, or block.
+that is a numeral, string constructor, boolean literal, sequence constructor, block,
+`self` or `outer` sequence.
+These forms are self-delimiting, and are readilly 
+distinguished from the identifiers that comprise the name of the method being requested. 
 
 **Examples**
 
@@ -1437,6 +1492,16 @@ that is a numeral, string, sequence constructor, or block.
             x := x + 1
         }
 
+**Grammar**
+```
+RULE Request
+RULE SelfRequest
+RULE OuterRequest
+RULE DottedRequest
+RULE RequestPart
+RULE RequestPartNoArguments
+RULE RequestPartsWithArguments
+```
 
 ### Implicit Requests
 
@@ -1485,6 +1550,11 @@ method containing the implicit request.
 
     app.barf  // prints "outer"
     bar.barf  // prints "outer"
+    
+**Grammar**
+```
+RULE ImplicitRequest
+```
 
 ## Assignment Requests
 
@@ -1494,13 +1564,20 @@ followed by a single argument, which need not be surrounded by
 parentheses. Spaces are optional before and after the
 `:=`.
 
+By convention, assignment methods return `done`.
+
 **Examples**
 
        x := 3
        y:=2
        widget.active := true
 
-Assignment methods conventionally return `done`.
+
+**Grammar**
+```
+RULE Assignment
+RULE AssignmentRequest
+```
 
 ## Binary Operator Requests
 
@@ -1544,6 +1621,10 @@ requests.
 |  `a + b + c`                   | `(a + b) + c` |
 |  `a - b - c`                   | `(a - b) - c` |
 
+**Grammar**
+```
+RULE BinaryRequest
+```
 
 ## Unary Prefix Operator Requests
 
@@ -1564,11 +1645,16 @@ tightly than binary operator requests.
 
     status.ok :=  !engine.isOnFire && wings.areAttached && isOnCourse
 
+**Grammar**
+```
+RULE UnaryRequest
+```
 
 ## Precedence of Method Requests
 
-Grace programs are formally defined by the language’s [Grammar]. The
-grammar gives the following precedence levels; lower numbers bind more
+The precedence of method requests
+is defined by Grace's [Grammar](#grammar). The
+grammar implies the following precedence levels, where lower numbers bind more
 tightly.
 
 1.  Numerals and constructors for strings, objects, collections,
@@ -1576,13 +1662,17 @@ blocks, and types; parenthesized expressions.
 2.  Requests of named methods.
 Multi-part requests accumulate name-parts and arguments as far to
 the right as possible.
-3.  Prefix operators
-4.  “Multiplicative” operators `*` and `/`: associate left to right.
-5.  “Additive” operators `+` and `-`: associate left to right.
-6.  “Other” operators, whose binding must be given explicitly
-using parenthesis.
-7.  Assignments and method requests that use `:=` as a suffix to a
+3.  Prefix operators.
+4.  Infix operators, whose binding must be given explicitly
+using parenthesis, except that a repeated sequence of the same operator need
+not be parenthesized, and associates to the left.
+7.  Assignments, and method requests that use `:=` as a suffix to a
 method name.
+
+There is one exception to the rule that the binding between infix operators must be given 
+explicitly:
+ * “Multiplicative” operators `*` and `/` associate left to right  and bind more tightly than
+ * “Additive” operators `+` and `-`, which also associate left to right.
 
 
 ## Requesting Methods with Type Parameters
@@ -1604,7 +1694,7 @@ arguments are omitted, they are assumed to be type `Unknown`.
 
 ## Manifest Expressions
 
-The parents in `inherit parent` and `use parent`
+The parent expressions in `inherit parent` and `use parent`
 statements must be _manifest_. This means that Grace must be able to
 determine the fields and methods defined in the object that is being inherited on a module-by-module basis.
 
@@ -1626,14 +1716,14 @@ or returned by, _p_~_i_~ is an object.
 
 Note that the arguments to a manifest expression need not themselves be manifest.
 
-**Example** 
+**Example**
+
+Consider a module containing the following code:
 
     class a {
-        method x { 
-            object { 
-                method one {}
-                method two {}
-            } 
+        class x { 
+            method one {}
+            method two {}
         }
         
         class b {
@@ -1644,12 +1734,24 @@ Note that the arguments to a manifest expression need not themselves be manifest
         }
     }
 
-Suppose that the above code appears in a module that is imported into the current module with nickname `m`, and that the current module defines a class `c` that inherits `m.a` and overrides `x`.
-If class `b` were to simply `inherit x`, then `c.b` would acquire the fields and methods of this overriding `x` — which are unknown to `m`.  By writing `outer.outer` to refer to the module enclosing `a`, the parent expression in `b`'s `inherit` statement is made to refer to `x` lexically, that is, the parent expression becomes manifest (rule 2 above).
+Suppose that the current module imports the above module with nickname `m`,
+and that the current module defines a class `c` that inherits `m.a` and overrides `x`:
+
+    import "module above" as m
+    class c {
+        inherit m.a
+        class x { ... }
+    }
+    
+If class `b` were to simply `inherit x`, then `c.b` would acquire the fields and
+methods of this overriding `x` — which are unknown to `m`.
+By writing `outer.outer` to refer to the module enclosing `a`
+the parent expression in `b`'s `inherit` statement is made to refer to `x` lexically
+that is, the parent expression becomes manifest (rule 2 above).
 
 ## Fresh Objects
 
-The parent expression in `inherit parent` and `use parent` statements must
+The `parent` expression in `inherit parent` and `use parent` statements must
 return a _fresh_ object, that is, a newly-created object to which there is no other
 reference.
 
@@ -1707,8 +1809,8 @@ parameter type, `matches(_)` returns `false`.
 
 If the parameter declaration of a matching block takes the form `_:pattern`,
 then the `_:` can be omitted, provided that `pattern` is
-is parenthesized, or is a string literal or a numeral.
-This rule (the *delimited argument rule*) means that the pattern can always be
+is parenthesized, or is a string constructor, a boolean literal, or a numeral.
+This rule (the *delimited argument rule*) means that the pattern can be
 distinguished from the declaration of a parameter to the block.
 
 **Grammar**
@@ -2123,6 +2225,14 @@ Type declarations may not be overridden.
 			at (_:A) put (_:B) -> Boolean
 			cleanup(_:B)
 		} where A <: Hashable,  B <: DisposableReference
+        
+**Grammar**
+```
+RULE TypeDeclaration
+RULE TypeParameterList
+RULE InterfaceLiteral
+RULE Where
+```
 
 ## Type Conformance
 
@@ -2171,7 +2281,7 @@ expressions.
 The type of an object referred to by a variant
 variable
 (as determined by the type annotations in its declaration)
-can be examined using that object’s reified type information.
+can be examined using that object's reified type information.
 
 The only methods in the static type of a receiver with a variant
 type are methods present in all members
@@ -2446,7 +2556,10 @@ example.grace module:
     ...
     do { average := sum / count } unless (count == 0)
 
-
+**Grammar**
+```
+RULE Dialect
+```
 ## Module and Dialect Scopes
 
 The **module scope** of a Grace module contains all declarations at the top
