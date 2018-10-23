@@ -2515,7 +2515,7 @@ Productions are arranged in alphabetical order.
     - `<operator>` is a sequence of [operator characters](#identifiers-and-operators)
     - `<decimalNumeral>`, `<baseExponentNumeral>`, and `<explicitRadixNumeral>` are described in the [Section on Numbers](#numbers)
     - `<stringSegment>` is a sequence of characters that does not include an unescaped `"`, newline, or `{`; it may contain the [string escapes](#string-literals).
-    - `<uninterpretedString>` is a sequence of _any_characters except `›`, the closing guillemet quotation mark; see the [Section on Uninterpreted Strings](#uninterpreted-strings)  
+    - `<uninterpretedString>` is a sequence of _any_ characters except `›`, the closing guillemet quotation mark; see the [Section on Uninterpreted Strings](#uninterpreted-strings)  
     - `<typeRelation>` is one of `<:`, `:>`,`<*`, or `*>`
 
 ```
