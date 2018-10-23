@@ -2507,20 +2507,16 @@ Productions are arranged in alphabetical order.
   * a plus `+` indicates one or more repetitions, and
   * a question mark `?` indicates that the previous item is optional.
   * Parenthesis `(` and `)` group terminals and non-terminals.
-  * Terminal symbols are enclosed in `"`quotes`"`, or in `<angle brackets>`:
+  * Terminal symbols are enclosed in `"`quotes`"`; the following additional terminals are in `<angle brackets>`:
     - `<id>` is an identifier: a sequence of letters, digits, single quotes `'` and underscores, starting with a letter, as described in the [Section on Identifiers](#identifiers-and-operators)
-    - `<arrow>` is one of `$\rightarrow$` or `->`
-    - `<openTP>` and `<closeTP>` are the type-parameter brackets $\llbracket$ and $\rrbracket$
     - `<newline>` is a line break, as described in the [Section on newlines](#newlines-tabs-and-control-characters)
     - `<dquote>` is a double-quote character `"`
     - `<dot>` is a full stop (also known as a period)
-    - `<selfdot>` is the sequence `self``.`, with optional space bewtween the tokens
-    - `<outerdot>` is the sequence `outer``.`, with optional space bewtween the tokens
     - `<operator>` is a sequence of [operator characters](#identifiers-and-operators)
     - `<decimalNumeral>`, `<baseExponentNumeral>`, and `<explicitRadixNumeral>` are described in the [Section on Numbers](#numbers)
-    - `<stringSegment>` is a sequence of characters that does not include unescaped `"`, newline, or `{`. It may contain the [string escapes](#string-literals).
+    - `<stringSegment>` is a sequence of characters that does not include an unescaped `"`, newline, or `{`; it may contain the [string escapes](#string-literals).
     - `<uninterpretedString>` is a sequence of _any_characters except `›`, the closing guillemet quotation mark; see the [Section on Uninterpreted Strings](#uninterpreted-strings)  
-    - `<typeRelation>` is one of `<:` or `:>`
+    - `<typeRelation>` is one of `<:`, `:>`,`<*`, or `*>`
 
 ```
 GRAMMAR
