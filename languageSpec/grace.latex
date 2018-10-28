@@ -146,6 +146,7 @@ $header-includes$
 $endfor$
 \newcommand{\passthrough}[1]{#1}
 \begin{document}
+\pagenumbering{roman}
 $if(title)$
 \maketitle
 $endif$
@@ -154,7 +155,8 @@ $if(abstract)$
 $abstract$
 \end{abstract}
 $endif$
-
+\thispagestyle{empty}
+\clearpage
 $for(include-before)$
 $include-before$
 
@@ -172,6 +174,8 @@ $endif$
 $if(lof)$
 \listoffigures
 $endif$
+\clearpage
+\pagenumbering{arabic}
 $body$
 
 $if(natbib)$
