@@ -9,7 +9,7 @@ bibliography:
 
 title:
     The Grace Programming Language\
-    Draft Specification Version 0.7.8
+    Draft Specification Version 0.7.9
 ...
 
 
@@ -517,7 +517,7 @@ RULE BlockParameterList
 # Declarations
 
 Declarations may occur anywhere within a module, object, class,
-or trait.  Consatnt and Variable Declarations may also occur within a
+or trait.  Constant and Variable Declarations may also occur within a
 method or block body.  Declarations are visible within the *whole* of
 their containing lexical scope.  It is an error to declare
 any name more than once in a given lexical scope.
@@ -881,15 +881,6 @@ as well as a `var` field named `x`.
         var g is public            // Public access and assignment
         var h is readable, writable    // Public access and assignment
     }
-
-### Imports
-
-The nickname for a [Module object](#modules) introduced by an `import` statement is like a name introduced by `def`; 
-it is confidential by default, but can be made public with an annotation.
-
-**Example**
-
-    import "list" as list is public
 
 ### No Private Attributes
 
@@ -1258,18 +1249,18 @@ by the parents' initialisers.
 ### Abstract Methods
 
 Methods may be declared to be *abstract* by annotating the method header with `abstract`,
-and omitting the menthod body.  Abstract methods do not override normal methods.
+and omitting the method body.  Abstract methods do not override normal methods.
 Requesting an abstract method will generate an error.
 
 ### Required Methods
 
 Methods may be declared to be *required* by annotating them as `required`,
-and omitting the menthod body.
+and omitting the method body.
 This indicates that a normal method with a body must be supplied.
 Required methods do _not_ conflict with other methods.
 In particular, a required local
 method does not override a method from a parent; instead the parent is
-said to supply the requirement.  Similarly, a method required by a used trait
+said to _supply_ the requirement.  Similarly, a method required by a used trait
 can be supplied by another used trait without any conflict.
 Requesting a required method that has not been supplied will generate an error.
 
@@ -1511,7 +1502,7 @@ in an argument list does determine the method being requested.
 Parenthesis may be omitted where they would enclose a single argument
 that is a numeral, string constructor, boolean literal, sequence constructor, block,
 `self` or `outer` sequence.
-These forms are self-delimiting, and are readilly 
+These forms are self-delimiting, and are readily 
 distinguished from the identifiers that comprise the name of the method being requested. 
 
 **Examples**
@@ -1803,7 +1794,7 @@ returns a fresh object.
 
 Pattern matching is based on `Pattern` objects that respond to the
 `matches(subject)` request by returning a `Boolean`, which is either
-`false` if the match fails, or `true` if the match succeeeds.
+`false` if the match fails, or `true` if the match succeeds.
 All type
 objects are Patterns; in addition, libraries supply non-type Patterns,
 and programmers are free to implement their own Patterns.
@@ -2471,18 +2462,22 @@ this object constructor is *executed*, resulting in a _module object_.
 ### Importing Modules
 
 Modules may begin with one or more `import` _moduleName_ `as` _nickname_
-statements.
+statements, where
 _moduleName_ is a [string literal](#string-literals) that identifies the module
-to be imported in an implementation-dependent manner; for example,
-_moduleName_ may be a file path.
-_nickname_ is the Grace identifier used to refer to the imported module object
-in the importing module.
-The nickname is confidential by default, but can be annotated as public.
+to be imported in an implementation-dependent manner.
+For example, _moduleName_ may be a file path.
+In the importing module, _nickname_ is used to refer to the imported module object;
+_nickname_ is confidential by default, but can be annotated as public.
 
-Because importing a module creates a module object, atttributes declared as public
-at the top level of an imported module are accessed
+Because importing a module creates a module object, public attributes
+of an imported module are accessed
 by requesting a method on the module's nickname.
-Confidential declarations are not visible to the importing module.
+Confidential attributes are not visible to the importing module.
+
+**Example**
+
+    import "list" as list is public
+    import "sparseMatrix" as matrix
 
 **Grammar**
 ```
