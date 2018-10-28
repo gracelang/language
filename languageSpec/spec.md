@@ -225,7 +225,7 @@ that are not reserved.  In the grammar, <operator> represents an operator.
 Grace has the following reserved tokens:
 
     alias as class def dialect exclude import inherit interface is method
-    object outer prefix required return self Self trait type use var where
+    object once outer prefix required return self Self trait type use var where
     . ... := = ; { } [ ] ( ) : -> $\rightarrow$ // [[  ]] $\llbracket$ $\rrbracket$
 
 
@@ -583,7 +583,7 @@ An omitted type annotation is treated as the type `Unknown`.
 Methods are declared using the **`method`** keyword followed by a name.
 Methods define the action to be taken when the object containing the
 method receives a
-request with the given name. Because every method must be associated
+request with that name. Because every method must be associated
 with an object, methods may not be declared directly inside other
 methods.  The body of the method is enclosed in braces.
 
@@ -618,20 +618,35 @@ RULE MethodParameterList
 RULE TypeParameterList
 ```
 
+### Returning a Value from a Method
+
+Methods may contain one or more **`return`** statements.
+If a `return e` statement is executed, the method terminates with the
+value of the expression `e`; a `return` statement with no
+expression is equivalent to `return done`.  If execution reaches
+the end of the method body without executing a `return`, the method
+terminates and returns the value of the last expression evaluated.
+An empty method body returns `done`.
+
+**Grammar**
+```
+RULE Return
+```
+
 ### Method Names
 
 To improve readability, method names have several forms.
 For each form, we describe its appearance,
 and also a _canonical_ form of the name which is used in dispatching method requests.
-A request "matches" a method if the canonical names are equal.
+A request has the same name as a method if their canonical names are equal.
 
 1. A method can be named by a single identifier, in which case the method
-	has no parameters; in this case the _canonical name_ of the method is
+	has no parameters; the _canonical name_ of the method is
 	the identifier.
 
 1. A method can be named by a single identifier suffixed with `:=`; such a method is called an assignment method, and is conventionally used for writer methods, both
 	user-written and automatically-generated.
-    Assignment methods _always_ take a single parameter after the `:=`, and have a _canonical name_ of  the identifier followed by `:=(_)`.
+    Assignment methods _always_ take a single parameter after the `:=`, and have a _canonical name_ of the identifier followed by `:=(_)`.
     It is an error to declare a variable and an assignment method with the same identifier in the same scope.
 
 1. A method can be named by one or more _parts_, where each _part_ is an identifier
@@ -696,8 +711,8 @@ In the third example, the canonical name of the method is `max(_,_)`.
 ```
 
 As a consequence of the above rules, methods `max(a, b, c)` and
-`max(a, b)` have different canonical names and are therefore treated
-as distinct methods.  In other words, Grace allows "overloading by
+`max(a, b)` have different canonical names and are therefore 
+distinct methods.  In other words, Grace allows "overloading by
 arity". (Grace does _not_ allow overloading by type).
 
 ### Parameters
@@ -734,20 +749,38 @@ canonical name of the method.
     method prefix- ⟦T⟧ -> Number
          { 0 - self }
 
+### Once Methods
 
-### Returning a Value from a Method
+A **`once method`** is declared by preceding a method declaration with the
+reserved word `once`.  Such a method executes to completetion at most once:
+the first time that its object receives the corresponding request.
+The return value is memoised, and subsequent requests of the method
+will return the memoised value without re-executing the method.
+Once methods may not have parameters.
 
-Methods may contain one or more **`return`** statements.
-If a `return e` statement is executed, the method terminates with the
-value of the expression `e`; a `return` statement with no
-expression is equivalent to `return done`.  If execution reaches
-the end of the method body without executing a `return`, the method
-terminates and returns the value of the last expression evaluated.
-An empty method body returns `done`.
+If a once method does _not_ return a value, e.g., because it raises an exception
+on its first execution,
+then no value is memoised and execution of the method will start a again time if it
+is requested anew.
+This process will repeat until the once method returns normally, at which point
+the return value will be memoised, and subsequent executions will return the memoised value.
 
-**Grammar**
+Once methods can be used to represent lazily-initialized constants, or for any
+method whose result will not change once it has been calculated.
+A once method differs from a `def`ined field in that a `def` is initialized as part of
+the process of creating its containing object, and is consequently _uninitialized_ during part
+of that process.
+Unlike a `def`, a `once method` is a method, and can appear in a trait.
+
+**Example**
+
 ```
-RULE Return
+def o = object {
+    def nums = 1..100
+    once method sum {
+        nums.fold {a, b -> a + b} startingWith 0
+    }
+}
 ```
 
 ## Annotations
