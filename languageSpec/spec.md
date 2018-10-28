@@ -224,9 +224,9 @@ that are not reserved.  In the grammar, <operator> represents an operator.
 
 Grace has the following reserved tokens:
 
-    alias as class def dialect exclude import inherit interface is method
-    object once outer prefix required return self Self trait type use var where
-    . ... := = ; { } [ ] ( ) : -> $\rightarrow$ // [[  ]] $\llbracket$ $\rrbracket$
+    alias as class def dialect exclude import inherit interface is method object
+    once outer prefix return self Self trait type use var where
+    . ... := = ; { } [ ] ( ) : -> $\rightarrow$ [[  ]] $\llbracket$ $\rrbracket$ //
 
 
 ## Newlines, Tabs and Control Characters
