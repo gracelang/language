@@ -247,7 +247,7 @@ Grace has the following reserved tokens:
 
     alias as class def dialect exclude import inherit interface is method object
     once outer prefix return self Self trait type use var where
-    . ... := = ; { } [ ] ( ) : -> $\rightarrow$ [[  ]] $\llbracket$ $\rrbracket$ //
+    . ... := = ; { } [ ] ( ) : → -> $\rightarrow$ [[  ]] $\llbracket$ $\rrbracket$ //
 
 # Built-in Objects
 
@@ -444,9 +444,9 @@ Sequences are immutable; they are most frequently used to initialize other  coll
 **Examples**
 
 
-    set.withAll [ 1, 2, 4, 5 ]           //make a set
-    [ "a", "b", "c" ]            //make a sequence
-    ["a", "e", "i", "o", "u"].do { x -> testletter(x) }
+    set.withAll [ 1, 2, 4, 5 ]           // make a set
+    [ "a", "b", "c" ]            // make a sequence
+    ["a", "e", "i", "o", "u"].do { x → testletter(x) }
     myWindow.addWidgets [
        title "Launch",
        text "Good Morning, Mrs President",
@@ -464,15 +464,15 @@ RULE SequenceConstructor
 
 Grace blocks are lambda expressions, with or without
 parameters. If a parameter list is present, the parameters are separated
-by commas and the list is separated from the body of the block by the `->` symbol.
+by commas and the list is separated from the body of the block by the `→` symbol.
 Within the body of the block, the parameters cannot be assigned.
 Block parameters may optionally be annotated with types; omitted type
 annotations are treated as the type `Unknown`.
 
     { do.something }
-    { i -> i + 1 }
-    { i:Number -> i + 1 }
-    { sum, next -> sum + next }
+    { i → i + 1 }
+    { i:Number → i + 1 }
+    { sum, next → sum + next }
 
 Blocks are lexically scoped, and can close over any visible field or parameter.
 The body of a block consists of a sequence of declarations and
@@ -494,7 +494,7 @@ the type annotation of the corresponding parameter.
 The looping construct
 
     for (1..10) do {
-        i -> print i
+        i → print i
     }
 
 might be implemented as a method with a block parameter
@@ -530,8 +530,8 @@ any name more than once in a given lexical scope.
 
 Grace has a single namespace for all identifiers: methods, parameters,
 constants, variables, classes, traits, and types. It is a *shadowing error*
-to declare a parameter (but not a method or field) that has the same name as a
-lexically-enclosing field, method, or parameter.
+to declare a parameter or temporary (but not a method or field) that has the same name as a
+lexically-enclosing field, method, parameter or temporary.
 
 **Grammar**
 ```
@@ -542,18 +542,19 @@ RULE TypeDeclaration
 RULE TypeOption
 ```
 
-## Fields
-
-Grace has two kinds of fields: [constants](#constants) and [variables](#variables).
-
-### Constants
+## Constants
 
 Constants are defined with the **`def`** keyword; they bind
-an identifier to the value of an initialising expression, and may
-optionally be annotated with a type.  This type is checked when
-the constant is initialised. Constants cannot be re-bound.
+an identifier to the value of an initialising expression.
 
-An omitted type annotation is treated as the type `Unknown`.
+Constants may be optionally given a type: this type is checked when
+the constant is initialised.
+An omitted type annotation is treated as `Unknown`.
+
+If the initialising expression is omitted, an annotation is required; 
+in this case the declaration is a *marker declaration*.
+Constant declarations inside an object constructor create [fields](#fields);
+others create temporary constants.
 
 **Examples**
 
@@ -562,7 +563,7 @@ An omitted type annotation is treated as the type `Unknown`.
     def x:Number = 3
     def x:Number           // Syntax Error: x must be initialised
 
-### Variables
+## Variables
 
 Variable are introduced with the **`var`** keyword.
 Variables can be re-bound to
@@ -574,7 +575,10 @@ variable is an error, which may be caught either at run time or at
 compile time.
 Variables may be optionally given a type: this type is checked when
 the variable is initialised and assigned.
-An omitted type annotation is treated as the type `Unknown`.
+An omitted type annotation is treated as `Unknown`.
+
+Variable declarations inside an object constructor create [fields](#fields);
+others create temporary variables.
 
 **Examples**
 
@@ -591,12 +595,14 @@ Methods define the action to be taken when the object containing the
 method receives a
 request with that name. Because every method must be associated
 with an object, methods may not be declared directly inside other
-methods.  The body of the method is enclosed in braces.
+methods.  The body of the method is delimited by braces.
 
-The type of the object returned from the method may
-optionally be given after the symbol `->`;
-an omitted type annotation is treated as the type `Unknown`.
+Specifying the return type is optional;
+an omitted return type is treated as `Unknown`.
 When the method returns, its result is checked against this type.
+
+If the `MethodBody` is omitted, an annotation is required; 
+in this case the method declaration is a *marker declaration*.
 
     method pi  { 3.141592634 }
 
@@ -604,16 +610,20 @@ When the method returns, its result is checked against this type.
         print "{sender} sends his greetings, {user}."
     }
 
-    method either (a) or (b) -> Done {
+    method either (a) or (b) → Done {
         if (random.nextBoolean)
             then {a.apply} else {b.apply}
     }
+    
+    method changeSpeedBy(delta) is abstract     // marker declaration
 
 **Grammar**
 
 ```
 RULE MethodDeclaration
 RULE MethodHeader
+RULE ReturnTypeOption
+RULE MethodBody
 RULE AssignmentMethodHeader
 RULE ParameterizedMethodHeader
 RULE ParameterlessMethodHeader
@@ -683,7 +693,7 @@ method isEmpty { elements.size == 0 }
  of an assignment method
 
 ```
-method value:= (n: Number) -> Done {
+method value:= (n: Number) → Done {
     print "value currently {v}, now assigned {n}"
     v := n
 }
@@ -708,11 +718,11 @@ In the third example, the canonical name of the method is `max(_,_)`.
  of operator symbols
 
 ```
-method + (other:Point) -> Point {
+method + (other:Point) → Point {
     (x + other.x) @ (y + other.y)
 }
 
-method prefix- -> Point
+method prefix- → Point
     { 0 - self }
 ```
 
@@ -730,7 +740,7 @@ Parameters to a method may optionally be annotated with types:
 the corresponding arguments will be
 checked against those types, either before execution, or
 when the method is requested.
-An omitted type annotation is treated as the type `Unknown`.
+An omitted type annotation is treated as `Unknown`.
 
 ### Type Parameters
 
@@ -748,11 +758,11 @@ canonical name of the method.
 **Examples**
 
 
-    method sumSq⟦T⟧(a:T, b:T) -> T where T <: Numeric {
+    method sumSq⟦T⟧(a:T, b:T) → T where T <: Numeric {
         (a * a) + (b * b)
     }
 
-    method prefix- ⟦T⟧ -> Number
+    method prefix- ⟦T⟧ → Number
          { 0 - self }
 
 ### Once Methods
@@ -773,10 +783,12 @@ the return value will be memoised, and subsequent executions will return the mem
 
 Once methods can be used to represent lazily-initialized constants, or for any
 method whose result will not change once it has been calculated.
-A once method differs from a `def`ined field in that a `def` is initialized as part of
+A once method differs from a constant field (declared with `def`) in that the latter is initialized as part of
 the process of creating its containing object, and is consequently _uninitialized_ during part
-of that process.
-Unlike a `def`, a `once method` is a method, and can appear in a trait.
+of that process.  Hence, once methods are convenient for defining constants that may be
+used during initialization, and for a group of interdependent values, because the
+programmer need not worry about the initialization order.
+Moreover, unlike a `def`, a `once method` is a method, and can appear in a trait.
 
 **Example**
 
@@ -784,7 +796,7 @@ Unlike a `def`, a `once method` is a method, and can appear in a trait.
 def o = object {
     def nums = 1..100
     once method sum {
-        nums.fold {a, b -> a + b} startingWith 0
+        nums.fold {a, b → a + b} startingWith 0
     }
 }
 ```
@@ -965,6 +977,7 @@ attributes of the object are in scope throughout the object constructor.
 
 ```
 RULE ObjectConstructor
+RULE ObjectBody
 RULE ObjectItem
 ```
 
@@ -1029,6 +1042,8 @@ binds the name `fergus` to this object.
 ```
 RULE ClassDeclaration
 ```
+If the MethodBody is omitted, an annotation is required; 
+in this case the class declaration is a *marker declaration*.
 
 ## Trait Objects and Trait Declarations
 
@@ -1049,7 +1064,7 @@ Hence, the following two declarations create equivalent traits:
 
     trait emptiness1 {
         method isEmpty { size == 0 }
-        method nonEmpty { size != 0 }
+        method nonEmpty { size ≠ 0 }
         method ifEmptyDo (eAction) nonEmptyDo (nAction) {
                 if (isEmpty) then { eAction.apply } else { do(nAction) }
         }
@@ -1058,7 +1073,7 @@ Hence, the following two declarations create equivalent traits:
     method emptiness2 {
         object {
             method isEmpty { size == 0 }
-            method nonEmpty { size != 0 }
+            method nonEmpty { size ≠ 0 }
             method ifEmptyDo (eAction) nonEmptyDo (nAction) {
                     if (isEmpty) then { eAction.apply } else { do(nAction) }
             }
@@ -1080,7 +1095,7 @@ with type arguments.
 
     class vectorOfSize(size)⟦T⟧ {
         var contents := Array.size(size)
-        method at(index: Number) -> T { return contents.at(index) }
+        method at(index: Number) → T { return contents.at(index) }
         method at(index: Number) put(elem: T) { ... }
     }
 
@@ -1310,7 +1325,7 @@ accessor method for an inherited variable.
         var prizes := 0
         method miceEaten is override { 0 }
                 // a pedigree cat would never be so coarse
-        method miceEaten:= (n:Number) -> Number is override { return }
+        method miceEaten:= (n:Number) → Number is override { return }
                // ignore attempts to debase it
     }
 
@@ -1330,7 +1345,7 @@ Traits are designed to be used as fine-grained components of reuse:
     trait canine {
         method loyal { "I'm your best friend" }
         method move {
-            if (you.location != self.location) then {
+            if (you.location ≠ self.location) then {
                 self.position := you.heel
             }
         }
@@ -1728,7 +1743,7 @@ explicitly:
 Methods that have type parameters may be requested with or without
 explicit type arguments. If type arguments are supplied there must be
 the same number of arguments as there are parameters. If type
-arguments are omitted, they are assumed to be type `Unknown`.
+arguments are omitted, they are assumed to be `Unknown`.
 
 
 
@@ -1829,13 +1844,13 @@ and programmers are free to implement their own Patterns.
 Suppose that the type `Point` is defined by:
 
     type Point = {
-      x -> Number
-      y -> Number
+      x → Number
+      y → Number
     }
 
 and implemented by this class:
 
-    class x(x':Number) y(y':Number) -> Point {
+    class x(x':Number) y(y':Number) → Point {
       method x { x' }
       method y { y' }
     }
@@ -1881,32 +1896,32 @@ are patterns that match strings, numbers and Booleans that are equal to the lite
 Matching blocks and self-matching objects can be conveniently used
 in the `match(_)case(_)...` family of methods.
 
-    method fib(n:Number) -> Number {
+    method fib(n:Number) → Number {
         match (n)
-	        case { 0 -> 0 }
-	        case { 1 -> 1 }
-	        case { _ -> fib(n-1) + fib(n-2) }
+	        case { 0 → 0 }
+	        case { 1 → 1 }
+	        case { _ → fib(n-1) + fib(n-2) }
     }
 
-The first two blocks use self-matching objects; the first is short for { _:0 -> 0 }.
+The first two blocks use self-matching objects; the first is short for { _:0 → 0 }.
 
-The last block has no pattern (or, if you prefer, has the pattern `Unknown`,
-which matches any object).  Such a block always matches.
+The last block has no pattern, which is equivalent to the pattern `Unknown`,
+and thus matches any object.
 
 If
 `match(_)case(_)...` does not find a match, it raises a non-exhaustive match exception.
 
 
-    { 0 -> "Zero" }
+    { 0 → "Zero" }
         // match against a Sting Literal
 
-    { s:String -> print(s) }
+    { s:String → print(s) }
         // type match, binding s - identical to block with typed parameter
 
-    { (pi) -> print("Pi = " ++ pi) }
+    { (pi) → print("Pi = " ++ pi) }
         // match against the value of an expression - requires parenthesis
 
-    { a -> print("did not match") }
+    { a → print("did not match") }
         // match against the empty type annotation; matches anything, and binds to `a`
 
 
@@ -1932,18 +1947,18 @@ resume that execution. Execution continues when the exception is *caught.*
 Grace defines a hierarchy of _kinds_ of exception; each kind of exception
 corresponds to a different kind of exceptional situation.
 All exceptions have the same _type_, that is, they understand the same set of
-requests.  A hierarchy of exception kinds is used to classify exceptions.
+requests.  A hierarchy of *exception kinds* is used to classify exceptions.
 
     type ExceptionKind = Pattern & {
-        parent -> ExceptionKind
+        parent → ExceptionKind
         // answers the ExceptionKind that is the parent of this exception in the
         // hierarchy. The parent of Exception is defined to be Exception. The parent
         // of any other ExceptionKind is the object that was refined to create it.
 
-        refine (name:String) -> ExceptionKind
+        refine (name:String) → ExceptionKind
         // answers a new ExceptionKind object, which is a refinement of self.
 
-        name -> String
+        name → String
         // answers the name given when this ExceptionKind object was created.
 
         raise (message:String)
@@ -1965,10 +1980,12 @@ The `name` of `Exception` is `"Exception"`, and
 the parent of `Exception` is `Exception` itself.
 
 Because `ExceptionKinds` are also `Patterns`, they support the pattern protocol
-(`match`, `&`, and `|`); an `ExceptionKind` object `e` will `match` any exception
-raised from `e'`, and any exception raised from a `refine`ment of `e'`, where `e' == e`,
+(`matches`, `&`, and `|`).
 This means that `ExceptionKinds` can be used as the
 patterns of the catch blocks in a `try(_)catch(_)…finally(_)` construct.
+An `ExceptionKind` object `e` `matches` any exception
+raised from `e'`, and any exception raised by a refinement of `e'`, for all `e' == e`.
+
 
 Grace defines three direct refinements of `Exception`:
 
@@ -1985,20 +2002,20 @@ For example, if you you have a key that may or may not be in a dictionary, you s
 Exception packet objects are generated when an exception is raised.
 
     type ExceptionPacket = type {
-        exception -> ExceptionKind   // the exceptionKind that raised this exception.
-        message -> String            // the message provided when this exception was raised.
+        exception → ExceptionKind   // the exceptionKind that raised this exception.
+        message → String            // the message provided when this exception was raised.
 
-        data -> Object               // the data object associated with this exception
+        data → Object               // the data object associated with this exception
                                      // when it was raised, if there was one. Otherwise,
                                      // the string "no data".
 
-        lineNumber -> Number         // the source-code line of the raise request
+        lineNumber → Number         // the source-code line of the raise request
                                      //  that created this exception.
 
-        moduleName -> String         // the name of the module containing the raise
+        moduleName → String         // the name of the module containing the raise
                                      // request that created this exception.
 
-        backtrace -> List⟦String⟧
+        backtrace → List⟦String⟧
         // a description of the call stack at the time that this exception was raised.
         // backtrace.first is the initial execution environment; backtrace.last is the
         // context that raised the exception.
@@ -2046,11 +2063,11 @@ exception is silently dropped.
     try {
         def f = io.open("data.store", "r")
     } catch {
-        e: NoSuchFile -> print "{e.message}\nFile does not exist."
+        e: NoSuchFile → print "{e.message}\nFile does not exist."
     } catch {
-        e: PermissionError -> print "Permission denied"
+        e: PermissionError → print "Permission denied"
     } catch {
-        _: Exception -> print "Unidentified Error"
+        _: Exception → print "Unidentified Error"
         system.exit(1)
     } finally {
         f.close
@@ -2060,7 +2077,7 @@ A single handler may be defined for more than one kind of exception using the `|
 
     try {
         try_block
-    } case { e:MyError | AnotherError ->
+    } case { e:MyError | AnotherError →
         handler
     }
 
@@ -2111,8 +2128,8 @@ In _standardGrace_, type `Object` includes just the public [Default Methods] dec
 `graceObject`.
 
     type Object = interface {
-        asString -> String                     // a string for use by the client
-        asDebugString -> String                // a string for use by the implementor
+        asString → String                     // a string for use by the client
+        asDebugString → String                // a string for use by the implementor
     }
 
 Notice that `isMe`, and `myIdentityHash`, although present in  [`graceObject`](#default-methods),
@@ -2123,10 +2140,10 @@ are not present in type `Object`, because they are *confidential*.
 In _standardGrace_, type `EqualityObject` adds the family of equality methods to `Object`:
 
     type EqualityObject = Object & interface {
-        ::(o:Object) -> Binding
-        ==(other:Object) -> Boolean
-        ≠(other:Object) -> Boolean
-        hash -> Number
+        ::(o:Object) → Binding
+        ==(other:Object) → Boolean
+        ≠(other:Object) → Boolean
+        hash → Number
     }
 
 ### Type Self
@@ -2156,7 +2173,7 @@ expects an argument of type `A1`, and returns a `Boolean`.
 
 ### Type Unknown
 
-Unknown is not actually a type, although it is treated as a type
+`Unknown` is not actually a type, although it is treated as a type
 by the type checker.  It is similar to the type label "Dynamic" in C#.
 Unknown can be written explicitly as a type annotation; moreover,
 if a declaration is not annotated, then the type of the declared name is
@@ -2168,52 +2185,52 @@ type `Unknown`, and type `Unknown` conforms to all other types.
 
 **Examples**
 
-    var x: Unknown := 5   //who knows what the type is?
-    var x := 5            //same here, but Unknown is implicit
-    x := "five"           //who cares
-    x.gilad               //almost certainly raises NoSuchMethod
+    var x: Unknown := 5   // who knows what the type is?
+    var x := 5            // same here, but Unknown is implicit
+    x := "five"           // who cares
+    x.gilad               // almost certainly raises NoSuchMethod
 
-    method id(x) { x }    //argument and return types both implicitly unknown
-    method id(x: Unknown) -> Unknown { x }  // same thing, explicitly
+    method id(x) { x }    // argument and return types both implicitly unknown
+    method id(x: Unknown) → Unknown { x }  // same thing, explicitly
 
 ### Type Type
 
 All types have type Type, which is defined as
 
     type Type = interface {
-        matches (o:Unknown) -> Boolean
-        & (other:Type) -> Type
-        | (other:Type) -> Type
-        + (other:Type) -> Type
-        :> (other:Type) -> Boolean
-        <: (other:Type) -> Boolean
-        == (other:Type) -> Boolean
-        != (other:Type) -> Boolean
-        hash -> Number
-        asString -> String
-        asDebugString -> String
-        interfaces -> Sequence⟦Interface⟧
+        matches (o:Unknown) → Boolean
+        & (other:Type) → Type
+        | (other:Type) → Type
+        + (other:Type) → Type
+        :> (other:Type) → Boolean
+        <: (other:Type) → Boolean
+        == (other:Type) → Boolean
+        ≠ (other:Type) → Boolean
+        hash → Number
+        asString → String
+        asDebugString → String
+        interfaces → Sequence⟦Interface⟧
 	}
 
 This type captures the idea that a type is a disjunction of interfaces.  The interface literal syntax
 defines a type containing a single interface, so the `interfaces` method of an interface returns a sequence of length 1 containing itself.
 
     type Interface = Type & interface {
-	     methods -> Dictionary⟦String, Signature⟧
+	     methods → Dictionary⟦String, Signature⟧
             // keys are the canonical names of the methods,
             // and values their signatures
-	     types -> Dictionary⟦String, Type⟧
+	     types → Dictionary⟦String, Type⟧
             // keys are the declared names of the types;
             // values objects representing those types
-	     - (other:Interface) -> Interface
+	     - (other:Interface) → Interface
 	 }
 	
 	 type Signature = interface {
-	     name -> String
+	     name → String
             // the canonical name of the method
-	     arguments -> Sequence⟦Type⟧
+	     arguments → Sequence⟦Type⟧
             // the types of the parameters, in order
-	     result -> Type
+	     result → Type
             // the type of the result
 	 }
 	
@@ -2234,10 +2251,10 @@ The various cat objects and class descriptions (see
 conform to this interface:
 
     interface {
-        colour -> Colour
-        name -> String
-        miceEaten -> Number
-        miceEaten:= (n:Number) -> Done
+        colour → Colour
+        name → String
+        miceEaten → Number
+        miceEaten:= (n:Number) → Done
     }
 
 Note that the public methods of `Object` are implicitly included in the type
@@ -2263,14 +2280,14 @@ Type declarations may not be overridden.
 **Examples**
 
 	type MyCatType = interface {  // the word interface may be omitted
-		color -> Colour
-		name -> String
+		color → Colour
+		name → String
 	}
 	// I care only about names and colours
 	
 	type MyParametricType⟦A,B⟧ =
 		interface {
-			at (_:A) put (_:B) -> Boolean
+			at (_:A) put (_:B) → Boolean
 			cleanup(_:B)
 		} where A <: Hashable,  B <: DisposableReference
         
@@ -2301,8 +2318,8 @@ If `A` and `B` are interfaces, then `B <: A` if and only if, for
 every method `m` in `A`, there is a corresponding method `m` (with the same
 canonical name) in `B` such that
 
--   If the method `m` in `A` has signature `m(P1, ... ,Pk)n(Pk+1, ... ,Pn)... -> R`, and
-    `m` in B has signature `m(Q1,...,Qk)n(Qk+1,...,Qn)... -> S`, then
+-   If the method `m` in `A` has signature `m(P1, ... ,Pk)n(Pk+1, ... ,Pn)... → R`, and
+    `m` in B has signature `m(Q1,...,Qk)n(Qk+1,...,Qn)... → S`, then
 
     -   parameter types must be contravariant: `Pi <: Qi`
 
@@ -2350,9 +2367,9 @@ T <: (S | T)
 
 To illustrate the limitations on conformance of variant types, suppose
 
-    type S = {m: A -> B, n: C -> D}
-    type T = {m: A -> B, k: E -> F}
-    type U = {m: A -> B}
+    type S = {m: A → B, n: C → D}
+    type T = {m: A → B, k: E → F}
+    type U = {m: A → B}
 
 Then `U` fails to conform to `S | T` even though `U` contains all
 methods contained in both `S` and `T`.
@@ -2372,11 +2389,11 @@ types with new operations, and as bounds on `where` clauses.
 
 
     type List⟦T⟧ = Sequence⟦T⟧ & interface {
-        add(_:T) -> List⟦T⟧
-        remove(_:T) -> List⟦T⟧
+        add(_:T) → List⟦T⟧
+        remove(_:T) → List⟦T⟧
     }
 
-    class happy⟦T⟧(param: T) -> Done
+    class happy⟦T⟧(param: T) → Done
        where T <: (Comparable⟦T⟧ & Printable & Happyable) {
                ...
     }
@@ -2421,16 +2438,16 @@ When implementing the static type check, types specified as `Unknown` will alway
 conform.  So, if a variable is annotated with type
 ```
     interface {
-        add(Number) -> Collection⟦Number⟧
-        removeLast -> Number
+        add(Number) → Collection⟦Number⟧
+        removeLast → Number
     }
 ```
 an object with type
 ```
     interface {
-        add(Unknown) -> Collection⟦Unknown⟧
-        removeLast -> Unknown
-        size -> Number
+        add(Unknown) → Collection⟦Unknown⟧
+        removeLast → Unknown
+        size → Number
     }
 ```
 will pass the type test.  Of course, the presence of `Unknown` in the type
@@ -2467,7 +2484,7 @@ This treatment is types not entirely satisfactory, and is subject to review and 
 
     assert (B <: A) description "B does not conform to A"
     assert (B <: interface { foo(_) } ) description "B has no foo(_) method"
-    assert (B <: interface {foo(_:C) -> D} ) description "B has no foo(_) method"
+    assert (B <: interface {foo(_:C) → D} ) description "B has no foo(_) method"
     assert (B == (A | C)) description "B is neither an A or a C"
 
 # Modules and Dialects
