@@ -1170,7 +1170,7 @@ sorted list:
 method merge ⟦T⟧(cs: Collection⟦T⟧) and (ds: Collection⟦T⟧) -> List⟦T⟧ { 
     def cIter = cs.iterator
     def dIter = ds.iterator
-    def result = emptyList
+    def result = list.empty
 
     if (cIter.hasNext.not) then { return result.addAll(ds) } 
     if (dIter.hasNext.not) then { return result.addAll(cs) } 
