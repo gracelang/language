@@ -46,5 +46,5 @@ string representation of canvas
 ### Definitions
 - `theContext -> `[`Foreign`](/grace-documentation/Foreign)  
 - `var theGraphics`  
-list of all objects on canvas (hidden or not) emptyList
+list of all objects on canvas (hidden or not)
 - `var redraw -> `[`Boolean`]({{site.baseurl}}/404)  

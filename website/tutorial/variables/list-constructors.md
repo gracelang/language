@@ -8,8 +8,8 @@ folder: tutorial
 ---
 
 The simplest constructors are those that you have already seen:
-the methods `emptyList` and `list` in _standardGrace_, and the methods
-`emptyList`, `list(_)`, `list(_,_)`, `list(_,_,_)`, etc. in _beginningStudent_.
+the methods `list.empty` and `list.with(_)` in _standardGrace_, and the methods
+`list`, `list(_)`, `list(_,_)`, `list(_,_,_)`, etc. in _beginningStudent_.
 These methods create lists containing the given elements in the given order.
 
 More interesting are methods on lists that construct other lists.

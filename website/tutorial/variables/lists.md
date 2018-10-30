@@ -36,14 +36,14 @@ and strings, but the elements can be anything — even other lists.
 Also note that you can put _no_ elements in a list, creating an empty list.
 
 ```
-def empty = list [ ]
+def empty = list.withAll [ ]
 ```
 
 or, in _beginningStudent_
 
 ```
 dialect "beginningStudent"
-def empty = emptyList
+def empty = list.empty
 ```
 
 ## Lists are Mutable
