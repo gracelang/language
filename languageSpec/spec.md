@@ -124,20 +124,38 @@ unit.
 
 **Example**
 
-// comment, to end of line
+    // comment, to end of line
+
+
+## Newlines, Tabs and Control Characters
+
+Newline in Grace programs can be represented by the Unicode line feed (LF) character, by the
+Unicode carriage return
+(CR) character, or by the Unicode line separator
+(U+2028) character; a line feed that immediately
+follows a carriage return is ignored.
+In the grammar, `<newline>` denotes a newline.
+
+Tab characters (U+0009) and all other non-printing control characters are syntax errors,
+even in a string literal. Escape sequences are provided to denote
+control characters in strings; see [the Table of String Escapes](#strings).
 
 ## Layout
 
+Statements are separated by one or more [newlines](#newlines-tabs-and-control-characters);
+it is also permissible, but uncommon, to separate statements by semicolons.
+
+**Grammar**
+```
+RULE Ss
+```
+
 Grace uses braces to indicate the boundaries of code blocks.
 Indentation (the number of leading spaces on a line) must be consistent with
-these boundaries: indentation must increase after a left brace, and return to the prior level with, or after, the matching right brace.
-
-Statements are separated by one or more line breaks;
-it is also permissible, but uncommon, to separate statements by semicolons.
+these boundaries: indentation must increase after a left brace, and return to the prior level with (or after) the matching right brace.
 
 Here are the precise rules that govern layout.
 
-  1. Tab characters (U+0009) are not allowed in Grace code. 
   1. A line containing just spaces, or spaces and a comment, is ignored as far as layout is concerned.
   1. All changes in indentation must be by *two* or more spaces; a change of a single space is treated as an error.
   1. If a line contains an unmatched left brace character, that line is said to open a code block. All lines up to the matching right brace comprise the body of the code block, and must be indented more than the line containing the left brace.
@@ -148,16 +166,16 @@ Here are the precise rules that govern layout.
   1. Indentation may be reduced *only* when ending a code block, or after the end of a continued line.  The indentation must return to that of the line that began the code block, or the continued line, respectively.
 
 
-**Example code with punctuation**
+**Example code** with punctuation
 
     def x =
        mumble "3"
        fratz 7;
     while {stream.hasNext} do {
-       print(stream.read);
+       print(stream.read)
     };
 
-**Example code without punctuation**
+**Example code** without punctuation
 
     def x =
        mumble "3"
@@ -169,7 +187,7 @@ Here are the precise rules that govern layout.
 This example defines `x` to be the result of the single request `mumble ("3") fratz (7)`.
 Because the second and third lines are indented more than the first, they continue that line.
 
-**Example of `if(_)then(_)else(_)`**
+**Example** of `if(_)then(_)else(_)`
 
     if (condition) then {
         doSomething
@@ -179,7 +197,7 @@ Because the second and third lines are indented more than the first, they contin
     
 The body of the block that comprises the `then` action is indented *more than* the line that contains the opening `{`; the closing `}` is at *the same* indentation as the the line that contains the opening `{`.  Because there is no line break after the first `}`, the `else(_)` does not start a separate statement.
 
-**Alternative Layout for `if(_)then(_)else(_)`**
+**Alternative Layout** for `if(_)then(_)else(_)`
 
     if (condition) 
         then { doSomething } 
@@ -190,7 +208,7 @@ Here the whole `if(_)then(_)else(_)` is on a single logical line;
 the indentation indicates that the `then` and `else` lines are a continuation of the `if` line.
 This format is appropriate only when the code blocks are small.
 
-**Bad Layout for `if(_)then(_)else(_)`**
+**Bad Layout** for `if(_)then(_)else(_)`
 
     if (condition) 
     then { doSomething } 
@@ -218,7 +236,10 @@ and the following ASCII operator characters
 
 `! ? @ # % ^ & | ~ = + - * / \ > < : . ` $\$\,$
 
-that are not reserved.  In the grammar, <operator> represents an operator.
+that are not reserved tokens.  
+So, for example, `+`, `++` and `..` are valid
+operators, but `.` is not, because it is reserved.
+In the grammar, `<operator>` denotes an operator.
 
 ## Reserved Tokens
 
@@ -227,20 +248,6 @@ Grace has the following reserved tokens:
     alias as class def dialect exclude import inherit interface is method object
     once outer prefix return self Self trait type use var where
     . ... := = ; { } [ ] ( ) : -> $\rightarrow$ [[  ]] $\llbracket$ $\rrbracket$ //
-
-
-## Newlines, Tabs and Control Characters
-
-Newline in Grace programs can be represented by the Unicode line feed (LF) character, by the
-Unicode carriage return
-(CR) character, or by the Unicode line separator
-(U+2028) character; a line feed that immediately
-follows a carriage return is ignored.
-In the grammar, `<newline>` denotes a newline.
-
-Tabs and all other non-printing control characters are syntax errors,
-even in a string literal. Escape sequences are provided to denote
-control characters in strings; see [the Table of String Escapes](#strings).
 
 # Built-in Objects
 
@@ -320,8 +327,8 @@ prefix `-` operator on a positive number.
 ## Booleans
 
 The predefined constants `true` and `false` denote values of Grace's
-`Boolean` type. Boolean operators are written using `&&` for and, `||`
-for or, and prefix `!` for not.
+`Boolean` type. Boolean operators are written using `&&` for "and", `||`
+for "or", and prefix `!` for "not".
 
 **Grammar**
 ```
@@ -389,7 +396,7 @@ The value of a String Constructor is obtained by first evaluating any
 expressions inside braces, requesting `asString` of the resulting object,
 and inserting the resulting string into the string literal in place of the
 brace expression.
-In the grammar, a `<stringSegment>` represents a sequence of characters that does
+In the grammar, a `<stringSegment>` denotes a sequence of characters that does
 not include unescaped `"`, newline, or `{`;
 it may contain the [string escapes](#string-literals).
 
@@ -403,7 +410,7 @@ it may contain the [string escapes](#string-literals).
 String literals can also be written between single guillemet quotation marks,
 ‹thus›.  Between the `‹` and the `›`, characters from the input become characters of
 the string without interpretation, and without any escapes (not even for `›`).
-In the grammar, `<uninterpretedString>` is a sequence of _any_ characters except `›`.
+In the grammar, `<uninterpretedString>` denotes a sequence of _any_ characters except `›`.
 
 **Example**
 
@@ -422,7 +429,7 @@ RULE StringLiteral
 
 ## Sequence Constructors
 
-A Sequence Constructor is a comma separated list of expressions surrounded by `[` and `]`.
+A Sequence Constructor is a comma-separated list of expressions surrounded by `[` and `]`.
 
 **Examples**
 
@@ -437,7 +444,7 @@ Sequences are immutable; they are most frequently used to initialize other  coll
 **Examples**
 
 
-    set [ 1, 2, 4, 5 ]           //make a set
+    set.withAll [ 1, 2, 4, 5 ]           //make a set
     [ "a", "b", "c" ]            //make a sequence
     ["a", "e", "i", "o", "u"].do { x -> testletter(x) }
     myWindow.addWidgets [
@@ -502,8 +509,7 @@ might be implemented as a method with a block parameter
 Here is another example:
 
     var sum := 0
-    def summingBlock: Function1⟦Number, Number⟧ =
-        { i: Number ->  sum := sum + i }
+    def summingBlock: Function1⟦Number, Number⟧ = { i:Number → sum := sum + i }
     summingBlock.apply(4)       // sum now 4
     summingBlock.apply(32)      // sum now 36
 
@@ -702,12 +708,12 @@ In the third example, the canonical name of the method is `max(_,_)`.
  of operator symbols
 
 ```
-    method + (other:Point) -> Point {
-        (x + other.x) @ (y + other.y)
-    }
+method + (other:Point) -> Point {
+    (x + other.x) @ (y + other.y)
+}
 
-    method prefix- -> Point
-        { 0 - self }
+method prefix- -> Point
+    { 0 - self }
 ```
 
 As a consequence of the above rules, methods `max(a, b, c)` and
@@ -752,7 +758,7 @@ canonical name of the method.
 ### Once Methods
 
 A **`once method`** is declared by preceding a method declaration with the
-reserved word `once`.  Such a method executes to completetion at most once:
+reserved word `once`.  Such a method executes to completion at most once:
 the first time that its object receives the corresponding request.
 The return value is memoised, and subsequent requests of the method
 will return the memoised value without re-executing the method.
@@ -787,28 +793,45 @@ def o = object {
 
 Any declaration, and any object constructor, may have a
 comma-separated list of annotations following the keyword **`is`**
-before its body or initialiser. Grace defines the following core
+before its body or initialiser. 
+
+Some annotations, like `required`, `abstract` and `annotation`, indicate that the
+declaration is a marker declaration, that is, a declaration without an initialiser 
+or a method body.  
+
+Grace defines the following core
 annotations:
 
 | Annotation | Semantics |
 |:-----      |:--------------------------------------------|
 | `confidential` | method may be requested only on self or outer — see [Encapsulation](#encapsulation) |
-| `manifest` | method must return a manifest object - see [Manifest Expressions](#manifest-expressions) |
+| `abstract` | a marker declaration for a method that must be provided by a reused component |
+| `required` | a marker declaration for a method that is assumed to exist by the current class, but is not provided |
 | `overrides` | method must override another method - see [Overriding Methods] |
 | `public` | method may be requested from anywhere |
 | |  field can be read and written from anywhere - see [Encapsulation](#encapsulation) |
 | `readable`  | field may be read from anywhere - see [Encapsulation](#encapsulation) |
 | `writeable` | variable field may be written from anywhere - see [Encapsulation](#encapsulation) |
+| `annotation` | a def or method will be used as an annotation |
 
-Additional annotations may be defined by dialect or libraries.
+Additional annotations can be defined by marker declarations
+annotated with `is annotation`
+
+Annotations are identifiers, i.e., static labels, not runtime values. 
+For example, a `def` declaration is public because it is annotated with the identifier `public`.
+It is not possible to make another identifier, say `secret`, mean the same thing as `public`
+by writing
+
+    def secret is annotation = public
+
 
 **Examples**
 
-
     var x is readable, writeable := 3
-    def y: Number is public
-    method foo is confidential  { }
-    method id⟦T⟧ is required  { }
+    def maxSpeed:Number is public = 80
+    method foo is confidential  { "the method body" }
+    method id⟦T⟧ is required            // no method body
+    def annotation is annotation       // no initialiser
 
 **Grammar**
 ```
@@ -820,8 +843,8 @@ RULE AnnotationArgList
 ## Encapsulation
 
 Grace has different default encapsulation rules for methods, types, and
-fields. The defaults can be changed by explicit annotations. The details
-are as follows.
+fields; the defaults can be changed by explicit annotations. 
+Grace defines two levels of visibility: [public](#public) and [confidential](#confidential).
 
 ### Public
 
@@ -835,28 +858,31 @@ only on `self`, or on an `outer`  sequence, or in an implicit request (which mus
 Consequently, if _m_ is
 defined in the object, class, or trait _d_, it
 is accessible to _d_, to objects that reuse (i.e., `inherit` or `use`) _d_,
-and to objects lexically enclosed by either _d_ itself, or objects that reuse _d_.
+and to objects lexically enclosed either by _d_ itself, or by objects that reuse _d_.
 
 ### Methods, Classes, Traits and Types
 
-By default, methods (which category includes classes and traits), and types, are public.
+By default, methods (which include classes and traits), and types, are public.
 If a method or type is annotated `is confidential`, it is confidential.
 
 ### Fields
 
 Variable (`var`) and constant (`def`) declarations immediately
 inside an object constructor create *fields* in that object.
+By default, fields are *confidential*.
 
 A field declared as `var x` can be read using the request `x` and
 assigned to using the assignment request `x:=(...)`.
 A field declared as `def y` can be read using the request `y`, and
-cannot be assigned. By default, fields are *confidential*.
+cannot be assigned. 
 
 The default visibility can be changed using annotations. The annotation
-`readable` can be applied to a `def` or `var` declaration, and makes the
-accessor request available to any object. The annotation `writable` can
-be applied to a `var` declaration, and makes the assignment request
-available to any object. It is also possible to annotate a field
+`readable`, applied to a `def` or `var` declaration, makes the
+accessor request available to any object. The annotation `writable`,
+applied to a `var` declaration, makes the assignment request
+available to any object. 
+
+It is also possible to annotate a field
 declaration as `public`. In the case of a `def`, `public` is equivalent
 to (and preferred over) `readable`. In the case of a `var`, `public` is
 equivalent to `readable, writable`.
@@ -928,9 +954,9 @@ experience before confirming the design.
 ## Objects
 
 Object constructors are expressions that evaluate to an object with the
-given attributes. Each time an object constructor is executed, a fresh object
+attributes defined in the constructor. Each time an object constructor is executed, a fresh object
 is created. In addition to declarations of types, fields and methods, object
-constructors can also contain expressions (executable code at the top level),
+constructors can also contain expressions (that is, executable code at the top level),
 which are executed as a
 side-effect of evaluating the object constructor. All of the declared
 attributes of the object are in scope throughout the object constructor.
@@ -954,7 +980,7 @@ RULE ObjectItem
 
 Like everything in Grace, object constructors are lexically scoped.
 
-A name can be bound to an object constructor, like this:
+A name can be bound to the object created by object constructor, like this:
 
     def unnamedCat = object {
          def colour:Colour = colours.tabby
@@ -1605,11 +1631,9 @@ RULE AssignmentRequest
 
 ## Binary Operator Requests
 
-Binary operators are methods whose names comprise one or more operator
-characters, provided that the operator is not reserved by the
-Grace language. Binary operators have a receiver and one argument; the
-receiver must be explicit. So, for example, `+`, `++` and `..` are valid
-operator symbols, but `.` is not, because it is reserved.
+Binary operators are methods whose names are `<operator>`s
+Binary operators have a receiver and one argument; the
+receiver must be explicit.
 
 Most Grace operators have the same precedence: it is a syntax error for
 two distinct operator symbols to appear in an expression without
