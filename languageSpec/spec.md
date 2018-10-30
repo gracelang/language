@@ -825,7 +825,7 @@ annotations:
 | |  field can be read and written from anywhere - see [Encapsulation](#encapsulation) |
 | `readable`  | field may be read from anywhere - see [Encapsulation](#encapsulation) |
 | `writeable` | variable field may be written from anywhere - see [Encapsulation](#encapsulation) |
-| `annotation` | a def or method will be used as an annotation |
+| `annotation` | a marker declaration for a def or method that will be used as an annotation |
 
 Additional annotations can be defined by marker declarations
 annotated with `is annotation`
