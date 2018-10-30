@@ -6,7 +6,7 @@ LATEXOPTS = --listings --template=grace.latex
 
 all: $(PDF_SPECS) $(HTML_SPECS) spec.kramdown
 
-spec_with_grammar.md: spec.md grammar.grace grammarator.perl
+spec_with_grammar.md: spec.md graceGrammar.txt grammarator.perl Makefile
 	perl grammarator.perl $<  > $@
 
 $(PDF_SPECS): %.pdf: %.md Makefile grace.sty grace.latex
