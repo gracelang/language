@@ -144,6 +144,7 @@ control characters in strings; see [the Table of String Escapes](#strings).
 
 Statements are separated by one or more [newlines](#newlines-tabs-and-control-characters);
 it is also permissible, but uncommon, to separate statements by semicolons.
+In the grammar, the non-terminal `Ss` is used to represent a _statement separator_.
 
 **Grammar**
 ```
