@@ -12,6 +12,7 @@ $endif$
 \usepackage{stmaryrd}
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
+\usepackage[text={6.5in,8.8in},top=1.2in]{geometry}
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
