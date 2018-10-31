@@ -48,7 +48,7 @@ enclosed in braces. The conditional can also be used as an expression:
 ```
 
 The above two examples are equivalent. Remember that layout matters; the
-whole conditional should be written on one line if it fits, but
+whole conditional can be written on one line if it fits, but
 otherwise should be broken across lines as shown.
 
 The `else` part of the conditional statement is optional;
@@ -177,38 +177,37 @@ Grace supports built-in objects with types `Object`,
 `Number`, `Boolean`, and
 `String.`
 
-## Object
+## Object and EqualityObject
 
-All Grace objects (except `done`) understand the methods in type
+All Grace objects understand the methods in type
 `Object`. These methods will often be omitted when other types are
 described.
 
 ``` 
 
-type Object = {
+type Object = interface {
+    asString -> String
+        // a string describing self
 
-   != (other: Object) -> Boolean
-   // the inverse of ==. There is a unicode alias for this operator.
-
-   hash -> Number
-   // the hash code of self, a Number in the range 0 .. 2^32
-
-   match (other: Object) -> SucccessfulMatch | FailedMatch
-   // returns a SuccessfulMatch if self "matches" other
-   // returns FailedMatch otherwise.
-   // The exact meaning of "matches" depends on self.
-
-   asString -> String
-   // a string describing self
-
-   asDebugString -> String
-   // a string describing the internals of self
-
-   :: (other:Object) -> Binding
-   // a Binding object with self as key and other as value.
+    asDebugString -> String
+        // a string describing the internals of self
 }
 ```
 
+Objects that support an equality test have additional methods
+
+```
+type EqualityObject = Object & interface { 
+    ==(other:Object) -> Boolean
+        // true if I consider other to be equal to me
+    ≠(other:Object) -> Boolean
+        // the inverse of ==
+    hash -> Number
+        // returns a hash code such that (a == b) implies (a.hash == b.hash)
+    ::(v:Object) -> Binding
+        // answers a binding with self as the key and o as the value
+}
+```
 
 ## Number
 
@@ -223,7 +222,7 @@ larger than any finite number, as well as conventional numerals like
 `27`.
 
 ``` 
-type Number = {
+type Number = interface {
 
     + (other: Number) -> Number
     //  sum of self and other
@@ -368,9 +367,9 @@ always return a new string; they never change the receiver.
 
 ``` 
 
-type String =  {
+type String =  interface {
     * (n: Number) -> String
-    // returns a string that contains n repetitions of self, so "abc" * 3 = "abcabcabc"
+    // returns a string that contains n repetitions of self, so "Abc" * 3 = "AbcAbcAbc"
 
     ++(other: Object) -> String
     // returns a string that is the concatenation of self and other.asString
@@ -536,6 +535,12 @@ type String =  {
     quoted -> String
     // returns a quoted version of self, with internal characters like " and \ and newline escaped, 
     // but without surrounding quotes.
+
+    >>(target:Sink⟦String⟧) -> Collection
+    // returns target << self
+
+    <<(source:Enumerable⟦String⟧) -> String
+    // returns a string containing me, followed in order by the elements of source.
 }
 ```
 
@@ -565,11 +570,11 @@ This means that `&&` and `||` can be used as “short circuit” operators, also
 if necessary.
 
 ``` 
-type Predicate0 = { apply -> Boolean }
+type Predicate0 = interface { apply -> Boolean }
 type PredicateOrBoolean = Predicate0 | Boolean 
 ```
 
-## Blocks
+## Blocks and Functions
 
 Blocks implement anonymous functions that take zero or more arguments and
 return one result.  A family of function types describe
@@ -581,9 +586,11 @@ type Function0⟦R⟧ = type {
 }
 type Function1⟦T,R⟧ = type {
     apply(a:T) -> R
+    matches(a:Object) -> Boolean
 }
 type Function2⟦S,T,R⟧ = type {
     apply(a:S, b:T) -> R
+    matches(a:Object, b:Object) -> Boolean
 }
 ```
 
@@ -644,7 +651,7 @@ A binding is an immutable pair comprising a `key` and a
 `::` operator, as in `k::v`, or by
 requesting `binding.key(k) value(v)`.
 
-    type Binding⟦K, T⟧ = {
+    type Binding⟦K, T⟧ = interface {
         key -> K
         // returns the key
         value -> T
@@ -713,29 +720,23 @@ type Collection⟦T⟧ = type {
     // returns a new collection containing only those elements of self for which
     // condition holds.  The result is ordered if self is ordered.
     
-    ++(other: Collection⟦T⟧) -> Collection⟦T⟧
+    ++(other:Enumerable⟦T⟧) -> Collection⟦T⟧
     // returns a new object whose elements include those of self and those of other.
+
+    >>(target:Sink⟦T⟧) -> Collection⟦T⟧
+    // sends my values into target
+
+    <<(source:Enumerable⟦T⟧) -> Collection⟦T⟧
+    // appends the values in source to my values.
+
 }
 ```
-
-## Collection Constructors
-
-The Grace language uses brackets as a syntax for constructing `Collection`
-objects. `[2, 3, 4]` is a collection containing the three numbers `2`, `3`
-and `4`. `[ ]` constructs the empty collection.
-
-Because collection objects are not indexable, they can’t be
-used like arrays or lists. They are primarily intended for initializing
-more capable collections, as in `list [2, 3, 4]`, which creates a list,
-or `set ["red", "green", "yellow"]`, which creates a set. Notice that a
-space must separate the name of the method from the collection literal.
-
 
 ## Enumerables
 
 Additional methods are available in the type
 `Enumerable`; an `Enumerable` is like a
-`Sequence`, but where the elements must be *enumerated*
+`Sequence`, but allow the elements to be *enumerated*
 one by one, in order, using a computational process, rather than being
 stored explicitly. For this reason, operations that require access to
 all of the elements at one time, like sorting, are not supported directly.
@@ -749,7 +750,7 @@ is that `Enumerable`s have a natural order, so lists are
 `Collection`s.
 
 ```
-type Enumerable⟦T⟧ = Collection⟦T⟧ & type {
+type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
 
     values -> Enumerable⟦T⟧
     // an enumeration of my values: the elements in the case of sequence or list,
@@ -784,7 +785,7 @@ explicitly, using a request such as `sequence [1, 3, 5, 7]`, or as
 ranges such as `1..10`.
 
 ```
-type Sequence⟦T⟧ = Enumerable⟦T⟧ & type {
+type Sequence⟦T⟧ = Enumerable⟦T⟧ & interface {
 
     at(n:Number) -> T
     // returns my element at index n (starting from 1), provided ix is integral and l ≤ n ≤  size
@@ -827,6 +828,18 @@ type Sequence⟦T⟧ = Enumerable⟦T⟧ & type {
 }
 ```
 
+## Sequence Constructors
+
+The Grace language uses brackets as a syntax for constructing `Sequence`
+objects. `[2, 3, 4]` is a sequence containing the three numbers `2`, `3`
+and `4`; `[ ]` constructs the empty sequence.
+
+Sequence objects are immutable, so they can’t be
+used like arrays or lists. They can be used for initializing
+mutable collections, as in `list.withAll [2, 3, 4]`, which creates a list,
+or `set.withAll ["red", "green", "yellow"]`, which creates a set.
+
+
 ## Ranges
 
 Ranges are sequences of consecutive integers. They behave exactly like
@@ -849,6 +862,7 @@ The `..` operation on Numbers can also be
 used to create ranges. Thus, `3..9` is the same as
 `range.from 3 to 9`, and `(3..9).reversed`
 is the same as `range.from 9 downTo 3`.
+Note that 9..3 is an empty range.
 
 ## Lists
 
@@ -856,12 +870,12 @@ The type `List⟦T⟧` describes objects that are mutable
 lists of elements that have type `T`. Like sets and
 sequences, list objects can be constructed by requesting the
 `list` method, as in
-`list⟦T⟧ [ ]`, `list⟦T⟧ [a, b, c]`, or
-`list (existingCollection)`.
+`list⟦T⟧.withAll [ ]`, `list⟦T⟧.withAll [a, b, c]`, or
+`list.withAll (existingCollection)`.
 
 
 ``` 
-type List⟦T⟧ = Sequence⟦T⟧ & type {
+type List⟦T⟧ = Sequence⟦T⟧ & interface {
     
     at(n: Number) put(new:T) -> List⟦T⟧
     // updates self so that my element at index n is new.  Returns self.
@@ -942,7 +956,7 @@ A `Set` is an unordered collections of elements, without duplicates. The
 eliminate duplicates; it must be symmetric.
 
 ```
-type Set⟦T⟧ = Collection⟦T⟧ & type {
+type Set⟦T⟧ = Collection⟦T⟧ & interface {
     size -> Number
     // the number of elements in self.
     
@@ -1005,16 +1019,16 @@ type Set⟦T⟧ = Collection⟦T⟧ & type {
 
 ## Dictionary
 
-The type `Dictionary⟦K, T⟧` describes an object that is a mappings from
+The type `Dictionary⟦K, T⟧` describes an object that is a mapping from
 *keys* of type `K` to *values* of type `T`. Like sets and sequences,
 dictionary objects can be constructed using the class `dictionary`, but
-the argument to `dictionary` must be of type `Collection⟦Binding⟧`. This
+the argument to `dictionary.withAll` must be of type `Collection⟦Binding⟧`. This
 means that each element of the argument must have methods `key` and
 `value`. Bindings can be conveniently created using the infix `::`
-operator, as in `dictionary⟦K, T⟧ [k::v, m::w, n::x, ...]`.
+operator, as in `dictionary⟦K, T⟧.withAll [k::v, m::w, n::x, ...]`.
 
 ```
-type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
+type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
     size -> Number
     // the number of key::value bindings in self
 
@@ -1057,7 +1071,7 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     values -> Collection⟦T⟧
     // returns my values as a lazy sequence in arbitrary order
     
-    bindings -> Collection⟦ Binding⟦K, T⟧ ⟧
+    bindings -> Enumerable⟦ Binding⟦K, T⟧ ⟧
     // returns my bindings as a lazy sequence
 
     keysAndValuesDo(action:Function2⟦K, T, Object⟧ ) -> Done
@@ -1069,6 +1083,9 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     valuesDo(action:Function2⟦T, Object⟧) -> Done
     do(action:Function2⟦T, Object⟧) -> Done
     // applies action, in arbitrary order, to each of my values.
+
+    bindingsDo(action:Function2⟦T, Object⟧) -> Done
+    // applies action, in arbitrary order, to each of my bindings.
 
     copy -> Self
     // returns a new dictionary that is a (shallow) copy of self
@@ -1083,6 +1100,13 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & type {
     -- (other:Dictionary⟦K, T⟧) -> Dictionary⟦K, T⟧
     // returns a new dictionary that contains all of my entries except 
     // for those whose keys are in other
+
+    >> (target:Sink⟦Binding⟦K, T⟧ ⟧
+    // sends my bindings into target
+
+    << (source:Enumerable⟦Binding⟦K, T⟧ ⟧)
+    // adds the bindings in source to my bindings, overriding values with common keys.
+    // Similar to ++(_), except that source need not be a Dictionary.
 }
 ```
 
@@ -1231,5 +1255,32 @@ type Array⟦T⟧ =  {
 }
 ```
 
-[^1]: It is a limitation of *minigrace* that expressions containing
-    {braces} cannot be interpolated into strings.
+## Pipelines
+
+When working with collections, it is often convenient to use the pipeline operator
+`>>`, because this allows the operations to be written in the order that they will be performed.
+For example, 
+
+    list.withAll((1..10).filter{ each -> each.isEven })
+
+constructs the range `1..10`, removes the elememnts that are not even, and puts 
+the result into a list.  This sequence is revealed more clearly using a pipeline:
+
+    (1..10).filter{ each -> each.isEven } >> list
+
+In general, the argument to `>>` can be any `Sink`, where
+
+```
+type Sink⟦T⟧ = interface {
+    <<(source:Enumerable⟦T⟧) -> Collection⟦T⟧
+```
+
+The `Sink` interface is implemented by `CollectionFactory`, and by `Collection`.
+When the argument to `>>` is a factory like `list` or `set`, the result is a new
+collection of the appropriate kind, containing the elements of the receiver.
+When the argument to `>>` is an existing collection, the elements of the receiver 
+will be added to it (if it is mutable), or a new collection containing the 
+concatenation will be constructed (if it is imutable). The approriate behaviour is
+obtained in the implementation by requesting `<<` on the argument.
+
+
