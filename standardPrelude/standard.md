@@ -731,6 +731,21 @@ type Collection⟦T⟧ = type {
 
 }
 ```
+## Creating Collections
+
+Collections can be created using objects with the `CollectionFactory` interface:
+```
+type CollectionFactory⟦T⟧ = interface {
+    empty -> Collection⟦T⟧
+        // an empty collection
+    with(element:T) -> Collection⟦T⟧
+        // a collection containing a single element
+    withAll(elements:Collection⟦T⟧) -> Collection⟦T⟧
+        // a collection containing elements
+}
+```
+The `list⟦T⟧`, set⟦T⟧, and sequence⟦T⟧ all support this interface; 
+`dictionary` supports a very simular interface [`DictionaryFactory`](#creating-dictionaries)
 
 ## Enumerables
 
@@ -1020,12 +1035,34 @@ type Set⟦T⟧ = Collection⟦T⟧ & interface {
 ## Dictionary
 
 The type `Dictionary⟦K, T⟧` describes an object that is a mapping from
-*keys* of type `K` to *values* of type `T`. Like sets and sequences,
+*keys* of type `K` to *values* of type `T`. 
+
+### Creating Dictionaries
+
+Like sets and sequences,
 dictionary objects can be constructed using the class `dictionary`, but
 the argument to `dictionary.withAll` must be of type `Collection⟦Binding⟧`. This
 means that each element of the argument must have methods `key` and
 `value`. Bindings can be conveniently created using the infix `::`
 operator, as in `dictionary⟦K, T⟧.withAll [k::v, m::w, n::x, ...]`.
+
+The object `dictionary⟦K,T⟧` supports the `DictionaryFactory` interface:
+```
+type DictionaryFactory⟦K,T⟧ = interface {
+    empty -> Dictionary⟦K,T⟧
+    // an empty dictionary
+
+    with(b:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
+    // a dictionary containing single mapping from b.key to b.value
+
+    withAll(bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
+    // a dictionary containing a mapping for each binding in bs
+}
+```
+`DictionaryFactory` has the same three methods as `CollectionFactory`, but with 
+different argument and result types.
+
+### Dictionary Methods
 
 ```
 type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
@@ -1106,7 +1143,7 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
 
     << (source:Enumerable⟦Binding⟦K, T⟧ ⟧)
     // adds the bindings in source to my bindings, overriding values with common keys.
-    // Similar to ++(_), except that source need not be a Dictionary.
+    // Similar to ++(_), except that source is not a Dictionary.
 }
 ```
 
@@ -1273,6 +1310,7 @@ In general, the argument to `>>` can be any `Sink`, where
 ```
 type Sink⟦T⟧ = interface {
     <<(source:Enumerable⟦T⟧) -> Collection⟦T⟧
+}
 ```
 
 The `Sink` interface is implemented by `CollectionFactory`, and by `Collection`.
