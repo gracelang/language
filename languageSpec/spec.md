@@ -768,16 +768,16 @@ canonical name of the method.
 
 ### Once Methods
 
-A **`once method`** is declared by preceding a method declaration with the
+A **`once method`** is declared by prefixing a method declaration with the
 reserved word `once`.  Such a method executes to completion at most once:
 the first time that its object receives the corresponding request.
 The return value is memoised, and subsequent requests of the method
 will return the memoised value without re-executing the method.
-Once methods may not have parameters.
+Currently, once methods may not have more than one parameter.
 
 If a once method does _not_ return a value, e.g., because it raises an exception
 on its first execution,
-then no value is memoised and execution of the method will start a again time if it
+then no value is memoised and execution of the method will start again if it
 is requested anew.
 This process will repeat until the once method returns normally, at which point
 the return value will be memoised, and subsequent executions will return the memoised value.
@@ -791,7 +791,7 @@ used during initialization, and for a group of interdependent values, because th
 programmer need not worry about the initialization order.
 Moreover, unlike a `def`, a `once method` is a method, and can appear in a trait.
 
-**Example**
+**Examples**
 
 ```
 def o = object {
@@ -800,6 +800,13 @@ def o = object {
         nums.fold {a, b → a + b} startingWith 0
     }
 }
+
+once method fib(n) {
+    // computes the nth Fibonacci number
+    if (n ≤ 2) then { 1 }
+               else { fib(n-1) + fib(n-2) }
+}
+
 ```
 
 ## Annotations
