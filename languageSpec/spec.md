@@ -422,7 +422,7 @@ In the grammar, `<uninterpretedString>` denotes a sequence of _any_ characters e
     ›
     
 **Grammar**
- ```
+```
 RULE String
 RULE StringConstructor
 RULE StringLiteral
