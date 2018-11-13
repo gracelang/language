@@ -161,7 +161,7 @@ non-exhaustive match exception.
 Grace's `valueOf` allows a block with 
 local declarations and a statement list where an 
 expression is required.  `valueOf` takes a block
-as argument, evaluates it, anf returns the result.
+as argument, evaluates it, and returns the result.
 
 ```
 def constant = valueOf {
