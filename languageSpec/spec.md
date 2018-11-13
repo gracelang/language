@@ -2150,7 +2150,7 @@ are not present in type `Object`, because they are *confidential*.
 In _standardGrace_, type `EqualityObject` adds the family of equality methods to `Object`:
 
     type EqualityObject = Object & interface {
-        ::(o:Object) → Binding
+        ::(value:Object) → Binding
         ==(other:Object) → Boolean
         ≠(other:Object) → Boolean
         hash → Number

@@ -205,7 +205,7 @@ type EqualityObject = Object & interface {
     hash -> Number
         // returns a hash code such that (a == b) implies (a.hash == b.hash)
     ::(v:Object) -> Binding
-        // answers a binding with self as the key and o as the value
+        // answers a binding with self as the key and v as the value
 }
 ```
 
