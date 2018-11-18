@@ -9,7 +9,7 @@ bibliography:
 
 title:
     The Grace Programming Language\
-    Draft Specification Version 0.8.0
+    Draft Specification Version 0.8.1
 ...
 
 
@@ -153,17 +153,17 @@ RULE Ss
 
 Grace uses braces to indicate the boundaries of code blocks.
 Indentation (the number of leading spaces on a line) must be consistent with
-these boundaries: indentation must increase after a left brace, and return to the prior level with (or after) the matching right brace.
+these boundaries: indentation must increase after an opening brace, and return to the prior level with (or after) the matching closing brace.
 
 Here are the precise rules that govern layout.
 
   1. A line containing just spaces, or spaces and a comment, is ignored as far as layout is concerned.
   1. All changes in indentation must be by *two* or more spaces; a change of a single space is treated as an error.
-  1. If a line contains an unmatched left brace character, that line is said to open a code block. All lines up to the matching right brace comprise the body of the code block, and must be indented more than the line containing the left brace.
-  1. If the right brace that closes the code block is the first non-space character on a line, then the indentation of the right brace must be the same as that of the line containing the matching left brace.  Otherwise, the line containing the right brace must be indented like all the other lines in the code block.
+  1. If a line contains an unmatched opening brace, that line is said to open a code block. All lines up to the matching closing brace comprise the body of the code block, and must be indented more than the line containing the opening brace.
+  1. If the closing brace that closes the code block is the first non-space character on a line, then the indentation of the closing brace must be the same as that of the line containing the matching opening brace.  Otherwise, the line containing the closing brace must be indented like all the other lines in the code block.
   1. An increase in indentation that does *not* correspond to the start of a code block indicates a continuation line: the preceding line break is treated as a space and not as a statement separator, and the two physical lines are treated as a single logical line. Further physical lines at the same (or greater) indentation are treated as part of the same logical line. The continuation ends either when the indentation decreases, or when the continuation line contains an unmatched brace.
-  1. If a line ends with any kind of left bracket --- one of `(`, `[`, `$\llbracket$`, or `{` --- the following line break is treated as a space, and *not* as a statement separator.
-  1. If a line starts with any kind of right bracket --- one of `)`, `]`, `$\rrbracket$`, or `}` --- the preceding line break is treated as a space, and *not* as a statement separator.
+  1. If a line ends with any kind of opening bracket --- one of `(`, `[`, `$\llbracket$`, or `{` --- the following line break is treated as a space, and *not* as a statement separator.
+  1. If a line starts with any kind of closing bracket --- one of `)`, `]`, `$\rrbracket$`, or `}` --- the preceding line break is treated as a space, and *not* as a statement separator.
   1. Indentation may be reduced *only* when ending a code block, or after the end of a continued line.  The indentation must return to that of the line that began the code block, or the continued line, respectively.
 
 
@@ -372,8 +372,8 @@ library supports efficient incremental string construction.
 |    `\\`    | backslash      | U+005C |
 |    `\n`     | line-feed      | U+000A |
 |    `\t`     | tab            | U+0009 |
-|    `\{`     | left brace     | U+007B |
-|    `\}`     | right brace    | U+007D |
+|    `\{`     | opening brace     | U+007B |
+|    `\}`     | closing brace    | U+007D |
 |    `\"`   | double quote   | U+0022 |
 |   `\r`             | carriage return      | U+000D       |
 |   `\l`            | line separator       | U+2028       |
@@ -625,6 +625,7 @@ RULE MethodDeclaration
 RULE MethodHeader
 RULE ReturnTypeOption
 RULE MethodBody
+RULE Statement
 RULE AssignmentMethodHeader
 RULE ParameterizedMethodHeader
 RULE ParameterlessMethodHeader
@@ -987,6 +988,7 @@ attributes of the object are in scope throughout the object constructor.
 RULE ObjectConstructor
 RULE ObjectBody
 RULE ObjectItem
+RULE Statement
 ```
 
 **Examples**
@@ -1004,9 +1006,9 @@ Like everything in Grace, object constructors are lexically scoped.
 A name can be bound to the object created by object constructor, like this:
 
     def unnamedCat = object {
-         def colour:Colour = colours.tabby
-         def name:String = "Unnamed"
-         var miceEaten := 0
+         def colour:Colour is public = colours.tabby
+         def name:String is public = "Unnamed"
+         var miceEaten is readable := 0
          method eatMouse { miceEaten := miceEaten + 1 }
     }
 
@@ -2193,54 +2195,57 @@ type `Unknown`, and type `Unknown` conforms to all other types.
 
 **Examples**
 
-    var x: Unknown := 5   // who knows what the type is?
+    var x:Unknown := 5    // who knows what the type is?
     var x := 5            // same here, but Unknown is implicit
     x := "five"           // who cares
     x.gilad               // almost certainly raises NoSuchMethod
 
-    method id(x) { x }    // argument and return types both implicitly unknown
-    method id(x: Unknown) → Unknown { x }  // same thing, explicitly
+    method id(x) { x }    // argument and return types both implicitly Unknown
+    method id(x:Unknown) → Unknown { x }  // same thing, explicitly
 
 ### Type Type
 
 All types have type Type, which is defined as
 
-    type Type = interface {
+    type Type⟦T⟧ = interface {
         matches (o:Unknown) → Boolean
         & (other:Type) → Type
         | (other:Type) → Type
         + (other:Type) → Type
-        :> (other:Type) → Boolean
-        <: (other:Type) → Boolean
-        == (other:Type) → Boolean
+        :> (other:Type) → Boolean       // other conforms to self
+        <: (other:Type) → Boolean       // self conforms to other
+        :=: (other:Type) → Boolean      // (self <: other) && (other :> self)
+        == (other:Type) → Boolean     // object identity
         ≠ (other:Type) → Boolean
         hash → Number
+        interfaces → Sequence⟦Interface⟧
+        subject → T
         asString → String
         asDebugString → String
-        interfaces → Sequence⟦Interface⟧
 	}
 
-This type captures the idea that a type is a disjunction of interfaces.  The interface literal syntax
-defines a type containing a single interface, so the `interfaces` method of an interface returns a sequence of length 1 containing itself.
+This type captures the idea that a type is a disjunction of interfaces.
+The interface literal syntax
+defines a type containing a single interface, 
+so the `interfaces` method of an interface returns a sequence of length 1 containing itself.
+(The object identity operation is necessary to avoid infinite regress when
+comparing two recursive types for conformity.)
 
-    type Interface = Type & interface {
-	     methods → Dictionary⟦String, Signature⟧
+    type Interface⟦T⟧ = Type⟦T⟧ & interface {
+        methods → Dictionary⟦String, Signature⟧
             // keys are the canonical names of the methods,
             // and values their signatures
-	     types → Dictionary⟦String, Type⟧
-            // keys are the declared names of the types;
-            // values objects representing those types
-	     - (other:Interface) → Interface
-	 }
-	
-	 type Signature = interface {
-	     name → String
+        - (other:Interface) → Interface
+    }
+
+    type Signature = interface {
+        name → String
             // the canonical name of the method
-	     arguments → Sequence⟦Type⟧
+        arguments → Sequence⟦Type⟧
             // the types of the parameters, in order
-	     result → Type
+        result → Type
             // the type of the result
-	 }
+    }
 	
 These types say that each interface comprises a mapping from (canonical) method names to method signatures,
 and a mapping from type names to type objects.
@@ -2250,23 +2255,27 @@ Each Signature comprises the (canonical) name of the method, the types of its ar
 ## Interfaces and Type Literals
 
 Interfaces characterize objects by detailing their public methods,
-and the types of the parameters and results of those methods. Interfaces can also
-contain definitions of other types; this enables interfaces to describe types nested
-inside objects.
+and the types of the parameters and results of those methods.
+A readable field `x:T` is equivalent to a method `x → T`, and a writable
+field `y:T` is equivalent to a method `y:=($\nu$:T) → Done`.
+A declaration `type N = TypeExpr` is represented in the interface by a 
+method `N → Type⟦TypeExpr⟧`
 
-The various cat objects and class descriptions (see
-[Objects, Classes, and Traits](#objects-classes-and-traits)) would create objects that
+The various cat object constructors and classes described above
+([Objects, Classes, and Traits](#objects-classes-and-traits)) create objects that
 conform to this interface:
 
     interface {
         colour → Colour
         name → String
         miceEaten → Number
-        miceEaten:= (n:Number) → Done
+        eatMouse → Done
+        asString → String
+        asDebugString → String
     }
 
-Note that the public methods of `Object` are implicitly included in the type
-denoted by a type literal.
+Note that the public methods of `graceObject`, inherited by the cat objects,
+are included in the interface literal, but confidential methods are excluded.
 
 For commonality with method declarations, parameters are normally named
 in type literals. These names are useful when writing specifications
@@ -2278,11 +2287,12 @@ in which case the type is `Unknown`.
 
 Types, including parameterized types, may be named in type declarations.
 By convention, the names of types start with an uppercase letter.
-A simple type literal consists of the keyword `interface` followed by
-an open curly brace, a sequence of method signatures, and a closed
-curly brace.
-The `interface` keyword may be omitted from the right-hand-side
-of a type declaration when the right-hand-side is a simple type literal.
+
+Types are disjunctions of interfaces; interfaces are sets of methods.
+An interface literal consists of the keyword `interface` followed by
+an opening brace, a sequence of method signatures, and a closing brace.
+The `interface` keyword may be omitted when the interface literal is
+the sole item on the right-hand-side of a type declaration.
 Type declarations may not be overridden.
 
 **Examples**
@@ -2304,6 +2314,7 @@ Type declarations may not be overridden.
 RULE TypeDeclaration
 RULE TypeParameterList
 RULE InterfaceLiteral
+RULE TypeExpression
 RULE Where
 ```
 
@@ -2323,8 +2334,8 @@ If `B <: A`, then every object of type `B` is also an object
 of type A. The converse does not apply.
 
 If `A` and `B` are interfaces, then `B <: A` if and only if, for
-every method `m` in `A`, there is a corresponding method `m` (with the same
-canonical name) in `B` such that
+every method with canonical name `m` in `A`, there is a method with the same
+canonical name `m` in `B` such that
 
 -   If the method `m` in `A` has signature `m(P1, ... ,Pk)n(Pk+1, ... ,Pn)... → R`, and
     `m` in B has signature `m(Q1,...,Qk)n(Qk+1,...,Qn)... → S`, then
@@ -2362,7 +2373,7 @@ of the variant.
 
 Variant types are *not* equivalent to the
 object type that describes all common methods. This is so that the
-exhaustiveness of match/case statements can be determined statically.
+exhaustiveness of match(_)case(_)... statements can be determined statically.
 Thus the rules for conformance are more restrictive:
 
 ```
@@ -2426,10 +2437,11 @@ irrelevant.
 
 ### Nested Types
 
-Type definitions may be nested inside other expressions, for example,
-they may be defined inside object, class, method, and other type
-definitions, and typically accessed via [Manifest Requests](#manifest-requests).
-This allows types to be declared and imported from other modules.
+Type declarations may be nested inside objects, and hence also inside classes and traits.
+This allows types to be declared in, and imported from, other modules.
+Such declarations can be accessed by making requests on the containing object.
+Because type declarations cannot be overridden, such requests are [Manifest Requests](#manifest-requests).
+A interface containing a 
 
 ## Type Annotations
 
