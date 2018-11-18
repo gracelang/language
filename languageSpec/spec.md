@@ -2441,7 +2441,6 @@ Type declarations may be nested inside objects, and hence also inside classes an
 This allows types to be declared in, and imported from, other modules.
 Such declarations can be accessed by making requests on the containing object.
 Because type declarations cannot be overridden, such requests are [Manifest Requests](#manifest-requests).
-A interface containing a 
 
 ## Type Annotations
 
