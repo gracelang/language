@@ -392,11 +392,15 @@ library supports efficient incremental string construction.
 
 ### String Constructors
 
-String Constructors are a generalization of [String Literals](#string-literals) that contain expressions enclosed in braces.
+String Constructors are a generalization of [String Literals](#string-literals) that contain _interpolations_:
+expressions enclosed in braces.
 The value of a String Constructor is obtained by first evaluating any
-expressions inside braces, requesting `asString` of the resulting object,
+interpolations, requesting `asString` of the resulting object,
 and inserting the resulting string into the string literal in place of the
-brace expression.
+interpolation.
+
+Interpolations may contain String Literals, but not newlines or String Constructors.
+(Hence, interpolations may not contain nested interpolations.)
 In the grammar, a `<stringSegment>` denotes a sequence of characters that does
 not include unescaped `"`, newline, or `{`;
 it may contain the [string escapes](#string-literals).
