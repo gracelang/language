@@ -774,25 +774,31 @@ canonical name of the method.
 ### Once Methods
 
 A **`once method`** is declared by prefixing a method declaration with the
-reserved word `once`.  Such a method executes to completion at most once:
-the first time that its object receives the corresponding request.
-The return value is memoised, and subsequent requests of the method
-will return the memoised value without re-executing the method.
-Currently, once methods may not have more than one parameter.
+reserved word `once`.  Such a method completes execution at most once on 
+each object with a given set of arguments:
+the first time that the object receives the corresponding request.
+The return value is memoized, and subsequent requests of the method with equal arguments
+will return the memoized value without re-executing the method.
+To make the memoization possible, the arguments must conform to `EqualityObject`,
+that is, they must have `==(_)` and `hash` methods.
 
 If a once method does _not_ return a value, e.g., because it raises an exception
 on its first execution,
-then no value is memoised and execution of the method will start again if it
+then no value is memoized, and execution of the method will start again if it
 is requested anew.
 This process will repeat until the once method returns normally, at which point
-the return value will be memoised, and subsequent executions will return the memoised value.
-
-Once methods can be used to represent lazily-initialized constants, or for any
+the return value will be memoized, and subsequent executions with equal argument 
+lists will return the memoized value.
+Once methods can be used to represent lazily-initialized scalar constants, 
+pure functions, and for any
 method whose result will not change once it has been calculated.
-A once method differs from a constant field (declared with `def`) in that the latter is initialized as part of
+
+A parameterless once method differs from a constant field (declared with `def`) 
+in that the latter is initialized as part of
 the process of creating its containing object, and is consequently _uninitialized_ during part
-of that process.  Hence, once methods are convenient for defining constants that may be
-used during initialization, and for a group of interdependent values, because the
+of that process.  Hence, parameterless once methods are convenient for defining constants that may be
+used during initialization.
+They are also useful for defining a group of interdependent constants, because the
 programmer need not worry about the initialization order.
 Moreover, unlike a `def`, a `once method` is a method, and can appear in a trait.
 
@@ -814,6 +820,9 @@ once method fib(n) {
 
 ```
 
+The simple recursive definition of `fib` would take exponential time without the `once`.
+Because of the memoization provided by `once`, the above code takes linear time.
+
 ## Annotations
 
 Any declaration, and any object constructor, may have a
@@ -832,7 +841,7 @@ annotations:
 | `confidential` | method may be requested only on self or outer — see [Encapsulation](#encapsulation) |
 | `abstract` | a marker declaration for a method that must be provided by a reused component |
 | `required` | a marker declaration for a method that is assumed to exist by the current class, but is not provided |
-| `overrides` | method must override another method - see [Overriding Methods] |
+| `override` | method must override another method - see [Overriding Methods](#overriding-methods) |
 | `public` | method may be requested from anywhere |
 | |  field can be read and written from anywhere - see [Encapsulation](#encapsulation) |
 | `readable`  | field may be read from anywhere - see [Encapsulation](#encapsulation) |
@@ -840,8 +849,7 @@ annotations:
 | `annotation` | a marker declaration for a def or method that will be used as an annotation |
 
 Additional annotations can be defined by marker declarations
-annotated with `is annotation`
-
+annotated with `is annotation`.
 Annotations are identifiers, i.e., static labels, not runtime values. 
 For example, a `def` declaration is public because it is annotated with the identifier `public`.
 It is not possible to make another identifier, say `secret`, mean the same thing as `public`
