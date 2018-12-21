@@ -4,6 +4,7 @@ s/\$\\neq\$/≠/g
 s/\$\\rightarrow\$/→/g
 s/\$\\rrbracket\$/⟧/g
 s/\$\\llbracket\$/⟦/g
+s/\$\\neg\$/¬/g
 s/\$\\nu\$/ν/g
 s/^#/##/
 s/` \$\\\$\\,\$/\$`/

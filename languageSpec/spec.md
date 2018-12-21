@@ -1856,9 +1856,21 @@ returns a fresh object.
 Pattern matching is based on `Pattern` objects that respond to the
 `matches(subject)` request by returning a `Boolean`, which is either
 `false` if the match fails, or `true` if the match succeeds.
-All type
-objects are Patterns; in addition, libraries supply non-type Patterns,
+
+ * All type
+objects are Patterns, which match objects that have that type.
+
+ * Numbers, Booleans and Strings are _self-matching_: they are patterns that match themselves.
+So, `5` is a pattern that matches the number 5, and `true` is a pattern that matches the Boolean true. 
+
+ * The prefix operations 
+`<`, `≤`, `>` and `≥` on numbers return approriate patterns, so `≥5` ia a 
+pattern that matches any number greater than or equal to 5.
+
+ * In addition, libraries supply Patterns, 
 and programmers are free to implement their own Patterns.
+
+ * Patterns can be combiend with the pattern operators `&` (for and), `|` (or), and prefix `$\neg$` (not).
 
 **Example**
 
@@ -1882,18 +1894,22 @@ we can write
     def cp = x(10) y(20)
 
     Point.matches(cp)              // true
-    Point.matches(42)                // false
+    Point.matches(42)              // false
 
-## Matching Blocks
+## Blocks as Patterns
 
-Blocks with a single parameter are called _matching blocks_. Matching
-blocks also conform to type Pattern, and respond to the request
+Blocks are also patterns, that is, they respond to the request
 `matches(_)` as well as `apply(_)`. When `apply(_)` would
 raise a type error because the block's argument would not conform to its
 parameter type, `matches(_)` returns `false`.
 
-If the parameter declaration of a matching block takes the form `_:pattern`,
-then the `_:` can be omitted, provided that `pattern` is
+The parameter declarations of a block take the form `Identifier PatternOption`, rather than `Identifier TypeOption`.
+This means that the annotaton after the `:` can be any `Expression` that evaluates to a Pattern, and is not restricted to being a `TypeExpression`.
+
+If the `Identifier` in the `BlockParameter` is `_`, and the
+`PatternOption` is not empty, then the underscore and the following
+colon can be omitted, provided that the pattern is not an identifier,
+that is, if it
 is parenthesized, or is a string constructor, a boolean literal, or a numeral.
 This rule (the *delimited argument rule*) means that the pattern can be
 distinguished from the declaration of a parameter to the block.
@@ -1902,36 +1918,35 @@ distinguished from the declaration of a parameter to the block.
 
 ```
 RULE BlockParameter
+RULE PatternOption
 RULE NonIdExpression
 RULE NonIdFactor
 RULE NonIdTerm
 ```
 
-## Self-Matching Objects
+## Match ... case ... else
 
-The objects created by [String Literals](#strings) [Numerals](#numbers) and
-[the Boolean constants](#booleans)
-are patterns that match strings, numbers and Booleans that are equal to the literal.
+Matching blocks and self-matching objects can be conveniently used
+in the `match(_)case(_)...else(_)` family of methods; 
+`case` may appear multiple times, with a block as argument.
+The `else` is optional; if present, it must be followed by a parameterless block.
+
+If more than one of the case patterns is true, a `MatchError` is raised.
+If none of the case patterns is true, the `else` block is executed, if there is one; if not, a `MatchError` is raised.
 
 **Examples**
 
-Matching blocks and self-matching objects can be conveniently used
-in the `match(_)case(_)...` family of methods.
-
-    method fib(n:Number) → Number {
+    once method fib(n:Number) → Number {
         match (n)
 	        case { 0 → 0 }
 	        case { 1 → 1 }
-	        case { _ → fib(n-1) + fib(n-2) }
+	        case { >1 → fib(n-1) + fib(n-2) }
     }
 
-The first two blocks use self-matching objects; the first is short for { _:0 → 0 }.
+The first two blocks use self-matching objects; the first is short for { _:0 → 0 }.  These two cases could be combined into `{ 0|1 → n }`
+The third block uses the prefix `≥` operator to create a pattern that matches any number greater than 1.
 
-The last block has no pattern, which is equivalent to the pattern `Unknown`,
-and thus matches any object.
-
-If
-`match(_)case(_)...` does not find a match, it raises a non-exhaustive match exception.
+If `fib` is requested with a negative argument, none of the pattern blocks will match, and a `MatchError` will be raised.
 
 
     { 0 → "Zero" }
@@ -1944,7 +1959,8 @@ If
         // match against the value of an expression - requires parenthesis
 
     { a → print("did not match") }
-        // match against the empty type annotation; matches anything, and binds to `a`
+        // match against the empty type annotation; matches any object, and binds it to `a`.  
+        // This is not useful in combiation with other case matching blocks
 
 
 # Exceptions
