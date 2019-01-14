@@ -1943,23 +1943,25 @@ If none of the case patterns is true, the `else` block is executed, if there is 
 	        case { >1 → fib(n-1) + fib(n-2) }
     }
 
-The first two blocks use self-matching objects; the first is short for { _:0 → 0 }.  These two cases could be combined into `{ 0|1 → n }`
-The third block uses the prefix `≥` operator to create a pattern that matches any number greater than 1.
+The patterns in the first two blocks use self-matching objects. `{ 0 → 0 }` is short for `{ _:0 → 0 }`.
+The first two cases could be combined into `{ 0|1 → n }`.
+The pattern in the third block uses the prefix `>` operator to create a pattern that matches any number greater than 1.
 
 If `fib` is requested with a negative argument, none of the pattern blocks will match, and a `MatchError` will be raised.
 
 
     { 0 → "Zero" }
-        // match against a Sting Literal
+        // match against the Number literal 0
 
     { s:String → print(s) }
-        // type match, binding s - identical to block with typed parameter
+        // match against the type String, binding s - identical to block with typed parameter
 
-    { (pi) → print("Pi = " ++ pi) }
+    { (pi) → print "Pi = {pi}" }
         // match against the value of an expression - requires parenthesis
 
-    { a → print("did not match") }
-        // match against the empty type annotation; matches any object, and binds it to `a`.  
+    { a → print "did not match" }
+        // match against the empty type annotation; equivalent to a:Unknown.
+        // Matches any object, and binds it to `a`.  
         // This is not useful in combiation with other case matching blocks
 
 
