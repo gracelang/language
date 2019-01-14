@@ -220,7 +220,7 @@ This layout shows three separate statements --- an `if(_)`, a `then(_)`, and an 
 
 ## Identifiers and Operators
 
-Identifiers must begin with a letter, which is followed by a sequence of
+_Identifiers_ must begin with a letter, which is followed by a sequence of
 zero or more letters, digits, prime (`'`) or underscore (`_`)
 characters.  In the grammar, `<id>` denotes an identifier.
 
@@ -231,13 +231,11 @@ A identifier comprising a single underscore `_` acts as a placeholder: it can
 appear in declarations, but not in expressions. In declarations, `_` is
 treated as a fresh identifier.
 
-Operators are sequences of [unicode mathematical operator symbols](
+_Operators_ are sequences of [unicode mathematical operator symbols](
 https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode)
 and the following ASCII operator characters
-
-`! ? @ # % ^ & | ~ = + - * / \ > < : . ` $\$\,$
-
-that are not reserved tokens.  
+`! ? @ # % ^ & | ~ = + - * / \ > < : . ` $\$\,$,
+that are not reserved tokens.
 So, for example, `+`, `++` and `..` are valid
 operators, but `.` is not, because it is reserved.
 In the grammar, `<operator>` denotes an operator.
