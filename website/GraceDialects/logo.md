@@ -72,9 +72,9 @@ Grace requires us to do _both_.
 
 <p></p>
 Run the code.
-The star looks as though it's staggering, doesn't it.
+The star looks as though it's standing rather uncomfortably on one leg!
 Can you modify the program so that the
-star is standing upright on two of its "legs"?
+star is standing upright on two of its legs?
 
 ## Defining Methods
 
