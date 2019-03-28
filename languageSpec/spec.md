@@ -9,7 +9,7 @@ bibliography:
 
 title:
     The Grace Programming Language\
-    Draft Specification Version 0.8.1
+    Draft Specification Version 0.8.2
 ...
 
 
@@ -753,25 +753,48 @@ If present, type parameters are listed between $\llbracket$
 and $\rrbracket$ after the identifier that forms the first
 (or only) part of the method's name.
 
-Type parameters may be constrained with `where` clauses;
-the details have yet to be specified.
-
 The presence or absence of type parameters does not change the
 canonical name of the method.
 
-**Examples**
 
+**Example**
 
-    method sumSq⟦T⟧(a:T, b:T) → T where T <: Numeric {
+    method indexOf⟦W⟧ (pattern:String) ifAbsent (absent:Function0⟦W⟧) -> Number | W {
+        // returns the leftmost index at which pattern appears in self; 
+        // applies absent if it is not there.
+        ...
+    
+    
+In this example, the `ifAbsent` block can return an abritary object.  If this object has type `W`, then
+the result of the `indexOf(_)ifAbsent(_)` method will have type `Number | W`.
+
+Type parameters may be constrained with **where clauses**.  The reserved word `where`
+follows the final type parameter; if there is more than one where condition, 
+the conditions are separated  by commas.
+
+**Example**
+
+    method sumSq⟦T where T <* Numeric⟧(a:T, b:T) → T  {
         (a * a) + (b * b)
     }
+    
+The type relation in a where condition can be one of `<:`, `:>`,`<*`, or `*>`.   `<:` indicates subtyping, 
+while `<*` indicates matching.
+Matching is like subtyping, except that where `Self` appears in one argument, it must also appear in the other.
+`:>` and `*>` are the inverses of `<:` and `<*`.
 
-    method prefix- ⟦T⟧ → Number
-         { 0 - self }
+**Grammar**
+```
+RULE TypeParameterList
+RULE TypeParameter
+RULE Where
+RULE WhereCondition
+```
+    
 
 ### Once Methods
 
-A **`once method`** is declared by prefixing a method declaration with the
+A **once method** is declared by prefixing a method declaration with the
 reserved word `once`.  Such a method completes execution at most once on 
 each object with a given set of arguments:
 the first time that the object receives the corresponding request.
