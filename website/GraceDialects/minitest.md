@@ -140,13 +140,15 @@ things that you can assert.
         // short forms, with the default message "assertion failure"
 
         assert (s1:Object) shouldBe (s2:Object)
-        // like assert (s1 == s2), but with a more appropriate default message.  Uses the == method of s1.
+        // like assert (s1 == s2), but with a more appropriate default message.  
+        // Uses the == method of s1.
 
         assert (s1:Object) shouldntBe (s2:Object)
-        // like assert (s1 != s2), but with a more appropriate default message. Uses the != method of s1.
+        // like assert (s1 ≠ s2), but with a more appropriate default message. 
+        // Uses the ≠ method of s1.
 
-        assert (block0) shouldRaise (desiredException)
-        // asserts that the desiredException is raised during the execution of block0
+        assert (b:Function0) shouldRaise (desiredException)
+        // asserts that the desiredException is raised during the execution of the block b
 
         assert(n1:Number) shouldEqual (n2:Number) within (epsilon:Number)
         // asserts that n1 and n2 don't differ by more than epsilon.
@@ -164,6 +166,11 @@ things that you can assert.
 
         deny(value:Object) hasType (Undesired:Type)
         // asserts that value is missing one of the methods in the type Undesired
+        
+        assertType(T:Type) describes (value)
+        // asserts that T is a complete description of value, i.e., that all of
+        // value's methods are in T
+
 
 The golden rule is to keep the tests simple. In addition to testing that
 the code in the module under test works, they define *what it means* for

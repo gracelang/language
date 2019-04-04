@@ -86,56 +86,45 @@ you expect the code being specified to do. Here are the
 things that you can expect.
 
 
-    method expect (cond:Boolean) orSay (complaint:String) {
+    expect (cond:Boolean) orSay (complaint:String) 
         // expects cond to be true; if not, minispec will complain with complaint
         // equivalent to expect (cond) toBe true orSay (complaint)
-    }
-
-    method expect(s1:Object) toBe (s2:Object) {
+    
+    expect(s1:Object) toBe (s2:Object)
         // expects s1 == s2;  complains with a default message otherwise. 
-    }
 
-    method expect(s1:Object) toBe (s2:Object) orSay (complaint:String) {
+    expect(s1:Object) toBe (s2:Object) orSay (complaint:String)
         // expects s1 == s2;  complains with complaint otherwise. 
-    }
 
-    method expect(b:Object) orSay (complaint:String) {
+    expect(b:Object) orSay (complaint:String)
         // expects b to be true;  complains with complaint otherwise. 
-    }
 
-    method expect(s1:Object) notToBe (s2:Object) {
+    expect(s1:Object) notToBe (s2:Object)
         // expects s1 ≠ s2;  complains with a default message otherwise. 
-    }
 
-    method expect(s1:Object) notToBe (s2:Object) orSay (complaint:String) {
+    expect(s1:Object) notToBe (s2:Object) orSay (complaint:String)
         // expects s1 ≠ s2;  complains with complaint otherwise. 
-    }
 
-    method expect(n1:Number) toBe (n2:Number) within (epsilon:Number) {
+    expect(n1:Number) toBe (n2:Number) within (epsilon:Number)
         // expects n1 and n2 to be approximately equal, i.e., to differ by less than epsilon
-    }
 
-    method expect(b:Block) toRaise (desired:ExceptionKind) {
+    expect(b:Block) toRaise (desired:ExceptionKind)
         // expects the execution of b to raise the desired ExceptionKind.
-    }
 
-    method expect(b:Block) notToRaise (undesired:ExceptionKind) {
+    expect(b:Block) notToRaise (undesired:ExceptionKind)
         // expects the execution of b not to raise the undesired ExceptionKind;
         // it might raise some other kind of exception, or no exception at all
-    }
 
-    method expect(s:Object) toHaveType (desired:Type) {
+    expect(s:Object) toHaveType (desired:Type)
         // expects s to have type desired; if it does not, the complaint will tell
         // you which methods are missing
-    }
 
-    method expect(s:Object) notToHaveType (undesired:Type) {
+    expect(s:Object) notToHaveType (undesired:Type)
         // expects s not to have type undesired.
-    }
 
-    method failAndSay(reason:String) {
+    failAndSay(reason:String)
         // always causes the specification to fail, complaining with reason
-    }
+
 
 ## Writing a Specification
 
