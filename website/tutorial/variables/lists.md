@@ -15,8 +15,8 @@ iterate over their contents using the method `do(_)`, or using `for(_)do(_)`.
 In _standardGrace_, a list is created like this:
 
 ```
-def animals = list ["dog", "cat", "whale", "bird", "mouse"]
-def sizes = list [52, 78, 45, 23]
+def animals = list.withAll ["dog", "cat", "whale", "bird", "mouse"]
+def sizes = list.withAll [52, 78, 45, 23]
 ```
 and in dialect _beginningStudent_, which does not use square brackets, like this:
 
@@ -33,17 +33,25 @@ It doesn't matter how many elements you put into the list; a list can contain
 arbitrarily many things. Moreover, the “things” can be any kind of object.
 We have used numbers 
 and strings, but the elements can be anything — even other lists.
+
+In _standardGrace_ you can also write
+
+```
+def animals = list ["dog", "cat", "whale", "bird", "mouse"]
+def sizes = list [52, 78, 45, 23]
+```
+
 Also note that you can put _no_ elements in a list, creating an empty list.
 
 ```
-def empty = list.withAll [ ]
-```
-
-or, in _beginningStudent_
-
-```
-dialect "beginningStudent"
 def empty = list.empty
+```
+
+This works in  both _beginningStudent_ and in _standardGrace_.
+You can of course also write:
+
+```
+def empty = list.withAll [ ]
 ```
 
 ## Lists are Mutable
@@ -52,7 +60,7 @@ One of the most confusing things about list to beginners is that they are _mutab
 What does that mean?  Lets' explain.
 
 Simple objects like Numbers, Strings, Points, and Booleans are _immutable_: 
-they don't change.  The number `3` is always `3`; it never becomes 4!  If the
+they don't change.  The number `3` is always 3; it never becomes 4!  If the
 variable `x` is bound to `3`, when you write an expression like `x + 1`, you are
 not changing `3`: you are creating a new number `4`, leaving `3` unchanged.
 The same is true of Strings:  the expression `"Hello " ++ "World!"` does not
@@ -83,12 +91,20 @@ Now try using `removeFirst` to change the list `a` again.
 
 There are three broad categories of methods that operate on lists.
  * [**Observers**]({{site.baseurl}}/variables/list-observers): methods that let us examine, or observe, the contents of the list.
-   Examples are methods such as `at(_)`, which returns a particular element of the list,
-   and asString, which returns a string representation of the list and its contents.
- * [**Constructors**]({{site.baseurl}}/variables/list-constructors): methods that make new lists.  Examples are `copy` and `++(_)`
- * [**Mutators**]({{site.baseurl}}/variables/list-mutators): methods that change the list.  Examples include `at(_)put(_)` and `addLast(_)`.
+   Examples are methods such as `first` and `at(_)`, which return a particular element of the list,
+   `isEmpty` which checks if a list is empty,
+   and `asString`, which returns a string representation of the list and its contents.
+ * [**Constructors**]({{site.baseurl}}/variables/list-constructors): methods that make new lists.
+   Examples are `copy`, `sorted`, and `++(_)`
+ * [**Mutators**]({{site.baseurl}}/variables/list-mutators): methods that change the list.
+   Examples include `at(_)put(_)`, `sort`,  and `addLast(_)`.
  
-There is a separate tutorial page for each of these categories: [**Observers**]({{site.baseurl}}/variables/list-observers),  [**Constructors**]({{site.baseurl}}/variables/list-constructors), and [**Mutators**]({{site.baseurl}}/variables/list-mutators).  And here is the [documentation for all methods on Lists]({{site.baseurl}}/dialects/standard/#list)
+There is a separate tutorial page for each of these categories:
+[**Observers**]({{site.baseurl}}/variables/list-observers),
+[**Constructors**]({{site.baseurl}}/variables/list-constructors), and
+[**Mutators**]({{site.baseurl}}/variables/list-mutators).
+
+The full set of requests is the [part of the specification of _standardGrace_]({{site.baseurl}}/dialects/standard/#list).
 
 ## Lists as Collections
 
@@ -103,4 +119,4 @@ or the [`do` method]({{site.baseurl}}/variables/do).
 In addition to `do`, there are several other useful methods on collections.
 This tutorial discusses [ `fold(_)startingWith(_)`]({{site.baseurl}}/variables/fold)
 and [`map(_)`]({{site.baseurl}}/variables/map).  The full list is in the
-[specification of the standard dialect]({{site.baseurl}}/dialects/standard/#common-abstractions).
+[specification of _standardGrace_]({{site.baseurl}}/dialects/standard/#common-abstractions).
