@@ -496,7 +496,13 @@ type String =  interface {
 
     size -> Number
     // returns the size of self, i.e., the number of characters it contains.
-
+    
+    split(splitter:String) -> List⟦String⟧
+    // answers a list of substrings of self, split before and after each
+    // occurrence of splitter in self.  If self is empty, the result list
+    // will also be empty; otherwise, if self does not contain splitter,
+    // the result list will be of size 1.
+    
     startsWith (possiblePrefix:String) -> Boolean
     // true when possiblePrefix is a prefix of self
 
