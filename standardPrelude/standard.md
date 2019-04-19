@@ -1154,9 +1154,6 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
     copy -> Self
     // returns a new dictionary that is a (shallow) copy of self
 
-    asDictionary -> Dictionary⟦K, T⟧
-    // returns self
-
     ++ (other:Dictionary⟦K, T⟧) -> Dictionary⟦K, T⟧
     // returns a new dictionary that merges the entries from self and other.
     // A value in other at key k overrides the value in self at key k.
