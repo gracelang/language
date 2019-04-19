@@ -670,8 +670,8 @@ The objects described in this section are made available to all standard
 Grace programs. (This means that they are defined as part of the
 *standardGrace* dialect.) As is natural for collections, the types are
 parameterized by the types of the elements of the collection. Type
-arguments are enclosed in `⟦` and `⟧`
-used as brackets. This enables us to distinguish, for example, between
+arguments are enclosed in `⟦` and `⟧` brackets.
+This enables us to distinguish, for example, between
 `Set⟦Number⟧` and `Set⟦String⟧`. In Grace programs, type arguments
 and their brackets can be omitted; this is equivalent to using
 `Unknown` as the argument, which says that the programmer
@@ -741,23 +741,25 @@ type Collection⟦T⟧ = type {
 
 Collections can be created using objects with the `CollectionFactory` interface:
 ```
-type CollectionFactory⟦T⟧ = interface {
-    empty -> Collection⟦T⟧
+type CollectionFactory = interface {
+    empty⟦T⟧ -> Collection⟦T⟧
         // an empty collection
-    with(element:T) -> Collection⟦T⟧
+    with⟦T⟧(element:T) -> Collection⟦T⟧
         // a collection containing a single element
-    withAll(elements:Collection⟦T⟧) -> Collection⟦T⟧
+    withAll⟦T⟧(elements:Collection⟦T⟧) -> Collection⟦T⟧
         // a collection containing elements
+    <<⟦T⟧(source:Collection⟦T⟧) -> Collection⟦T⟧
+        // identical to withAll
 }
 ```
-The `list⟦T⟧`, set⟦T⟧, and sequence⟦T⟧ all support this interface; 
+The objects  `list`, `set`, and `sequence` all support this interface; 
 `dictionary` supports a very simular interface [`DictionaryFactory`](#creating-dictionaries)
 
 ## Enumerables
 
 Additional methods are available in the type
 `Enumerable`; an `Enumerable` is like a
-`Sequence`, but allow the elements to be *enumerated*
+`Sequence`, but allows its elements to be *enumerated*
 one by one, in order, using a computational process, rather than being
 stored explicitly. For this reason, operations that require access to
 all of the elements at one time, like sorting, are not supported directly.
@@ -775,7 +777,7 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
 
     values -> Enumerable⟦T⟧
     // an enumeration of my values: the elements in the case of sequence or list,
-    // the values the case of a dictionary.
+    // the values in the case of a dictionary.
 
     asDictionary -> Dictionary⟦Number, T⟧
     // returns a dictionary containing my indices as keys and my elements as values, so that
@@ -783,9 +785,6 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
 
     keysAndValuesDo (action:Function2⟦Number, T, Object⟧) -> Done
     // applies action, in sequence, to each of my keys and the corresponding element. 
-
-    into(existing:Collection⟦T⟧) -> Collection⟦T⟧
-    // adds my elements to existing, and returns existing.
 
     sorted -> Enumerable⟦T⟧
     // returns a new Enumerable containing all of my elements, but sorted by their < and == operations.
@@ -802,8 +801,8 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
 
 The type `Sequence⟦T⟧` describes sequences of values of type `T`.
 Sequence objects are immutable; they can be constructed either
-explicitly, using a request such as `sequence [1, 3, 5, 7]`, or as
-ranges such as `1..10`.
+explicitly, using a [sequence constructor](#sequence-constructors) such as `[1, 3, 5, 7]`, or as
+[ranges](#ranges) such as `1..10` or `range.from 10 downto 1`
 
 ```
 type Sequence⟦T⟧ = Enumerable⟦T⟧ & interface {
@@ -1050,19 +1049,22 @@ dictionary objects can be constructed using the class `dictionary`, but
 the argument to `dictionary.withAll` must be of type `Collection⟦Binding⟧`. This
 means that each element of the argument must have methods `key` and
 `value`. Bindings can be conveniently created using the infix `::`
-operator, as in `dictionary⟦K, T⟧.withAll [k::v, m::w, n::x, ...]`.
+operator, as in `dictionary.withAll [k::v, m::w, n::x, ...]`.
 
-The object `dictionary⟦K,T⟧` supports the `DictionaryFactory` interface:
+The object `dictionary` supports the `DictionaryFactory` interface:
 ```
-type DictionaryFactory⟦K,T⟧ = interface {
-    empty -> Dictionary⟦K,T⟧
+type DictionaryFactory = interface {
+    empty⟦K,T⟧ -> Dictionary⟦K,T⟧
     // an empty dictionary
 
-    with(b:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
+    with⟦K,T⟧(b:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
     // a dictionary containing single mapping from b.key to b.value
 
-    withAll(bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
+    withAll⟦K,T⟧(bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
     // a dictionary containing a mapping for each binding in bs
+    
+    <<⟦K,T⟧ (bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
+    // identical to withAll
 }
 ```
 `DictionaryFactory` has the same three methods as `CollectionFactory`, but with 
