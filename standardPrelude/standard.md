@@ -749,7 +749,7 @@ type CollectionFactory = interface {
     withAll⟦T⟧(elements:Collection⟦T⟧) -> Collection⟦T⟧
         // a collection containing elements
     <<⟦T⟧(source:Collection⟦T⟧) -> Collection⟦T⟧
-        // identical to withAll
+        // identical to withAll(_)
 }
 ```
 The objects  `list`, `set`, and `sequence` all support this interface; 
@@ -1064,10 +1064,10 @@ type DictionaryFactory = interface {
     // a dictionary containing a mapping for each binding in bs
     
     <<⟦K,T⟧ (bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
-    // identical to withAll
+    // identical to withAll(_)
 }
 ```
-`DictionaryFactory` has the same three methods as `CollectionFactory`, but with 
+`DictionaryFactory` has the same four methods as `CollectionFactory`, but with 
 different argument and result types.
 
 ### Dictionary Methods
@@ -1149,7 +1149,7 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
     >> (target:Sink⟦Binding⟦K, T⟧ ⟧
     // sends my bindings into target
 
-    << (source:Enumerable⟦Binding⟦K, T⟧ ⟧)
+    << (source:Collection⟦Binding⟦K, T⟧ ⟧)
     // adds the bindings in source to my bindings, overriding values with common keys.
     // Similar to ++(_), except that source is not a Dictionary.
 }
