@@ -750,19 +750,19 @@ type Collection⟦T⟧ = type {
 
 Collections can be created using objects with the `CollectionFactory` interface:
 ```
-type CollectionFactory = interface {
-    empty⟦T⟧ -> Collection⟦T⟧
+type CollectionFactory⟦T⟧ = interface {
+    empty -> Collection⟦T⟧
         // an empty collection
-    with⟦T⟧(element:T) -> Collection⟦T⟧
+    with(element:T) -> Collection⟦T⟧
         // a collection containing a single element
-    withAll⟦T⟧(elements:Collection⟦T⟧) -> Collection⟦T⟧
+    withAll(elements:Collection⟦T⟧) -> Collection⟦T⟧
         // a collection containing elements
-    <<⟦T⟧(source:Collection⟦T⟧) -> Collection⟦T⟧
+    <<(source:Collection⟦T⟧) -> Collection⟦T⟧
         // identical to withAll(_)
 }
 ```
-The objects  `list`, `set`, and `sequence` all support this interface; 
-`dictionary` supports a very simular interface [`DictionaryFactory`](#creating-dictionaries)
+The `list⟦T⟧`, `set⟦T⟧`, and `sequence⟦T⟧` all support this interface; 
+`dictionary⟦K,V⟧` supports a very similar interface [`DictionaryFactory`](#creating-dictionaries)
 
 ## Enumerables
 
@@ -771,7 +771,7 @@ Additional methods are available in the type
 `Sequence`, but allows its elements to be *enumerated*
 one by one, in order, using a computational process, rather than being
 stored explicitly. For this reason, operations that require access to
-all of the elements at one time, like sorting, are not supported directly.
+all of the elements at the same time, like sorting, are not supported directly.
 Instead, Enumerables can be converted 
 to other collections that store their elements. 
 
@@ -789,7 +789,7 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
     // the values in the case of a dictionary.
 
     keysAndValuesDo (action:Function2⟦Number, T, Object⟧) -> Done
-    // applies action, in sequence, to each of my keys and the corresponding element. 
+    // applies action, in order, to each of my keys and the corresponding element. 
 
     sorted -> Enumerable⟦T⟧
     // returns a new Enumerable containing all of my elements, but sorted by their < and == operations.
@@ -805,9 +805,9 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
 ## Sequences
 
 The type `Sequence⟦T⟧` describes sequences of values of type `T`.
-Sequence objects are immutable; they can be constructed either
+Sequence objects are immutable; they can be constructed
 explicitly, using a [sequence constructor](#sequence-constructors) such as `[1, 3, 5, 7]`, or as
-[ranges](#ranges) such as `1..10` or `10.downTo 1`.
+[ranges](#ranges) such as `1..10` or `10.downto 1`, or using the `sequence` factory.
 
 ```
 type Sequence⟦T⟧ = EqualityObject & Sequenceable⟦T⟧
@@ -859,7 +859,7 @@ type Sequenceable⟦T⟧ = Enumerable⟦T⟧ & interface {
 
 ```
 Because a `Sequence` is imutable, its `==` and `hash` methods are stable, 
-it can be used as a key to a `Dictionary`.  This is not true of a  `List` or a `Set`.
+and it can be used as a key in a `Dictionary`.  This is not true of a  `List` or a `Set`.
 
 ## Sequence Constructors
 
@@ -867,10 +867,9 @@ The Grace language uses brackets as a syntax for constructing `Sequence`
 objects. `[2, 3, 4]` is a sequence containing the three numbers `2`, `3`
 and `4`; `[ ]` constructs the empty sequence.
 
-Sequence objects are immutable, so they can’t be
-used like arrays or lists. They can be used for initializing
-mutable collections, as in `list.withAll [2, 3, 4]`, which creates a list,
-or `set.withAll ["red", "green", "yellow"]`, which creates a set.
+Although sequences are immutable, they can be used for initializing
+mutable collections, as in `[2, 3, 4] >> list`, which creates a list,
+or `set⟦String⟧ << ["red", "green", "yellow"]`, which creates a set.
 
 
 ## Ranges
@@ -1068,21 +1067,22 @@ dictionary objects can be constructed using the class `dictionary`, but
 the argument to `dictionary.withAll` must be of type `Collection⟦Binding⟧`. This
 means that each element of the argument must have methods `key` and
 `value`. Bindings can be conveniently created using the infix `::`
-operator, as in `dictionary.withAll [k::v, m::w, n::x, ...]`.
+operator, as in `dictionary⟦K, T⟧.withAll [k::v, m::w, n::x, ...]`, or 
+equivalently, `[k::v, m::w, n::x, ...] >> dictionary⟦K, T⟧`.
 
-The object `dictionary` supports the `DictionaryFactory` interface:
+The object `dictionary⟦K,T⟧` supports the `DictionaryFactory` interface:
 ```
-type DictionaryFactory = interface {
-    empty⟦K,T⟧ -> Dictionary⟦K,T⟧
+type DictionaryFactory⟦K,T⟧ = interface {
+    empty -> Dictionary⟦K,T⟧
     // an empty dictionary
 
-    with⟦K,T⟧(b:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
+    with(b:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
     // a dictionary containing single mapping from b.key to b.value
 
-    withAll⟦K,T⟧(bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
+    withAll(bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
     // a dictionary containing a mapping for each binding in bs
     
-    <<⟦K,T⟧ (bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
+    <<(bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
     // identical to withAll(_)
 }
 ```
