@@ -393,7 +393,7 @@ type String =  interface {
     // (self == other) || (self > other)
 
     at(index: Number) -> String
-    // returns the character in position index (as a string of size 1); index must be in the range 1..size
+    // returns the character in position index (as a string of size 1); index must be an integer in the range 1..size
 
     first -> String
     // returns the first character of the string, as a String of size 1.  String must not be empty
@@ -540,7 +540,7 @@ type String =  interface {
 
     quoted -> String
     // returns a quoted version of self, with internal characters like " and \ and newline escaped, 
-    // but without surrounding quotes.
+    // but without surrounding quotes.  See also asDebugString
 
     >>(target:Sink⟦String⟧) -> Collection
     // returns target << self
@@ -778,10 +778,6 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
     values -> Enumerable⟦T⟧
     // an enumeration of my values: the elements in the case of sequence or list,
     // the values in the case of a dictionary.
-
-    asDictionary -> Dictionary⟦Number, T⟧
-    // returns a dictionary containing my indices as keys and my elements as values, so that
-    // my self.at(i) is self.asDictionary.at(i).
 
     keysAndValuesDo (action:Function2⟦Number, T, Object⟧) -> Done
     // applies action, in sequence, to each of my keys and the corresponding element. 
