@@ -209,7 +209,7 @@ type EqualityObject = Object & interface {
 }
 ```
 
-## Number
+## Numbers
 
 `Number` describes all numeric values in
 *minigrace*, including integers and numbers with decimal
@@ -219,10 +219,10 @@ double-precision). `Number`s are represented with a
 precision of approximately 51 bits.
 Number constants include `π` and `infinity`, the latter being 
 larger than any finite number, as well as conventional numerals like
-`27`.
+`27`.  
 
 ``` 
-type Number = interface {
+type Number = EqualityObject & interface {
 
     + (other: Number) -> Number
     //  sum of self and other
@@ -243,8 +243,11 @@ type Number = interface {
     // quotient q of self after integer division by other: self = (other * q) + r, where r = self % other
 
     .. (last: Number) -> Sequence
-    //  the Sequence of numbers from self to last
+    //  the Sequence of numbers from self to last, so 2..4 contains 2, 3, and 4
 
+    downTo(last:Number) -> Sequence
+    //  the Sequence of numbers from self down to last, so 2.downTo 0 contains 2, 1 and 0.
+    
     < (other: Number) -> Boolean
     //  true iff self is less than other
 
@@ -299,7 +302,7 @@ type Number = interface {
     // -1 when self < 0, and +1 when self > 0
 
     isNaN -> Boolean
-    // true if this Number is not a number, i.e., if it is NaN
+    // true if this Number is not a number, i.e., if it is NaN.  For example, 0/0 returns NaN
 
     isEven -> Boolean
     // true if this number is even
@@ -339,7 +342,7 @@ type Number = interface {
 }
 ```
 
-## String
+## Strings
 
 String constructors are written surrounded by double quote characters.
 There are three commonly-used escape characters:
@@ -354,7 +357,7 @@ There are also escapes for a few other characters and for arbitrary
 Unicode codepoints; for more information, see the Grace language
 specification.
 
-String constructors can also contain simple Grace expressions[^1]
+String constructors can also contain simple Grace expressions
 enclosed in braces, like this: `"count = {count}."` These are called
 string interpolations. The value of the interpolated expression is
 calculated, converted to a string (by requesting its `asString` method),
@@ -367,7 +370,7 @@ always return a new string; they never change the receiver.
 
 ``` 
 
-type String =  interface {
+type String =  EqualityObject & interface {
     * (n: Number) -> String
     // returns a string that contains n repetitions of self, so "Abc" * 3 = "AbcAbcAbc"
 
@@ -550,12 +553,12 @@ type String =  interface {
 }
 ```
 
-## Boolean
+## Booleans
 
 The Boolean literals are `true` and `false`.
 
 ```
-type Boolean =  {
+type Boolean =  EqualityObject & interface {
 
     not -> Boolean
     prefix ! -> Boolean
@@ -566,11 +569,17 @@ type Boolean =  {
 
     || (other: PredicateOrBoolean) -> Boolean
     // returns true when either self or other (or both) are true
+    
+    == (other:Object) -> Boolean
+    // returns true of other is the same Boolean as self
+    
+    ≠ (other:Object) -> 
+    // if other is a boolean, returns the exclusive OR of self and other; otherwise returns false
 }
 ```
 
 The condition in an `if` statement, and the argument to the operators `&&` and `||`,
-can be either a Boolean or a zero-parameter block that returns a Boolean.
+can be either a Boolean, or a zero-parameter block that returns a Boolean.
 This means that `&&` and `||` can be used as “short circuit” operators, also known as
 “non-commutative”, operators: they will evaluate their argument only
 if necessary.
@@ -599,9 +608,9 @@ type Function2⟦S,T,R⟧ = type {
     matches(a:Object, b:Object) -> Boolean
 }
 ```
+Block objects are normally created using Grace's block syntax `{ p, q -> ... }`.
 
-
-## Point
+## Points
 
 Points can be thought of as locations in the cartesian plane, or as
 2-dimensional vectors from the origin to a specified location. Points
@@ -609,7 +618,7 @@ are created from Numbers using the `@` infix operator.
 Thus, `3 @ 4` represents the point with coordinates (3, 4).
 
 ``` 
-type Point =  {
+type Point =  EqualityObject && interface {
 
     x -> Number
     // the x-coordinates of self
@@ -650,7 +659,7 @@ type Point =  {
 }
 ```
 
-### Binding
+### Bindings
 
 A binding is an immutable pair comprising a `key` and a
 `value`. Bindings are created with the infix
@@ -798,13 +807,18 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
 The type `Sequence⟦T⟧` describes sequences of values of type `T`.
 Sequence objects are immutable; they can be constructed either
 explicitly, using a [sequence constructor](#sequence-constructors) such as `[1, 3, 5, 7]`, or as
-[ranges](#ranges) such as `1..10` or `range.from 10 downto 1`
+[ranges](#ranges) such as `1..10` or `10.downTo 1`.
 
 ```
-type Sequence⟦T⟧ = Enumerable⟦T⟧ & interface {
+type Sequence⟦T⟧ = EqualityObject & Sequenceable⟦T⟧
+
+type Sequenceable⟦T⟧ = Enumerable⟦T⟧ & interface {
 
     at(n:Number) -> T
-    // returns my element at index n (starting from 1), provided ix is integral and l ≤ n ≤  size
+    // returns my element at index n (starting from 1), provided ix is integral and l ≤ n ≤  size 
+    
+    at⟦W⟧(n:Number) ifAbsent(action:Function0⟦W⟧) -> T | W
+    // returns my element at index n (starting from 1), provided ix is integral and l ≤ n ≤  size.  Otherwise, executes action and returns its result
     
     first -> T
     // returns my first element
@@ -825,7 +839,7 @@ type Sequence⟦T⟧ = Enumerable⟦T⟧ & interface {
     // returns my last element
     
     indices -> Sequence⟦Number⟧
-    // returns the sequence of my indices.  
+    // returns the sequence of my indices, 1..size  
     
     keys -> Sequence⟦Number⟧
     // same as indices; the name keys is for compatibility with dictionaries.
@@ -842,7 +856,10 @@ type Sequence⟦T⟧ = Enumerable⟦T⟧ & interface {
     contains(sought:T) -> Boolean
     // returns true if I contain an element v such that v == sought
 }
+
 ```
+Because a `Sequence` is imutable, its `==` and `hash` methods are stable, 
+it can be used as a key to a `Dictionary`.  This is not true of a  `List` or a `Set`.
 
 ## Sequence Constructors
 
@@ -876,9 +893,11 @@ methods on the `range` class:
 
 The `..` operation on Numbers can also be
 used to create ranges. Thus, `3..9` is the same as
-`range.from 3 to 9`, and `(3..9).reversed`
-is the same as `range.from 9 downTo 3`.
-Note that 9..3 is an empty range.
+`range.from 3 to 9`.
+Note that `9..9` ias a range containing just one element, and
+`9..8` and `9..3` are empty ranges.  Downward ranges can 
+also be constructed using the `downTo` method on Numbers,
+so `9.downTo 3` is the same as `range.from 9 downTo 3`.
 
 ## Lists
 
@@ -891,7 +910,7 @@ sequences, list objects can be constructed by requesting the
 
 
 ``` 
-type List⟦T⟧ = Sequence⟦T⟧ & interface {
+type List⟦T⟧ = Sequenceable⟦T⟧ & interface {
     
     at(n: Number) put(new:T) -> List⟦T⟧
     // updates self so that my element at index n is new.  Returns self.
@@ -930,6 +949,10 @@ type List⟦T⟧ = Sequence⟦T⟧ & interface {
     
     removeAll(elements:Collection⟦T⟧) ifAbsent(action:Function0⟦Unknown⟧) -> List⟦T⟧
     // removes elements from self; executes action if any of them is not contained in self. Returns self
+    
+    insert(element:T) at(n:Number) ->  List⟦T⟧
+    // inserts element into self at index n; any element with index i > n is
+    // moved so that it has index i + 1.  Returns self, that is, the modified list.
 
     clear -> List⟦T⟧
     // removes all the elements of self, leaving self empty.  Returns self
@@ -1286,7 +1309,7 @@ type Array⟦T⟧ =  {
     at(index: Number) put (newValue: T) -> Done
     // updates the element of self at index to newValue
 
-    sortInitial(n:Number) by(sortBlock:block2⟦T, T, Number⟧) -> Self
+    sortInitial(n:Number) by(sortBlock:Function2⟦T, T, Number⟧) -> Self
     // sorts elements 0..n.  The ordering is determined by sortBlock, which should return -1 if
     // its first argument is less than its second argument, 0 if they are equal, and +1 otherwise.
 
