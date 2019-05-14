@@ -2022,11 +2022,11 @@ requests.  A hierarchy of *exception kinds* is used to classify exceptions.
         name → String
         // answers the name given when this ExceptionKind object was created.
 
-        raise (message:String)
+        raise (message:String) → None
         // creates an exception of this kind, terminating the current execution,
         // and transferring control to an appropriate handler.
 
-        raise (message:String) with (data:Object)
+        raise (message:String) with (data:Object) → None
         // similar to raise(_), except that the object data is associated with the
         // new exception.
 
@@ -2180,7 +2180,7 @@ most dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`]
 
 ### Type None
 
-Type `None` is completely empty; it has no methods.
+Type `None` has all methods.  It is "uninhabited", that is, no actual object has type `None`.
 
 
 ### Type Object
