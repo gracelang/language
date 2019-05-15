@@ -707,10 +707,10 @@ type Collection⟦T⟧ = type {
     // True if self has no elements
     
     size -> Number
-    // The number of elements in self; raises SizeUnknown if size is not known.
+    // returns the number of elements in self; raises SizeUnknown if size is not known.
     
     sizeIfUnknown(action: Function0⟦Number⟧) -> Number
-    // The number of elements in self; if size is not known, then action is evaluated and its value returned.
+    // returns the number of elements in self, or the result of evaluating action if size is not known
     
     first -> T
     // The first element of self; raises BoundsError if there is none.  
