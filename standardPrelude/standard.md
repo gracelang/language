@@ -761,14 +761,16 @@ type CollectionFactory⟦T⟧ = interface {
         // identical to withAll(_)
 }
 ```
-The `list⟦T⟧`, `set⟦T⟧`, and `sequence⟦T⟧` all support this interface; 
-`dictionary⟦K,V⟧` supports a very similar interface [`DictionaryFactory`](#creating-dictionaries)
+The classes `list`, `set`, and `sequence` all support this interface; 
+`dictionary` supports a very similar interface [`DictionaryFactory`](#creating-dictionaries).
+In addition, the _methods_ `list⟦T⟧(_)`,  `set⟦T⟧(_)` and `sequence⟦T⟧(_)` are defined in Standard Grace,
+and are equivalent to  `list⟦T⟧.withAll(_)`,  `set⟦T⟧.withAll(_)` and `sequence⟦T⟧.withAll(_)`.
 
 ## Enumerables
 
 Additional methods are available in the type
 `Enumerable`; an `Enumerable` is like a
-`Sequence`, but allows its elements to be *enumerated*
+`Sequence`, but in addition allows its elements to be *enumerated*
 one by one, in order, using a computational process, rather than being
 stored explicitly. For this reason, operations that require access to
 all of the elements at the same time, like sorting, are not supported directly.
@@ -815,10 +817,11 @@ type Sequence⟦T⟧ = EqualityObject & Sequenceable⟦T⟧
 type Sequenceable⟦T⟧ = Enumerable⟦T⟧ & interface {
 
     at(n:Number) -> T
-    // returns my element at index n (starting from 1), provided ix is integral and l ≤ n ≤  size 
+    // returns my element at index n (starting from 1), if n is integral and l ≤ n ≤  size 
     
     at⟦W⟧(n:Number) ifAbsent(action:Function0⟦W⟧) -> T | W
-    // returns my element at index n (starting from 1), provided ix is integral and l ≤ n ≤  size.  Otherwise, executes action and returns its result
+    // returns my element at index n (starting from 1), if n is integral and l ≤ n ≤  size.
+    // Otherwise, executes action and returns its result
     
     first -> T
     // returns my first element
@@ -845,10 +848,12 @@ type Sequenceable⟦T⟧ = Enumerable⟦T⟧ & interface {
     // same as indices; the name keys is for compatibility with dictionaries.
 
     indexOf(sought:T)  -> Number
-    // returns the index of my first element v such that v == sought.  Raises NoSuchObject if there is none.
+    // returns the index of my first element v such that v == sought.  Raises NoSuchObject
+    // if there is none.
     
     indexOf⟦W⟧(sought:T) ifAbsent(action:Function0⟦W⟧)  -> Number | W
-    // returns the index of the first element v such that v == sought.  Performs action if there is no such element.
+    // returns the index of my first element v such that v == sought.  Performs action if
+    // there is no such element.
 
     reversed -> Sequence⟦T⟧
     // returns a Sequence containing my values, but in the reverse order.
@@ -893,16 +898,15 @@ methods on the `range` class:
 The `..` operation on Numbers can also be
 used to create ranges. Thus, `3..9` is the same as
 `range.from 3 to 9`.
-Note that `9..9` ias a range containing just one element, and
+Note that `9..9` is a range containing just one element, and
 `9..8` and `9..3` are empty ranges.  Downward ranges can 
-also be constructed using the `downTo` method on Numbers,
+also be constructed using the `downTo(_)` method on Numbers,
 so `9.downTo 3` is the same as `range.from 9 downTo 3`.
 
 ## Lists
 
 The type `List⟦T⟧` describes objects that are mutable
-lists of elements that have type `T`. Like sets and
-sequences, list objects can be constructed by requesting the
+lists of elements that each have type `T`. List objects can be constructed by requesting the
 `list` method, as in
 `list⟦T⟧.withAll [ ]`, `list⟦T⟧.withAll [a, b, c]`, or
 `list.withAll (existingCollection)`.
