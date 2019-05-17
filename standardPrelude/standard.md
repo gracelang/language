@@ -1142,18 +1142,15 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
     bindings -> Enumerable⟦ Binding⟦K, T⟧ ⟧
     // returns my bindings as a lazy sequence
 
-    keysAndValuesDo(action:Function2⟦K, T, Object⟧ ) -> Done
+    keysAndValuesDo(action:Procedure2⟦K, T⟧) -> Done
     // applies action, in arbitrary order, to each of my keys and the corresponding value. 
 
-    keysDo(action:Function2⟦K, Object⟧) -> Done
+    keysDo(action:Procedure1⟦K⟧) -> Done
     // applies action, in arbitrary order, to each of my keys.
 
-    valuesDo(action:Function2⟦T, Object⟧) -> Done
-    do(action:Function2⟦T, Object⟧) -> Done
+    valuesDo(action:Procedure1⟦T⟧) -> Done
+    do(action:Procedure1⟦T⟧) -> Done
     // applies action, in arbitrary order, to each of my values.
-
-    bindingsDo(action:Function2⟦T, Object⟧) -> Done
-    // applies action, in arbitrary order, to each of my bindings.
 
     copy -> Self
     // returns a new dictionary that is a (shallow) copy of self
