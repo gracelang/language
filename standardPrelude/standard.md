@@ -396,7 +396,8 @@ type String =  EqualityObject & interface {
     // (self == other) || (self > other)
 
     at(index: Number) -> String
-    // returns the character in position index (as a string of size 1); index must be an integer in the range 1..size
+    // returns the character in position index (as a string of size 1); index must be an integer in
+    // the range 1..size
 
     first -> String
     // returns the first character of the string, as a String of size 1.  String must not be empty
@@ -450,7 +451,7 @@ type String =  EqualityObject & interface {
     // returns the leftmost index at which pattern appears in self; applies absent if it is not there.
 
     indexOf (pattern:String) startingAt (offset) -> Number
-    // like indexOf(pattern), except that it returns the first index ≥ offset, or 0 if  pattern is not found.
+    // like indexOf(pattern), but returns the smallest index ≥ offset, or 0 if pattern is not found.
 
     indexOf⟦W⟧ (pattern:String) startingAt(offset) ifAbsent (action:Function0⟦W⟧) -> Number | W
     // like the above, except that it returns the result of applying action if there is no such index.
@@ -596,14 +597,14 @@ return one result.  A family of function types describe
 block objects:
 
 ```
-type Function0⟦R⟧ = type {
+type Function0⟦R⟧ = interface {
     apply -> R
 }
-type Function1⟦T,R⟧ = type {
+type Function1⟦T,R⟧ = interface {
     apply(a:T) -> R
     matches(a:Object) -> Boolean
 }
-type Function2⟦S,T,R⟧ = type {
+type Function2⟦S,T,R⟧ = interface {
     apply(a:S, b:T) -> R
     matches(a:Object, b:Object) -> Boolean
 }
@@ -697,7 +698,7 @@ collection of *elements*, each of type `T`, over which a client can
 iterate:
 
 ```
-type Collection⟦T⟧ = type {
+type Collection⟦T⟧ = interface {
     iterator -> Iterator⟦T⟧       
     // Returns an iterator over my elements.  It is an error to modify self while iterating over it.
     // Note: all other methods can be defined using iterator. Iterating over a dictionary
@@ -1183,7 +1184,7 @@ implement internal iterators, while the method `iterator` returns an
 external iterator object, with the following interface:
 
 ``` 
-type Iterator⟦T⟧ = type {
+type Iterator⟦T⟧ = interface {
     next -> T
     // returns the next element of the collection over which I am the iterator; raises the Exhausted
     // exception if there are no more elements. Repeated request of this method will yield all of the 
