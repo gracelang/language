@@ -143,17 +143,19 @@ in the `match(_)case(_)...` family of methods to support multiway branching.
         match (n)
 	        case { 0 -> 0 }
 	        case { 1 -> 1 }
-	        case { _ -> fib(n-1) + fib(n-2) }
+	        else { fib(n-1) + fib(n-2) }
     }
 ```
 
 The first two blocks use self-matching objects; the first is short for
 `{_ : 0 -> 0 }`, that is, a block with parameter `_` 
-and pattern `0`.  The last block has no pattern (or, if you prefer, has
-the pattern `Unknown`, which matches any object).  Such a block always matches.
+and pattern `0`.   `match(_)case(_)...` is defined with one or many `case` branches;
+the branch labelled `else` is optional, but when present must come last.
 
-If `match(_)case(_)…` does not find a match, it raises a
-non-exhaustive match exception.  
+If `match(_)case(_)…` does not find a match, it executes the `else` block, if there is one;
+otherwise it raises raises `MatchError`. 
+If it finds _multiple_ matches, it also raises `MatchError`.
+
 
 
 ## ValueOf
