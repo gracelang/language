@@ -2083,40 +2083,48 @@ Exception packet objects are generated when an exception is raised.
     }
 
 The `data` field of an `ExceptionPacket` may be populated
-with any object using the `raise(_)with(_)` method on an `ExceptionKind` object. For
+with any object by requesting `raise(_)with(_)` on an `ExceptionKind` object. For
 example:
 
 ```
-MyException.raise "A message" with (anObject)
+MyException.raise "A message" with (dataObject)
 ```
 
-The `data` object is stored so that it can be used (if desired) when the exception is caught.
+The `dataObject` is stored in the exception packet so that it can be used (if desired) when the exception is caught.
 
 
-## Catching Exceptions
+## Catching Exceptions & Final Actions
 
 An exception in `expression` can be caught by a dynamically-enclosing
+`try(_)catch(_)...` or `try(_)catch(_)...finally(_)` request, 
+which takes the following form.
 
-    try (expression)
-        catch (block 1)
+    try { expression }
+        catch { e1:Exception_1 -> block_1 }
         ...
-        catch (block n)
-        finally (finalBlock)
+        catch { en:Exception_n -> block_n }
+        finally { finalBlock }
 
-in which the `block i`
-are pattern-matching blocks. More precisely, if an exception is raised
-during the evaluation of the `try` block `expression`, the `catch` blocks
-`block 1`, `block 2`, …, `block n`, are attempted, in order,
+If an exception is raised
+during the evaluation of `expression`, the `catch` blocks
+are attempted, in order,
 until one of them matches the exception. If none of them matches, then
 the process of matching the exception continues in the
-dynamically-surrounding `try(_)catch(_)…finally(_)`. The
+dynamically-surrounding `try(_)catch(_)…finally(_)`.
+
+The clause `finally { finalBlock }` is optional.  If present,
 `finalBlock` is always executed before control leaves the
 `try(_)catch(_)…finally(_)` construct, whether or not an
-exception is raised, and whether or not one of the catch blocks returns.
+exception is raised, and whether or not `expression`, or one of the catch blocks, executes a `return`.
 
-Finally clauses can return early, either by executing a `return`, or by
-raising an exception. In such a situation, any prior `return` or raised
-exception is silently dropped.
+The value of a 
+`try(_)catch(_)...finally(_)` request is the last value in `expression`, unless an exception is raised, in which case it is the
+the last value in whichever catch-block catches the exception.
+If the `finalBlock` executes to completion, its final value is ignored. 
+
+If `finalBlock` terminates by raising an exception, 
+or by executing a `return`, any prior `return` or raised
+exception is forgotten. 
 
 **Examples**
 
