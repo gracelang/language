@@ -2303,7 +2303,7 @@ and a mapping from type names to type objects.
 Each Signature comprises the (canonical) name of the method, the types of its arguments, and the type of its result.
 
 
-## Interfaces and Type Literals
+## Interfaces and Interface Literals
 
 Interfaces characterize objects by detailing their public methods,
 and the types of the parameters and results of those methods.
@@ -2329,9 +2329,9 @@ Note that the public methods of `graceObject`, inherited by the cat objects,
 are included in the interface literal, but confidential methods are excluded.
 
 For commonality with method declarations, parameters are normally named
-in type literals. These names are useful when writing specifications
+in interface literals. These names are useful when writing specifications
 of the methods. If a parameter name is omitted, it must be replaced by
-an underscore. The type of a parameter or result may be omitted,
+an underscore, as in method `at(_) ifAbsent(_)`. The type of a parameter or result may be omitted,
 in which case the type is `Unknown`.
 
 ## Type Declarations
@@ -2342,23 +2342,21 @@ By convention, the names of types start with an uppercase letter.
 Types are disjunctions of interfaces; interfaces are sets of methods.
 An interface literal consists of the keyword `interface` followed by
 an opening brace, a sequence of method signatures, and a closing brace.
-The `interface` keyword may be omitted when the interface literal is
-the sole item on the right-hand-side of a type declaration.
 Type declarations may not be overridden.
 
 **Examples**
 
-	type MyCatType = interface {  // the word interface may be omitted
+	type MyCatType = interface {
+    // I care about only names and colours
 		color → Colour
 		name → String
 	}
-	// I care only about names and colours
 	
-	type MyParametricType⟦A,B⟧ =
-		interface {
+	type MyParametricType⟦A,B 
+          where A <: Hashable, B <: DisposableReference⟧ = interface {
 			at (_:A) put (_:B) → Boolean
 			cleanup(_:B)
-		} where A <: Hashable,  B <: DisposableReference
+    }
         
 **Grammar**
 ```
@@ -2367,6 +2365,7 @@ RULE TypeParameterList
 RULE InterfaceLiteral
 RULE TypeExpression
 RULE Where
+RULE WhereCondition
 ```
 
 ## Type Conformance
