@@ -54,7 +54,7 @@ entries:
       type: web
 
     - title: Exceptions
-      url: /lang-spec#excpetions
+      url: /lang-spec#exceptions
       output: web
       type: web
 
