@@ -26,6 +26,9 @@ type Environment = interface {
 
 argv -> Sequence⟦String⟧
 // the command-line arguments to this program
+
+cwd -> String
+// the absolute pathname of the current working directory
     
 elapsedTime -> Number
 // the time in seconds, since an arbitrary epoch.  Subtract one elapsedTime
