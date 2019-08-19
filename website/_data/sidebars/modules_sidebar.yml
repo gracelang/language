@@ -23,6 +23,10 @@ entries:
       url: /modules/random/
       output: web
       type: web
+    - title: regularExpression
+      url: /modules/regex/
+      output: web
+      type: web
     - title: sys
       url: /modules/sys/
       output: web
