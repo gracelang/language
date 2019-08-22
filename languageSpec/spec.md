@@ -2274,11 +2274,11 @@ All types have type Type, which is defined as
         :> (other:Type) → Boolean       // other conforms to self
         <: (other:Type) → Boolean       // self conforms to other
         :=: (other:Type) → Boolean      // (self <: other) && (other :> self)
-        == (other:Type) → Boolean     // object identity
+        == (other:Type) → Boolean       // object identity
         ≠ (other:Type) → Boolean
         hash → Number
         interfaces → Sequence⟦Interface⟧
-        subject → T
+        subject → Type                  // the parameter T
         asString → String
         asDebugString → String
 	}
