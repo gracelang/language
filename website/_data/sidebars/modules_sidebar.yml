@@ -15,6 +15,10 @@ entries:
       url: /modules/io/
       output: web
       type: web
+    - title: matrix
+      url: /modules/matrix/
+      output: web
+      type: web
     - title: option
       url: /modules/option/
       output: web
