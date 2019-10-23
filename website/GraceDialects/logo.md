@@ -220,6 +220,13 @@ when we request them.  This tells the turtle to draw two stars with different si
 
 <object id="example-3" data="{{site.editor}}?5-star-params" width="100%" height="550px"> </object>
 
+You may notice that some of the method arguments, like `size` and `distance`, are in parenthesis, 
+whereas others, like `90`, are not?  
+The rule is that, if the argument is something simple like a numeral (`3`) or a string constant (`"hello"`)
+then the parenthesis can be omitted.   If the argument is a name like `size`, 
+or an expression line `3+4`, then the parenthesis are required. 
+it is always OK to add extra parenthesis, just as in mathematics — but too many parentheses can 
+make your code hard to read.
 
 ### Example 6
 
