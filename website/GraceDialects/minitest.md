@@ -56,7 +56,7 @@ Line 1 says that this module is written in the dialect *minitest*. Line
 of sets using vectors, which is in the module *setVector*. Line 4 builds
 a *testSuite*: a collection of tests, here just four. A testSuite can
 also contain definitions, variable declarations, and executable code, as
-seen on lines 5–8.
+seen on lines 5–8.  These are common to all of the tests in the test suite.
 
 As you can see, each test has a title (which is printed out if the test
 fails or errors) and a block of code, which should contain one or more
@@ -64,68 +64,31 @@ assertions.
 
 When the test module is executed, all of the test in the test suite are
 run, in some order. Any variables and definitions inside the testSuite
-are re-initialized before each test is run.
+are _re-initialized before each test_ is run.
+
+You can also put code at the top level of the module, outside of any test suite.
+Such code is run just once, when the module is initialized.  This is a good place
+to construct any large objects that will be shared by many tests, but not changed.
 
 ### Naming TestSuites
 
+If you have more than one test suite in a single module, it’s handy to give each
+test suite a name. 
+This makes it easy to see how many tests pass in each suite.
+To name test suites, use the method `testSuite(_)with(_)`, like this:
 
-If you have several test suites in one module, it’s handy to give each
-test suite a name, so that it’s easy to see how many tests pass in each
-suite. To do this, use the method :
+<object id="minitest_for_and" data="{{site.editor}}?minitest_for_and" width="100%" height="550px"> </object>
 
-    dialect "minitest"
+If you run this code, it should produce the output
 
-    testSuiteNamed "for(_)and(_) where second is longer" with {
-        test "first smaller" by {
-            def result = list [ ]
-            def as = list [1, 2, 3]
-            def bs = list ["one", "two", "three", "four", "five"]
-            for (as) and (bs) do { a, b ->
-                result.add(a::b)
-            }
-            assert (result) shouldBe [1::"one", 2::"two", 3::"three"]
-        }
-
-        test "for(_)and(_) where second is shorter" by {
-            def result = list [ ]
-            def as = list [1, 2, 3, 4, 5]
-            def bs = list ["one", "two", "three"]
-            for (as) and (bs) do { a, b ->
-                result.add(a::b)
-            }
-            assert (result) shouldBe ( list [1::"one", 2::"two", 3::"three"] )
-        }
-    }
-
-    method trymatch(e) {
-        match (e)
-            case {n: Number -> n+1}
-            case {s: String -> "Got " ++ s}
-    }
-
-    testSuiteNamed "match tests" with {
-        test "number" by {
-            assert(trymatch 4) shouldBe 5
-        }
-        test "string" by {
-            assert(trymatch "beer") shouldBe "Got beer"
-        }
-
-        test "boolean" by {
-            assert{trymatch (true)} shouldRaise (ProgrammingError)
-        }
-    }
-
-This will produce the output
-
-    for()and: 2 run, 0 failed, 0 errors
+    for(_)and(_): 2 run, 0 failed, 0 errors
     match tests: 3 run, 0 failed, 0 errors
 
 ### What’s in a test?
 
 
 Typically, a test contains zero, one or two lines of code to set up a
-testable situation, and then one or more *assertions*. Here are the
+testable situation (this is called the _test fixture_), and then one or more *assertions*. Here are the
 things that you can assert.
 
 
@@ -148,15 +111,28 @@ things that you can assert.
         // Uses the ≠ method of s1.
 
         assert (b:Function0) shouldRaise (desiredException)
-        // asserts that the desiredException is raised during the execution of the block b
+        // asserts that desiredException is raised during the execution of the block b
+        
+        assert (b:Function0) shouldRaise (desiredException) mentioning (str)
+        // asserts that desiredException is raised during the execution of the block b,
+        // and that the exception's message contains str as a substring. 
+        
+        assert (b:Function0) shouldRaise (desiredException) mentioning (s1) and (s2)
+        // asserts that desiredException is raised during the execution of the block b,
+        // and that the exception's message contains both s1 and s2 as substrings. 
 
         assert(n1:Number) shouldEqual (n2:Number) within (epsilon:Number)
         // asserts that n1 and n2 don't differ by more than epsilon.
         // Use instead of assert(_)shouldBe(_) for floating point numbers.
-        assert (block0) shouldntRaise (undesiredException)
-        // asserts that the undesiredException is not raised during the execution of block0.
-        // The assertion holds if block0 raises some other exception, or if it completes
-        // execution without raising any exception.
+        
+        assert (b:Function0) shouldntRaise (undesiredException)
+        // asserts that the undesiredException is not raised during the execution of b.
+        // The assertion holds if b raises some other exception, or if it completes
+        // without raising any exception.
+        // NOTE:  Use this rarely!  If all you need is to check that b does not
+        // raise an excpetion, just write the body of the block in-line: if it does raise
+        // an excpetion, your test will error.  If you want to check that b does raise
+        // and expection of a different kind, then use assert(_)shouldRaise(_)...
 
         failBecause (message)
         // always fails; equivalent to assert (false) description (message)
@@ -171,17 +147,22 @@ things that you can assert.
         // asserts that T is a complete description of value, i.e., that all of
         // value's methods are in T
 
+### What's _not_ in a test
 
 The golden rule is to keep the tests simple. In addition to testing that
 the code in the module under test works, they define *what it means* for
 the code to work. So the readability of the tests is of utmost
-importance.
+importance.  **Do not** put complex conditional code in a test.
+
+Each test should check one property of the module under test.  This usually
+means using just one or two assertions.  If there are several properties to check,
+write several tests.
 
 It’s also important for the tests to depend only on the defined external
 behaviour of the code under test, and *not* on implementation decisions
 that might change. So, for example, if the result is a set, your test
 should not depend on the order in which the elements appear when you
-request on it.
+iterate over it.
 
 ### What happens when you execute a *minitest* module?
 
@@ -207,12 +188,40 @@ to run a suite of tests, and see how many pass, rather than have testing
 stop on the first error or failure. For example, when we run the _set_
 test suite at the top of this page, we get the output
 
-    4 run, 0 failed, 1 error
-    Errors:
-        remove: RuntimeError: undefined value used as argument to at(_)put(_)
+    4 run, 1 failed, 0 errors
+    Failures:
+        remove: ⟦SetVector: <Vector: 3>⟧ contains 3 after it was removed
 
-Note that even though the test with title *remove* errored, *minitest*
+Note that even though the test with title *remove* failed, *minitest*
 went on to run the remaining tests.
+
+### Limiting the output form Erroneous Specifications.
+
+When a test reveals an error, _minitest_ will
+run it again, and on this second run will capture and print Grace's usual _backtrace_.
+This may or may not be useful;  if the error is deep within the module being specified,
+it can be quite useful, but in the case where it is in the test itself, it is not.
+
+If there are many errors in the tests or the module under test, 
+the output can be quite voluminous.  By default,  _minitest_ will re-run 10 errors.
+You can change this by assigning to the variable `numberOfErrorsToRerun`.  For example,
+if you add 
+
+    numberOfErrorsToRerun := 0
+    
+to a test module (_before_ the `testSuite` statement), then no 
+tests will be re-run.
+
+### Exiting
+
+The minitest dialect defines a method `exit` that will terminate your test module.
+It's intended to be used at the end of the module, after all of the tests have run.
+If they all passed, `exit` will print `"all tests passed"` and pass exit code `10`
+to the calling environment; if any of 
+the tests errored or failed, it will print nothing and pass exit code `1`. 
+This is intended for use in conjunction with scripts that run many test modules. 
+
+### Further Reading
 
 If you want more information about testing, see the documentation for
 *gUnit*, Grace’s more comprehensive testing framework, or any of many

@@ -110,6 +110,14 @@ things that you can expect.
 
     expect(b:Block) toRaise (desired:ExceptionKind)
         // expects the execution of b to raise the desired ExceptionKind.
+    
+    expect(b:Block) toRaise (desired:ExceptionKind) mentioning (issue:String)
+        // expects the execution of b to raise the desired ExceptionKind, and
+        // for the exception's message to contain issue as a substring.
+
+    expect(b:Block) toRaise (desired:ExceptionKind) mentioning (i1:String) and (i2:String)
+        // expects the execution of b to raise the desired ExceptionKind, and
+        // for the exception's message to contain i1 and i2 as substrings 
 
     expect(b:Block) notToRaise (undesired:ExceptionKind)
         // expects the execution of b not to raise the undesired ExceptionKind;
@@ -222,6 +230,15 @@ if you add
     
 to the above specification (_before_ the `describe` statement), then no 
 specifications will be re-run.
+
+### Exiting
+
+The minispec dialect defines a method `exit` that will terminate your specification module.
+It's intended to be used at the end of the module, after all of the specifications have run.
+If they all passed, `exit` will print `"all tests passed"` and pass exit code `10`
+to the calling environment; if any of 
+the specifications errored or failed, it will print nothing and pass exit code `1`. 
+This is intended for use in conjunction with scripts that run many specification modules. 
 
 ### Further Reading
 
