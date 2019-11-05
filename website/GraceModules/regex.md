@@ -105,24 +105,25 @@ If you write strings between `"` and `"`, then `\` must be written as `\\`.
 
 Once a regular expression has been created, the following requests can be made on it.
 ```
-matches(text:String)
+matches(text:String) → Boolean
     // answers true if the receiver matches text, and false if it does not
         
-firstMatchingPosition(text:String) ifNone(noMatchBlock)
+firstMatchingPosition⟦T⟧(text:String) ifNone(noMatchBlock:Function0⟦T⟧) → Number | T
     // answers the index of the first substring of text that matches the receiver
     
-firstMatchingString(text:String) ifNone(noMatchBlock) {
+firstMatchingString⟦T⟧(text:String) ifNone(noMatchBlock:Function0⟦T⟧) → String | T
     // answers the first substring of text that matches the receiver
     
-allMatches(text:String)
+allMatches(text:String) → Collection ⟦MatchResult⟧
     // answers a collection containing all the substrings of text that match the receiver.
     // Each element is a MatchResult object that describes one match
     
 type MatchResult = interface {
-    position // the index at which the matching text starts
-    group(i) // i is an integer; returns the text matching the i_th parenthesized matching group, 
-            // or raises BoundsError if there is no such group.
-    whole   // returns the whole of the matching text
+    position → Number        // the index at which the matching text starts
+    group(i:Number) → String // i is an integer; returns the text matching the
+                             // i_th parenthesized matching group, 
+                             // or raises BoundsError if there is no such group.
+    whole → String           // returns the whole of the matching text
 }
 ```
   
