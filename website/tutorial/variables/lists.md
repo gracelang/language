@@ -12,11 +12,11 @@ the list, and can be any other objects.
 Lists let us access individual elements using the method `at(_)`, and 
 iterate over their contents using the method `do(_)`, or using `for(_)do(_)`. 
 
-In _standardGrace_, a list is created like this:
+In the _standard_ dialect, a list is created like this:
 
 ```
-def animals = list.withAll ["dog", "cat", "whale", "bird", "mouse"]
-def sizes = list.withAll [52, 78, 45, 23]
+def animals = list ["dog", "cat", "whale", "bird", "mouse"]
+def sizes = list [52, 78, 45, 23]
 ```
 and in dialect _beginningStudent_, which does not use square brackets, like this:
 
@@ -34,11 +34,11 @@ arbitrarily many things. Moreover, the “things” can be any kind of object.
 We have used numbers 
 and strings, but the elements can be anything — even other lists.
 
-In _standardGrace_ you can also write
+In _standard_ you can also write
 
 ```
-def animals = list ["dog", "cat", "whale", "bird", "mouse"]
-def sizes = list [52, 78, 45, 23]
+def animals = list.withAll ["dog", "cat", "whale", "bird", "mouse"]
+def sizes = list.withAll [52, 78, 45, 23]
 ```
 
 Also note that you can put _no_ elements in a list, creating an empty list.
@@ -47,7 +47,7 @@ Also note that you can put _no_ elements in a list, creating an empty list.
 def empty = list.empty
 ```
 
-This works in  both _beginningStudent_ and in _standardGrace_.
+This works in  both _beginningStudent_ and in _standard_.
 You can of course also write:
 
 ```
@@ -104,7 +104,7 @@ There is a separate tutorial page for each of these categories:
 [**Constructors**]({{site.baseurl}}/variables/list-constructors), and
 [**Mutators**]({{site.baseurl}}/variables/list-mutators).
 
-The full set of requests is the [part of the specification of _standardGrace_]({{site.baseurl}}/dialects/standard/#list).
+The full set of requests is the [part of the specification of _standard_]({{site.baseurl}}/dialects/standard/#list).
 
 ## Lists as Collections
 
@@ -119,4 +119,4 @@ or the [`do` method]({{site.baseurl}}/variables/do).
 In addition to `do`, there are several other useful methods on collections.
 This tutorial discusses [ `fold(_)startingWith(_)`]({{site.baseurl}}/variables/fold)
 and [`map(_)`]({{site.baseurl}}/variables/map).  The full list is in the
-[specification of _standardGrace_]({{site.baseurl}}/dialects/standard/#common-abstractions).
+[specification of _standard_]({{site.baseurl}}/dialects/standard/#common-abstractions).

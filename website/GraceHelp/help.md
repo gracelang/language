@@ -28,7 +28,7 @@ Modules make available features that are useful to Grace programmers but that ar
 * **Dialects**: this pull-down menu lists available Grace dialects.  Dialects are special modules that extend or restrict the Grace language
 for specific purposes.  In particular, some of Grace's dialects are designed to support specific teaching objectives.  The Dialects menu also
 gives access to a page that describes how instructors can write their own dialects. One of the most important dialects is 
-[_standardGrace_]({{site.baseurl}}/dialects/standard), the dialect in which you are writing if you specify no other.  The documentation for _standardGrace_
+[_standard_]({{site.baseurl}}/dialects/standard), the dialect in which you are writing if you specify no other.  The documentation for _standard_
 describes the methods available on the standard [_String_]({{site.baseurl}}/dialects/standard/#string), [_Number_]({{site.baseurl}}/dialects/standard/#number),
 and [_Collection_]({{site.baseurl}}/dialects/standard/#collection-objects) objects.
 

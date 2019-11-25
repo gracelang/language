@@ -64,33 +64,68 @@ turtle to follow this path.
 Since dialects are just modules, they themselves must be written in some
 dialect.  For example, most dialects will be written in
 ```
-dialect "standardGrace"
+dialect "standard"
 ```
-However, this does _not_ automatically make all of the _standardGrace_ dialect
+However, this does _not_ automatically make all of the _standard_ dialect
 available to dialectical programs.  This is because the outer dialect is not
 visible to programs written in the inner dialect.
 
-This means that if you _want_ to make all of "standardGrace" available to
-dialectical program, you will have to take special action.  The recommended way
-of doing this at present is to add the statement
-```
-inherit prelude.methods
-```
-The identifier `prelude` is defined to be the current dialect, that is, the
-dialect surrounding the dialect that you are writing.
-Thus, if the current dialect is
-`"standardGrace"`, `prelude` will be bound to the standardGrace module object.
-Because of the freshness constraint, it is not possible to inherit from
-`prelude`.  However, `prelude.methods` is a fresh copy of the module,
-from which it is possible to inherit.
+This means that if you _want_ to make all of _standard_ available to
+dialectical program, you will have to take special action.  
 
-Inheritance makes all the attributes of the inherited object (here, a copy
-of the _standardGrace_ module), available locally, and thus also available to
+## Combining Dialects
+
+The obvious way to combine an existing dialect with your new dialect
+is to import the module _standard_, and then **use** it: 
+```
+import "standard" as standard   
+use standard                    // this won't work
+```
+However, as the comments indicates, this won't work.
+Grace modules are singleton objects, not methods that generate objects, so they cannot be **`use`**d (or **`inherit`**ed) because of the freshness constraint. 
+
+To avoid this problem, dialect modules are defined in an idiomatic way.
+Here is the definition of _standard_:
+
+```
+dialect "none"
+import "standardBundle" as standardBundle
+
+use standardBundle.open
+```
+
+As you can see, all of the content of the dialect module is actually in a method
+`open` defined in abother module called [_standardBundle_](https://github.com/gracelang/minigrace/blob/master/standard.grace).
+All that _standard_ need do is import that module, and request its `open` method;
+this generates a new object that can be **`use`**d.
+The **`use`** statement makes all of the definitions in `standardBundle.open`
+available locally, and thus also available to
 any modules written in your dialect.
+
+Because the `open` method is actually a trait, muliple dialects can be "opened" and 
+then **`use`**d in this way.
+This is how you write a dialect that combines two or more exiting dialects. 
+
+If you think that anyone in the future might want to combine your dialect with another dialect, you should follow the same idiom:
+1. Put the methods and types that you want in your dialect into a **`trait`** called `open` in a module called _myDialectBundle_.  Because you are definiing a trait, you will not be able to put **`def`**s in your dialect; use **`once method`**s instead.  If you need module-wide shared state, you can put **`var`** declarations at the top-level of the _Bundle_ module.  You can, of course, put **`def`**s and **`var`**s inside classes and objects defined in your trait.
+1. In module _myDialect_, write **`dialect`**, **`import`** and **`use`** statement in a similar way to that shown above:
+
+```
+dialect "none"
+import "standardBundle" as standardBundle
+import "myDialectBundle" as myBundle
+
+use standardBundle.open
+use myBundle.open
+```
+
+Alternatively, if you do _not_ want to make your dialect a superset of _standard_, then 
+do _not_ `use standardBundle.open`.
+Instead, write your dialect _in_ "standard", and write "pass-through" definitions for the specific parts of _standard_ that you want your users to be able to access.
 
 ## Defining `thisDialect`
 
-A dialect that implement a checker (feature 3 above), or wants to wrap the
+A dialect that implements a checker (feature 3 above), or wants to wrap the
 dialectical module (feature 4 above), should declare an object `thisDialect`.
 The form of the definition should be as follows:
 ```
@@ -120,6 +155,17 @@ try to load it at compile time.  (Use the compiler flag `--verbose 50` or higher
 if you want to see a message saying whether or not the compiler loaded your
 dialect module.)
 
+Note that the `thisDialect` object must be defined in the dialect itself.
+If you use the [idiom described above](#combining-dialects), this will mean that 
+`thisDialect` will be a method in the `open` trait defined in your _Bundle_.
+
+If you **`use`** two traits defined in bundles from two separate dialect modules,
+and both of them define `thisDialect`, then the second **`use`** statement will 
+generate a trait conflict.
+This is as it should be: in general, there is no way to automatically combine checkers or 
+`atStart` or `atEnd` code.  
+It is your job as the combiner of the dialects to create a new `thisDialect` object that combines the pieces of the other dialects in the way that you want, using **`alias`** and **`exclude`** clauses to resolve the conflict and access the parts of the bundles that you wish to reuse.
+
 ## The `parseChecker` and `astChecker` methods
 
 The argument to the `parseChecker` method will be the `ast.moduleNode` that
@@ -138,11 +184,12 @@ produce the AST.  These include:
     arguments appears as an `identifierNode`; in the AST, it has been resolved
     into a `callNode` or a `memberNode`, both of which respond to `isCall` with
     `true`.
- 3. Implicit receivers in other requests have been resolved to `self`,
-    an `outerNode`, `prelude`, or the current module.
+ 3. Implicit receivers in requests have been resolved to `self`,
+ an `outerNode`, `$module` (for the current module), or `$dialect` (for the current dialect).
  4. Return statements are decorated with the declared return type of the
     containing method.
- 5. The names of fresh methods requested in `inherit` and `use` statements have been
+ 5. Variables on the lhs of assignments are decorated with their declared types.
+ 6. The names of fresh methods requested in `inherit` and `use` statements have been
     decorated with a suffix beginning with `$`, to indicate that they should
     be compiled as templates rather than as normal requests.
 
@@ -169,7 +216,7 @@ inherited names and names obtained from traits are represented in the symbol
 table explicitly.
 
 Each scope also has a `parent`, which is the enclosing scope, and a method
-`withSurroundingScopesDo(action:Block1)` that applies `action` to the current
+`withSurroundingScopesDo(action:Procedure1)` that applies `action` to the current
 scope and all the surrounding scopes.  Scopes are defined in the
 _identifierresolution_ module.
 
@@ -213,6 +260,6 @@ be highlighted when the error is displayed.
 
 Note that the IDE _throws away_ anything written on the standard output stream.
 This means that you won't see the output from a `print` statement.
-If you need to produce debugging output,
+If you need to produce debugging output in the IDE,
 import the `"io"` module `as io`,
 and use `io.error.write "Progress is being made!\n"`.
