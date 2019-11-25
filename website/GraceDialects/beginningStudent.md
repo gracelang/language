@@ -24,29 +24,29 @@ are available in _beginningStudent_.
 The collection constructors of _standardGrace_, written with `[` square brackets `]`,
 are not present in _beginningStudent_.  Instead, use the following methods:
 
-    list                        // creates an empty list
+    list.empty                  // creates an empty list
     list(arg1)                  // creates a list containing the single element arg1
     list(arg1, arg2)            // creates a list containing the two elements arg1 and arg2
     list(arg1, ...)             // as above, but with an arbitrary number of arguments 
     
-    sequence                    // creates an empty sequence
+    sequence.empty              // creates an empty sequence
     sequence(arg1)              // creates a sequence containing the single element arg1
     sequence(arg1, arg2)        // creates a sequence containing the two elements arg1 and arg2
     sequence(arg1, ...)         // as above, but with an arbitrary number of arguments 
     
-    set                         // creates an empty set
+    set.empty                   // creates an empty set
     set(arg1)                   // creates a set containing the single element arg1
     set(arg1, arg2)             // creates a set containing the two elements arg1 and arg2
     set(arg1, ...)              // as above, but with an arbitrary number of arguments 
     
-    dictionary                  // creates an empty dictionary
+    dictionary.empty            // creates an empty dictionary
     dictionary(k1::v1)          // creates a dictionary containing the single key k1, with value v1
     dictionary(k1::v1, k2::v2)  // creates a dictionary containing the two keys k1 and k2,
                                 // with values v1 and v2, respectively.
     dictionary(k1::v1, ...)     // as above, but with an arbitrary number of arguments 
 
-Once they have been constructed, these collections are identical to those of 
-[_standardGrace_ dialect]({{site.baseurl}}/dialects/standard).
+Once they have been constructed, these collections are identical to those of the
+[_standard_ dialect]({{site.baseurl}}/dialects/standard).
 
 ## Type are Required
 
