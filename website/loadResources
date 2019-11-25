@@ -27,13 +27,13 @@ cat ./standardHeader.txt GraceDialects/standardSource.md > GraceDialects/standar
 cat ./specHeader.txt GraceLangSpec/grammarSpecSource.md > GraceLangSpec/spec_with_grammar.md
 
 #Load the PDFs into the pdf folder
-/bin/rm -r gracePdfs
+/bin/rm -rf gracePdfs
 mkdir  gracePdfs
 ln ../languageSpec/spec_with_grammar.pdf ../standardPrelude/standard.pdf gracePdfs
 
 #Add the necessary info to standard.md
 sed -i .bak "s/<<TITLE-OF-PAGE>>/The Standard Dialect/g;\
-    s/<<KEYWORDS-OF-PAGE>>/Standard, Dialect, standardGrace/g;\
+    s/<<KEYWORDS-OF-PAGE>>/Standard, Dialect, standard Grace/g;\
     s/<<SIDEBAR-OF-PAGE>>/dialects_sidebar/g;\
     s/<<PERMALINK-OF-PAGE>>/\/dialects\/standard\//g;\
     s/ <<FOLDER-OF-PAGE>>/Dialects/g;\

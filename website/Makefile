@@ -6,7 +6,8 @@ BASE_URL = /~grace/doc
 WEB_SERVER_URL = http://cs.pdx.edu
 WEB_DIRECTORY = public_html/doc/
 
-.PHONEY = build deploy serve pdfs kramdowns
+.PHONEY = build deploy serve pdfs kramdowns all
+
 all: deploy
 
 _config.yml: config.yml.in Makefile

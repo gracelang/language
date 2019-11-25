@@ -9,15 +9,15 @@ bibliography:
 
 title: |
     The Grace Standard Dialect\
-    Draft Specification Version 0.7.8
+    Draft Specification Version 0.7.9
 ...
 
 # Introduction
 
-This is a specification of the standard dialect of Grace, called _standardGrace_.
+This is a specification of the _standard_ dialect of Grace.
 Grace programs run in this dialect unless they nominate a different
 dialect using a `dialect` statement. 
-The _standardGrace_ dialect  provides a range of methods, objects and types for
+The _standard_ dialect  provides a range of methods, objects and types for
 general purpose programming.
 
 This specification is incomplete, and everything is subject to
@@ -71,8 +71,7 @@ conditional evaluation possible, all conditions after the first must be
 enclosed in *braces*.
 
 Grace also includes a multi-way
-`match`…`case` statement, which is
-described in the language specification.
+[`match`…`case` statement](match-case).
 
 ## Bounded Loops
 
@@ -133,7 +132,7 @@ determined in advance. This is what we mean by “unbounded loop”. The
 number of times may even be infinite—a common coding error for
 beginners.
 
-## Match Case
+### Match Case
 
 Matching blocks and self-matching objects can be conveniently used
 in the `match(_)case(_)...` family of methods to support multiway branching.
@@ -148,9 +147,10 @@ in the `match(_)case(_)...` family of methods to support multiway branching.
 ```
 
 The first two blocks use self-matching objects; the first is short for
-`{_ : 0 -> 0 }`, that is, a block with parameter `_` 
-and pattern `0`.   `match(_)case(_)...` is defined with one or many `case` branches;
-the branch labelled `else` is optional, but when present must come last.
+`{_ : 0 -> 0 }`, that is, a block with parameter `_`  and pattern `0`.
+The `match(_)case(_)…` statement may have one or many `case` branches, of which just one
+should match.  
+The branch labelled `else` is optional, but when present must come last.
 
 If `match(_)case(_)…` does not find a match, it executes the `else` block, if there is one;
 otherwise it raises raises `MatchError`. 
@@ -678,9 +678,9 @@ requesting `binding.key(k) value(v)`.
 
 # Collection objects
 
-The objects described in this section are made available to all standard
-Grace programs. (This means that they are defined as part of the
-*standardGrace* dialect.) As is natural for collections, the types are
+The objects described in this section are made available to all 
+Grace programs that are written in the _standard_ dialect.
+As is natural for collections, the types are
 parameterized by the types of the elements of the collection. Type
 arguments are enclosed in `⟦` and `⟧` brackets.
 This enables us to distinguish, for example, between
@@ -692,10 +692,10 @@ either does not know, or does not care to state, the type.
 ## Common Abstractions 
 
 The major kinds of collection are `sequence`, `list`, `set` and
-`dictionary`. Although these objects differ in their details, they share
+`dictionary`. Although these collection objects differ in their details, they share
 many common methods, which are defined in a hierarchy of types, each
 extending the one above it in the hierarchy. The simplest is the type
-`Collection⟦T⟧`, which captures the idea of a (potentially unordered)
+`Collection⟦T⟧`, which captures the idea of a (potentially unordered, and possibly unbounded)
 collection of *elements*, each of type `T`, over which a client can
 iterate:
 
@@ -766,25 +766,26 @@ type CollectionFactory⟦T⟧ = interface {
 ```
 The classes `list`, `set`, and `sequence` all support this interface; 
 `dictionary` supports a very similar interface [`DictionaryFactory`](#creating-dictionaries).
-In addition, the _methods_ `list⟦T⟧(_)`,  `set⟦T⟧(_)` and `sequence⟦T⟧(_)` are defined in Standard Grace,
+In addition, the _methods_ `list⟦T⟧(_)`,  `set⟦T⟧(_)` and `sequence⟦T⟧(_)` are defined in _standard_,
 and are equivalent to  `list⟦T⟧.withAll(_)`,  `set⟦T⟧.withAll(_)` and `sequence⟦T⟧.withAll(_)`.
 
 ## Enumerables
 
 Additional methods are available in the type
-`Enumerable`; an `Enumerable` is like a
-`Sequence`, but in addition allows its elements to be *enumerated*
-one by one, in order, using a computational process, rather than being
-stored explicitly. For this reason, operations that require access to
-all of the elements at the same time, like sorting, are not supported directly.
-Instead, Enumerables can be converted 
-to other collections that store their elements. 
-
+`Enumerable`; an `Enumerable` is a
+`Collection`, that allows its elements to be *enumerated*
+one by one, in order, using a computational process.
 The key difference
 between a `Collection` and an `Enumerable`
 is that `Enumerable`s have a natural order, so lists are
 `Enumerable`, whereas sets are just
 `Collection`s.
+
+There is no requirment that the elements of an `Enumerable` are stored explicitly.
+For this reason, operations that require access to
+all of the elements at the same time, like sorting, are not supported directly.
+Instead, Enumerables can be converted to other collections that store their elements. 
+
 
 ```
 type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
@@ -796,11 +797,11 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
     keysAndValuesDo (action:Function2⟦Number, T, Object⟧) -> Done
     // applies action, in order, to each of my keys and the corresponding element. 
 
-    sorted -> Enumerable⟦T⟧
-    // returns a new Enumerable containing all of my elements, but sorted by their < and == operations.
+    sorted -> List⟦T⟧
+    // returns a new list containing all of my elements, but sorted by their < and == operations.
 
-    sortedBy(sortBlock:Function2⟦T, T, Number⟧) -> Enumerable⟦T⟧
-    // returns a new List containing all of my elements, but sorted according to the ordering 
+    sortedBy(sortBlock:Function2⟦T, T, Number⟧) -> List⟦T⟧
+    // returns a new list containing all of my elements, but sorted according to the ordering 
     // established by sortBlock, which should return -1 if its first argument is less than its
     // second argument, 0 if they are equal, and +1 otherwise.
 }
@@ -1209,7 +1210,7 @@ your own iterator, it is good practice to detect this error and raise
 `ConcurrentModification`.
 
 *for–do* loops on `Collection` objects are provided by
-standard Grace. The method `for(_)do(_)` takes two
+the _standard_ dialect. The method `for(_)do(_)` takes two
 arguments, a `collection` and
 a one-parameter block `body`. It repeatedly applies
 `body` to the elements of `collection`.
