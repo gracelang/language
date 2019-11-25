@@ -1446,7 +1446,7 @@ default methods.
 
 
 Notice that `graceObject` implements neither `==` nor `$\neq$`.
-In the _standardGrace_ dialect, the trait `equality` is available to help
+In the _standard_ dialect, the trait `equality` is available to help
 in their implementation.
 
 
@@ -2180,8 +2180,8 @@ Dialects can implement a variety of static typing regimes.
 
 ## Predeclared Types
 
-A number of types are declared in _standardGrace_ and included in
-most dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`](#type-object),
+A number of types are declared in the _standard_ dialect, and included in
+most other dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`](#type-object),
 [`Number`](#numbers), [`String`](#strings), `Function`_n_, `Procedure`_n_, `Predicate`_n_, 
 `Iterator`, `Pattern`, [`ExceptionPacket`](#exception-packets),
 [`ExceptionKind`](#kinds-of-exception), and [`Type`](#type-type).
@@ -2193,7 +2193,7 @@ Type `None` has all methods.  It is "uninhabited", that is, no actual object has
 
 ### Type Object
 
-In _standardGrace_, type `Object` includes just the public [Default Methods] declared in
+In _standard_, type `Object` includes just the public [Default Methods] declared in
 `graceObject`.
 
     type Object = interface {
@@ -2206,7 +2206,7 @@ are not present in type `Object`, because they are *confidential*.
 
 ### Type EqualityObject
 
-In _standardGrace_, type `EqualityObject` adds the family of equality methods to `Object`:
+In _standard_, type `EqualityObject` adds the family of equality methods to `Object`:
 
     type EqualityObject = Object & interface {
         ::(value:Object) → Binding
@@ -2672,7 +2672,7 @@ declarations, classes, traits, control structures, and even the
 `graceObject` trait that defines the default methods.
 
 Modules that do not declare a `dialect` are treated as being written in the
-dialect _standardGrace_.  If a module really wishes to use no dialect,
+dialect _standard_.  If a module really wishes to use no dialect,
 it should specify `dialect "none"`.
 
 In addition to declarations, a dialect can also define a _checker_ that
