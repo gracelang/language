@@ -14,14 +14,14 @@ folder: Dialects
 
 The _beginningStudent_ dialect is intended to avoid some challenges that 
 beginning students have encountered with Grace.  It makes several changes to 
-the [_standardGrace_ dialect]({{site.baseurl}}/dialects/standard).
-Other than what is listed below, all of the features of 
-[_standardGrace_ dialect]({{site.baseurl}}/dialects/standard)
+the [_standard_ dialect]({{site.baseurl}}/dialects/standard).
+Other than what is listed below, all of the features of the
+[_standard_ dialect]({{site.baseurl}}/dialects/standard)
 are available in _beginningStudent_.
 
 ## Collections
 
-The collection constructors of _standardGrace_, written with `[` square brackets `]`,
+The collection constructors of _standard_, written with `[` square brackets `]`,
 are not present in _beginningStudent_.  Instead, use the following methods:
 
     list.empty                  // creates an empty list

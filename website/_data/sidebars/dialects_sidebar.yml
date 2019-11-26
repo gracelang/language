@@ -24,7 +24,7 @@ entries:
     - title: statictype
       url: /dialects/staticTypes/
       output: web
-    - title: standardGrace
+    - title: standard
       url: /dialects/standard/
       output: web
     - title: Writing a dialect

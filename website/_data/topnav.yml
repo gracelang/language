@@ -54,7 +54,7 @@ topnav_dropdowns:
           url: /dialects/minitest/
         - title: staticType
           url: /dialects/staticTypes/
-        - title: standardGrace (the standard library)
+        - title: standard
           url: /dialects/standard/
         - title: Writing a dialect
           url: /dialects/writeDialect/
