@@ -130,9 +130,9 @@ things that you can assert.
         // The assertion holds if b raises some other exception, or if it completes
         // without raising any exception.
         // NOTE:  Use this rarely!  If all you need is to check that b does not
-        // raise an excpetion, just write the body of the block in-line: if it does raise
-        // an excpetion, your test will error.  If you want to check that b does raise
-        // and expection of a different kind, then use assert(_)shouldRaise(_)...
+        // raise an exception, just write the body of the block in-line: if it does raise
+        // an exception, your test will error.  If you want to check that b does raise
+        // and exception of a different kind, then use assert(_)shouldRaise(_)...
 
         failBecause (message)
         // always fails; equivalent to assert (false) description (message)
@@ -163,6 +163,18 @@ behaviour of the code under test, and *not* on implementation decisions
 that might change. So, for example, if the result is a set, your test
 should not depend on the order in which the elements appear when you
 iterate over it.
+
+Don't make your test depend on trivial details that are likely to change.  Why not?
+Because you don't want to spend valuable development time changing tests because,
+for example, you correct a punctuation mistake in an error message.
+This is where the 
+
+    assert (computation) shouldRaise (ExceptionKind) mentioning (string)
+    assert (computation) shouldRaise (ExceptionKind) mentioning (string1) and (string2)
+
+assertion methods can be useful.
+Don't insist that the whole wording of the error message is just so.  
+Instead, put only the critical phrases in the `mentioning` string(s).
 
 ### What happens when you execute a *minitest* module?
 
@@ -195,7 +207,7 @@ test suite at the top of this page, we get the output
 Note that even though the test with title *remove* failed, *minitest*
 went on to run the remaining tests.
 
-### Limiting the output form Erroneous Specifications.
+### Limiting the output from Erroneous Specifications.
 
 When a test reveals an error, _minitest_ will
 run it again, and on this second run will capture and print Grace's usual _backtrace_.
@@ -211,6 +223,7 @@ if you add
     
 to a test module (_before_ the `testSuite` statement), then no 
 tests will be re-run.
+You will still see the failure and error reports, but no back-traces.
 
 ### Exiting
 
@@ -219,7 +232,7 @@ It's intended to be used at the end of the module, after all of the tests have r
 If they all passed, `exit` will print `"all tests passed"` and pass exit code `10`
 to the calling environment; if any of 
 the tests errored or failed, it will print nothing and pass exit code `1`. 
-This is intended for use in conjunction with scripts that run many test modules. 
+This is helpful in conjunction with scripts that run many test modules. 
 
 ### Further Reading
 
