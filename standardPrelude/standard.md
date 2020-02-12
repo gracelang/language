@@ -458,7 +458,7 @@ type String =  EqualityObject & interface {
     indexOf⟦W⟧ (pattern:String) startingAt(offset) ifAbsent (action:Function0⟦W⟧) -> Number | W
     // like the above, except that it returns the result of applying action if there is no such index.
 
-    indices -> Sequence⟦Numbre⟧
+    indices -> Sequence⟦Number⟧
     keys -> Sequence⟦Number⟧
     // an object representing the range of indices of self (1..self.size). 
 
