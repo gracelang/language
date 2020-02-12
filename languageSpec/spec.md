@@ -748,7 +748,9 @@ An omitted type annotation is treated as `Unknown`.
 
 ### Type Parameters
 
-Methods may be declared with one or more type parameters.
+Methods (including [classes](#class-declarations) and 
+[traits](#trait-objects-and-trait-declarations)) 
+may be declared with one or more type parameters.
 If present, type parameters are listed between $\llbracket$
 and $\rrbracket$ after the identifier that forms the first
 (or only) part of the method's name.
@@ -759,14 +761,25 @@ canonical name of the method.
 
 **Example**
 
-    method indexOf⟦W⟧ (pattern:String) ifAbsent (absent:Function0⟦W⟧) -> Number | W {
+    method indexOf⟦W⟧ (pattern:String) ifAbsent (absent:Function0⟦W⟧) → Number | W {
         // returns the leftmost index at which pattern appears in self; 
         // applies absent if it is not there.
         ...
+    }
     
+    method list⟦T⟧ {
+        object {
+            method asString { "the list factory" }
+            method empty -> List⟦T⟧ { list⟦T⟧ [] }
+            method with (elem) -> List⟦T⟧ { list⟦T⟧ [elem] }
+            method withAll (elems) -> List⟦T⟧ { list⟦T⟧ (elems) } 
+        }
+    }
     
-In this example, the `ifAbsent` block can return an abritary object.  If this object has type `W`, then
+In the first example, the `ifAbsent` block can return an abritary object.  If this object has type `W`, then
 the result of the `indexOf(_)ifAbsent(_)` method will have type `Number | W`.
+The second example illustrates a method `list` with a single type parameter `T`, which is
+used as a type argument within the body of the object that it returns.
 
 Type parameters may be constrained with **where clauses**.  The reserved word `where`
 follows the final type parameter; if there is more than one where condition, 
@@ -1096,16 +1109,18 @@ field declarations, `inherit` statements, or executable code.
 A trait can `use` other traits.
 Methods in a trait can capture variables in the lexical scope of the trait,
 so that they can have what is effectively private state, as illustrated in the [Section on private attributes](#no-private-attributes).
-Note that a trait can contain types, traits, and classes; these classes _can_ contain field declarations, and can inherit.
+Note that a trait object can contain types, traits, and classes; these classes _can_ contain field declarations, and can inherit.
 
 
 Aside from these restrictions, Grace's **trait** syntax and semantics is parallel to the class syntax.
-In particular, a `trait` defines a method that returns a trait object.
-Hence, the following two declarations create equivalent traits:
+In particular, the reserved word `trait` defines a *method* that returns a trait object.
+Hence, in the following example, `emptiness1` and `emptiness2` are both methods,
+and both create and return equivalent traits objects.
 
 **Examples**
 
     trait emptiness1 {
+        method size is required
         method isEmpty { size == 0 }
         method nonEmpty { size ≠ 0 }
         method ifEmptyDo (eAction) nonEmptyDo (nAction) {
@@ -1115,6 +1130,7 @@ Hence, the following two declarations create equivalent traits:
 
     method emptiness2 {
         object {
+            method size is required
             method isEmpty { size == 0 }
             method nonEmpty { size ≠ 0 }
             method ifEmptyDo (eAction) nonEmptyDo (nAction) {
@@ -1142,8 +1158,8 @@ with type arguments.
         method at(index: Number) put(elem: T) { ... }
     }
 
-    class sortedVectorOfSize(size)⟦T⟧
-        where T <: Comparable⟦T⟧ {
+    class sortedVector⟦T⟧
+        where T <* Comparable⟦T⟧ {
           ...
     }
 
@@ -1166,10 +1182,10 @@ clauses:
   2. `inherit` clauses include methods in the parent that originated in `graceObject`,
 while `use` clauses do not.
 
-The `parent` in an `inherit parent` and `use parent` clause must be a
+The expression `parent` in an `inherit parent` and `use parent` clause must be a
 [Manifest Expression](#manifest-expressions)
 that returns a [Fresh Object](#fresh-objects); usually this will be a request on a class or trait.
-The `parent` cannot depend on `self`, implicitly or
+The expression `parent` cannot depend on `self`, implicitly or
 explicitly, because `self` does not exist until after the reuse statement containing `parent` has been evaluated.
 
 If it is necessary for the current object to access an overridden attribute
@@ -1509,8 +1525,15 @@ Elsewhere, **`self`** refers to
 the object being constructed by the lexically-innermost module,
 object constructor, class or trait surrounding the word **`self`**
 Hence, the expression `self.x` requests `x` on the current object.
+Because of inheritance and trait use, this may not be the definition of `x` that
+appears in the current object constructor.
 
-The reserved word **`Self`** (capitalised) refers to the type of the current object.
+The reserved word **`Self`** (capitalised) may appear in an object or in an interface.  
+In an object, it refers to the type of the object `self`;
+in an interface, it refers to the type of which that interface is a part.
+Because interfaces can be compbined using `&` and `|`,
+the meaning of `Self`, like that of `self`, depends on the context in which 
+it is evaluated.
 
 
 **Examples**
@@ -1522,6 +1545,11 @@ The reserved word **`Self`** (capitalised) refers to the type of the current obj
       self.doThis(3) timesTo("foo")
       self + 1
       ! self
+      
+      type Copyable = interface { copy → Self }
+      type Key = interface { unlock(_) → Done }
+      type CopyableKey = Copyable & Key     // the result of the copy method
+      // in a CopyableKey is also a CopyableKey
 
 ## Outer
 
@@ -1626,7 +1654,8 @@ However, if `m` is defined in the current scope by inheritance or trait use,
 rather than directly, and *also* defined _directly_ in an enclosing scope, then
 an implicit request of `m` is ambiguous, and is an error.
 
-Implicit requests are always resolved lexically, that is, in the nested scope in which
+Implicit requests are always resolved lexically, that is, 
+in the nested scope in which
 the implicit request is written, and
 not within the scope of any object (class, or trait) that may inherit the
 method containing the implicit request.
@@ -1793,9 +1822,9 @@ arguments are omitted, they are assumed to be `Unknown`.
 **Examples**
 
 
-    sumSq⟦Number⟧(10.i64, 20.i64)
+    sumSq⟦Number⟧(1, 20)
 
-    sumSq(10.i64, 20.i64)
+    sumSq(1, 20)
 
 
 ## Manifest Expressions
@@ -2100,9 +2129,9 @@ An exception in `expression` can be caught by a dynamically-enclosing
 which takes the following form.
 
     try { expression }
-        catch { e1:Exception_1 -> block_1 }
+        catch { e1:Exception_1 → block_1 }
         ...
-        catch { en:Exception_n -> block_n }
+        catch { en:Exception_n → block_n }
         finally { finalBlock }
 
 If an exception is raised
@@ -2402,9 +2431,6 @@ canonical name `m` in `B` such that
 
     -   results types must be covariant: `S <: R`
 
-The relationship used in `where` clauses to constrain
-type parameters of traits, classes and methods has yet to be specified.
-
 ## Composite types
 
 Grace offers a number of operators to compose types.
@@ -2456,7 +2482,7 @@ methods contained in both `S` and `T`.
 An object conforms to an Intersection type, written
 `T1 & T2 & ... & Tn`, if and only if that object conforms to all of the
 component types. The main uses of intersection types is for augmenting
-types with new operations, and as bounds on `where` clauses.
+types with new operations, and as type bounds in `where` clauses.
 
     (S & T) <: S
     (S & T) <: T
