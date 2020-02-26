@@ -221,7 +221,7 @@ double-precision). `Number`s are represented with a
 precision of approximately 51 bits.
 Number constants include `π` and `infinity`, the latter being 
 larger than any finite number, as well as conventional numerals like
-`27`.  
+`27`, `2.5`, and `7e3` (the latter meaning `7 * 10^3`).  
 
 ``` 
 type Number = EqualityObject & interface {
@@ -738,6 +738,14 @@ type Collection⟦T⟧ = interface {
     // returns a new collection containing only those elements of self for which
     // condition holds.  The result is ordered if self is ordered.
     
+    anySatisfy(condition:Function1⟦T, Boolean⟧) -> Boolean
+    // returns true if self contains an element x for which conditon.apply(x)) holds.
+    // Otherwise (including the case when self is empty), returns false.
+    
+    allSatisfy(condition:Function1⟦T, Boolean⟧) -> Boolean
+    // returns false if conditon.apply(x)) is false for any element x of self.
+    // Otherwise (including the case when self is empty), returns true.
+        
     ++(other:Enumerable⟦T⟧) -> Collection⟦T⟧
     // returns a new object whose elements include those of self and those of other.
 
@@ -1031,9 +1039,6 @@ type Set⟦T⟧ = Collection⟦T⟧ & interface {
     
     contains(elem:T) -> Boolean
     // true if self contains elem
-
-    includes(predicate: Function1⟦T,Boolean⟧) -> Boolean
-    // true if predicate holds for any of the elements of self
     
     find(predicate: Function1⟦T,Boolean⟧) ifNone(notFoundBlock: Function0⟦T⟧) -> T
     // returns an element of self for which predicate holds, or the result of 
