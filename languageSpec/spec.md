@@ -411,7 +411,7 @@ it may contain the [string escapes](#string-literals).
 ### Uninterpreted Strings
 
 String literals can also be written between single guillemet quotation marks,
-‹thus›.  Between the `‹` and the `›`, characters from the input become characters of
+`‹thus›`.  Between the `‹` and the `›`, characters from the input become characters of
 the string without interpretation, and without any escapes (not even for `›`).
 In the grammar, `<uninterpretedString>` denotes a sequence of _any_ characters except `›`.
 
@@ -776,7 +776,7 @@ canonical name of the method.
         }
     }
     
-In the first example, the `ifAbsent` block can return an abritary object.  If this object has type `W`, then
+In the first example, the `ifAbsent` block can return an arbitrary object.  If this object has type `W`, then
 the result of the `indexOf(_)ifAbsent(_)` method will have type `Number | W`.
 The second example illustrates a method `list` with a single type parameter `T`, which is
 used as a type argument within the body of the object that it returns.
@@ -1531,7 +1531,7 @@ appears in the current object constructor.
 The reserved word **`Self`** (capitalised) may appear in an object or in an interface.  
 In an object, it refers to the type of the object `self`;
 in an interface, it refers to the type of which that interface is a part.
-Because interfaces can be compbined using `&` and `|`,
+Because interfaces can be combined using `&` and `|`,
 the meaning of `Self`, like that of `self`, depends on the context in which 
 it is evaluated.
 
@@ -1914,13 +1914,13 @@ objects are Patterns, which match objects that have that type.
 So, `5` is a pattern that matches the number 5, and `true` is a pattern that matches the Boolean true. 
 
  * The prefix operations 
-`<`, `≤`, `>` and `≥` on numbers return approriate patterns, so `≥5` ia a 
+`<`, `≤`, `>` and `≥` on numbers return appropriate patterns, so `≥5` is a 
 pattern that matches any number greater than or equal to 5.
 
  * In addition, libraries supply Patterns, 
 and programmers are free to implement their own Patterns.
 
- * Patterns can be combiend with the pattern operators `&` (for and), `|` (or), and prefix `$\neg$` (not).
+ * Patterns can be combined with the pattern operators `&` (for and), `|` (or), and prefix `$\neg$` (not).
 
 **Example**
 
@@ -1954,7 +1954,7 @@ raise a type error because the block's argument would not conform to its
 parameter type, `matches(_)` returns `false`.
 
 The parameter declarations of a block take the form `Identifier PatternOption`, rather than `Identifier TypeOption`.
-This means that the annotaton after the `:` can be any `Expression` that evaluates to a Pattern, and is not restricted to being a `TypeExpression`.
+This means that the annotation after the `:` can be any `Expression` that evaluates to a Pattern, and is not restricted to being a `TypeExpression`.
 
 If the `Identifier` in the `BlockParameter` is `_`, and the
 `PatternOption` is not empty, then the underscore and the following
@@ -2011,8 +2011,8 @@ If `fib` is requested with a negative argument, none of the pattern blocks will 
 
     { a → print "did not match" }
         // match against the empty type annotation; equivalent to a:Unknown.
-        // Matches any object, and binds it to `a`.  
-        // This is not useful in combiation with other case matching blocks
+        // This matches any object, and binds it to `a`, and hence  
+        // is not useful in combination with other case-matching blocks
 
 
 # Exceptions
