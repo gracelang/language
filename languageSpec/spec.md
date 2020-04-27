@@ -245,7 +245,7 @@ In the grammar, `<operator>` denotes an operator.
 Grace has the following reserved tokens:
 
     alias as class def dialect exclude import inherit interface is method object
-    once outer prefix return self Self trait type use var where
+    once outer prefix return self Self trait type Unknown use var where
     . ... := = ; { } [ ] ( ) : → -> $\rightarrow$ [[  ]] $\llbracket$ $\rrbracket$ //
 
 # Built-in Objects
@@ -1560,7 +1560,7 @@ enclosing `self`.
 
 **Grammar**
 
-````
+```
 RULE Self
 RULE Outer
 ```
@@ -2278,7 +2278,7 @@ if a declaration is not annotated, then the type of the declared name is
 _implicitly_ `Unknown`.  Omitted type arguments are also equivalent to
 `Unknown`.
 
-Type-checking against `Unknown` will always succeed: any object matches
+Static type-checking against `Unknown` will always succeed: any object matches
 type `Unknown`, and type `Unknown` conforms to all other types.
 
 **Examples**
