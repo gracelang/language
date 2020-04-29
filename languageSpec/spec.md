@@ -246,7 +246,7 @@ Grace has the following reserved tokens:
 
     alias as class def dialect exclude import inherit interface is method object
     once outer prefix return self Self trait type Unknown use var where
-    . ... := = ; { } [ ] ( ) : → -> $\rightarrow$ [[  ]] $\llbracket$ $\rrbracket$ //
+    . ... := = ; { } [ ] ( ) : -> $\rightarrow$ [[  ]] $\llbracket$ $\rrbracket$ //
 
 # Built-in Objects
 
