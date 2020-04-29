@@ -15,7 +15,7 @@ _config.yml: config.yml.in Makefile
 
 serve: build
 	@echo "Running command:"
-	bundle exec jekyll serve --skip-initial-build
+	bundle exec jekyll serve --skip-initial-build 2>&1 | egrep -v 'deprecated|called method'
 
 pdfs:
 	$(MAKE) -C ../languageSpec spec_with_grammar.pdf
@@ -30,10 +30,10 @@ build: _config.yml pdfs kramdowns loadResources
 	./loadResources
 	./checkJekyll
 	@echo Building the website... Running command:
-	bundle exec jekyll build relative
+	bundle exec jekyll build relative 2>&1 | egrep -v 'deprecated|called method'
 	@echo ${LAST_EXIT}
 	@echo The website has been built and is stored in the \"_site\" folder. It can now be
-	@echo added to a server. If you wish to run it on localhost:4000, use "make serve"
+	@echo uploaded to a server. If you wish to test it on localhost, use \"make serve\"
 	@echo ${LAST_EXIT}
 
 deploy: build
