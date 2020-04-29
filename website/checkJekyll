@@ -2,16 +2,16 @@
 
 LINEBREAK="*****************************************************************"
 VERSION=0
+echo "which jekyll = $(which jekyll)"
+printf "Checking Jekyll... "
 
-echo "Checking Jekyll..."
-VERSION=$(jekyll --version)
-
-if test "$?" == "0"
+if VERSION=$(jekyll --version)
 then
-     echo "$VERSION is installed on this system..."
+     echo "$VERSION is installed on this system."
 else
+     echo "$VERSION"
      echo "$LINEBREAK"
-     echo "Oops! It looks like you don't have Jekyll yet, lets install it!"
+     echo "Oops! It looks like you don't yet have Jekyll, lets install it!"
      echo "Running command: \"sudo gem install jekyll\""
      echo "$LINEBREAK"
      sudo gem install jekyll
