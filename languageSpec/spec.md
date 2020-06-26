@@ -37,7 +37,7 @@ Many of the expressions and commands in Grace are actually defined in the
 Grace standard dialect (and hence may not be supported in all dialects).
 Because some of these constructs are used in the examples in this document,
 we urge you to have a copy of [the documentation for the standard dialect](../dialects/standard)
-at hand when reading this document.  It should be available in the 
+at hand when reading this document.  It should be available in the
 directory where this document was found.
 
 # User Model
@@ -93,7 +93,7 @@ Grace has been designed with the following users in mind.
 ------------------------------------------------------------------------
 
 Grace programs are written in Unicode. Reserved words are written in the
-ASCII subset of Unicode.  
+ASCII subset of Unicode.
 
 The context-free syntax of Grace is described by an EBNF grammar.
 Individual productions are included in this specification where appropriate.
@@ -195,27 +195,30 @@ Because the second and third lines are indented more than the first, they contin
     } else {
         doAnotherThing
     }
-    
-The body of the block that comprises the `then` action is indented *more than* the line that contains the opening `{`; the closing `}` is at *the same* indentation as the the line that contains the opening `{`.  Because there is no line break after the first `}`, the `else(_)` does not start a separate statement.
+
+The body of the block that comprises the `then` action is indented *more than* the line that
+contains the opening `{`; the closing `}` is at *the same* indentation as the the line that contains the opening `{`.
+Because there is no line break after the first `}`, the `else(_)` does not start a separate statement.
 
 **Alternative Layout** for `if(_)then(_)else(_)`
 
-    if (condition) 
-        then { doSomething } 
+    if (condition)
+        then { doSomething }
         else { doAnotherThing }
     theFollowingStatement
 
-Here the whole `if(_)then(_)else(_)` is on a single logical line; 
+Here, the whole `if(_)then(_)else(_)` is on a single logical line;
 the indentation indicates that the `then` and `else` lines are a continuation of the `if` line.
 This format is appropriate only when the code blocks are small.
 
 **Bad Layout** for `if(_)then(_)else(_)`
 
-    if (condition) 
-    then { doSomething } 
+    if (condition)
+    then { doSomething }
     else { doAnotherThing }
-    
-This layout shows three separate statements --- an `if(_)`, a `then(_)`, and an `else(_)`. It is *not* a valid way of formatting a single `if(_)then(_)else(_)` statement.
+
+This layout shows three separate statements --- an `if(_)`, a `then(_)`, and an `else(_)`.
+It is *not* a valid way of formatting a single `if(_)then(_)else(_)` statement.
 
 
 ## Identifiers and Operators
@@ -361,7 +364,7 @@ escape characters;
 these are listed in the table below.
 
 Individual characters
-are represented by strings of length 1. Strings are immutable, so an implementation may intern them. 
+are represented by strings of length 1. Strings are immutable, so an implementation may intern them.
 Grace's standard
 library supports efficient incremental string construction.
 
@@ -422,7 +425,7 @@ In the grammar, `<uninterpretedString>` denotes a sequence of _any_ characters e
     def s = "This is a String"
     def n = 17
     ›
-    
+
 **Grammar**
 ```
 RULE String
@@ -520,7 +523,7 @@ Here is another example:
 **Grammar**
 ```
 RULE Block
-RULE BlockParameterList 
+RULE BlockParameterList
 ```
 
 # Declarations
@@ -554,7 +557,7 @@ Constants may be optionally given a type: this type is checked when
 the constant is initialised.
 An omitted type annotation is treated as `Unknown`.
 
-If the initialising expression is omitted, an annotation is required; 
+If the initialising expression is omitted, an annotation is required;
 in this case the declaration is a *marker declaration*.
 Constant declarations inside an object constructor create [fields](#fields);
 others create temporary constants.
@@ -604,7 +607,7 @@ Specifying the return type is optional;
 an omitted return type is treated as `Unknown`.
 When the method returns, its result is checked against this type.
 
-If the `MethodBody` is omitted, an annotation is required; 
+If the `MethodBody` is omitted, an annotation is required;
 in this case the method declaration is a *marker declaration*.
 
     method pi  { 3.141592634 }
@@ -617,7 +620,7 @@ in this case the method declaration is a *marker declaration*.
         if (random.nextBoolean)
             then {a.apply} else {b.apply}
     }
-    
+
     method changeSpeedBy(delta) is abstract     // marker declaration
 
 **Grammar**
@@ -731,7 +734,7 @@ method prefix- → Point
 ```
 
 As a consequence of the above rules, methods `max(a, b, c)` and
-`max(a, b)` have different canonical names and are therefore 
+`max(a, b)` have different canonical names and are therefore
 distinct methods.  In other words, Grace allows "overloading by
 arity". (Grace does _not_ allow overloading by type).
 
@@ -748,8 +751,8 @@ An omitted type annotation is treated as `Unknown`.
 
 ### Type Parameters
 
-Methods (including [classes](#class-declarations) and 
-[traits](#trait-objects-and-trait-declarations)) 
+Methods (including [classes](#class-declarations) and
+[traits](#trait-objects-and-trait-declarations))
 may be declared with one or more type parameters.
 If present, type parameters are listed between $\llbracket$
 and $\rrbracket$ after the identifier that forms the first
@@ -762,27 +765,27 @@ canonical name of the method.
 **Example**
 
     method indexOf⟦W⟧ (pattern:String) ifAbsent (absent:Function0⟦W⟧) → Number | W {
-        // returns the leftmost index at which pattern appears in self; 
+        // returns the leftmost index at which pattern appears in self;
         // applies absent if it is not there.
         ...
     }
-    
+
     method list⟦T⟧ {
         object {
             method asString { "the list factory" }
             method empty -> List⟦T⟧ { list⟦T⟧ [] }
             method with (elem) -> List⟦T⟧ { list⟦T⟧ [elem] }
-            method withAll (elems) -> List⟦T⟧ { list⟦T⟧ (elems) } 
+            method withAll (elems) -> List⟦T⟧ { list⟦T⟧ (elems) }
         }
     }
-    
+
 In the first example, the `ifAbsent` block can return an arbitrary object.  If this object has type `W`, then
 the result of the `indexOf(_)ifAbsent(_)` method will have type `Number | W`.
 The second example illustrates a method `list` with a single type parameter `T`, which is
 used as a type argument within the body of the object that it returns.
 
 Type parameters may be constrained with **where clauses**.  The reserved word `where`
-follows the final type parameter; if there is more than one where condition, 
+follows the final type parameter; if there is more than one where condition,
 the conditions are separated  by commas.
 
 **Example**
@@ -790,8 +793,8 @@ the conditions are separated  by commas.
     method sumSq⟦T where T <* Numeric⟧(a:T, b:T) → T  {
         (a * a) + (b * b)
     }
-    
-The type relation in a where condition can be one of `<:`, `:>`,`<*`, or `*>`.   `<:` indicates subtyping, 
+
+The type relation in a where condition can be one of `<:`, `:>`,`<*`, or `*>`.   `<:` indicates subtyping,
 while `<*` indicates matching.
 Matching is like subtyping, except that where `Self` appears in one argument, it must also appear in the other.
 `:>` and `*>` are the inverses of `<:` and `<*`.
@@ -803,12 +806,12 @@ RULE TypeParameter
 RULE Where
 RULE WhereCondition
 ```
-    
+
 
 ### Once Methods
 
 A **once method** is declared by prefixing a method declaration with the
-reserved word `once`.  Such a method completes execution at most once on 
+reserved word `once`.  Such a method completes execution at most once on
 each object with a given set of arguments:
 the first time that the object receives the corresponding request.
 The return value is memoized, and subsequent requests of the method with equal arguments
@@ -821,13 +824,13 @@ on its first execution,
 then no value is memoized, and execution of the method will start again if it
 is requested anew.
 This process will repeat until the once method returns normally, at which point
-the return value will be memoized, and subsequent executions with equal argument 
+the return value will be memoized, and subsequent executions with equal argument
 lists will return the memoized value.
-Once methods can be used to represent lazily-initialized scalar constants, 
+Once methods can be used to represent lazily-initialized scalar constants,
 pure functions, and for any
 method whose result will not change once it has been calculated.
 
-A parameterless once method differs from a constant field (declared with `def`) 
+A parameterless once method differs from a constant field (declared with `def`)
 in that the latter is initialized as part of
 the process of creating its containing object, and is consequently _uninitialized_ during part
 of that process.  Hence, parameterless once methods are convenient for defining constants that may be
@@ -861,11 +864,11 @@ Because of the memoization provided by `once`, the above code takes linear time.
 
 Any declaration, and any object constructor, may have a
 comma-separated list of annotations following the keyword **`is`**
-before its body or initialiser. 
+before its body or initialiser.
 
 Some annotations, like `required`, `abstract` and `annotation`, indicate that the
-declaration is a marker declaration, that is, a declaration without an initialiser 
-or a method body.  
+declaration is a marker declaration, that is, a declaration without an initialiser
+or a method body.
 
 Grace defines the following core
 annotations:
@@ -884,7 +887,7 @@ annotations:
 
 Additional annotations can be defined by marker declarations
 annotated with `is annotation`.
-Annotations are identifiers, i.e., static labels, not runtime values. 
+Annotations are identifiers, i.e., static labels, not runtime values.
 For example, a `def` declaration is public because it is annotated with the identifier `public`.
 It is not possible to make another identifier, say `secret`, mean the same thing as `public`
 by writing
@@ -910,7 +913,7 @@ RULE AnnotationArgList
 ## Encapsulation
 
 Grace has different default encapsulation rules for methods, types, and
-fields; the defaults can be changed by explicit annotations. 
+fields; the defaults can be changed by explicit annotations.
 Grace defines two levels of visibility: [public](#public) and [confidential](#confidential).
 
 ### Public
@@ -941,13 +944,13 @@ By default, fields are *confidential*.
 A field declared as `var x` can be read using the request `x` and
 assigned to using the assignment `x := ...`.
 A field declared as `def y` can be read using the request `y`, and
-cannot be assigned. 
+cannot be assigned.
 
 The default visibility can be changed using annotations. The annotation
 `readable`, applied to a `def` or `var` declaration, makes the
 accessor request available to any object. The annotation `writable`,
 applied to a `var` declaration, makes the assignment request
-available to any object. 
+available to any object.
 
 It is also possible to annotate a field
 declaration as `public`. In the case of a `def`, `public` is equivalent
@@ -1098,7 +1101,7 @@ binds the name `fergus` to this object.
 ```
 RULE ClassDeclaration
 ```
-If the MethodBody is omitted, an annotation is required; 
+If the MethodBody is omitted, an annotation is required;
 in this case the class declaration is a *marker declaration*.
 
 ## Trait Objects and Trait Declarations
@@ -1215,9 +1218,9 @@ object under construction, and thus do _not_ conflict with (and may therefore ov
 attributes obtained by reuse.
 They _do_ conflict with attributes declared in the object under construction.
 
-The method names in alias and exclude clauses have the same syntax as 
+The method names in alias and exclude clauses have the same syntax as
 method names in method declarations and interface literals;
-this means that they can contain both parameter names and type annotations. 
+this means that they can contain both parameter names and type annotations.
 Such names and annotations may be useful as documentation,
 but do not affect the meaning of the program.
 
@@ -1248,7 +1251,7 @@ class c1 {
     method w(kind) { ... }
 }
 ```
-This is a trait composition error, because `c1` gets a method with 
+This is a trait composition error, because `c1` gets a method with
 canonical name `w(_)` from two places: an alias clause, and a method definition.
 
 ```
@@ -1275,15 +1278,15 @@ trait moreCompare {
 }
 ```
 
-In this example, the trait `moreCompare` has two methods, 
+In this example, the trait `moreCompare` has two methods,
 `greaterThanOrEqual(_,_)` and `lessThanOrEqual(_,_)`, _but these method are
-identical_, and therefore the names are misleading. 
+identical_, and therefore the names are misleading.
 If the intension is to make `greaterThanOrEqual(_,_)` perform the inverse comparison,
 this should have been written as
 
 ```
 trait moreCompare {
-    use compare 
+    use compare
     method greaterThanOrEqual(x, y) is confidential {
         lessThanOrEqual(y, x)
     }
@@ -1473,7 +1476,7 @@ in their implementation.
         method ≠ (other)  { (self == other).not }
         method :: (obj) { binding.key (self) value (obj) }
     }
-    
+
 As the `is required` indicates, an object using this trait must provide an `==` method,
 and a corresponding `hash` method.
 One way to define these methods is by combining the equality and hash on the
@@ -1528,11 +1531,11 @@ Hence, the expression `self.x` requests `x` on the current object.
 Because of inheritance and trait use, this may not be the definition of `x` that
 appears in the current object constructor.
 
-The reserved word **`Self`** (capitalised) may appear in an object or in an interface.  
+The reserved word **`Self`** (capitalised) may appear in an object or in an interface.
 In an object, it refers to the type of the object `self`;
 in an interface, it refers to the type of which that interface is a part.
 Because interfaces can be combined using `&` and `|`,
-the meaning of `Self`, like that of `self`, depends on the context in which 
+the meaning of `Self`, like that of `self`, depends on the context in which
 it is evaluated.
 
 
@@ -1545,7 +1548,7 @@ it is evaluated.
       self.doThis(3) timesTo("foo")
       self + 1
       ! self
-      
+
       type Copyable = interface { copy → Self }
       type Key = interface { unlock(_) → Done }
       type CopyableKey = Copyable & Key     // the result of the copy method
@@ -1554,8 +1557,10 @@ it is evaluated.
 ## Outer
 
 The reserved word **`outer`** refers to the object lexically enclosing
-the current object; `outer.outer` (an `outer` sequence of length 2) refers to the object enclosing `outer`, and so on.  
-Note that an `outer` sequence is not a request, and that `outer` is a reserved word, not the name of a message. The expression `outer.x` requests `x` on the object lexically
+the current object; `outer.outer` (an `outer` sequence of length 2) refers to the object
+enclosing `outer`, and so on.
+Note that an `outer` sequence is not a request, and that `outer` is a reserved word,
+not the name of a message. The expression `outer.x` requests `x` on the object lexically
 enclosing `self`.
 
 **Grammar**
@@ -1576,7 +1581,7 @@ RULE Outer
       outer + 1
       ! outer
 
-Because `outer` is lexical, two methods in the same object may have different `outer` objects.  For example, one method may be inherited, while the other is defined locally. 
+Because `outer` is lexical, two methods in the same object may have different `outer` objects.  For example, one method may be inherited, while the other is defined locally.
 
 ## Named Requests
 
@@ -1614,8 +1619,8 @@ in an argument list does determine the method being requested.
 Parenthesis may be omitted where they would enclose a single argument
 that is a numeral, string constructor, boolean literal, sequence constructor, block,
 `self` or `outer` sequence.
-These forms are self-delimiting, and are readily 
-distinguished from the identifiers that comprise the name of the method being requested. 
+These forms are self-delimiting, and are readily
+distinguished from the identifiers that comprise the name of the method being requested.
 
 **Examples**
 
@@ -1654,7 +1659,7 @@ However, if `m` is defined in the current scope by inheritance or trait use,
 rather than directly, and *also* defined _directly_ in an enclosing scope, then
 an implicit request of `m` is ambiguous, and is an error.
 
-Implicit requests are always resolved lexically, that is, 
+Implicit requests are always resolved lexically, that is,
 in the nested scope in which
 the implicit request is written, and
 not within the scope of any object (class, or trait) that may inherit the
@@ -1687,7 +1692,7 @@ method containing the implicit request.
 
     app.barf  // prints "outer"
     bar.barf  // prints "outer"
-    
+
 **Grammar**
 ```
 RULE ImplicitRequest
@@ -1703,7 +1708,7 @@ parentheses. Spaces are optional before and after the
 
 An assignment binds the variable to the value of the argument, and returns `done`.
 An assignment method executes the method body;
-by convention, assignment methods also return `done`; 
+by convention, assignment methods also return `done`;
 
 **Examples**
 
@@ -1806,7 +1811,7 @@ not be parenthesized, and associates to the left.
 7.  Assignments, and method requests that use `:=` as a suffix to a
 method name.
 
-There is one exception to the rule that the binding between infix operators must be given 
+There is one exception to the rule that the binding between infix operators must be given
 explicitly:
  * “multiplicative” operators `*` and `/` are left-associative, and bind more tightly than
  * “additive” operators `+` and `-`, which also left associative.
@@ -1842,7 +1847,7 @@ Once disambiguated, let the parent expression be
     _r.p_~1~_.p_~2~_._ ... _.p_~_n_~,
 where the _p_~_i_~ are canonical names.
 The expression _r.p_~1~_.p_~2~_._ ... _.p_~_n_~ is manifest if
-the receiver _r_ is 
+the receiver _r_ is
 
 1. bound to a module in an `import` statement, or
 2. an `outer` sequence that refers to a module
@@ -1858,11 +1863,11 @@ Note that the arguments to a manifest expression need not themselves be manifest
 Consider a module containing the following code:
 
     class a {
-        class x { 
+        class x {
             method one {}
             method two {}
         }
-        
+
         class b {
             inherit outer.outer.a.x
                 // this uniquely defines x, without the possibility of overriding
@@ -1879,7 +1884,7 @@ and that the current module defines a class `c` that inherits `m.a` and override
         inherit m.a
         class x { ... }
     }
-    
+
 If class `b` were to simply `inherit x`, then `c.b` would acquire the fields and
 methods of this overriding `x` — which are unknown to `m`.
 By writing `outer.outer` to refer to the module enclosing `a`
@@ -1913,13 +1918,13 @@ Pattern matching is based on `Pattern` objects that respond to the
 objects are Patterns, which match objects that have that type.
 
  * Numbers, Booleans and Strings are _self-matching_: they are patterns that match themselves.
-So, `5` is a pattern that matches the number 5, and `true` is a pattern that matches the Boolean true. 
+So, `5` is a pattern that matches the number 5, and `true` is a pattern that matches the Boolean true.
 
- * The prefix operations 
-`<`, `≤`, `>` and `≥` on numbers return appropriate patterns, so `≥5` is a 
+ * The prefix operations
+`<`, `≤`, `>` and `≥` on numbers return appropriate patterns, so `≥5` is a
 pattern that matches any number greater than or equal to 5.
 
- * In addition, libraries supply Patterns, 
+ * In addition, libraries supply Patterns,
 and programmers are free to implement their own Patterns.
 
  * Patterns can be combined with the pattern operators `&` (for and), `|` (or), and prefix `$\neg$` (not).
@@ -1979,7 +1984,7 @@ RULE NonIdTerm
 ## Match ... case ... else
 
 Matching blocks and self-matching objects can be conveniently used
-in the `match(_)case(_)...else(_)` family of methods; 
+in the `match(_)case(_)...else(_)` family of methods;
 `case` may appear multiple times, with a block as argument.
 The `else` is optional; if present, it must be followed by a parameterless block.
 
@@ -2013,7 +2018,7 @@ If `fib` is requested with a negative argument, none of the pattern blocks will 
 
     { a → print "did not match" }
         // match against the empty type annotation; equivalent to a:Unknown.
-        // This matches any object, and binds it to `a`, and hence  
+        // This matches any object, and binds it to `a`, and hence
         // is not useful in combination with other case-matching blocks
 
 
@@ -2127,7 +2132,7 @@ The `dataObject` is stored in the exception packet so that it can be used (if de
 ## Catching Exceptions & Final Actions
 
 An exception in `expression` can be caught by a dynamically-enclosing
-`try(_)catch(_)...` or `try(_)catch(_)...finally(_)` request, 
+`try(_)catch(_)...` or `try(_)catch(_)...finally(_)` request,
 which takes the following form.
 
     try { expression }
@@ -2148,14 +2153,14 @@ The clause `finally { finalBlock }` is optional.  If present,
 `try(_)catch(_)…finally(_)` construct, whether or not an
 exception is raised, and whether or not `expression`, or one of the catch blocks, executes a `return`.
 
-The value of a 
+The value of a
 `try(_)catch(_)...finally(_)` request is the last value in `expression`, unless an exception is raised, in which case it is the
 the last value in whichever catch-block catches the exception.
-If the `finalBlock` executes to completion, its final value is ignored. 
+If the `finalBlock` executes to completion, its value is ignored.
 
-If `finalBlock` terminates by raising an exception, 
+If `finalBlock` terminates by raising an exception,
 or by executing a `return`, any prior `return` or raised
-exception is forgotten. 
+exception is forgotten.
 
 **Examples**
 
@@ -2207,13 +2212,13 @@ type tests.
 Because type declarations cannot be changed by overriding, the value of
 a type expression can always be determined before the program is executed;
 this means that types can be checked statically.
-Dialects can implement a variety of static typing regimes. 
+Dialects can implement a variety of static typing regimes.
 
 ## Predeclared Types
 
 A number of types are declared in the _standard_ dialect, and included in
 most other dialects, including [`None`](#none), [`Done`](#done), `Boolean`, [`Object`](#type-object),
-[`Number`](#numbers), [`String`](#strings), `Function`_n_, `Procedure`_n_, `Predicate`_n_, 
+[`Number`](#numbers), [`String`](#strings), `Function`_n_, `Procedure`_n_, `Predicate`_n_,
 `Iterator`, `Pattern`, [`ExceptionPacket`](#exception-packets),
 [`ExceptionKind`](#kinds-of-exception), and [`Type`](#type-type).
 
@@ -2255,9 +2260,9 @@ can be used to annotate results.
 
 ### Types Function, Procedure, and Predicate
 
-The type `Function0⟦T⟧` describes a block with zero parameters that returns a 
-result of type `T`.  
-`Function1⟦A1,T⟧` describes a block with one parameter of type `A1` and a 
+The type `Function0⟦T⟧` describes a block with zero parameters that returns a
+result of type `T`.
+`Function1⟦A1,T⟧` describes a block with one parameter of type `A1` and a
 result of type `T`.
 `Function2⟦A1, A2,T⟧` describes a block with two parameters of types `A1` and `A2`,
 and and a result of type `T`.
@@ -2316,7 +2321,7 @@ All types have type Type, which is defined as
 
 This type captures the idea that a type is a disjunction of interfaces.
 The interface literal syntax
-defines a type containing a single interface, 
+defines a type containing a single interface,
 so the `interfaces` method of an interface returns a sequence of length 1 containing itself.
 (The object identity operation is necessary to avoid infinite regress when
 comparing two recursive types for conformity.)
@@ -2348,7 +2353,7 @@ Interfaces characterize objects by detailing their public methods,
 and the types of the parameters and results of those methods.
 A readable field `x:T` is equivalent to a method `x → T`, and a writable
 field `y:T` is equivalent to a method `y:=($\nu$:T) → Done`.
-A declaration `type N = TypeExpr` is represented in the interface by a 
+A declaration `type N = TypeExpr` is represented in the interface by a
 method `N → Type⟦TypeExpr⟧`
 
 The various cat object constructors and classes described above
@@ -2386,17 +2391,17 @@ Type declarations may not be overridden.
 **Examples**
 
 	type MyCatType = interface {
-    // I care about only names and colours
+      // I care about just names and colours
 		color → Colour
 		name → String
 	}
 	
-	type MyParametricType⟦A,B 
+	type MyParametricType⟦A,B
           where A <: Hashable, B <: DisposableReference⟧ = interface {
 			at (_:A) put (_:B) → Boolean
 			cleanup(_:B)
     }
-        
+
 **Grammar**
 ```
 RULE TypeDeclaration
@@ -2566,21 +2571,21 @@ may impose varied restrictions on Grace.
 
 ### Dynamic Type Checking
 
-Currently, the dynamic interpretation of types is _shallow_, that is, 
-it considers only the methods present in an interface, 
+Currently, the dynamic interpretation of types is _shallow_, that is,
+it considers only the methods present in an interface,
 and not the types of the arguments or the results of those methods.
-This is because, in the absence of type annotations, Grace has no information 
+This is because, in the absence of type annotations, Grace has no information
 about the argument types or the return type of a method.
 This means that if programmers annotate a declaration
 
     var x:Number
 
 they can be sure that any object assigned to `x` has a method `+(_)`, but are _not_
-assured that this `+(_)` method will expect an argument that is also a `Number`, 
-nor that the result will be a `Number`, even though these details are part of 
+assured that this `+(_)` method will expect an argument that is also a `Number`,
+nor that the result will be a `Number`, even though these details are part of
 the `Number` interface.
-Similarly, when the operators `<:`, `:>` and `==` between types are evaluated 
-dynamically, argument and result types are ignored, even if they are present in the 
+Similarly, when the operators `<:`, `:>` and `==` between types are evaluated
+dynamically, argument and result types are ignored, even if they are present in the
 type definitions.
 
 This treatment is types not entirely satisfactory, and is subject to review and change.
@@ -2688,7 +2693,7 @@ where the `dialect` keyword is followed by a [string literal](#string-literal).
 
 The effect of the dialect statement is to import the dialect like any other
 module, but to nest the module that uses the dialect inside an enclosing
-[scope](#module-and-dialect-scopes) 
+[scope](#module-and-dialect-scopes)
 that contains the public definitions of the dialect.
 This means that
 [Implicit Requests](#implicit-requests) in the module can resolve to the definitions in
@@ -2802,7 +2807,7 @@ Productions are arranged in alphabetical order.
     - `<operator>` is a sequence of [operator characters](#identifiers-and-operators)
     - `<decimalNumeral>`, `<baseExponentNumeral>`, and `<explicitRadixNumeral>` are described in the [Section on Numbers](#numbers)
     - `<stringSegment>` is a sequence of characters that does not include an unescaped `"`, newline, or `{`; it may contain the [string escapes](#string-literals).
-    - `<uninterpretedString>` is a sequence of _any_ characters except `›`, the closing guillemet quotation mark; see the [Section on Uninterpreted Strings](#uninterpreted-strings)  
+    - `<uninterpretedString>` is a sequence of _any_ characters except `›`, the closing guillemet quotation mark; see the [Section on Uninterpreted Strings](#uninterpreted-strings)
     - `<typeRelation>` is one of `<:`, `:>`,`<*`, or `*>`
 
 ```
