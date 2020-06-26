@@ -1576,7 +1576,7 @@ RULE Outer
       outer + 1
       ! outer
 
-Because `outer` is lexical, two methods in the same object may have different `outer` objects.  For example, one method may be inherited, while the another is defined locally. 
+Because `outer` is lexical, two methods in the same object may have different `outer` objects.  For example, one method may be inherited, while the other is defined locally. 
 
 ## Named Requests
 
@@ -1645,7 +1645,7 @@ If the receiver of a method request is `self` or
 an `outer` sequence, the receiver may be left implicit, _i.e._, the `self` or `outer` sequence, and the following
 dot, may both be omitted.
 An implicit request is interpreted as a `self` request, or as an
-`outer` sequence request on an outer sequence of the appropriate length.
+`outer` request on an outer sequence of the appropriate length.
 
 When interpreting an implicit request of a method named `m`, the usual rules of lexical scoping apply,
 so a definition of `m` in
@@ -1764,7 +1764,7 @@ RULE BinaryRequest
 ## Unary Prefix Operator Requests
 
 Grace supports unary methods named by operator symbols that precede the
-explicit receiver. (Since binary operator methods must have an
+explicit receiver. (Since binary operator requests must have an
 explicit receiver, there is no syntactic ambiguity.)
 
 Prefix operators bind less tightly than named method requests, and more
@@ -1806,8 +1806,8 @@ method name.
 
 There is one exception to the rule that the binding between infix operators must be given 
 explicitly:
- * “Multiplicative” operators `*` and `/` associate left to right  and bind more tightly than
- * “Additive” operators `+` and `-`, which also associate left to right.
+ * “multiplicative” operators `*` and `/` are left-associative, and bind more tightly than
+ * “additive” operators `+` and `-`, which also left associative.
 
 
 ## Requesting Methods with Type Parameters
