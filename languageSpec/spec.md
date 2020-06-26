@@ -939,7 +939,7 @@ inside an object constructor create *fields* in that object.
 By default, fields are *confidential*.
 
 A field declared as `var x` can be read using the request `x` and
-assigned to using the assignment request `x:=(...)`.
+assigned to using the assignment `x := ...`.
 A field declared as `def y` can be read using the request `y`, and
 cannot be assigned. 
 
@@ -1693,15 +1693,17 @@ method containing the implicit request.
 RULE ImplicitRequest
 ```
 
-## Assignment Requests
+## Assignments and Assignment Requests
 
-An assignment request is a variable followed by `:=`, or a request
+An assignment is a variable followed by `:=` ; an assignment request is a request
 of a method whose name ends with `:=`. In both cases the `:=` is
 followed by a single argument, which need not be surrounded by
 parentheses. Spaces are optional before and after the
 `:=`.
 
-By convention, assignment methods return `done`.
+An assignment binds the variable to the value of the argument, and returns `done`.
+An assignment method executes the method body;
+by convention, assignment methods also return `done`; 
 
 **Examples**
 
