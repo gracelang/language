@@ -568,6 +568,7 @@ others create temporary constants.
     def x = 3 * 100 * 0.01
     def x:Number = 3
     def x:Number           // Syntax Error: x must be initialised
+    def volatile is annotation  // marker declaration
 
 ## Variables
 
@@ -1101,7 +1102,7 @@ binds the name `fergus` to this object.
 ```
 RULE ClassDeclaration
 ```
-If the MethodBody is omitted, an annotation is required;
+If the `MethodBody` is omitted, an annotation is required;
 in this case the class declaration is a *marker declaration*.
 
 ## Trait Objects and Trait Declarations
@@ -1617,8 +1618,8 @@ in an argument list does determine the method being requested.
 ### Delimited Arguments
 
 Parenthesis may be omitted where they would enclose a single argument
-that is a numeral, string constructor, boolean literal, sequence constructor, block,
-`self` or `outer` sequence.
+that is a numeral, string constructor, boolean constant (`true` or `false`),
+sequence constructor, block, `self` or `outer` sequence.
 These forms are self-delimiting, and are readily
 distinguished from the identifiers that comprise the name of the method being requested.
 
@@ -2356,7 +2357,7 @@ field `y:T` is equivalent to a method `y:=($\nu$:T) → Done`.
 A declaration `type N = TypeExpr` is represented in the interface by a
 method `N → Type⟦TypeExpr⟧`
 
-The various cat object constructors and classes described above
+The various `cat` object constructors and classes described above
 ([Objects, Classes, and Traits](#objects-classes-and-traits)) create objects that
 conform to this interface:
 
@@ -2375,7 +2376,8 @@ are included in the interface literal, but confidential methods are excluded.
 For commonality with method declarations, parameters are normally named
 in interface literals. These names are useful when writing specifications
 of the methods. If a parameter name is omitted, it must be replaced by
-an underscore, as in method `at(_) ifAbsent(_)`. The type of a parameter or result may be omitted,
+an underscore, as in method `at(_) ifAbsent(_)`.
+The type of a parameter or result may be omitted,
 in which case the type is `Unknown`.
 
 ## Type Declarations
