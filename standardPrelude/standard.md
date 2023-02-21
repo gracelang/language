@@ -16,12 +16,12 @@ title: |
 
 This is a specification of the _standard_ dialect of Grace.
 Grace programs run in this dialect unless they nominate a different
-dialect using a `dialect` statement. 
+dialect using a `dialect` statement.
 The _standard_ dialect  provides a range of methods, objects and types for
 general purpose programming.
 
 This specification is incomplete, and everything is subject to
-change. 
+change.
 
 # Control Structures
 
@@ -30,7 +30,7 @@ change.
 Standard Grace includes a conventional `if`…`then`
 …`else` conditional, as illustrated here:
 
-``` 
+```
     if (background.isDark) then {
         fontColor := white
     } else {
@@ -43,7 +43,7 @@ boolean value, and is enclosed in parentheses. The blocks of code
 following then and else are evaluated only when necessary, and are
 enclosed in braces. The conditional can also be used as an expression:
 
-``` 
+```
     fontColor := if (background.isDark) then { white } else { black }
 ```
 
@@ -55,7 +55,7 @@ The `else` part of the conditional statement is optional;
 it can be omitted if there is nothing to do. More conditions can be
 added using `elseif` clauses:
 
-``` 
+```
     if (background.darkness > 0.7) then {
         fontColor := white
     } elseif {background.darkness < 0.3} then {
@@ -71,7 +71,7 @@ conditional evaluation possible, all conditions after the first must be
 enclosed in *braces*.
 
 Grace also includes a multi-way
-[`match`…`case` statement](match-case).
+[`match`…`case` statement](#match-case).
 
 ## Bounded Loops
 
@@ -115,7 +115,7 @@ Contrast this with the *do–while* loop:
 
     do {
         guess := (guess + (x/guess))/2
-    } while { (x - (guess*guess)).abs > epsilon } 
+    } while { (x - (guess*guess)).abs > epsilon }
 
 Here, the body of the loop is executed *first*, and then the condition
 is checked. If it is false, the loop terminates; otherwise, the body is
@@ -132,9 +132,9 @@ determined in advance. This is what we mean by “unbounded loop”. The
 number of times may even be infinite—a common coding error for
 beginners.
 
-### Match Case
+## Match Case
 
-Matching blocks and self-matching objects can be conveniently used
+Single-parameter blocks and [pattern](#patterns) objects can be conveniently used
 in the `match(_)case(_)...` family of methods to support multiway branching.
 
 ```
@@ -146,22 +146,22 @@ in the `match(_)case(_)...` family of methods to support multiway branching.
     }
 ```
 
-The first two blocks use self-matching objects; the first is short for
+The first two blocks use numbers as [patterns](#patterns); the first is short for
 `{_ : 0 -> 0 }`, that is, a block with parameter `_`  and pattern `0`.
 The `match(_)case(_)…` statement may have one or many `case` branches, of which just one
-should match.  
+should match.
 The branch labelled `else` is optional, but when present must come last.
 
 If `match(_)case(_)…` does not find a match, it executes the `else` block, if there is one;
-otherwise it raises raises `MatchError`. 
+otherwise it raises raises `MatchError`.
 If it finds _multiple_ matches, it also raises `MatchError`.
 
 
 
 ## ValueOf
 
-Grace's `valueOf` allows a block with 
-local declarations and a statement list where an 
+Grace's `valueOf` allows a block with
+local declarations and a statement list where an
 expression is required.  `valueOf` takes a block
 as argument, evaluates it, and returns the result.
 
@@ -185,7 +185,7 @@ All Grace objects understand the methods in type
 `Object`. These methods will often be omitted when other types are
 described.
 
-``` 
+```
 
 type Object = interface {
     asString -> String
@@ -199,7 +199,7 @@ type Object = interface {
 Objects that support an equality test have additional methods
 
 ```
-type EqualityObject = Object & interface { 
+type EqualityObject = Object & interface {
     ==(other:Object) -> Boolean
         // true if I consider other to be equal to me
     ≠(other:Object) -> Boolean
@@ -219,12 +219,12 @@ fractions. (Thus, *minigrace* `Number`s are
 what some other languages call floating point numbers, floats or
 double-precision). `Number`s are represented with a
 precision of approximately 51 bits.
-Number constants include `π` and `infinity`, the latter being 
+Number constants include `π` and `infinity`, the latter being
 larger than any finite number, as well as conventional numerals like
-`27`, `2.5`, and `7e3` (the latter meaning `7 * 10^3`).  
+`27`, `2.5`, and `7e3` (the latter meaning `7 * 10^3`).
 
-``` 
-type Number = EqualityObject & interface {
+```
+type Number = EqualityObject & Pattern & interface {
 
     + (other: Number) -> Number
     //  sum of self and other
@@ -249,7 +249,7 @@ type Number = EqualityObject & interface {
 
     downTo(last:Number) -> Sequence
     //  the Sequence of numbers from self down to last, so 2.downTo 0 contains 2, 1 and 0.
-    
+
     < (other: Number) -> Boolean
     //  true iff self is less than other
 
@@ -294,14 +294,13 @@ type Number = EqualityObject & interface {
     // largest whole number less than or equal to self
 
     ceiling -> Number
-    // smallest number greater than or equal to self
+    // smallest whole number greater than or equal to self
 
     abs -> Number
     // the absolute value of self
-    
+
     sgn -> Number
-    // the signum function: 0 when self == 0, 
-    // -1 when self < 0, and +1 when self > 0
+    // the signum function: 0 when self == 0, -1 when self < 0, and +1 when self > 0
 
     isNaN -> Boolean
     // true if this Number is not a number, i.e., if it is NaN.  For example, 0/0 returns NaN
@@ -311,7 +310,7 @@ type Number = EqualityObject & interface {
 
     isOdd -> Boolean
     // true if this number is odd
-    
+
     sin -> Number
     // trigonometric sine (self in radians)
 
@@ -334,13 +333,25 @@ type Number = EqualityObject & interface {
     // log base 2 of self
 
     ln -> Number
-    // the natural log of self 
+    // the natural log of self
 
     exp -> Number
     // e raised to the power of self
 
     log10 -> Number
     // log base 10 of self
+
+    prefix > -> Pattern
+    // a pattern that matches all numbers > self
+
+    prefix ≥ -> Pattern
+    // a pattern that matches all numbers ≥ self
+
+    prefix < -> Pattern
+    // a pattern that matches all numbers < self
+
+    prefix ≤ -> Pattern
+    // a pattern that matches all numbers ≤ self
 }
 ```
 
@@ -370,9 +381,9 @@ the string `"count = 7."`
 Strings are immutable. Methods like `replace(_)with(_)`
 always return a new string; they never change the receiver.
 
-``` 
+```
 
-type String =  EqualityObject & interface {
+type String =  EqualityObject & Pattern & interface {
     * (n: Number) -> String
     // returns a string that contains n repetitions of self, so "Abc" * 3 = "AbcAbcAbc"
 
@@ -439,7 +450,7 @@ type String =  EqualityObject & interface {
     // returns the String containing those characters of self for which predicate returns true
 
     fold⟦U⟧ (binaryFunction: Function2⟦U,String,U⟧) startingWith(initial: U) -> U
-    // performs a left fold of binaryFunction over self, starting with initial.   
+    // performs a left fold of binaryFunction over self, starting with initial.
     // For example, fold {a, b -> a + b.ord} startingWith 0 will compute the sum
     // of the ords of the characters in self
 
@@ -460,7 +471,7 @@ type String =  EqualityObject & interface {
 
     indices -> Sequence⟦Number⟧
     keys -> Sequence⟦Number⟧
-    // an object representing the range of indices of self (1..self.size). 
+    // an object representing the range of indices of self (1..self.size).
 
     isEmpty -> Boolean
     // true if self is the empty string
@@ -475,7 +486,7 @@ type String =  EqualityObject & interface {
     lastIndexOf (sub:String) -> Number
     // returns the rightmost index at which sub appears in self, or 0 if it is not there.
 
-    lastIndexOf (sub:String) startingAt (offset) ->  Number 
+    lastIndexOf (sub:String) startingAt (offset) ->  Number
     // like the above, except that it returns the rightmost index ≤ offset.
 
     lastIndexOf⟦W⟧ (sub:String) ifAbsent (absent:Function0⟦W⟧) -> Number | W
@@ -491,9 +502,6 @@ type String =  EqualityObject & interface {
     // individual characters of self. Note that the result is not a String, even if type U happens to be String.
     // If a String is desired, use fold (_) startingWith "" with a function that concatenates.
 
-    match (other:Object) -> SuccessfulMatch | FailedMatch
-    // returns SuccessfulMatch match if self matches other, otherwise FailedMatch
-
     ord -> Number
     // a numeric representation of the first character of self, or NaN if self is empty.
 
@@ -502,13 +510,13 @@ type String =  EqualityObject & interface {
 
     size -> Number
     // returns the size of self, i.e., the number of characters it contains.
-    
+
     split(splitter:String) -> List⟦String⟧
     // answers a list of substrings of self, split before and after each
     // occurrence of splitter in self.  If self is empty, the result list
     // will also be empty; otherwise, if self does not contain splitter,
     // the result list will be of size 1.
-    
+
     startsWith (possiblePrefix:String) -> Boolean
     // true when possiblePrefix is a prefix of self
 
@@ -545,7 +553,7 @@ type String =  EqualityObject & interface {
     // a string like self except that leading and trailing spaces are omitted.
 
     quoted -> String
-    // returns a quoted version of self, with internal characters like " and \ and newline escaped, 
+    // returns a quoted version of self, with internal characters like " and \ and newline escaped,
     // but without surrounding quotes.  See also asDebugString
 
     >>(target:Sink⟦String⟧) -> Collection
@@ -572,11 +580,11 @@ type Boolean =  EqualityObject & interface {
 
     || (other: PredicateOrBoolean) -> Boolean
     // returns true when either self or other (or both) are true
-    
+
     == (other:Object) -> Boolean
     // returns true of other is the same Boolean as self
-    
-    ≠ (other:Object) -> 
+
+    ≠ (other:Object) ->
     // if other is a boolean, returns the exclusive OR of self and other; otherwise returns false
 }
 ```
@@ -587,9 +595,8 @@ This means that `&&` and `||` can be used as “short circuit” operators, also
 “non-commutative”, operators: they will evaluate their argument only
 if necessary.
 
-``` 
-type Predicate0 = interface { apply -> Boolean }
-type PredicateOrBoolean = Predicate0 | Boolean 
+```
+type PredicateOrBoolean = Predicate0 | Boolean
 ```
 
 ## Blocks and Functions
@@ -602,16 +609,54 @@ block objects:
 type Function0⟦R⟧ = interface {
     apply -> R
 }
-type Function1⟦T,R⟧ = interface {
+type Function1⟦T, R⟧ = interface {
     apply(a:T) -> R
-    matches(a:Object) -> Boolean
+    matches(a:Object) -> R      // answers true if a <: T
 }
-type Function2⟦S,T,R⟧ = interface {
-    apply(a:S, b:T) -> R
-    matches(a:Object, b:Object) -> Boolean
+type Function2⟦T1, T2, R⟧ = interface {
+    apply(a1:T1, a2:T2) -> R
+    matches(a1:Object, a2:Object) → Boolean
+        // answers true if a1 <: T1 and a2 <: T2
+}
+type Function3⟦T1, T2, T3, ResultT⟧  = Object & interface {
+    apply(a1:T1, a2:T2, a3:T3) → ResultT
+    matches(a1:Object, a2:Object, a3:Object) → Boolean
+        // answers true if a1 <: T1 and a2 <: T2 and a3 :< T3
+}
+
+// Predictates are functions that return a Boolean
+type Predicate0 = Function0⟦Boolean⟧
+    // Function with no arguments returning Boolean
+type Predicate1⟦T1⟧ = Function1⟦T1, Boolean⟧
+    // Function with 1 argument of type T1, returning Boolean
+type Predicate2⟦T1, T2⟧ = Function2⟦T1, T2, Boolean⟧
+    // Function with 2 arguments of types T1 and T2, returning Boolean
+type Predicate3⟦T1, T2, T3⟧ = Function3⟦T1, T2, T3, Boolean⟧
+    // Function with 3 arguments of types T1, T2, and T3, returning Boolean
+
+```
+Block objects are normally created using Grace's block syntax `{ a:P, b:Q -> ... }`.
+
+## Patterns
+
+Any object that implements the interface
+```
+type Pattern = Object & interface {
+    matches(value:Object) → Boolean // true if this pattern matches value
+    & (other:Pattern) → Pattern     // pattern AND
+    | (other:Pattern) → Pattern     // pattern OR
+    prefix ¬ → Pattern              // the negation of this pattern
+    isType → Boolean                // is this pattern also a type?
 }
 ```
-Block objects are normally created using Grace's block syntax `{ p, q -> ... }`.
+is a pattern.   Strings and Numbers are patterns; they match strings and numbers
+to which they are equal.  A type `T` is a pattern that matches objects that have type `T`.
+Blocks are patterns: if the block's parameteter is annotated with a
+type or pattern `P`, then the block matches objects that are matched by `P`.
+(This also works for blocks with multiple parameters.)
+
+Patterns can be combined using the operators `&` (AND), `|` (OR) and `¬` (NOT) to
+construct compound patterns.
 
 ## Points
 
@@ -620,7 +665,7 @@ Points can be thought of as locations in the cartesian plane, or as
 are created from Numbers using the `@` infix operator.
 Thus, `3 @ 4` represents the point with coordinates (3, 4).
 
-``` 
+```
 type Point =  EqualityObject && interface {
 
     x -> Number
@@ -637,13 +682,13 @@ type Point =  EqualityObject && interface {
 
     - (other:Point) -> Point
     // the Point that is the vector difference of self and other, i.e. (self.x-other.x) @ (self.y-other.y)
-    
+
     prefix - -> Point
     // the point that is the negation of self
-    
+
     * (factor:Number) -> Point
     // this point scaled by factor, i.e., (self.x*factor) @ (self.y*factor)
-    
+
     / (factor:Number) -> Point
     // this point scaled by 1/factor, i.e., (self.x/factor) @ (self.y/factor)
 
@@ -662,7 +707,7 @@ type Point =  EqualityObject && interface {
 }
 ```
 
-### Bindings
+## Bindings
 
 A binding is an immutable pair comprising a `key` and a
 `value`. Bindings are created with the infix
@@ -676,9 +721,11 @@ requesting `binding.key(k) value(v)`.
         // returns the value
     }
 
+The type `K` of keys must be an [EqualityObject](#object-and-equalityobject)
+
 # Collection objects
 
-The objects described in this section are made available to all 
+The objects described in this section are made available to all
 Grace programs that are written in the _standard_ dialect.
 As is natural for collections, the types are
 parameterized by the types of the elements of the collection. Type
@@ -689,7 +736,7 @@ and their brackets can be omitted; this is equivalent to using
 `Unknown` as the argument, which says that the programmer
 either does not know, or does not care to state, the type.
 
-## Common Abstractions 
+## Common Abstractions
 
 The major kinds of collection are `sequence`, `list`, `set` and
 `dictionary`. Although these collection objects differ in their details, they share
@@ -701,51 +748,51 @@ iterate:
 
 ```
 type Collection⟦T⟧ = interface {
-    iterator -> Iterator⟦T⟧       
+    iterator -> Iterator⟦T⟧
     // Returns an iterator over my elements.  It is an error to modify self while iterating over it.
     // Note: all other methods can be defined using iterator. Iterating over a dictionary
     // yields its values.
-    
+
     isEmpty -> Boolean
     // True if self has no elements
-    
+
     size -> Number
     // returns the number of elements in self; raises SizeUnknown if size is not known.
-    
+
     sizeIfUnknown(action: Function0⟦Number⟧) -> Number
     // returns the number of elements in self, or the result of evaluating action if size is not known
-    
+
     first -> T
-    // The first element of self; raises BoundsError if there is none.  
-    // If self is unordered, then first returns an arbitrary element. 
-    
+    // The first element of self; raises BoundsError if there is none.
+    // If self is unordered, then first returns an arbitrary element.
+
     do(action: Function1⟦T,Unknown⟧) -> Done
     //  Applies action to each element of self.
-    
+
     do(action:Function1⟦T, Unknown⟧) separatedBy(sep:Function0⟦Unknown⟧) -> Done
     // applies action to each element of self, and applies sep (to no arguments) in between.
 
     map⟦R⟧(unaryFunction:Function1⟦T, R⟧) -> Collection⟦T⟧
     // returns a new collection whose elements are obtained by applying unaryFunction to
     // each element of self.  If self is ordered, then the result is ordered.
-    
+
     fold⟦R⟧(binaryFunction:Function2⟦R, T, R⟧) startingWith(initial:R) -> R
-    // folds binaryFunction over self, starting with initial.  If self is ordered, this is 
+    // folds binaryFunction over self, starting with initial.  If self is ordered, this is
     // the left fold.  For example, fold {a, b -> a + b} startingWith 0
     // will compute the sum, and fold {a, b -> a * b} startingWith 1 the product.
-    
+
     filter(condition:Function1⟦T, Boolean⟧) -> Collection⟦T⟧
     // returns a new collection containing only those elements of self for which
     // condition holds.  The result is ordered if self is ordered.
-    
+
     anySatisfy(condition:Function1⟦T, Boolean⟧) -> Boolean
     // returns true if self contains an element x for which conditon.apply(x)) holds.
     // Otherwise (including the case when self is empty), returns false.
-    
+
     allSatisfy(condition:Function1⟦T, Boolean⟧) -> Boolean
     // returns false if conditon.apply(x)) is false for any element x of self.
     // Otherwise (including the case when self is empty), returns true.
-        
+
     ++(other:Enumerable⟦T⟧) -> Collection⟦T⟧
     // returns a new object whose elements include those of self and those of other.
 
@@ -772,7 +819,7 @@ type CollectionFactory⟦T⟧ = interface {
         // identical to withAll(_)
 }
 ```
-The classes `list`, `set`, and `sequence` all support this interface; 
+The classes `list`, `set`, and `sequence` all support this interface;
 `dictionary` supports a very similar interface [`DictionaryFactory`](#creating-dictionaries).
 In addition, the _methods_ `list⟦T⟧(_)`,  `set⟦T⟧(_)` and `sequence⟦T⟧(_)` are defined in _standard_,
 and are equivalent to  `list⟦T⟧.withAll(_)`,  `set⟦T⟧.withAll(_)` and `sequence⟦T⟧.withAll(_)`.
@@ -792,7 +839,7 @@ is that `Enumerable`s have a natural order, so lists are
 There is no requirment that the elements of an `Enumerable` are stored explicitly.
 For this reason, operations that require access to
 all of the elements at the same time, like sorting, are not supported directly.
-Instead, Enumerables can be converted to other collections that store their elements. 
+Instead, Enumerables can be converted to other collections that store their elements.
 
 
 ```
@@ -803,13 +850,13 @@ type Enumerable⟦T⟧ = Collection⟦T⟧ & interface {
     // the values in the case of a dictionary.
 
     keysAndValuesDo (action:Function2⟦Number, T, Object⟧) -> Done
-    // applies action, in order, to each of my keys and the corresponding element. 
+    // applies action, in order, to each of my keys and the corresponding element.
 
     sorted -> List⟦T⟧
     // returns a new list containing all of my elements, but sorted by their < and == operations.
 
     sortedBy(sortBlock:Function2⟦T, T, Number⟧) -> List⟦T⟧
-    // returns a new list containing all of my elements, but sorted according to the ordering 
+    // returns a new list containing all of my elements, but sorted according to the ordering
     // established by sortBlock, which should return -1 if its first argument is less than its
     // second argument, 0 if they are equal, and +1 otherwise.
 }
@@ -829,53 +876,53 @@ type Sequence⟦T⟧ = EqualityObject & Sequenceable⟦T⟧
 type Sequenceable⟦T⟧ = Enumerable⟦T⟧ & interface {
 
     at(n:Number) -> T
-    // returns my element at index n (starting from 1), if n is integral and l ≤ n ≤  size 
-    
+    // returns my element at index n (starting from 1), if n is integral and l ≤ n ≤  size
+
     at⟦W⟧(n:Number) ifAbsent(action:Function0⟦W⟧) -> T | W
     // returns my element at index n (starting from 1), if n is integral and l ≤ n ≤  size.
     // Otherwise, executes action and returns its result
-    
+
     first -> T
     // returns my first element
-    
+
     second -> T
     // returns my second element
 
     third -> T
     // returns my third element
-    
+
     fourth -> T
     // returns my fourth element
-    
+
     fifth -> T
     // returns my fifth element
-    
+
     last -> T
     // returns my last element
-    
+
     indices -> Sequence⟦Number⟧
-    // returns the sequence of my indices, 1..size  
-    
+    // returns the sequence of my indices, 1..size
+
     keys -> Sequence⟦Number⟧
     // same as indices; the name keys is for compatibility with dictionaries.
 
     indexOf(sought:T)  -> Number
     // returns the index of my first element v such that v == sought.  Raises NoSuchObject
     // if there is none.
-    
+
     indexOf⟦W⟧(sought:T) ifAbsent(action:Function0⟦W⟧)  -> Number | W
     // returns the index of my first element v such that v == sought.  Performs action if
     // there is no such element.
 
     reversed -> Sequence⟦T⟧
     // returns a Sequence containing my values, but in the reverse order.
-    
+
     contains(sought:T) -> Boolean
     // returns true if I contain an element v such that v == sought
 }
 
 ```
-Because a `Sequence` is imutable, its `==` and `hash` methods are stable, 
+Because a `Sequence` is imutable, its `==` and `hash` methods are stable,
 and it can be used as a key in a `Dictionary`.  This is not true of a  `List` or a `Set`.
 
 ## Sequence Constructors
@@ -900,10 +947,10 @@ methods on the `range` class:
     // The sequence of integers from lower to upper, inclusive.  If lower = upper,
     // the range contains a single value.  If lower > upper, the range is empty.
     // It is an error for lower or upper not to be an integer.
-    
+
     range.from(upper:Number) downTo(lower:Number)
-    // The sequence from upper to lower, inclusive.  If upper = lower, 
-    // the range contains a single value. If upper < lower, the range is empty. 
+    // The sequence from upper to lower, inclusive.  If upper = lower,
+    // the range contains a single value. If upper < lower, the range is empty.
     // It is an error for lower or upper not to be an integer.
 ```
 
@@ -911,7 +958,7 @@ The `..` operation on Numbers can also be
 used to create ranges. Thus, `3..9` is the same as
 `range.from 3 to 9`.
 Note that `9..9` is a range containing just one element, and
-`9..8` and `9..3` are empty ranges.  Downward ranges can 
+`9..8` and `9..3` are empty ranges.  Downward ranges can
 also be constructed using the `downTo(_)` method on Numbers,
 so `9.downTo 3` is the same as `range.from 9 downTo 3`.
 
@@ -924,9 +971,9 @@ lists of elements that each have type `T`. List objects can be constructed by re
 `list.withAll (existingCollection)`.
 
 
-``` 
+```
 type List⟦T⟧ = Sequenceable⟦T⟧ & interface {
-    
+
     at(n: Number) put(new:T) -> List⟦T⟧
     // updates self so that my element at index n is new.  Returns self.
     // Requires 1 ≤ n ≤ size+1; when n = size+1, equivalent to addLast(new).
@@ -938,7 +985,7 @@ type List⟦T⟧ = Sequenceable⟦T⟧ & interface {
 
     addFirst(new:T) -> List⟦T⟧
     // adds new as the first element(s) of self.  Changes the index of all of the existing elements.
-    
+
     addAllFirst(news: Collection⟦T⟧) -> List⟦T⟧
     // adds news as the first elements of self.  Changes the index of all of the existing elements.
 
@@ -952,51 +999,51 @@ type List⟦T⟧ = Sequenceable⟦T⟧ & interface {
     // removes and returns n^th element of self
 
     remove(element:T) -> List⟦T⟧
-    // removes element from self.  Raises NoSuchObject if self.contains(element).not 
+    // removes element from self.  Raises NoSuchObject if self.contains(element).not
     // Returns self
 
     remove(element:T) ifAbsent(action:Function0⟦Unknown⟧) -> List⟦T⟧
     // removes element from self; executes action if it is not contained in self.  Returns self
 
     removeAll(elements:Collection⟦T⟧) -> List⟦T⟧
-    // removes elements from self. Raises NoSuchObject exception if any  of 
+    // removes elements from self. Raises NoSuchObject exception if any  of
     // them is not contained in self. Returns self
-    
+
     removeAll(elements:Collection⟦T⟧) ifAbsent(action:Function0⟦Unknown⟧) -> List⟦T⟧
     // removes elements from self; executes action if any of them is not contained in self. Returns self
-    
+
     insert(element:T) at(n:Number) ->  List⟦T⟧
     // inserts element into self at index n; any element with index i > n is
     // moved so that it has index i + 1.  Returns self, that is, the modified list.
 
     clear -> List⟦T⟧
     // removes all the elements of self, leaving self empty.  Returns self
-    
+
     ++ (other:List⟦T⟧) -> List⟦T⟧
     // returns a new list formed by concatenating self and other
-    
+
     addAll(extension:Collection⟦T⟧) -> List⟦T⟧
     // extends self by appending the contents of extension; returns self.
-    
+
     contains(sought:T) -> Boolean
     // returns true when sought is an element of self.
 
     == (other: Object) -> Boolean
-    // returns true when other is a Sequence of the same size as self, containing elements that 
+    // returns true when other is a Sequence of the same size as self, containing elements that
     // are == to those in self, in the same order.
 
     sort -> List⟦T⟧
     // sorts self in place, using the < and == operations on elements.  Returns self.
     // Compare with sorted, which constructs a new list.
-        
+
     sortBy(sortBlock:Function2⟦T, T, Number⟧) -> List⟦T⟧
-    // sorts self according to the ordering determined by sortBlock, which should return -1 if its first 
+    // sorts self according to the ordering determined by sortBlock, which should return -1 if its first
     // argument is less than its second argument, 0 if they are equal, and +1 otherwise.  Returns self.
     // Compare with sortedBy, which constructs a new list.
 
     copy -> List⟦T⟧
     // returns a list that is a (shallow) copy of self
-        
+
     reverse -> List⟦T⟧
     // mutates self in-place so that its elements are in the reverse order.  Returns self.
     // Compare with reversed, which creates a new collection.
@@ -1013,19 +1060,19 @@ eliminate duplicates; it must be symmetric.
 type Set⟦T⟧ = Collection⟦T⟧ & interface {
     size -> Number
     // the number of elements in self.
-    
+
     add(element:T) -> Set⟦T⟧
-    // adds element to self.  Returns self.    
-    
+    // adds element to self.  Returns self.
+
     addAll(elements:Collection⟦T⟧) -> Set⟦T⟧
-    // adds elements to self.  Returns self. 
-    
+    // adds elements to self.  Returns self.
+
     remove(element: T) -> Set⟦T⟧
     // removes element from self.  It is an error if element is not present.   Returns self.
-    
+
     remove(elements: T) ifAbsent(block: Function0⟦Done⟧) -> Set⟦T⟧
     // removes element from self.  Executes action if element is not present.   Returns self.
-    
+
     removeAll(elems:Collection⟦T⟧)
     // removes elems from self.  Raises NoSuchObject if any of the elems is
     // not present.   Returns self.
@@ -1036,24 +1083,24 @@ type Set⟦T⟧ = Collection⟦T⟧ & interface {
 
     clear -> Set⟦T⟧
     // removes all the elements of self, leaving self empty.  Returns self
-    
+
     contains(elem:T) -> Boolean
     // true if self contains elem
-    
+
     find(predicate: Function1⟦T,Boolean⟧) ifNone(notFoundBlock: Function0⟦T⟧) -> T
-    // returns an element of self for which predicate holds, or the result of 
+    // returns an element of self for which predicate holds, or the result of
     // applying notFoundBlock if there is no such element.
-    
+
     copy -> Set⟦T⟧
     // returns a copy of self
-    
+
     ** (other:Set⟦T⟧) -> Set⟦T⟧
     // set intersection; returns a new set that is the intersection of self and other
-    
+
     -- (other:Set⟦T⟧) -> Set⟦T⟧
-    // set difference (relative complement); the result contains all of my elements that are 
+    // set difference (relative complement); the result contains all of my elements that are
     // not also in other.
-    
+
     ++ (other:Set⟦T⟧) -> Set⟦T⟧
     // set union; the result contains elements that were in self or in other (or in both).
 
@@ -1062,7 +1109,7 @@ type Set⟦T⟧ = Collection⟦T⟧ & interface {
 
     isSuperset(s2: Collection⟦T⟧) -> Boolean
     // true if I contain all the elements of s2
-    
+
     into(existing:Collection⟦T⟧) -> Collection⟦T⟧
     // adds my elements to existing, and returns existing.
 }
@@ -1071,7 +1118,7 @@ type Set⟦T⟧ = Collection⟦T⟧ & interface {
 ## Dictionary
 
 The type `Dictionary⟦K, T⟧` describes an object that is a mapping from
-*keys* of type `K` to *values* of type `T`. 
+*keys* of type `K` to *values* of type `T`.
 
 ### Creating Dictionaries
 
@@ -1080,7 +1127,7 @@ dictionary objects can be constructed using the class `dictionary`, but
 the argument to `dictionary.withAll` must be of type `Collection⟦Binding⟧`. This
 means that each element of the argument must have methods `key` and
 `value`. Bindings can be conveniently created using the infix `::`
-operator, as in `dictionary⟦K, T⟧.withAll [k::v, m::w, n::x, ...]`, or 
+operator, as in `dictionary⟦K, T⟧.withAll [k::v, m::w, n::x, ...]`, or
 equivalently, `[k::v, m::w, n::x, ...] >> dictionary⟦K, T⟧`.
 
 The object `dictionary⟦K,T⟧` supports the `DictionaryFactory` interface:
@@ -1094,12 +1141,12 @@ type DictionaryFactory⟦K,T⟧ = interface {
 
     withAll(bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
     // a dictionary containing a mapping for each binding in bs
-    
+
     <<(bs:Binding⟦K,T⟧) -> Dictionary⟦K,T⟧
     // identical to withAll(_)
 }
 ```
-`DictionaryFactory` has the same four methods as `CollectionFactory`, but with 
+`DictionaryFactory` has the same four methods as `CollectionFactory`, but with
 different argument and result types.
 
 ### Dictionary Methods
@@ -1111,16 +1158,16 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
 
     at(key:K) put(value:T) -> Dictionary⟦K, T⟧
     // puts value at key; returns self
-    
+
     at(k:K) -> T
     // returns my value at key k; raises NoSuchObject if there is none.
-    
+
     at(k:K) ifAbsent(action:Function0⟦T⟧) -> T
     // returns my value at key k; returns the result of applying action if there is none.
 
-    containsKey(k:K) -> Boolean 
+    containsKey(k:K) -> Boolean
     // returns true if one of my keys == k
-    
+
     contains(v:T) -> Boolean
     containsValue(v:T) -> Boolean
     // returns true if one of my values == v
@@ -1132,7 +1179,7 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
     // removes key from self, along with the corresponding value.  Returns self.
 
     removeAllValues(removals: Collection⟦T⟧) -> Self
-    // removes from self all of the values in removals, along with the corresponding keys.  
+    // removes from self all of the values in removals, along with the corresponding keys.
     // Returns self.
 
     removeValue(removal:T) -> Self
@@ -1147,12 +1194,12 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
 
     values -> Collection⟦T⟧
     // returns my values as a lazy sequence in arbitrary order
-    
+
     bindings -> Enumerable⟦ Binding⟦K, T⟧ ⟧
     // returns my bindings as a lazy sequence
 
     keysAndValuesDo(action:Procedure2⟦K, T⟧) -> Done
-    // applies action, in arbitrary order, to each of my keys and the corresponding value. 
+    // applies action, in arbitrary order, to each of my keys and the corresponding value.
 
     keysDo(action:Procedure1⟦K⟧) -> Done
     // applies action, in arbitrary order, to each of my keys.
@@ -1167,9 +1214,9 @@ type Dictionary⟦K, T⟧ = Collection⟦T⟧ & interface {
     ++ (other:Dictionary⟦K, T⟧) -> Dictionary⟦K, T⟧
     // returns a new dictionary that merges the entries from self and other.
     // A value in other at key k overrides the value in self at key k.
-    
+
     -- (other:Dictionary⟦K, T⟧) -> Dictionary⟦K, T⟧
-    // returns a new dictionary that contains all of my entries except 
+    // returns a new dictionary that contains all of my entries except
     // for those whose keys are in other
 
     >> (target:Sink⟦Binding⟦K, T⟧ ⟧
@@ -1191,16 +1238,16 @@ elements of type `T`, one element at a time. The method
 implement internal iterators, while the method `iterator` returns an
 external iterator object, with the following interface:
 
-``` 
+```
 type Iterator⟦T⟧ = interface {
     next -> T
     // returns the next element of the collection over which I am the iterator; raises the Exhausted
-    // exception if there are no more elements. Repeated request of this method will yield all of the 
+    // exception if there are no more elements. Repeated request of this method will yield all of the
     // elements of the underlying collection, one at a time.
-    
+
     hasNext -> Boolean
     // returns  true if there is at least one more element, i.e., if next will not raise `Exhausted`.
-    // Once an iterator is exhausted (i.e., once hasNext returns false), it will remain exhausted. 
+    // Once an iterator is exhausted (i.e., once hasNext returns false), it will remain exhausted.
 }
 ```
 
@@ -1262,34 +1309,34 @@ example, this method merges two sorted `Collection`s into a
 sorted list:
 
 ```
-method merge ⟦T⟧(cs: Collection⟦T⟧) and (ds: Collection⟦T⟧) -> List⟦T⟧ { 
+method merge ⟦T⟧(cs: Collection⟦T⟧) and (ds: Collection⟦T⟧) -> List⟦T⟧ {
     def cIter = cs.iterator
     def dIter = ds.iterator
     def result = list.empty
 
-    if (cIter.hasNext.not) then { return result.addAll(ds) } 
-    if (dIter.hasNext.not) then { return result.addAll(cs) } 
-    
+    if (cIter.hasNext.not) then { return result.addAll(ds) }
+    if (dIter.hasNext.not) then { return result.addAll(cs) }
+
     var c := cIter.next
     var d := dIter.next
-    
-    while {cIter.hasNext && dIter.hasNext} do { 
+
+    while {cIter.hasNext && dIter.hasNext} do {
         if (c <= d) then {
             result.addLast(c)
-            c := cIter.next 
+            c := cIter.next
         } else {
             result.addLast(d)
-            d := dIter.next 
+            d := dIter.next
         }
     }
-        
+
     if (c <= d) then {
         result.addAll [c,d]
     } else {
         result.addAll [d,c]
     }
-    while {cIter.hasNext} do { result.addLast(cIter.next) } 
-    while {dIter.hasNext} do { result.addLast(dIter.next) } 
+    while {cIter.hasNext} do { result.addLast(cIter.next) }
+    while {dIter.hasNext} do { result.addLast(dIter.next) }
     result
 }
 ```
@@ -1305,7 +1352,7 @@ for more user-friendly objects. Most programmers should use
 `list`, `set` or
 `dictionary` rather than `primitiveArray`.
 
-``` 
+```
 type Array⟦T⟧ =  {
     size -> Number
     // returns the number of elements in self
@@ -1330,11 +1377,11 @@ type Array⟦T⟧ =  {
 
 When working with collections, it is often convenient to use the pipeline operator
 `>>`, because this allows the operations to be written in the order that they will be performed.
-For example, 
+For example,
 
     list.withAll((1..10).filter{ each -> each.isEven })
 
-constructs the range `1..10`, removes the elememnts that are not even, and puts 
+constructs the range `1..10`, removes the elememnts that are not even, and puts
 the result into a list.  This sequence is revealed more clearly using a pipeline:
 
     (1..10).filter{ each -> each.isEven } >> list
@@ -1350,8 +1397,8 @@ type Sink⟦T⟧ = interface {
 The `Sink` interface is implemented by `CollectionFactory`, and by `Collection`.
 When the argument to `>>` is a factory like `list` or `set`, the result is a new
 collection of the appropriate kind, containing the elements of the receiver.
-When the argument to `>>` is an existing collection, the elements of the receiver 
-will be added to it (if it is mutable), or a new collection containing the 
+When the argument to `>>` is an existing collection, the elements of the receiver
+will be added to it (if it is mutable), or a new collection containing the
 concatenation will be constructed (if it is imutable). The approriate behaviour is
 obtained in the implementation by requesting `<<` on the argument.
 
