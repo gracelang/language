@@ -1,0 +1,6 @@
+#! /bin/bash
+# π Unicode (UTF-8) comment
+# apparently, sed will work correctly on utf-8 encoded files only
+# when lauched from a utf-8 encoded file.
+sed -f lstfixes $1
+

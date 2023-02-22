@@ -13,7 +13,7 @@ kramdown: standard.kramdown
 	pandoc --standalone $(PANDOCOPTS) -o $@ --to=html --self-contained $<
 
 %.pdf: %.tex Makefile grace.sty grace.latex
-	sed -f lstfixes $< > fixed-$<
+	./sed-lstfixes.utf8 $< > fixed-$<
 	pdflatex fixed-$< && mv fixed-$@ $@
 
 %.tex: %.md Makefile grace.sty grace.latex
