@@ -868,7 +868,7 @@ comma-separated list of annotations following the keyword **`is`**
 before its body or initialiser.
 
 Some annotations, like `required`, `abstract` and `annotation`, indicate that the
-declaration is a marker declaration, that is, a declaration without an initialiser
+declaration is a _marker declaration_, that is, a declaration without an initialiser
 or a method body.
 
 Grace defines the following core
@@ -877,11 +877,10 @@ annotations:
 | Annotation | Semantics |
 |:-----      |:--------------------------------------------|
 | `confidential` | method may be requested only on self or outer — see [Encapsulation](#encapsulation) |
-| `abstract` | a marker declaration for a method that must be provided by a reused component |
-| `required` | a marker declaration for a method that is assumed to exist by the current class, but is not provided |
+| `abstract` | a marker declaration for method that must be provided when this component is reused |
+| `required` | a marker declaration for method that is assumed to exist, but not provided,  by the current class |
 | `override` | method must override another method - see [Overriding Methods](#overriding-methods) |
-| `public` | method may be requested from anywhere |
-| |  field can be read and written from anywhere - see [Encapsulation](#encapsulation) |
+| `public` | a public method may be requested from anywhere; a public variable field may be read and written from anywhere; a public field may be read from anywhere - see [Encapsulation](#encapsulation) |
 | `readable`  | field may be read from anywhere - see [Encapsulation](#encapsulation) |
 | `writeable` | variable field may be written from anywhere - see [Encapsulation](#encapsulation) |
 | `annotation` | a marker declaration for a def or method that will be used as an annotation |
@@ -2230,7 +2229,7 @@ Type `None` has all methods.  It is "uninhabited", that is, no actual object has
 
 ### Type Object
 
-In _standard_, type `Object` includes just the public [Default Methods] declared in
+In _standard_, type `Object` includes just the public [Default Methods](#default-methods) declared in
 `graceObject`.
 
     type Object = interface {
@@ -2423,8 +2422,8 @@ have conforming signatures). This can also be read as “B is a subtype of
 A”, or “A is a supertype of B”.
 
 We now define the conformance relation more rigorously. This section
-draws heavily on the wording of the [Modula-3 report]
-(https://www.cs.purdue.edu/homes/hosking/m3/reference/).
+draws heavily on the wording of the 
+[Modula-3 report](https://www.cs.purdue.edu/homes/hosking/m3/reference/).
 
 If `B <: A`, then every object of type `B` is also an object
 of type A. The converse does not apply.
