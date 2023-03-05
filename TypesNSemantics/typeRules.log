@@ -1,0 +1,32 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  5 JUN 2018 16:30
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**typeRules.tex
+(./typeRules.tex
+LaTeX2e <2015/01/01>
+Babel <3.9l> and hyphenation patterns for 79 languages loaded.
+./typeRules.tex:3: Undefined control sequence.
+<recently read> \section 
+                         
+l.3 \section
+            {Type-checking rules}\label{app::typeassn}
+? 
+./typeRules.tex:3: Emergency stop.
+<recently read> \section 
+                         
+l.3 \section
+            {Type-checking rules}\label{app::typeassn}
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 6 strings out of 493089
+ 142 string characters out of 6134842
+ 53199 words of memory out of 5000000
+ 3591 multiletter control sequences out of 15000+600000
+ 3640 words of font info for 14 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 5i,0n,3p,66b,8s stack positions out of 5000i,500n,10000p,200000b,80000s
+./typeRules.tex:3:  ==> Fatal error occurred, no output PDF file produced!

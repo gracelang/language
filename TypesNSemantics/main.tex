@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+
+%\textheight 8.5in  %remove it !!!
+
+\usepackage{alltt}
+%\usepackage{stmaryrd}
+\input{jmacros}
+%\input{rmacros}
+\newcommand{\addEnv}{\texttt{+}}
+\newcommand{\Void}{\texttt{Object}}
+\newcommand{\Done}{\texttt{Done}}
+\newcommand{\lgen}{\ensuremath{<}}
+\newcommand{\rgen}{\ensuremath{>}}
+
+\newcommand{\tst}{\vdash}
+\newcommand{\bs}{\backslash}
+\newcommand{\self}{\rm{\texttt{self}}}
+\newcommand{\si}{\rm{\texttt{selfinst}}}
+\newcommand{\sm}{\rm{\texttt{self}}}
+\newcommand{\selfm}{{\tt{self}}} %new
+\newcommand{\selfi}{{\tt{inst}}} %new
+\newcommand{\err}{{\rm\texttt{error}}}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\leI}{{\rm \, <\!\!\!\# \, }}
+\newcommand{\leS}{{\rm \ <: \ }}
+\newcommand{\iscom}{{\rm{COMMAND}}}
+\newcommand{\isprog}{{\rm PROGRAM}}
+\newcommand{\com}{{\texttt{command}}}
+\newcommand{\Com}{{\texttt{COMMAND}}}
+\newcommand{\Prog}{{\texttt{PROGRAM}}}
+\newcommand{\semconf}{{\rm \ {\it conf}\ }}
+\newcommand{\conf}{{\rm \ {\bf conf}\ }}
+\newcommand{\sext}{{\rm\ {\it ext}\ }}
+\newcommand{\error}{\texttt{error}}
+\newcommand{\ST}{\texttt{InstType}}
+\newcommand{\me}{\texttt{self}}
+\newcommand{\supermeth}{\rm{\texttt{super}}}
+\newcommand{\super}{{\texttt{super}}}
+\newcommand{\rf}{{\texttt{ref}}}
+\newcommand{\supervar}{{\texttt{supervar}}}
+\newcommand{\MT}{{\texttt{MyType}}}
+\newcommand{\fn}{{\texttt{fun}}}
+\newcommand{\Tobj}{{\texttt{ObjectType}}}
+\newcommand{\TobjV}{{\texttt{VisObjType}}}
+\newcommand{\Tclass}{{\texttt{ClassType}}}
+\newcommand{\ObjectType}{{\texttt{ObjectType}}}
+\newcommand{\ClassType}{{\texttt{ClassType}}}
+\newcommand{\TP}{{\texttt{TYPE}}}
+\newcommand{\RTM}{{\rm{\it RecToMem}}} %new
+\newcommand{\RM}{{\rm{\it RecToMem}}}
+\newcommand{\class}{{\texttt{class}}}
+\newcommand{\extend}{{\texttt{extend}}}
+\newcommand{\by}{{\rm{\it by}}}
+\newcommand{\update}{{\texttt{update}}}
+\newcommand{\with}{{\texttt{with}}}
+\newcommand{\new}{{\texttt{new}}}
+\newcommand{\jf}{{\texttt{if}}}
+\newcommand{\thn}{{\texttt{then}}}
+\newcommand{\els } {{\texttt{else}}}
+\newcommand{\mtch}{{\texttt{match}}}
+\newcommand{\cs}{{\texttt{case}}}
+\newcommand{\fun}{{\texttt{fun}}}
+\newcommand{\gts}{{\texttt{ gets}}}
+\newcommand{\cls}{{\texttt{close}}}
+\newcommand{\cet}{C,E \ts}
+\newcommand{\ovrd}{\oplus}
+\newcommand{\tyerr}{{\texttt{tyerr}}} %new
+\newcommand{\nc}{{\textit{\scriptsize{Comp}}}} %new
+
+\newcommand{\ed}[1]{{#1}_{\rho}}
+\newcommand{\edz}[1]{{#1}_{\rho,0}}
+\newcommand{\edp}[1]{{#1}_{\rho'}}
+\newcommand{\edpz}[1]{{#1}_{\rho',0}}
+\newcommand{\edf}[1]{{#1}_{\rho_f}}
+\newcommand{\fntp}[2]{func(#1): #2}
+\newcommand{\tsm}{\vdash_{M}}
+\newcommand{\tsa}{{\ts_{\! \cal A}\ }}
+\newcommand{\kwd}[1]{\emph{\texttt{#1}}}
+\newcommand{\blkz}[1]{\texttt{Block0}\dlb #1\drb}
+\newcommand{\blko}[1]{\texttt{Block1}\dlb #1\drb}
+%\renewcommand{\forall}[2]{\dlb #1\drb #2}
+
+\author{Kim B. Bruce\thanks{Corresponding author:
+Kim B. Bruce, Department of Computer Science,
+Pomona College, Claremont, CA 91711.
+kim@cs.pomona.edu}\\ Pomona College \and
+Andrew Black\\ Portland State
+University \and
+James Noble, Michael Homer\\
+Victoria University of Wellington}
+\date{\today}
+\title{Type-checking with Grace}
+
+
+\begin{document}
+\bibliographystyle{alpha}
+\maketitle
+
+\input{Prelims}
+\input{typeRules}
+\end{document}

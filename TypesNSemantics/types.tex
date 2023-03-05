@@ -1,0 +1,39 @@
+\begin{figure}
+
+\axiom{C\vdash \textit{c}:\texttt{TYPE},\ \emph{for c} \in {\cal C}}{}
+
+\axiom{C\cup\{\emph{t}<:\tau\}\vdash \ \emph{t}:\texttt{TYPE} }{}
+
+\axiom{C\cup\{\emph{t} = \tau\}\vdash \ \emph{t}:\texttt{TYPE}}{}
+
+\infrule {C\vdash \sigma_{i} :\texttt{TYPE}\ \emph{for }i =
+1,\ldots,n\ \ \ \ \ \ C\vdash \tau :\texttt{TYPE}\ } {C\vdash
+\sigma_{1} \cross \ldots \cross \sigma_{n} \to \tau
+:\texttt{TYPE}} {}{}
+
+% \infrule {C\cup \{\emph{t}:\texttt{TYPE}\}\vdash \tau :\texttt{TYPE}\ } 
+% {C\vdash \pair{ \emph{t}}\tau
+% :\texttt{TYPE}} {}{}
+
+\infrule {C\cup \{\emph{t}<:\gamma \}\vdash \tau :\texttt{TYPE}\ }
+{C\vdash \forall{ \emph{t}<:\gamma }.\tau :\texttt{TYPE}} {}{}
+
+\infrule {C\vdash \tau_i:\texttt{TYPE}\textit{ for}\ 1 \le n
+% \ and \ l_{i}\in {\cal L} \for\ 1\lei\le n\
+} {C\vdash \{\textit{l}_i:\tau_i\}_{i\leq n}:\texttt{TYPE}} {}{}
+
+\infrule {C\vdash \tau_i:\texttt{TYPE}\textit{ for}\ 1 \le n
+% \ and \ l_{i}\in {\cal L} \for\ 1\lei\le n\
+} {C\vdash < l_i:\tau_i>_{i\leq n} :\texttt{TYPE}}{}{}
+
+\infrule {C\vdash \tau :\texttt{TYPE} } {C\vdash \rf\ \tau :\texttt{TYPE}} {}{}
+
+
+    \infrule { C \union \{ t:\texttt{TYPE}\} \ts \kappa :K }
+{C \ts \texttt{TFunc}[t]\ \kappa : \texttt{TYPE} \Rightarrow K}{}{}
+
+\infrule { C \ts \kappa: \texttt{TYPE} \Rightarrow K, \ \ C \ts \tau:
+\texttt{TYPE}} {\kappa[\tau]:K}{}{}
+
+\caption{Type and constructor rules}\label{def-types}
+\end{figure}

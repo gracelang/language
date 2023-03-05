@@ -1,0 +1,39 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  29 MAY 2018 13:51
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**jmacros.tex
+(./jmacros.tex
+LaTeX2e <2015/01/01>
+Babel <3.9l> and hyphenation patterns for 79 languages loaded.
+\c@thm=\count79
+
+./jmacros.tex:31: LaTeX Error: No counter 'section' defined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.31 \newtheorem{thm}{Theorem}[section]
+                                       
+? 
+./jmacros.tex:31: Emergency stop.
+ ...                                              
+                                                  
+l.31 \newtheorem{thm}{Theorem}[section]
+                                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+ 
+Here is how much of TeX's memory you used:
+ 19 strings out of 493089
+ 322 string characters out of 6134842
+ 53199 words of memory out of 5000000
+ 3603 multiletter control sequences out of 15000+600000
+ 3640 words of font info for 14 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 8i,0n,13p,97b,14s stack positions out of 5000i,500n,10000p,200000b,80000s
+./jmacros.tex:31:  ==> Fatal error occurred, no output PDF file produced!

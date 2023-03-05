@@ -1,0 +1,29 @@
+Grammar questions:
+
+What are names of Top and Bottom types?
+
+Any has no methods, Object is below it, and has some methods shared by all 
+objects.
+
+None is at bottom
+
+Hone is not inhabited?
+
+Uninitialized is not a member of any type?
+
+What is type of command?  Void
+
+What is relationship between Nothing and Bottom?
+
+
+What is role of parenExpression  (seems to be semicolon separated list of 
+expressions)?
+
+addOp is very strange.  Excludes "+", but includes "::::="???
+
+What is nonNakedSuper?
+
+// I really dislike use of "not" in grammars
+
+What is difference between rep and rep1?  At least one copy.
+Similarly for repsep and repsep1.

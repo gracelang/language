@@ -1,0 +1,192 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{float} % lets you have non-floating floats
+\usepackage{graphicx}
+\usepackage{url} % for typesetting urls
+\usepackage{listings}
+\usepackage{grace}
+\usepackage{varioref}
+\usepackage{balance}
+\usepackage{hyperref}
+\usepackage{url}
+\urlstyle{sf}
+%\textheight 8.5in  %remove it !!!
+
+\usepackage{alltt}
+\input{jmacros}
+%\input{rmacros}
+\newcommand{\tst}{\vdash}
+\newcommand{\bs}{\backslash}
+\newcommand{\self}{\rm{\texttt{self}}}
+\newcommand{\si}{\rm{\texttt{selfinst}}}
+\newcommand{\sm}{\rm{\texttt{self}}}
+\newcommand{\selfm}{{\tt{self}}} %new
+\newcommand{\selfi}{{\tt{inst}}} %new
+\newcommand{\err}{{\rm\texttt{error}}}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\leI}{{\rm \, <\!\!\!\# \, }}
+\newcommand{\leS}{{\rm \ <: \ }}
+\newcommand{\iscom}{{\rm{COMMAND}}}
+\newcommand{\isprog}{{\rm PROGRAM}}
+\newcommand{\com}{{\texttt{command}}}
+\newcommand{\Com}{{\texttt{COMMAND}}}
+\newcommand{\Prog}{{\texttt{PROGRAM}}}
+\newcommand{\semconf}{{\rm \ {\it conf}\ }}
+\newcommand{\conf}{{\rm \ {\bf conf}\ }}
+\newcommand{\sext}{{\rm\ {\it ext}\ }}
+\newcommand{\error}{\texttt{error}}
+\newcommand{\ST}{\texttt{InstType}}
+\newcommand{\me}{\texttt{self}}
+\newcommand{\supermeth}{\rm{\texttt{super}}}
+\newcommand{\super}{{\texttt{super}}}
+\newcommand{\rf}{{\texttt{ref}}}
+\newcommand{\supervar}{{\texttt{supervar}}}
+\newcommand{\MT}{{\texttt{MyType}}}
+\newcommand{\fn}{{\texttt{fun}}}
+\newcommand{\Tobj}{{\texttt{ObjectType}}}
+\newcommand{\TobjV}{{\texttt{VisObjType}}}
+\newcommand{\Tclass}{{\texttt{ClassType}}}
+\newcommand{\ObjectType}{{\texttt{ObjectType}}}
+\newcommand{\ClassType}{{\texttt{ClassType}}}
+\newcommand{\TP}{{\texttt{TYPE}}}
+\newcommand{\RTM}{{\rm{\it RecToMem}}} %new
+\newcommand{\RM}{{\rm{\it RecToMem}}}
+\newcommand{\class}{{\texttt{class}}}
+\newcommand{\extend}{{\texttt{extend}}}
+\newcommand{\by}{{\rm{\it by}}}
+\newcommand{\update}{{\texttt{update}}}
+\newcommand{\with}{{\texttt{with}}}
+\newcommand{\new}{{\texttt{new}}}
+\newcommand{\jf}{{\texttt{if}}}
+\newcommand{\thn}{{\texttt{then}}}
+\newcommand{\els } {{\texttt{else}}}
+\newcommand{\fun}{{\texttt{fun}}}
+\newcommand{\gts}{{\texttt{ gets}}}
+\newcommand{\cls}{{\texttt{close}}}
+\newcommand{\cet}{C,E \ts}
+\newcommand{\ovrd}{\oplus}
+\newcommand{\tyerr}{{\texttt{tyerr}}} %new
+\newcommand{\nc}{{\textit{\scriptsize{Comp}}}} %new
+
+\newcommand{\ed}[1]{{#1}_{\rho}}
+\newcommand{\edz}[1]{{#1}_{\rho,0}}
+\newcommand{\edp}[1]{{#1}_{\rho'}}
+\newcommand{\edpz}[1]{{#1}_{\rho',0}}
+\newcommand{\edf}[1]{{#1}_{\rho_f}}
+\newcommand{\fntp}[2]{func(#1): #2}
+\newcommand{\tsm}{\vdash_{M}}
+\newcommand{\tsa}{{\ts_{\! \cal A}\ }}
+
+
+\author{Kim B. Bruce}
+\date{\today}
+\title{Semantics of Grace classes}
+
+
+\begin{document}
+\bibliographystyle{alpha}
+\maketitle
+
+Here we sketch the definition of the semantics of classes and objects
+in Grace.  The semantics is presented in terms of a (typed) lambda
+calculus with records and tuples.  Consider the following simple 
+class definition:
+
+\begin{lstlisting}
+class C.new(a:U)->V{
+   var x:W := b
+   method m(s:S)->T {
+      e
+   }
+}
+\end{lstlisting}
+
+We have only included a single instance variable and a single method
+for simplicity.  (We could generalize this by writing overscores
+over all the components.)  We have also left off definitions and
+start-up code, again to keep the analysis simple (though both
+are pretty simple to add).
+
+Also, for simplicity, we assume that the expression b contains no 
+references to self (implicit or explicit).
+
+We will use the notation $\mnr{e}$ for the meaning of expression $e$ 
+with respect to environment $\rho$ (which keeps track of the meaning 
+of all identifiers in the current scope).
+
+We can obtain the meaning of class $C$ as follows:
+$$\begin{array}{l@{}l}
+\mnr{C} = \{new = \lambda a' \in U.<&\{xInit = 
+\mnr{\texttt{b}}[a'/\texttt{a}]\}, \\
+&\lambda instLocn.\lambda \textit{self}
+\in V.\{m = \lambda
+s':S.\mnr{e}[a'/\texttt{a},instLocn/\texttt{x},\textit{self}/\texttt{self},s'/\texttt{s}]\}>\}
+\end{array}$$
+
+Let's unpack the definition.  First, in the semantics I am using curly
+brackets for records (i.e., where fields have names) and 
+$<>$ for tuples.
+
+The meaning of a class is a record with a single field with name 
+corresponding to the name of the constructor, in this case, 
+\texttt{new}.  That field corresponds to a function with the same 
+parameters as the constructor (I've tagged all semantic identifiers 
+with a `` ` `` to distinguish them from the corresponding identifiers 
+in the language syntax).
+
+That top-level function, when provided with the appropriate parameters, returns
+a pair consisting of a record of initial values for instance variables
+and a function which will represent the meanings of
+methods.  The first record consists of the initial values for instance
+variables.  In the case above, I've provided the initial value for
+\texttt{x} with label \textit{xInit}.  When the constructor is applied
+we will need to allocate a location for that variable, but for now we
+only need to keep track of the initial value.
+
+We can't completely determine the meaning of the methods without the
+location of the instance variables and the meaning of \texttt{self}.
+Thus the meaning of methods takes these as parameters and then returns
+a record with the meanings of the methods.  The methods are of course
+functions of their parameters.  Notice that the bodies of the methods
+are evaluated in environments updated to provide the values of the
+parameters to the constructor, locations of the instance variables,
+the meaning of \texttt{self}, and the meanings of the method parameters.
+
+What about the object generated by the constructor?  That's not too 
+bad.  I'll write it in terms of the code above rather than obtaining 
+the pieces indirectly from the meaning of \texttt{C} (though that 
+would be the way to write the formal definition).
+
+
+$$\mnr{C.new(a)} = <\{x = l\},fix(\lambda \textit{self}
+\in V.\{m = \lambda
+s':S.\mnr{e}[a'/\texttt{a},l/\texttt{x},\textit{self}/
+\texttt{self},s'/\texttt{s}]\}>\}$$
+
+\noindent where $a' = \mnr{a}$ and \textit{l} is a new location whose 
+initial value is given by $\mnr{\texttt{b}}[a'/\texttt{a}]$.
+
+Thus the meaning of the object generated by \texttt{C.new} is a pair, 
+where the first item is a record containing the newly-allocated 
+locations of the instance variables, each of which is initialized 
+with the initial value specified in the class definition.
+
+The second item is the record of methods.  These are first updated
+with the locations of the newly generated instance variables and then
+the fixed point is taken to make sure that \texttt{self} refers to the
+entire method suite.
+
+I'm going to stop here rather than going on to explain inheritance as 
+I have to meet my daughter in downtown LA this evening.  However, 
+hopefully staring at this for a while will help in understanding when 
+the various items are evaluated (notice almost all valuations are 
+hidden under lambdas, and hence evaluated only after they are applied 
+to the appropriate values -- recall we never do evaluations under 
+lambdas if we want side-effects to happen in the right order.
+
+
+\end{document}

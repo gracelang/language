@@ -1,0 +1,67 @@
+\begin{figure}
+\infrule
+{C\vdash \tau :\texttt{TYPE}}
+{C\vdash \tau <:\tau }
+{}{\emph{Refl}_{<:}}
+
+\axiom
+{C\cup \{t<:\tau \}\vdash t<:\tau}
+{\emph{Hyp}_{<:}}
+
+\infrule {C\vdash \sigma <:\tau \qquad C\vdash \tau <:\delta }
+{C\vdash \sigma <:\delta }
+{}{\emph{Trans}_{<:}}
+
+\infrule {C\vdash \sigma <: \sigma' \qquad C\vdash \tau' <:\tau }
+{C\vdash \sigma' \to \tau' <:\sigma \to \tau }
+{}{\emph{Func}_{<:}}
+
+\infrule
+{C\cup \{u:\texttt{TYPE}\}\vdash \tau' [t' \mapsto u]<:\tau [t \mapsto u]
+\qquad u\notin
+FV(\tau' )\cup FV(\tau )}
+{C\vdash \forall{ t'}. \tau' <:\forall{ t}.\tau }
+{}{\emph{Poly}_{<:}}
+
+\infrulebig
+{C\cup \{u<:\gamma \}\vdash \tau' [t'\mapsto u]<:\tau [t \mapsto u]
+\qquad
+u\notin \textit{FV}(\tau' )\cup \textit{FV}(\tau ) \cup \textit{FV}(\gamma)}
+{C\vdash \forall{t'<:\gamma}.\tau' <:\forall{ t<:\gamma }. \tau }
+{}{\emph{SBdedPoly}_{<:}}
+
+\infrule {C\vdash \tau' _i<:\tau _i\ \ \ for\ 1\le i\le n,\qquad
+C\vdash \tau' _i:\texttt{TYPE}\ \ \  for\ n+1\le i\le n+m}
+ {C\vdash \{l_j: \tau' _j\}_{j\leq n+m}<:\{l_j:\tau _j\}_{j\leq n}}
+{}{\emph{ObjType}_{<:}}
+
+\infrule {C\vdash \tau' _i<:\tau _i\ \ \ for\ 1\le i\le n,\qquad
+C\vdash \tau' _i:\texttt{TYPE}\ \ \  for\ n+1\le i\le n+m}
+ {C\vdash <l_j: \tau' _j>_{j\leq n}<:<l_j:\tau _j>_{j\leq n+m}}
+{}{\emph{VarWidth}_{<:}}
+
+\infrule {C\vdash \sigma <: \gamma\ \ \ 
+C\vdash \tau<: \gamma}
+ {C\vdash \sigma | \tau <: \gamma}
+{}{\emph{VariantLeft}_{<:}}
+
+\infrule {C\vdash \gamma <: \sigma \ \ 
+\emph{or }\ C\vdash \gamma <: \tau}
+ {C\vdash \gamma <: \sigma | \tau}
+{}{\emph{VariantRight}_{<:}}
+
+\infrule {C\vdash \sigma <: \gamma\ \ \emph{or } 
+C\vdash \tau<: \gamma}
+ {C\vdash \sigma \& \tau <: \gamma}
+{}{\emph{AndLeft}_{<:}}
+
+\infrule {C\vdash \gamma <: \sigma, \ \ 
+\ C\vdash \gamma <: \tau}
+ {C\vdash \gamma <: \sigma \& \tau}
+{}{\emph{AndRight}_{<:}}
+
+
+\caption{Subtyping rules}\label{app::subtype}
+\end{figure}
+
+\emph{Note that Pierce, pg 197, uses different rules.}
