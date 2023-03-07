@@ -220,6 +220,16 @@ This format is appropriate only when the code blocks are small.
 This layout shows three separate statements --- an `if(_)`, a `then(_)`, and an `else(_)`.
 It is *not* a valid way of formatting a single `if(_)then(_)else(_)` statement.
 
+**Bad Layout** for blocks that answer blocks
+
+    def x = if (...) then {{
+       print("true")
+    }} else {{
+       print("false")
+    }}
+    
+This layout for an `if(_)then(_)else()` that answers a block can't work: it's not possible to close two blocks on the same line, because the second closing brace will violate rule 4.
+
 
 ## Identifiers and Operators
 
@@ -2249,6 +2259,7 @@ In _standard_, type `EqualityObject` adds the family of equality methods to `Obj
         ==(other:Object) → Boolean
         ≠(other:Object) → Boolean
         hash → Number
+        prefix == → Pattern
     }
 
 ### Type Self
@@ -2303,7 +2314,9 @@ type `Unknown`, and type `Unknown` conforms to all other types.
 All types have type Type, which is defined as
 
     type Type⟦T⟧ = interface {
-        matches (o:Unknown) → Boolean
+        name → String                   // the name of this type
+        isNone → Boolean        // true for the type None, otherwise false
+        matches (value:Object) → Boolean
         & (other:Type) → Type
         | (other:Type) → Type
         + (other:Type) → Type
