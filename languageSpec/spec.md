@@ -167,7 +167,7 @@ Here are the precise rules that govern layout.
   1. Indentation may be reduced *only* when ending a code block, or after the end of a continued line.  The indentation must return to that of the line that began the code block, or the continued line, respectively.
 
 
-**Example code** with punctuation
+**Example code** with punctuation:
 
     def x =
        mumble "3"
@@ -176,7 +176,7 @@ Here are the precise rules that govern layout.
        print(stream.read)
     };
 
-**Example code** without punctuation
+**Example code** without punctuation:
 
     def x =
        mumble "3"
@@ -188,7 +188,7 @@ Here are the precise rules that govern layout.
 This example defines `x` to be the result of the single request `mumble ("3") fratz (7)`.
 Because the second and third lines are indented more than the first, they continue that line.
 
-**Example** of `if(_)then(_)else(_)`
+**Example** of `if(_)then(_)else(_)`:
 
     if (condition) then {
         doSomething
@@ -200,7 +200,7 @@ The body of the block that comprises the `then` action is indented *more than* t
 contains the opening `{`; the closing `}` is at *the same* indentation as the the line that contains the opening `{`.
 Because there is no line break after the first `}`, the `else(_)` does not start a separate statement.
 
-**Alternative Layout** for `if(_)then(_)else(_)`
+**Alternative Layout** for `if(_)then(_)else(_)`:
 
     if (condition)
         then { doSomething }
@@ -211,7 +211,7 @@ Here, the whole `if(_)then(_)else(_)` is on a single logical line;
 the indentation indicates that the `then` and `else` lines are a continuation of the `if` line.
 This format is appropriate only when the code blocks are small.
 
-**Bad Layout** for `if(_)then(_)else(_)`
+**Bad Layout** for `if(_)then(_)else(_)`:
 
     if (condition)
     then { doSomething }
@@ -220,13 +220,13 @@ This format is appropriate only when the code blocks are small.
 This layout shows three separate statements --- an `if(_)`, a `then(_)`, and an `else(_)`.
 It is *not* a valid way of formatting a single `if(_)then(_)else(_)` statement.
 
-**Bad Layout** for blocks that answer blocks
+**Bad Layout** for blocks that answer blocks:
 
-    def x = if (...) then {{
-       print("true")
-    }} else {{
-       print("false")
-    }}
+    def x = if (...) then { {
+       print "true"
+    } } else { {
+       print "false"
+    } }
     
 This layout for an `if(_)then(_)else()` that answers a block can't work: it's not possible to close two blocks on the same line, because the second closing brace will violate rule 4.
 
