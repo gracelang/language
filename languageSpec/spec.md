@@ -490,7 +490,7 @@ annotations are treated as the type `Unknown`.
     { i:Number → i + 1 }
     { sum, next → sum + next }
 
-Blocks are lexically scoped, and can close over any visible field or parameter.
+Blocks are lexically scoped, and can close over any visible temporary, field or parameter.
 The body of a block consists of a sequence of declarations and
 expressions; declarations are local to the block.
 An empty body is allowed, and is equivalent to `done`.
